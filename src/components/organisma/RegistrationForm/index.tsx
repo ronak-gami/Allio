@@ -15,6 +15,8 @@ import PasswordField from '../../molecules/PasswordFields';
 import Button from '../../atoms/Button';
 import styles from './style';
 import {Text as PaperText} from 'react-native-paper';
+import {getAuth} from '@react-native-firebase/auth';
+
 const RegistrationForm = () => {
   const initialValues = {
     firstName: '',
@@ -25,8 +27,17 @@ const RegistrationForm = () => {
     confirmPassword: '',
   };
 
-  const handleRegister = (values: typeof initialValues) => {
-    console.log('Registration values:', values);
+  const handleRegister = async (values: typeof initialValues) => {
+    try {
+      const auth = getAuth();
+      const userCredential = await auth.createUserWithEmailAndPassword(
+        values.email,
+        values.password,
+      );
+      console.log('-----------userCredential-----------', userCredential);
+    } catch (error) {
+      console.error('error into handleRegister :- ', error);
+    }
   };
 
   return (
