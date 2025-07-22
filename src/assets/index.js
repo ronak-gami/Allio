@@ -7,4 +7,7 @@ export const IMAGES = {
 export const ICONS = {
   eye: require('./icons/eye.png'),
   eyeOff: require('./icons/eyeoff.png'),
+  down: require('./icons/arrowdown.png'),
+  check: require('./icons/check.png'),
+  cancel: require('./icons/cancel.png'),
 };

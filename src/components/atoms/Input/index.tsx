@@ -15,7 +15,6 @@ import DateTimePicker, {
 import {useStyle} from './style';
 import {COLORS} from '../../../utils/color';
 import Text from '../Text';
-import {scale} from 'react-native-size-matters';
 import {ICONS} from '../../../assets';
 
 interface InputProps {
@@ -55,11 +54,11 @@ const Input: React.FC<InputProps> = ({
   onDateChange,
   ...props
 }) => {
+  const styles = useStyle();
   const [internalDate, setInternalDate] = useState<Date>(new Date());
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [isSecure, setIsSecure] = useState<boolean>(isPassword);
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const styles = useStyle();
 
   useEffect(() => {
     if ((dataType === 'date' || dataType === 'time') && value) {
@@ -96,7 +95,7 @@ const Input: React.FC<InputProps> = ({
           icon={() => (
             <Image
               source={isSecure ? ICONS.eye : ICONS.eyeOff}
-              style={{width: 20, height: 20, tintColor: COLORS.gray}}
+              style={styles.icon}
             />
           )}
           onPress={() => setIsSecure(!isSecure)}
@@ -107,12 +106,7 @@ const Input: React.FC<InputProps> = ({
     if (showClearButton && value && dataType === 'text') {
       return (
         <TextInput.Icon
-          icon={() => (
-            <Image
-              source={ICONS.Clear}
-              style={{width: 20, height: 20, tintColor: COLORS.gray}}
-            />
-          )}
+          icon={() => <Image source={ICONS.cancel} style={styles.icon} />}
           onPress={onClear}
         />
       );
@@ -136,7 +130,7 @@ const Input: React.FC<InputProps> = ({
       multiline={multiline}
       style={[
         styles.inputField,
-        multiline && {minHeight: 100, textAlignVertical: 'top'},
+        multiline && styles.multiline,
         backgroundColor ? {backgroundColor} : {},
       ]}
       outlineColor={error ? COLORS.error : COLORS.darkGray}
@@ -145,10 +139,7 @@ const Input: React.FC<InputProps> = ({
         prefixIcon ? (
           <TextInput.Icon
             icon={() => (
-              <Image
-                source={ICONS[prefixIcon]}
-                style={{width: 20, height: 20, tintColor: COLORS.gray}}
-              />
+              <Image source={ICONS[prefixIcon]} style={styles.prefixIcon} />
             )}
           />
         ) : null
@@ -164,14 +155,7 @@ const Input: React.FC<InputProps> = ({
       render={inputProps => (
         <RNTextInput
           {...inputProps}
-          style={[
-            inputProps.style,
-            {
-              fontFamily: 'WinkyRough-Regular',
-              fontSize: scale(14),
-              color: COLORS.black,
-            },
-          ]}
+          style={[inputProps.style, styles.textInput]}
         />
       )}
       onFocus={(e: NativeSyntheticEvent<TextInputFocusEventData>) => {
