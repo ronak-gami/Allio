@@ -13,6 +13,10 @@ export const IMAGES = {
 export const ICONS = {
   eye: require('./icons/eye.png'),
   eyeOff: require('./icons/eyeoff.png'),
+  down: require('./icons/arrowdown.png'),
+  check: require('./icons/check.png'),
+  cancel: require('./icons/cancel.png'),
+
   BackArrow: require('./icons/backarrow.png'),
   Clear: require('./icons/clear.png'),
   FaceBook: require('./icons/facebook.png'),

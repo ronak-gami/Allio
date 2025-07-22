@@ -1,6 +1,7 @@
-import { StyleSheet } from 'react-native';
-import { scale } from 'react-native-size-matters';
-import { COLORS } from '../../../utils/color';
+import {StyleSheet} from 'react-native';
+import {scale} from 'react-native-size-matters';
+import {COLORS} from '../../../utils/color';
+
 export const useStyle = () => {
   return StyleSheet.create({
     inputContainer: {
@@ -11,13 +12,28 @@ export const useStyle = () => {
       fontSize: scale(14),
       backgroundColor: COLORS.white,
     },
-    labelStyle: {
+    textInput: {
       fontFamily: 'WinkyRough-Regular',
       fontSize: scale(14),
+      color: COLORS.black,
+    },
+    multiline: {
+      minHeight: 100,
+      textAlignVertical: 'top',
     },
     errorText: {
       color: COLORS.error,
       fontSize: scale(12),
+    },
+    icon: {
+      width: 20,
+      height: 20,
+      tintColor: COLORS.black,
+    },
+    prefixIcon: {
+      width: 20,
+      height: 20,
+      tintColor: COLORS.gray,
     },
   });
 };

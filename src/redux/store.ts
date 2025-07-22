@@ -1,10 +1,15 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { persistReducer, persistStore, PersistConfig } from 'redux-persist';
+import {combineReducers, configureStore} from '@reduxjs/toolkit';
+import {persistReducer, persistStore, PersistConfig} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import authReducer from './slices/AuthSlice';
+import languageReducer from './slices/languageSlice';
+import themeReducer from './slices/ThemeSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  language: languageReducer,
+  theme: themeReducer,
 });
 
 type RootReducerType = ReturnType<typeof rootReducer>;
@@ -12,7 +17,7 @@ type RootReducerType = ReturnType<typeof rootReducer>;
 const persistConfig: PersistConfig<RootReducerType> = {
   key: 'Allio_root',
   storage: AsyncStorage,
-  whitelist: ['auth'],
+  whitelist: ['auth', 'language', 'theme'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -29,7 +34,6 @@ export const store = configureStore({
         ignoredPaths: ['register.imageData', 'profile.imageData'],
       },
     }),
-//   devTools: process.env.NODE_ENV !== 'production',
 });
 
 export const persistor = persistStore(store);

@@ -1,0 +1,14 @@
+{
+  "login": "लॉगिन",
+  "login_subtitle": "वापसी पर स्वागत है! कृपया अपने खाते में लॉगिन करें",
+  "email": "ईमेल",
+  "password": "पासवर्ड",
+  "remember_me": "मुझे याद रखें",
+  "forgot_password": "पासवर्ड भूल गए?",
+  "continue_facebook": "फेसबुक से जारी रखें",
+  "continue_google": "गूगल से जारी रखें",
+  "continue_github": "गिटहब से जारी रखें",
+  "continue_linkedin": "लिंक्डइन से जारी रखें",
+  "no_account": "क्या आपका खाता नहीं है?",
+  "register": "रजिस्टर करें"
+}
