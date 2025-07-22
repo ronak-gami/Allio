@@ -10,4 +10,12 @@ export const ICONS = {
   down: require('./icons/arrowdown.png'),
   check: require('./icons/check.png'),
   cancel: require('./icons/cancel.png'),
+
+  BackArrow: require('./icons/backarrow.png'),
+  Clear: require('./icons/clear.png'),
+  FaceBook: require('./icons/facebook.png'),
+  Google: require('./icons/googleicon.png'),
+  LinkedIn: require('./icons/message.png'),
+  Github: require('./icons/github.png'),
+  ArrowRight: require('./icons/right-arrow.png'),
 };
