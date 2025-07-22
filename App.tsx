@@ -1,24 +1,20 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-import SplashScreen from './src/screens/splash';
-import Onboarding from './src/screens/onboarding';
+import React from 'react';
+import {Provider} from 'react-redux';
+import {PaperProvider} from 'react-native-paper';
+import StackNavigator from './src/navigations/StackNavigation';
+import {PersistGate} from 'redux-persist/integration/react';
+import {persistor, store} from './src/redux/store';
 
 const App = () => {
-  const [showSplash, setShowSplash] = useState(true);
-  useEffect(() => {
-    setTimeout(() => setShowSplash(false), 2000); // Hide splash after 2s
-  }, []);
   return (
-    <View style={styles.container}>
-      {showSplash ? <SplashScreen /> : <Onboarding />}
-    </View>
+    <Provider store={store}>
+      <PaperProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <StackNavigator />
+        </PersistGate>
+      </PaperProvider>
+    </Provider>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
