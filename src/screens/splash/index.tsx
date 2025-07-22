@@ -1,23 +1,12 @@
-import React, {useEffect} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
-import LottieView from 'lottie-react-native';
-import {scale} from 'react-native-size-matters';
-
-import {height, width} from '../../utils/helper';
-import {useStyle} from './style';
-
-const styles = useStyle(); 
+import React from 'react';
+import {View, Image} from 'react-native';
+import {IMAGES} from '../../assets';
+import styles from './style';
 
 const SplashScreen = () => {
   return (
     <View style={styles.container}>
-      <LottieView
-        source={require('../../assets/animation/splash.json')}
-        autoPlay
-        loop={false}
-        style={styles.animation}
-      />
-      <Text style={styles.text}>ALLIO APP</Text>
+      <Image source={IMAGES.Allio_Logo} resizeMode="contain" />
     </View>
   );
 };

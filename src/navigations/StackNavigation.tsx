@@ -13,7 +13,7 @@ const StackNavigator: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsSplashVisible(false);
-    }, 3000);
+    }, 2500);
     return () => clearTimeout(timer);
   }, []);
 
