@@ -5,7 +5,7 @@ import {onboardingData} from '../../utils/constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
 
-const OnboardingScreen = () => {
+const OnboardingScreen = ({navigation}: any) => {
   const checkOnboardingStatus = async () => {
     const onboardingWatched = await AsyncStorage.getItem('onboardingWatched');
     if (onboardingWatched) {
@@ -25,11 +25,11 @@ const OnboardingScreen = () => {
     } else {
       await AsyncStorage.setItem('onboardingWatched', 'true');
       checkOnboardingStatus();
-      // navigation.replace('Login');
+      navigation.navigate('LoginScreen');
     }
   };
   const handleSkip = () => {
-    // navigation.replace('Auth');
+    navigation.navigate('LoginScreen'); // Assuming you want to navigate to Login on skip
   };
   return (
     <View style={styles.container}>

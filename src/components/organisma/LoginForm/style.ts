@@ -1,7 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from '../../../utils/color';
-import {height, width} from '../../../utils/helper';
 
 export default StyleSheet.create({
   logoContainer: {
@@ -24,9 +23,7 @@ export default StyleSheet.create({
   formContainer: {
     flexGrow: 1,
     justifyContent: 'center',
-    marginTop: scale(12),
     padding: scale(16),
-    borderRadius: scale(8),
     backgroundColor: COLORS.white,
   },
   logo: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView, KeyboardAvoidingView} from 'react-native';
+import {StyleSheet, ScrollView, KeyboardAvoidingView} from 'react-native';
 import RegistrationForm from '../../components/organisma/RegistrationForm';
 
 const RegisterScreen = () => {
@@ -14,9 +14,8 @@ const RegisterScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    // flexGrow: 1,
-    // justifyContent: 'center',
-    // padding: 16,
+    flexGrow: 1,
+    justifyContent: 'center',
   },
 });
 

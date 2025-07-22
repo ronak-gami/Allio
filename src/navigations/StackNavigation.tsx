@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux';
 
 const StackNavigator: React.FC = () => {
   // const token = useSelector((state: any) => state.auth.token);
-  const token = true;
+  const token = false;
   const [isSplashVisible, setIsSplashVisible] = useState(true);
 
   useEffect(() => {

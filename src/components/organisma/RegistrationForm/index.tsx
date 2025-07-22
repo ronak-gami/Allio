@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   View,
-  StyleSheet,
   TouchableOpacity,
   ScrollView,
   KeyboardAvoidingView,
@@ -14,13 +13,9 @@ import MobilenoField from '../../molecules/MobileFiled';
 import EmailField from '../../molecules/EmailField';
 import PasswordField from '../../molecules/PasswordFields';
 import Button from '../../atoms/Button';
-import Text from '../../atoms/Text';
-import {useNavigation} from '@react-navigation/native';
-import styles from './style'; // Assuming you have a styles file
+import styles from './style';
 import {Text as PaperText} from 'react-native-paper';
 const RegistrationForm = () => {
-  //   const navigation = useNavigation();
-
   const initialValues = {
     firstName: '',
     lastName: '',
@@ -32,7 +27,6 @@ const RegistrationForm = () => {
 
   const handleRegister = (values: typeof initialValues) => {
     console.log('Registration values:', values);
-    // 🔗 call API or move to next screen here
   };
 
   return (
@@ -42,14 +36,7 @@ const RegistrationForm = () => {
           initialValues={initialValues}
           validationSchema={registrationValidationSchema}
           onSubmit={handleRegister}>
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-          }) => (
+          {({handleChange, handleSubmit, values, errors, touched}) => (
             <View style={styles.formContainer}>
               <PaperText style={styles.title}>Register</PaperText>
               <PaperText style={styles.subtitle}>

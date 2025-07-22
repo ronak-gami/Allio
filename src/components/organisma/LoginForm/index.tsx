@@ -1,15 +1,17 @@
 import React, {useState} from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, TouchableOpacity} from 'react-native';
 import Input from '../../atoms/Input';
 import PasswordField from '../../molecules/PasswordFields';
 import Button from '../../atoms/Button';
 import {loginValidationSchema} from '../../../utils/validationSchema';
-import {ICONS, IMAGES} from '../../../assets';
+import {ICONS} from '../../../assets';
 import styles from './style';
 import {Text} from 'react-native-paper';
 import RememberForgot from '../../molecules/RememberForget';
+import {useNavigation} from '@react-navigation/native';
 
 const LoginForm = () => {
+  const navigation: any = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -40,8 +42,10 @@ const LoginForm = () => {
 
   return (
     <View style={styles.formContainer}>
-     <Text style={styles.title}>Login</Text>
-      <Text style={styles.subtitle}>Welcome back! Please login to your account</Text>   
+      <Text style={styles.title}>Login</Text>
+      <Text style={styles.subtitle}>
+        Welcome back! Please login to your account
+      </Text>
       <View style={styles.inputContainer}>
         <Input
           placeholder="Email"
@@ -100,9 +104,13 @@ const LoginForm = () => {
           bgColor="#0077b5"
           style={styles.button}
         />
+
         <View style={styles.dividerContainer}>
           <Text style={styles.orText}>Do not have an Account ?</Text>
-          <Text style={styles.signUpText}>Registration</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('RegisterScreen')}>
+            <Text style={styles.signUpText}>Registration</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
