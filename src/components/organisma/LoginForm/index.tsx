@@ -6,20 +6,9 @@ import Button from '../../atoms/Button';
 import {loginValidationSchema} from '../../../utils/validationSchema';
 import {ICONS} from '../../../assets';
 import styles from './style';
-import Text from '../../atoms/Text'; // ✅ Use your custom Text
+import Text from '../../atoms/Text'; 
 import RememberForgot from '../../molecules/RememberForget';
 import {useNavigation} from '@react-navigation/native';
-import CustomDropdown from '../../atoms/Dropdown';
-import {useDispatch, useSelector} from 'react-redux';
-import {useTranslation} from 'react-i18next';
-import {setLanguage} from '../../../redux/slices/languageSlice';
-import {toggleTheme} from '../../../redux/slices/ThemeSlice';
-import {RootState} from '../../../redux/store';
-const languages = [
-  {label: 'English', value: 'en'},
-  {label: 'हिंदी', value: 'hi'},
-  {label: 'ગુજરાતી', value: 'gu'},
-];
 
 const LoginForm = () => {
   const navigation: any = useNavigation();
@@ -28,18 +17,6 @@ const LoginForm = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [remember, setRemember] = useState(false);
-
-  const dispatch = useDispatch();
-  const {t} = useTranslation();
-
-  const currentLanguage = useSelector(
-    (state: RootState) => state.language.language,
-  );
-
-  const handleLanguageChange = (value: string) => {
-    dispatch(setLanguage(value));
-    dispatch(toggleTheme());
-  };
 
   const handleLogin = async () => {
     setEmailError('');
@@ -140,20 +117,6 @@ const LoginForm = () => {
             <Text label="register" style={styles.signUpText} type="semibold" />
           </TouchableOpacity>
         </View>
-
-        <CustomDropdown
-          label={t('select_language')}
-          data={languages.map(lang => lang.label)}
-          selectedValue={
-            languages.find(lang => lang.value === currentLanguage)?.label || ''
-          }
-          onSelect={label => {
-            const selected = languages.find(lang => lang.label === label);
-            if (selected) {
-              handleLanguageChange(selected.value);
-            }
-          }}
-        />
       </View>
     </View>
   );
