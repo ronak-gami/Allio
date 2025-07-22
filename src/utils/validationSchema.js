@@ -1,9 +1,10 @@
 import * as Yup from 'yup';
 
+
 export const loginValidationSchema = Yup.object().shape({
     email: Yup.string()
         .email('Please enter valid email address')
-        .required('Email is required')
+        .required(`{t}`)
         .trim(),
     password: Yup.string()
         .min(6, 'Password must be at least 6 characters')

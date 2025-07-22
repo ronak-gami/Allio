@@ -21,7 +21,7 @@ export default StyleSheet.create({
     marginBottom: scale(30),
   },
   formContainer: {
-    flexGrow: 1,
+    flex: 1,
     justifyContent: 'center',
     padding: scale(16),
     backgroundColor: COLORS.white,
@@ -33,13 +33,20 @@ export default StyleSheet.create({
   },
   dividerContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: scale(20),
     alignItems: 'center',
     // marginVertical: scale(12),
   },
-
+  socialSignInText: {
+    fontSize: scale(16),
+    color: COLORS.primary,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginVertical: scale(10),
+  },
   emailInput: {
     marginBottom: scale(12),
-    // backgroundColor: COLORS.lightGray,
     borderRadius: scale(8),
     paddingHorizontal: scale(12),
   },
@@ -55,6 +62,7 @@ export default StyleSheet.create({
   loginButton: {
     marginVertical: scale(6),
     backgroundColor: COLORS.primary,
+    paddingVertical: scale(12),
   },
   socialButtonsWrapper: {
     marginTop: scale(12),
@@ -81,5 +89,17 @@ export default StyleSheet.create({
     color: COLORS.primary,
     fontSize: scale(16),
     fontWeight: 'bold',
+  },
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: scale(20),
+    paddingHorizontal: scale(40),
+  },
+  icon: {
+    width: scale(32),
+    height: scale(32),
+    resizeMode: 'contain',
   },
 });

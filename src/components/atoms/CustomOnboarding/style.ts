@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.lightBlue,
+    backgroundColor: COLORS.lightyellow,
     justifyContent: 'center',
     paddingHorizontal: 38,
   },
@@ -21,14 +21,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'left',
     marginTop: 20,
-    color: COLORS.primary,
+    color: COLORS.black,
   },
   description: {
-    fontSize: 16,
+    fontSize: 18,
     textAlign: 'left',
     width: '50%',
     marginTop: 10,
-    color: COLORS.gray,
+    color: COLORS.black,
   },
 });
 

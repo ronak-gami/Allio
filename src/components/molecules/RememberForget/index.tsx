@@ -4,18 +4,20 @@ import Text from '../../atoms/Text';
 import {Checkbox} from 'react-native-paper';
 import {COLORS} from '../../../utils/color';
 import {scale} from 'react-native-size-matters';
-import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 interface RememberForgotProps {
   remember: boolean;
   onCheckboxPress: () => void;
+  onForgotPasswordPress: () => void;
 }
 
 const RememberForgot: React.FC<RememberForgotProps> = ({
   remember,
   onCheckboxPress,
+  onForgotPasswordPress,
 }) => {
-  //   const navigation = useNavigation<NavigationProp<any>>();
+  const navigation: any = useNavigation();
 
   return (
     <View style={Styles.rememberForgotView}>
@@ -26,11 +28,11 @@ const RememberForgot: React.FC<RememberForgotProps> = ({
         labelStyle={Styles.checkboxLabel as StyleProp<TextStyle>}
         status={remember ? 'checked' : 'unchecked'}
         onPress={onCheckboxPress}
-        color={COLORS.primary}
+        color={COLORS.black}
       />
 
       <Pressable
-        // onPress={() => navigation.navigate('ForgotPassword')}
+        onPress={onForgotPasswordPress}
         style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}>
         <Text style={Styles.forgotpassText}>Forgot Password?</Text>
       </Pressable>
@@ -47,16 +49,16 @@ const Styles = StyleSheet.create({
     alignItems: 'center',
   },
   forgotpassText: {
-    color: COLORS.primary,
+    color: COLORS.black,
     fontSize: scale(16),
-    fontWeight: '300',
+    fontWeight: 'bold',
   },
   checkbox: {
     paddingHorizontal: 0,
     paddingVertical: 0,
   },
   checkboxLabel: {
-    color: COLORS.primary,
+    color: COLORS.black,
     fontSize: scale(16),
     fontFamily: 'WinkyRough-Regular',
   },
