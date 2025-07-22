@@ -1,0 +1,14 @@
+{
+  "login": "લૉગિન",
+  "login_subtitle": "પાછા આવવા માટે આપનું સ્વાગત છે! કૃપા કરીને તમારા એકાઉન્ટમાં લૉગિન કરો",
+  "email": "ઇમેઇલ",
+  "password": "પાસવર્ડ",
+  "remember_me": "મને યાદ રાખો",
+  "forgot_password": "પાસવર્ડ ભૂલી ગયા?",
+  "continue_facebook": "ફેસબુકથી આગળ વધો",
+  "continue_google": "ગુગલથી આગળ વધો",
+  "continue_github": "ગિટહબથી આગળ વધો",
+  "continue_linkedin": "લિન્કડઇનથી આગળ વધો",
+  "no_account": "એકાઉન્ટ નથી?",
+  "register": "રજિસ્ટ્રેશન કરો"
+}
