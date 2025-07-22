@@ -35,7 +35,7 @@ interface InputProps {
   onDateChange?: (date: Date) => void;
   dateIconName?: string;
   timeIconName?: string;
-  [key: string]: any; // for additional props
+  [key: string]: any;
 }
 
 const Input: React.FC<InputProps> = ({
