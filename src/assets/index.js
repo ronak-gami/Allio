@@ -26,3 +26,4 @@ export const ICONS = {
   VideoMedia: require('./images/video-media.png'),
   Allio_Logo: require('./images/Allio_logo.png'),
 };
+
