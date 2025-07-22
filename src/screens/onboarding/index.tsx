@@ -1,15 +1,12 @@
-import React, {useContext, useRef, useState} from 'react';
-import {View, FlatList, TouchableOpacity, Text, StyleSheet} from 'react-native';
-import OnboardingScreen from '../../components/atoms/Onboarding';
-
-import {useStyle} from './style';
+import React, {useRef, useState} from 'react';
+import {View, FlatList, TouchableOpacity, Text} from 'react-native';
+import Onboarding from '../../components/atoms/CustomOnboarding';
 import {onboardingData} from '../../utils/constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import styles from './style';
 
-const styles = useStyle();
-const Onboarding = () => {
-  const chackOnboardingStatus = async () => {
+const OnboardingScreen = () => {
+  const checkOnboardingStatus = async () => {
     const onboardingWatched = await AsyncStorage.getItem('onboardingWatched');
     if (onboardingWatched) {
       // navigation.replace('splashScreen');
@@ -27,7 +24,7 @@ const Onboarding = () => {
       setCurrentIndex(currentIndex + 1);
     } else {
       await AsyncStorage.setItem('onboardingWatched', 'true');
-      chackOnboardingStatus();
+      checkOnboardingStatus();
       // navigation.replace('Login');
     }
   };
@@ -47,7 +44,7 @@ const Onboarding = () => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
-          <OnboardingScreen
+          <Onboarding
             image={item.image}
             title={item.title}
             description={item.description}
@@ -71,7 +68,7 @@ const Onboarding = () => {
   );
 };
 
-export default Onboarding;
+export default OnboardingScreen;
 // import React, {useRef, useState} from 'react';
 // import {View, FlatList, TouchableOpacity, Text} from 'react-native';
 // import OnboardingScreen from '../../components/atoms/Onboarding';

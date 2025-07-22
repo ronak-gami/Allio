@@ -12,17 +12,22 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-native-community/datetimepicker": "^8.2.0",
+    "@react-navigation/bottom-tabs": "7.4.2",
     "@react-navigation/native": "^7.1.14",
     "@react-navigation/native-stack": "^7.1.9",
-    "i": "^0.3.7",
+    "react-native-reanimated": "3.18.0",
+    "react-native-safe-area-context": "5.5.2",
+    "react-native-screens": "4.9.2",
+    "@reduxjs/toolkit": "^2.8.2",
     "lottie-react-native": "^6.7.2",
-    "npm": "^11.4.2",
     "react": "18.3.1",
     "react-hook-form": "^7.55.0",
     "react-native": "0.76.7",
     "react-native-paper": "^5.14.5",
     "react-native-size-matters": "^0.4.2",
-    "react-native-vector-icons": "^10.1.0"
+    "react-native-vector-icons": "^10.1.0",
+    "react-redux": "^9.2.0",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
