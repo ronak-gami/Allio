@@ -9,3 +9,15 @@ export const IMAGES = {
   VideoMedia: require('./images/video-media.png'),
   Allio_Logo: require('./images/Allio_logo.png'),
 };
+
+export const ICONS = {
+  eye: require('./icons/eye.png'),
+  eyeOff: require('./icons/eyeoff.png'),
+  BackArrow: require('./icons/backarrow.png'),
+  Clear: require('./icons/clear.png'),
+  FaceBook: require('./icons/facebook.png'),
+  Google: require('./icons/googleicon.png'),
+  LinkedIn: require('./icons/message.png'),
+  Github: require('./icons/github.png'),
+  ArrowRight: require('./icons/right-arrow.png'),
+};

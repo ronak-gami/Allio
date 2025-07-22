@@ -3,9 +3,12 @@ import {
   View,
   TextInput as RNTextInput,
   Pressable,
+  Image,
   Platform,
   NativeSyntheticEvent,
   TextInputFocusEventData,
+  StyleProp,
+  TextStyle,
 } from 'react-native';
 import {TextInput} from 'react-native-paper';
 import DateTimePicker, {
@@ -14,8 +17,8 @@ import DateTimePicker, {
 import {useStyle} from './style';
 import {COLORS} from '../../../utils/color';
 import Text from '../Text';
-import CustomVectorIcon from '../CustomvectorIcon';
 import {scale} from 'react-native-size-matters';
+import {ICONS} from '../../../assets';
 
 interface InputProps {
   placeholder: string;
@@ -24,18 +27,17 @@ interface InputProps {
   keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
   isPassword?: boolean;
   error?: string;
-  style?: object;
+  // style?: object;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   backgroundColor?: string;
   multiline?: boolean;
-  prefixIcon?: string | React.ReactNode;
+  prefixIcon?: keyof typeof ICONS;
   showClearButton?: boolean;
   onClear?: () => void;
   dataType?: 'text' | 'date' | 'time';
   onDateChange?: (date: Date) => void;
-  dateIconName?: string;
-  timeIconName?: string;
-  [key: string]: any; // for additional props
+  [key: string]: any;
+  style?: StyleProp<TextStyle>;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -54,8 +56,6 @@ const Input: React.FC<InputProps> = ({
   onClear,
   dataType = 'text',
   onDateChange,
-  dateIconName = 'MaterialCommunityIcons:calendar',
-  timeIconName = 'MaterialCommunityIcons:clock-outline',
   ...props
 }) => {
   const [internalDate, setInternalDate] = useState<Date>(new Date());
@@ -78,18 +78,14 @@ const Input: React.FC<InputProps> = ({
     selectedDate?: Date,
   ) => {
     setShowPicker(Platform.OS === 'ios');
-
     if (event.type === 'dismissed') return;
 
     if (selectedDate) {
       setInternalDate(selectedDate);
-      let formattedValue = '';
-
-      if (dataType === 'date') {
-        formattedValue = selectedDate.toLocaleDateString();
-      } else if (dataType === 'time') {
-        formattedValue = selectedDate.toLocaleTimeString();
-      }
+      const formattedValue =
+        dataType === 'date'
+          ? selectedDate.toLocaleDateString()
+          : selectedDate.toLocaleTimeString();
 
       onChangeText(formattedValue);
       onDateChange?.(selectedDate);
@@ -97,44 +93,13 @@ const Input: React.FC<InputProps> = ({
   };
 
   const renderRightIcon = () => {
-    if (dataType === 'date') {
-      return (
-        <TextInput.Icon
-          icon={() => (
-            <CustomVectorIcon
-              name={dateIconName}
-              size={24}
-              color={isFocused ? COLORS.primary : COLORS.gray}
-            />
-          )}
-          onPress={() => setShowPicker(true)}
-        />
-      );
-    }
-
-    if (dataType === 'time') {
-      return (
-        <TextInput.Icon
-          icon={() => (
-            <CustomVectorIcon
-              name={timeIconName}
-              size={24}
-              color={isFocused ? COLORS.primary : COLORS.gray}
-            />
-          )}
-          onPress={() => setShowPicker(true)}
-        />
-      );
-    }
-
     if (isPassword) {
       return (
         <TextInput.Icon
           icon={() => (
-            <CustomVectorIcon
-              name={isSecure ? 'Feather:eye' : 'Feather:eye-off'}
-              size={24}
-              color={isFocused ? COLORS.primary : COLORS.gray}
+            <Image
+              source={isSecure ? ICONS.eye : ICONS.eyeOff}
+              style={{width: 20, height: 20, tintColor: COLORS.gray}}
             />
           )}
           onPress={() => setIsSecure(!isSecure)}
@@ -146,10 +111,9 @@ const Input: React.FC<InputProps> = ({
       return (
         <TextInput.Icon
           icon={() => (
-            <CustomVectorIcon
-              name="MaterialCommunityIcons:close-circle"
-              size={24}
-              color={COLORS.gray}
+            <Image
+              source={ICONS.Clear}
+              style={{width: 20, height: 20, tintColor: COLORS.gray}}
             />
           )}
           onPress={onClear}
@@ -166,13 +130,9 @@ const Input: React.FC<InputProps> = ({
     <TextInput
       mode="outlined"
       label={<Text>{placeholder}</Text>}
-      value={value}
       onChangeText={!isPickerInput ? onChangeText : undefined}
       editable={!isPickerInput}
-      keyboardType={keyboardType}
       secureTextEntry={isPassword && isSecure}
-      autoCapitalize={autoCapitalize}
-      multiline={multiline}
       style={[
         styles.inputField,
         multiline && {minHeight: 100, textAlignVertical: 'top'},
@@ -183,17 +143,12 @@ const Input: React.FC<InputProps> = ({
       left={
         prefixIcon ? (
           <TextInput.Icon
-            icon={() =>
-              typeof prefixIcon === 'string' ? (
-                <CustomVectorIcon
-                  name={prefixIcon}
-                  size={24}
-                  color={COLORS.gray}
-                />
-              ) : (
-                prefixIcon
-              )
-            }
+            icon={() => (
+              <Image
+                source={ICONS[prefixIcon]}
+                style={{width: 20, height: 20, tintColor: COLORS.gray}}
+              />
+            )}
           />
         ) : null
       }

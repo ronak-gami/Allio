@@ -19,7 +19,7 @@
     "react-native-safe-area-context": "5.5.2",
     "react-native-screens": "4.9.2",
     "@reduxjs/toolkit": "^2.8.2",
-    "lottie-react-native": "^6.7.2",
+    "formik": "^2.4.6",
     "react": "18.3.1",
     "react-hook-form": "^7.55.0",
     "react-native": "0.76.7",
@@ -27,7 +27,8 @@
     "react-native-size-matters": "^0.4.2",
     "react-native-vector-icons": "^10.1.0",
     "react-redux": "^9.2.0",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
