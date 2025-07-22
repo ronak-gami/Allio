@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "458949194446",
+    "project_id": "allio-react-native",
+    "storage_bucket": "allio-react-native.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:458949194446:android:c4a3c154be0ec27629569f",
+        "android_client_info": {
+          "package_name": "com.allio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8BKxqJQa8h4cFoZ5szElN347M0ibPNaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
