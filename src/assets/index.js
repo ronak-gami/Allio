@@ -7,4 +7,5 @@ export const IMAGES = {
   More: require('./images/more.png'),
   ScanQR: require('./images/scanQR.png'),
   VideoMedia: require('./images/video-media.png'),
+  Allio_Logo: require('./images/Allio_logo.png'),
 };
