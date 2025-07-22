@@ -7,6 +7,8 @@ import {
   Platform,
   NativeSyntheticEvent,
   TextInputFocusEventData,
+  StyleProp,
+  TextStyle,
 } from 'react-native';
 import {TextInput} from 'react-native-paper';
 import DateTimePicker, {
@@ -25,7 +27,7 @@ interface InputProps {
   keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
   isPassword?: boolean;
   error?: string;
-  style?: object;
+  // style?: object;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   backgroundColor?: string;
   multiline?: boolean;
@@ -35,6 +37,7 @@ interface InputProps {
   dataType?: 'text' | 'date' | 'time';
   onDateChange?: (date: Date) => void;
   [key: string]: any;
+  style?: StyleProp<TextStyle>;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -127,13 +130,9 @@ const Input: React.FC<InputProps> = ({
     <TextInput
       mode="outlined"
       label={<Text>{placeholder}</Text>}
-      value={value}
       onChangeText={!isPickerInput ? onChangeText : undefined}
       editable={!isPickerInput}
-      keyboardType={keyboardType}
       secureTextEntry={isPassword && isSecure}
-      autoCapitalize={autoCapitalize}
-      multiline={multiline}
       style={[
         styles.inputField,
         multiline && {minHeight: 100, textAlignVertical: 'top'},

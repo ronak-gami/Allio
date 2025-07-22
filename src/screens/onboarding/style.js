@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { scale } from 'react-native-size-matters';
 import { COLORS } from '../../utils/color';
 export const useStyle = () => {
     return StyleSheet.create({
@@ -34,8 +33,6 @@ export const useStyle = () => {
             fontWeight: '600',
 
         },
-
-
 
     })
 }

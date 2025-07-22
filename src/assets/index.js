@@ -1,10 +1,18 @@
 export const IMAGES = {
-  First: require('./images/firstScreen.png'),
-  SecondOnboarding: require('./images/onboardingSecond.png'),
-  OnboardingThree: require('./images/onboardingThree.png'),
+    First: require('./images/firstScreen.png'),
+    SecondOnboarding: require('./images/onboardingSecond.png'),
+    OnboardingThree: require('./images/onboardingThree.png'),
 };
 
 export const ICONS = {
-  eye: require('./icons/eye.png'),
-  eyeOff: require('./icons/eyeoff.png'),
+    eye: require('./icons/eye.png'),
+    eyeOff: require('./icons/eyeoff.png'),
+    BackArrow: require('./icons/backarrow.png'),
+    Clear: require('./icons/clear.png'),
+    FaceBook: require('./icons/facebook.png'),
+    Google: require('./icons/googleicon.png'),
+    LinkedIn: require('./icons/message.png'),
+    Github: require('./icons/github.png'),
+    ArrowRight: require('./icons/right-arrow.png'),
+
 };
