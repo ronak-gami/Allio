@@ -6,9 +6,20 @@ import Button from '../../atoms/Button';
 import {loginValidationSchema} from '../../../utils/validationSchema';
 import {ICONS} from '../../../assets';
 import styles from './style';
-import {Text} from 'react-native-paper';
+import Text from '../../atoms/Text'; // ✅ Use your custom Text
 import RememberForgot from '../../molecules/RememberForget';
 import {useNavigation} from '@react-navigation/native';
+import CustomDropdown from '../../atoms/Dropdown';
+import {useDispatch, useSelector} from 'react-redux';
+import {useTranslation} from 'react-i18next';
+import {setLanguage} from '../../../redux/slices/languageSlice';
+import {toggleTheme} from '../../../redux/slices/ThemeSlice';
+import {RootState} from '../../../redux/store';
+const languages = [
+  {label: 'English', value: 'en'},
+  {label: 'हिंदी', value: 'hi'},
+  {label: 'ગુજરાતી', value: 'gu'},
+];
 
 const LoginForm = () => {
   const navigation: any = useNavigation();
@@ -17,6 +28,18 @@ const LoginForm = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [remember, setRemember] = useState(false);
+
+  const dispatch = useDispatch();
+  const {t} = useTranslation();
+
+  const currentLanguage = useSelector(
+    (state: RootState) => state.language.language,
+  );
+
+  const handleLanguageChange = (value: string) => {
+    dispatch(setLanguage(value));
+    dispatch(toggleTheme());
+  };
 
   const handleLogin = async () => {
     setEmailError('');
@@ -42,13 +65,12 @@ const LoginForm = () => {
 
   return (
     <View style={styles.formContainer}>
-      <Text style={styles.title}>Login</Text>
-      <Text style={styles.subtitle}>
-        Welcome back! Please login to your account
-      </Text>
+      <Text label="login" style={styles.title} type="bold" />
+      <Text label="login_subtitle" style={styles.subtitle} />
+
       <View style={styles.inputContainer}>
         <Input
-          placeholder="Email"
+          placeholder="email"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -61,19 +83,22 @@ const LoginForm = () => {
           onChangeText={setPassword}
           error={passwordError}
         />
+
         <RememberForgot
           remember={remember}
           onCheckboxPress={() => setRemember(!remember)}
         />
       </View>
+
       <View style={styles.socialButtonsWrapper}>
         <Button
-          title="Login"
+          title="login"
           onPress={handleLogin}
           style={styles.loginButton}
         />
+
         <Button
-          title="Continue with Facebook"
+          title="continue_facebook"
           prefixLogo={
             <Image source={ICONS.FaceBook} style={styles.iconStyle} />
           }
@@ -81,22 +106,25 @@ const LoginForm = () => {
           bgColor="#3b5998"
           style={styles.button}
         />
+
         <Button
-          title="Continue with Google"
+          title="continue_google"
           prefixLogo={<Image source={ICONS.Google} style={styles.iconStyle} />}
           onPress={() => console.log('Google Login')}
           bgColor="#DB4437"
           style={styles.button}
         />
+
         <Button
-          title="Continue with GitHub"
+          title="continue_github"
           prefixLogo={<Image source={ICONS.Github} style={styles.iconStyle} />}
           onPress={() => console.log('GitHub Login')}
           bgColor="#24292e"
           style={styles.button}
         />
+
         <Button
-          title="Continue with LinkedIn"
+          title="continue_linkedin"
           prefixLogo={
             <Image source={ICONS.LinkedIn} style={styles.iconStyle} />
           }
@@ -106,12 +134,26 @@ const LoginForm = () => {
         />
 
         <View style={styles.dividerContainer}>
-          <Text style={styles.orText}>Do not have an Account ?</Text>
+          <Text label="no_account" style={styles.orText} />
           <TouchableOpacity
             onPress={() => navigation.navigate('RegisterScreen')}>
-            <Text style={styles.signUpText}>Registration</Text>
+            <Text label="register" style={styles.signUpText} type="semibold" />
           </TouchableOpacity>
         </View>
+
+        <CustomDropdown
+          label={t('select_language')}
+          data={languages.map(lang => lang.label)}
+          selectedValue={
+            languages.find(lang => lang.value === currentLanguage)?.label || ''
+          }
+          onSelect={label => {
+            const selected = languages.find(lang => lang.label === label);
+            if (selected) {
+              handleLanguageChange(selected.value);
+            }
+          }}
+        />
       </View>
     </View>
   );

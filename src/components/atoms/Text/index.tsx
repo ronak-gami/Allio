@@ -7,21 +7,26 @@ import {
   TextProps as RNTextProps,
 } from 'react-native';
 import {FONTS} from '../../../utils/helper';
+import {useTranslation} from 'react-i18next';
 
 interface TextProps extends RNTextProps {
-  children: React.ReactNode;
+  label?: string;
   style?: StyleProp<TextStyle>;
   numberOfLines?: number;
   onPress?: (event: GestureResponderEvent) => void;
   type?: string;
+  children?: React.ReactNode;
+  fontFamily?: string;
 }
 
 const Text: React.FC<TextProps> = ({
-  children,
+  label,
   style,
   numberOfLines,
   onPress,
   type = 'regular',
+  children,
+
   ...rest
 }) => {
   const getFontFamily = () => {
@@ -47,13 +52,18 @@ const Text: React.FC<TextProps> = ({
     }
   };
 
+
+  const {t} = useTranslation();
+
+  const content = label ? t(label) : children;
+
   return (
     <RNText
-      style={[{fontFamily: getFontFamily()}, style]}
+      style={ style}
       numberOfLines={numberOfLines}
       onPress={onPress}
       {...rest}>
-      {children}
+      {content}
     </RNText>
   );
 };
