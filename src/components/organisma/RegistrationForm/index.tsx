@@ -15,7 +15,13 @@ import PasswordField from '../../molecules/PasswordFields';
 import Button from '../../atoms/Button';
 import styles from './style';
 import {Text as PaperText} from 'react-native-paper';
-import {getAuth} from '@react-native-firebase/auth';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+} from '@react-native-firebase/auth';
+import {useDispatch} from 'react-redux';
+import {setStateKey} from '../../../redux/slices/AuthSlice';
+import {useNavigation} from '@react-navigation/native';
 
 const RegistrationForm = () => {
   const initialValues = {
@@ -27,16 +33,31 @@ const RegistrationForm = () => {
     confirmPassword: '',
   };
 
+  const dispatch = useDispatch();
+  const auth = getAuth();
+  const navigation = useNavigation();
+
   const handleRegister = async (values: typeof initialValues) => {
     try {
-      const auth = getAuth();
-      const userCredential = await auth.createUserWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
         values.email,
         values.password,
       );
-      console.log('-----------userCredential-----------', userCredential);
+      const user = userCredential.user;
+      if (user) {
+        const userData = {
+          uid: user.uid,
+          email: user.email,
+          displayName: `${values.firstName} ${values.lastName}`,
+          phoneNumber: values.mobileNo,
+        };
+        console.log('userData:', userData);
+        dispatch(setStateKey({key: 'userData', value: userData}));
+        navigation.navigate('Login');
+      }
     } catch (error) {
-      console.error('error into handleRegister :- ', error);
+      console.error('Error in handleRegister:', error);
     }
   };
 
