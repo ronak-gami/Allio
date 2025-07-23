@@ -1,29 +1,21 @@
 
-
-import React from 'react';
-import {Provider, useDispatch, useSelector} from 'react-redux';
-import {PaperProvider} from 'react-native-paper';
-import StackNavigator from './src/navigations/StackNavigation';
-import {PersistGate} from 'redux-persist/integration/react';
-import {persistor, RootState, store} from './src/redux/store';
+import React, { useEffect } from 'react';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { PaperProvider } from 'react-native-paper';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor, RootState } from './src/redux/store';
 import i18n from './src/assets/i18n';
-import {setLanguage} from './src/redux/slices/languageSlice';
-import {getThemeColors} from './src/utils/themes';
+import StackNavigator from './src/navigations/StackNavigation';
 
 const OnBeforeLift = () => {
   const dispatch = useDispatch();
-  const language = useSelector((state: any) => state.language.language);
+  const language = useSelector((state: RootState) => state.language.language);
 
   React.useEffect(() => {
     if (language) {
-      i18n.changeLanguage(language); // ✅ Restore language into i18n
+      i18n.changeLanguage(language);
     }
   }, [language]);
-
-  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
-  const themeColors = getThemeColors(isDarkMode);
-  console.log(isDarkMode);
-
   return null;
 };
 
