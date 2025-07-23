@@ -11,13 +11,17 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import EmailField from '../../molecules/EmailField';
 import Button from '../../atoms/Button';
-import {forgotPasswordSchema} from '../../../utils/validationSchema';
 import {scale} from 'react-native-size-matters';
 import style from './style';
 import {ICONS} from '../../../assets';
 import Text from '../../atoms/Text';
+import useValidation from '../../../utils/validationSchema';
+
+import {useNavigation} from '@react-navigation/native';
 
 const ForgotPasswordScreen: React.FC = () => {
+  const {forgotPasswordSchema} = useValidation();
+
   const handleForgotPassword = (values: {email: string}) => {
     // Perform API call here
     console.log('Reset email sent to:', values.email);

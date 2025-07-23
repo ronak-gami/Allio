@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import Input from '../../atoms/Input';
 import PasswordField from '../../molecules/PasswordFields';
 import Button from '../../atoms/Button';
-import { loginValidationSchema } from '../../../utils/validationSchema';
+
 import { ICONS } from '../../../assets';
 import styles from './style';
 import Text from '../../atoms/Text';
@@ -13,6 +13,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from '@react-native-firebase/auth';
+import useValidation from '../../../utils/validationSchema';
 import { useDispatch } from 'react-redux';
 import { setStateKey } from '../../../redux/slices/AuthSlice';
 import { Formik } from 'formik';
@@ -20,6 +21,7 @@ import { Formik } from 'formik';
 const LoginForm = () => {
   const navigation = useNavigation();
   const [remember, setRemember] = useState(false);
+  const { loginValidationSchema } = useValidation();
 
   const initialValues = {
     email: '',

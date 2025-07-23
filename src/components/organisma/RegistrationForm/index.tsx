@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { Formik } from 'formik';
-import { registrationValidationSchema } from '../../../utils/validationSchema';
 import FirstnameField from '../../molecules/FirstnameField';
 import LastnameField from '../../molecules/LastnameField';
 import MobilenoField from '../../molecules/MobileFiled';
@@ -22,6 +21,8 @@ import {
 } from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
 import { setStateKey } from '../../../redux/slices/AuthSlice';
+import useValidation from '../../../utils/validationSchema';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const RegistrationForm = () => {
   const initialValues = {
@@ -36,6 +37,7 @@ const RegistrationForm = () => {
   const dispatch = useDispatch();
   const auth = getAuth();
   const navigation = useNavigation();
+  const { registrationValidationSchema } = useValidation();
 
   const handleRegister = async (values: typeof initialValues) => {
     try {
@@ -118,7 +120,7 @@ const RegistrationForm = () => {
                   Already have an account?{' '}
                   <Text
                     style={styles.loginLink}
-                    onPress={() => navigation.navigate('LoginScreen')}>
+                    onPress={() => navigation.navigate('Login')}>
                     Login
                   </Text>
                 </Text>
