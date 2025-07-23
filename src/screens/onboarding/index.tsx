@@ -69,6 +69,7 @@ const OnboardingScreen = ({ navigation }: any) => {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         keyExtractor={item => item.id}
+        removeClippedSubviews={false}
         renderItem={({ item }) => (
           <Onboarding
             image={item.image}

@@ -9,14 +9,19 @@ import styles from './style';
 import Text from '../../atoms/Text';
 import RememberForgot from '../../molecules/RememberForget';
 import { useNavigation } from '@react-navigation/native';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import {
   getAuth,
   signInWithEmailAndPassword,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  signInWithCredential,
 } from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
 import { setStateKey } from '../../../redux/slices/AuthSlice';
 import { Formik } from 'formik';
-import FacebookButton from '../../molecules/FacebookButton';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
 const LoginForm = () => {
   const navigation = useNavigation();
   const [remember, setRemember] = useState(false);
@@ -45,6 +50,58 @@ const LoginForm = () => {
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
+      if (result.isCancelled) {
+        throw new Error('User cancelled the login process');
+      }
+      const data = await AccessToken.getCurrentAccessToken();
+      if (!data) {
+        throw new Error('Something went wrong obtaining access token');
+      }
+      const facebookCredential = FacebookAuthProvider.credential(
+        data.accessToken,
+      );
+      const userCredential = await signInWithCredential(
+        getAuth(),
+        facebookCredential,
+      );
+      const user = userCredential.user;
+      console.log('user: ', user);
+      const token = await user.getIdToken();
+      dispatch(setStateKey({ key: 'token', value: token }));
+      dispatch(setStateKey({ key: 'userData', value: user }));
+    } catch (error) {
+      console.error('Facebook Login Error:', error);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
+      await GoogleSignin.signIn();
+      const { idToken } = await GoogleSignin.getTokens();
+      if (!idToken) throw new Error('ID token is missing');
+      const credential = GoogleAuthProvider.credential(idToken);
+      const auth = getAuth();
+      const result = await signInWithCredential(auth, credential);
+      const user = result.user;
+
+      dispatch(setStateKey({ key: 'token', value: idToken }));
+      dispatch(setStateKey({ key: 'userData', value: user }));
+
+      console.log('Firebase User:', user);
+    } catch (error) {
+      console.error('Google Sign-In Error:', error);
     }
   };
 
@@ -90,11 +147,10 @@ const LoginForm = () => {
       <View style={styles.socialButtonsWrapper}>
         <Text style={styles.socialSignInText}>Social Sign-In</Text>
         <View style={styles.container}>
-          {/* <TouchableOpacity onPress={() => console.log('Facebook Login')}>
+          <TouchableOpacity onPress={handleFacebookLogin}>
             <Image source={ICONS.FaceBook} style={styles.icon} />
-          </TouchableOpacity> */}
-          <FacebookButton />
-          <TouchableOpacity onPress={() => console.log('Google Login')}>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleGoogleLogin}>
             <Image source={ICONS.Google} style={styles.icon} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => console.log('GitHub Login')}>
