@@ -5,8 +5,8 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from 'react-native';
-import {Formik} from 'formik';
-import {registrationValidationSchema} from '../../../utils/validationSchema';
+import { Formik } from 'formik';
+import { registrationValidationSchema } from '../../../utils/validationSchema';
 import FirstnameField from '../../molecules/FirstnameField';
 import LastnameField from '../../molecules/LastnameField';
 import MobilenoField from '../../molecules/MobileFiled';
@@ -14,14 +14,15 @@ import EmailField from '../../molecules/EmailField';
 import PasswordField from '../../molecules/PasswordFields';
 import Button from '../../atoms/Button';
 import styles from './style';
-import {Text as PaperText} from 'react-native-paper';
+import Text from '../../atoms/Text';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import {
   getAuth,
   createUserWithEmailAndPassword,
 } from '@react-native-firebase/auth';
-import {useDispatch} from 'react-redux';
-import {setStateKey} from '../../../redux/slices/AuthSlice';
-import {useNavigation} from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { setStateKey } from '../../../redux/slices/AuthSlice';
 
 const RegistrationForm = () => {
   const initialValues = {
@@ -53,7 +54,7 @@ const RegistrationForm = () => {
           phoneNumber: values.mobileNo,
         };
         console.log('userData:', userData);
-        dispatch(setStateKey({key: 'userData', value: userData}));
+        dispatch(setStateKey({ key: 'userData', value: userData }));
         navigation.navigate('Login');
       }
     } catch (error) {
@@ -62,18 +63,18 @@ const RegistrationForm = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <ScrollView contentContainerStyle={styles.container}>
         <Formik
           initialValues={initialValues}
           validationSchema={registrationValidationSchema}
           onSubmit={handleRegister}>
-          {({handleChange, handleSubmit, values, errors, touched}) => (
+          {({ handleChange, handleSubmit, values, errors, touched }) => (
             <View style={styles.formContainer}>
-              <PaperText style={styles.title}>Register</PaperText>
-              <PaperText style={styles.subtitle}>
+              <Text style={styles.title}>Register</Text>
+              <Text style={styles.subtitle}>
                 Create your account to get started
-              </PaperText>
+              </Text>
               <View style={styles.form}>
                 <FirstnameField
                   value={values.firstName}
@@ -114,10 +115,14 @@ const RegistrationForm = () => {
               />
 
               <TouchableOpacity>
-                <PaperText style={styles.loginText}>
+                <Text style={styles.loginText}>
                   Already have an account?{' '}
-                  <PaperText style={styles.loginLink}>Login</PaperText>
-                </PaperText>
+                  <Text
+                    style={styles.loginLink}
+                    onPress={() => navigation.navigate('LoginScreen')}>
+                    Login
+                  </Text>
+                </Text>
               </TouchableOpacity>
             </View>
           )}

@@ -25,11 +25,11 @@ const OnboardingScreen = ({navigation}: any) => {
     } else {
       await AsyncStorage.setItem('onboardingWatched', 'true');
       checkOnboardingStatus();
-      navigation.navigate('LoginScreen');
+      navigation.navigate('Login');
     }
   };
   const handleSkip = () => {
-    navigation.navigate('LoginScreen'); // Assuming you want to navigate to Login on skip
+    navigation.navigate('Login'); // Assuming you want to navigate to Login on skip
   };
   return (
     <View style={styles.container}>
@@ -42,6 +42,7 @@ const OnboardingScreen = ({navigation}: any) => {
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
+        removeClippedSubviews={false}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
           <Onboarding

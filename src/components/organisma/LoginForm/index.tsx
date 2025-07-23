@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
+import {Pressable} from 'react-native';
 import Input from '../../atoms/Input';
 import PasswordField from '../../molecules/PasswordFields';
 import Button from '../../atoms/Button';
 import {loginValidationSchema} from '../../../utils/validationSchema';
 import {ICONS} from '../../../assets';
 import styles from './style';
-import Text from '../../atoms/Text'; 
+import Text from '../../atoms/Text';
 import RememberForgot from '../../molecules/RememberForget';
 import {useNavigation} from '@react-navigation/native';
 
@@ -64,6 +65,7 @@ const LoginForm = () => {
         <RememberForgot
           remember={remember}
           onCheckboxPress={() => setRemember(!remember)}
+          onForgotPasswordPress={() => navigation.navigate('ForgotPassword')}
         />
       </View>
 
@@ -73,43 +75,21 @@ const LoginForm = () => {
           onPress={handleLogin}
           style={styles.loginButton}
         />
-
-        <Button
-          title="continue_facebook"
-          prefixLogo={
-            <Image source={ICONS.FaceBook} style={styles.iconStyle} />
-          }
-          onPress={() => console.log('Facebook Login')}
-          bgColor="#3b5998"
-          style={styles.button}
-        />
-
-        <Button
-          title="continue_google"
-          prefixLogo={<Image source={ICONS.Google} style={styles.iconStyle} />}
-          onPress={() => console.log('Google Login')}
-          bgColor="#DB4437"
-          style={styles.button}
-        />
-
-        <Button
-          title="continue_github"
-          prefixLogo={<Image source={ICONS.Github} style={styles.iconStyle} />}
-          onPress={() => console.log('GitHub Login')}
-          bgColor="#24292e"
-          style={styles.button}
-        />
-
-        <Button
-          title="continue_linkedin"
-          prefixLogo={
-            <Image source={ICONS.LinkedIn} style={styles.iconStyle} />
-          }
-          onPress={() => console.log('LinkedIn Login')}
-          bgColor="#0077b5"
-          style={styles.button}
-        />
-
+        <Text style={styles.socialSignInText}>Social Sign-In</Text>
+        <View style={styles.container}>
+          <Pressable onPress={() => console.log('Facebook Login')}>
+            <Image source={ICONS.FaceBook} style={styles.icon} />
+          </Pressable>
+          <Pressable onPress={() => console.log('Google Login')}>
+            <Image source={ICONS.Google} style={styles.icon} />
+          </Pressable>
+          <Pressable onPress={() => console.log('GitHub Login')}>
+            <Image source={ICONS.Github} style={styles.icon} />
+          </Pressable>
+          <Pressable onPress={() => console.log('LinkedIn Login')}>
+            <Image source={ICONS.LinkedIn} style={styles.icon} />
+          </Pressable>
+        </View>
         <View style={styles.dividerContainer}>
           <Text label="no_account" style={styles.orText} />
           <TouchableOpacity
