@@ -10,9 +10,9 @@ import { RootState } from '../redux/store';
 import { setDarkMode } from '../redux/slices/ThemeSlice';
 
 const StackNavigator: React.FC = () => {
-  const token = true;
+  const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
-  const colorScheme = useColorScheme(); 
+  const colorScheme = useColorScheme();
   const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
   const [isSplashVisible, setIsSplashVisible] = useState(true);
 

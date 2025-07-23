@@ -1,6 +1,5 @@
-
-import React, { useEffect } from 'react';
-import { Provider, useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { Provider, useSelector } from 'react-redux';
 import { PaperProvider } from 'react-native-paper';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor, RootState } from './src/redux/store';
@@ -8,8 +7,10 @@ import i18n from './src/assets/i18n';
 import StackNavigator from './src/navigations/StackNavigation';
 
 const OnBeforeLift = () => {
-  const dispatch = useDispatch();
-  const language = useSelector((state: RootState) => state.language.language);
+  const language = useSelector((state: RootState) => {
+    console.log('-------------state-------------', state);
+    return state.language.language;
+  });
 
   React.useEffect(() => {
     if (language) {

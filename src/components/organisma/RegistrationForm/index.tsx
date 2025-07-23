@@ -15,7 +15,6 @@ import PasswordField from '../../molecules/PasswordFields';
 import Button from '../../atoms/Button';
 import styles from './style';
 import Text from '../../atoms/Text';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import {
   getAuth,
@@ -58,7 +57,7 @@ const RegistrationForm = () => {
         navigation.navigate('Login');
       }
     } catch (error) {
-      console.error('Error in handleRegister:', error);
+      console.error('Error into handleRegister :- ', error);
     }
   };
 
