@@ -13,6 +13,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.black,
   },
+  logoutButton:  {
+      backgroundColor: COLORS.primary,
+    },
 });
 
 export default styles;

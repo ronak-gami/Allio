@@ -1,17 +1,19 @@
-
 import React, { useEffect } from 'react';
-import { Provider, useDispatch, useSelector } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { PaperProvider } from 'react-native-paper';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor, RootState } from './src/redux/store';
 import i18n from './src/assets/i18n';
 import StackNavigator from './src/navigations/StackNavigation';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const OnBeforeLift = () => {
-  const dispatch = useDispatch();
-  const language = useSelector((state: RootState) => state.language.language);
+  const language = useSelector((state: RootState) => {
+    console.log('-------------state-------------', state);
+    return state.language.language;
+  });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (language) {
       i18n.changeLanguage(language);
     }
@@ -20,6 +22,13 @@ const OnBeforeLift = () => {
 };
 
 const App = () => {
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '299086233123-40u7rfe1tdb4q5m7341rtdqo5qabf7eu.apps.googleusercontent.com',
+      offlineAccess: true,
+    });
+  }, []);
   return (
     <Provider store={store}>
       <PaperProvider>

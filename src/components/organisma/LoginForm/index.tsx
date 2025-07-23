@@ -1,42 +1,107 @@
-import React, {useState} from 'react';
-import {View, Image, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, TouchableOpacity } from 'react-native';
 import Input from '../../atoms/Input';
 import PasswordField from '../../molecules/PasswordFields';
 import Button from '../../atoms/Button';
-import {loginValidationSchema} from '../../../utils/validationSchema';
-import {ICONS} from '../../../assets';
+import { loginValidationSchema } from '../../../utils/validationSchema';
+import { ICONS } from '../../../assets';
 import styles from './style';
-import Text from '../../atoms/Text'; 
+import Text from '../../atoms/Text';
 import RememberForgot from '../../molecules/RememberForget';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  signInWithCredential,
+} from '@react-native-firebase/auth';
+import { useDispatch } from 'react-redux';
+import { setStateKey } from '../../../redux/slices/AuthSlice';
+import { Formik } from 'formik';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const LoginForm = () => {
-  const navigation: any = useNavigation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+  const navigation = useNavigation();
   const [remember, setRemember] = useState(false);
 
-  const handleLogin = async () => {
-    setEmailError('');
-    setPasswordError('');
+  const initialValues = {
+    email: '',
+    password: '',
+  };
 
+  const auth = getAuth();
+  const dispatch = useDispatch();
+
+  const handleLogin = async (values: typeof initialValues) => {
     try {
-      await loginValidationSchema.validate(
-        {email, password},
-        {abortEarly: false},
+      console.log('Login Function called');
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password,
       );
-      console.log({email, password});
-    } catch (err: any) {
-      if (err.inner) {
-        err.inner.forEach((validationError: any) => {
-          if (validationError.path === 'email')
-            setEmailError(validationError.message);
-          if (validationError.path === 'password')
-            setPasswordError(validationError.message);
-        });
+      const user = userCredential.user;
+      if (user) {
+        const token = await user.getIdToken();
+        console.log('Token:', token);
+        dispatch(setStateKey({ key: 'token', value: token }));
       }
+    } catch (error) {
+      console.error('Error into handleLogin :- ', error);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
+      if (result.isCancelled) {
+        throw new Error('User cancelled the login process');
+      }
+      const data = await AccessToken.getCurrentAccessToken();
+      if (!data) {
+        throw new Error('Something went wrong obtaining access token');
+      }
+      const facebookCredential = FacebookAuthProvider.credential(
+        data.accessToken,
+      );
+      const userCredential = await signInWithCredential(
+        getAuth(),
+        facebookCredential,
+      );
+      const user = userCredential.user;
+      console.log('user: ', user);
+      const token = await user.getIdToken();
+      dispatch(setStateKey({ key: 'token', value: token }));
+      dispatch(setStateKey({ key: 'userData', value: user }));
+    } catch (error) {
+      console.error('Facebook Login Error:', error);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
+      await GoogleSignin.signIn();
+      const { idToken } = await GoogleSignin.getTokens();
+      if (!idToken) throw new Error('ID token is missing');
+      const credential = GoogleAuthProvider.credential(idToken);
+      const auth = getAuth();
+      const result = await signInWithCredential(auth, credential);
+      const user = result.user;
+
+      dispatch(setStateKey({ key: 'token', value: idToken }));
+      dispatch(setStateKey({ key: 'userData', value: user }));
+
+      console.log('Firebase User:', user);
+    } catch (error) {
+      console.error('Google Sign-In Error:', error);
     }
   };
 
@@ -46,74 +111,58 @@ const LoginForm = () => {
       <Text label="login_subtitle" style={styles.subtitle} />
 
       <View style={styles.inputContainer}>
-        <Input
-          placeholder="email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          error={emailError}
-        />
-
-        <PasswordField
-          value={password}
-          onChangeText={setPassword}
-          error={passwordError}
-        />
-
-        <RememberForgot
-          remember={remember}
-          onCheckboxPress={() => setRemember(!remember)}
-        />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={loginValidationSchema}
+          onSubmit={handleLogin}>
+          {({ handleChange, handleSubmit, values, errors, touched }) => (
+            <>
+              <Input
+                placeholder="email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={values.email}
+                onChangeText={handleChange('email')}
+                error={touched.email ? errors.email : ''}
+              />
+              <PasswordField
+                value={values.password}
+                onChangeText={handleChange('password')}
+                error={touched.password ? errors.password : ''}
+              />
+              <RememberForgot
+                remember={remember}
+                onCheckboxPress={() => setRemember(!remember)}
+              />
+              <Button
+                title="login"
+                onPress={handleSubmit as () => void}
+                style={styles.loginButton}
+              />
+            </>
+          )}
+        </Formik>
       </View>
 
       <View style={styles.socialButtonsWrapper}>
-        <Button
-          title="login"
-          onPress={handleLogin}
-          style={styles.loginButton}
-        />
-
-        <Button
-          title="continue_facebook"
-          prefixLogo={
-            <Image source={ICONS.FaceBook} style={styles.iconStyle} />
-          }
-          onPress={() => console.log('Facebook Login')}
-          bgColor="#3b5998"
-          style={styles.button}
-        />
-
-        <Button
-          title="continue_google"
-          prefixLogo={<Image source={ICONS.Google} style={styles.iconStyle} />}
-          onPress={() => console.log('Google Login')}
-          bgColor="#DB4437"
-          style={styles.button}
-        />
-
-        <Button
-          title="continue_github"
-          prefixLogo={<Image source={ICONS.Github} style={styles.iconStyle} />}
-          onPress={() => console.log('GitHub Login')}
-          bgColor="#24292e"
-          style={styles.button}
-        />
-
-        <Button
-          title="continue_linkedin"
-          prefixLogo={
-            <Image source={ICONS.LinkedIn} style={styles.iconStyle} />
-          }
-          onPress={() => console.log('LinkedIn Login')}
-          bgColor="#0077b5"
-          style={styles.button}
-        />
-
+        <Text style={styles.socialSignInText}>Social Sign-In</Text>
+        <View style={styles.container}>
+          <TouchableOpacity onPress={handleFacebookLogin}>
+            <Image source={ICONS.FaceBook} style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleGoogleLogin}>
+            <Image source={ICONS.Google} style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => console.log('GitHub Login')}>
+            <Image source={ICONS.Github} style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => console.log('LinkedIn Login')}>
+            <Image source={ICONS.LinkedIn} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.dividerContainer}>
           <Text label="no_account" style={styles.orText} />
-          <TouchableOpacity
-            onPress={() => navigation.navigate('RegisterScreen')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
             <Text label="register" style={styles.signUpText} type="semibold" />
           </TouchableOpacity>
         </View>

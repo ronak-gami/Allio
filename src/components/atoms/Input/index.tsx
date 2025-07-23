@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TextInput as RNTextInput,
@@ -10,14 +10,14 @@ import {
   StyleProp,
   TextStyle,
 } from 'react-native';
-import {TextInput} from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
-import {useStyle} from './style';
-import {COLORS} from '../../../utils/color';
+import { useStyle } from './style';
+import { COLORS } from '../../../utils/color';
 import Text from '../Text';
-import {ICONS} from '../../../assets';
+import { ICONS } from '../../../assets';
 
 interface InputProps {
   placeholder: string;
@@ -97,7 +97,7 @@ const Input: React.FC<InputProps> = ({
         <TextInput.Icon
           icon={() => (
             <Image
-              source={isSecure ? ICONS.eye : ICONS.eyeOff}
+              source={isSecure ? ICONS.eyeOff : ICONS.eye}
               style={styles.icon}
             />
           )}
@@ -130,7 +130,7 @@ const Input: React.FC<InputProps> = ({
       style={[
         styles.inputField,
         multiline && styles.multiline,
-        backgroundColor ? {backgroundColor} : {},
+        backgroundColor ? { backgroundColor } : {},
       ]}
       outlineColor={error ? COLORS.error : COLORS.darkGray}
       activeOutlineColor={error ? COLORS.error : COLORS.primary}

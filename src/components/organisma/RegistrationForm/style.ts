@@ -5,9 +5,9 @@ import {COLORS} from '../../../utils/color';
 export default StyleSheet.create({
   formContainer: {
     backgroundColor: COLORS.white,
+    flex: 1,
   },
   container: {
-    flexGrow: 1,
     justifyContent: 'center',
     padding: scale(16),
     borderRadius: scale(8),
@@ -22,7 +22,7 @@ export default StyleSheet.create({
   },
   loginText: {
     marginTop: scale(20),
-    fontSize: scale(14),
+    fontSize: scale(18),
     textAlign: 'center',
     color: COLORS.gray,
   },
@@ -31,11 +31,10 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   loginButton: {
-    marginTop: scale(16),
     marginVertical: scale(6),
     backgroundColor: COLORS.primary,
-    borderRadius: scale(8),
     paddingVertical: scale(12),
+    marginTop: scale(16),
   },
   form: {
     justifyContent: 'center',

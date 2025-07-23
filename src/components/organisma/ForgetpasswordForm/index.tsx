@@ -1,26 +1,52 @@
 import React from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-  Image,
-} from 'react-native';
-import {Formik} from 'formik';
-import * as Yup from 'yup';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { Formik } from 'formik';
 import EmailField from '../../molecules/EmailField';
 import Button from '../../atoms/Button';
-import {forgotPasswordSchema} from '../../../utils/validationSchema';
-import {scale} from 'react-native-size-matters';
+import { forgotPasswordSchema } from '../../../utils/validationSchema';
+import { scale } from 'react-native-size-matters';
 import style from './style';
-import {ICONS} from '../../../assets';
 import Text from '../../atoms/Text';
+import auth from '@react-native-firebase/auth';
 
 const ForgotPasswordScreen: React.FC = () => {
-  const handleForgotPassword = (values: {email: string}) => {
-    // Perform API call here
-    console.log('Reset email sent to:', values.email);
+  const handleForgotPassword = async (values: { email: string }) => {
+    console.log(
+      'Initiating password reset for email:',
+      values.email.trim().toLowerCase(),
+    );
+    try {
+      if (!values.email) {
+        console.log('❌ No email provided!');
+        return { success: false, message: 'Please enter your email address.' };
+      }
+      console.log('🔍 Sending password reset email...');
+      await auth().sendPasswordResetEmail(values.email.trim().toLowerCase());
+      console.log(
+        '✅ Password reset email sent successfully to:',
+        values.email,
+      );
+      return {
+        success: true,
+        message: 'Password reset email sent successfully!',
+      };
+    } catch (error: any) {
+      console.error('❌ Error in sendPasswordReset:', error);
+      let message = 'Something went wrong';
+      if (error.code === 'auth/invalid-email') {
+        message = 'Invalid email address';
+        console.log('⚠️ Error: Invalid email format');
+      } else if (error.code === 'auth/user-not-found') {
+        message = 'No user found with this email';
+        console.log('⚠️ Error: Email does not exist in Firebase Auth');
+      } else if (error.code === 'auth/network-request-failed') {
+        message = 'Network error, check your internet connection';
+        console.log('⚠️ Error: Network failure');
+      } else {
+        console.log('⚠️ Unknown error:', error.code);
+      }
+      return { success: false, message };
+    }
   };
 
   return (
@@ -34,17 +60,10 @@ const ForgotPasswordScreen: React.FC = () => {
         {/* <Image source={ICONS.ArrowRight} style={{width: 24, height: 24}} /> */}
 
         <Formik
-          initialValues={{email: ''}}
+          initialValues={{ email: '' }}
           validationSchema={forgotPasswordSchema}
           onSubmit={handleForgotPassword}>
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-          }) => (
+          {({ handleChange, handleSubmit, values, errors, touched }) => (
             <View style={style.form}>
               <Text style={style.title}>Forgot Password</Text>
               <Text style={style.subtitle}>
