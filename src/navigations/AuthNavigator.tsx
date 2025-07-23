@@ -13,10 +13,10 @@ const AuthNavigator: React.FC = () => {
       screenOptions={{headerShown: false}}
       initialRouteName="Onboarding">
       <Stack.Screen name="Splash" component={SplashScreen} />
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="ForgetPassword" component={ForgotPassword} />
-      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Registration" component={RegisterScreen} />
+      <Stack.Screen name="ForgetPassword" component={ForgotPassword} />
     </Stack.Navigator>
   );
 };
