@@ -16,7 +16,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { setStateKey } from '../../../redux/slices/AuthSlice';
 import { Formik } from 'formik';
-
+import FacebookButton from '../../molecules/FacebookButton';
 const LoginForm = () => {
   const navigation = useNavigation();
   const [remember, setRemember] = useState(false);
@@ -76,9 +76,6 @@ const LoginForm = () => {
               <RememberForgot
                 remember={remember}
                 onCheckboxPress={() => setRemember(!remember)}
-                onForgotPasswordPress={() =>
-                  navigation.navigate('ForgotPassword')
-                }
               />
               <Button
                 title="login"
@@ -93,9 +90,10 @@ const LoginForm = () => {
       <View style={styles.socialButtonsWrapper}>
         <Text style={styles.socialSignInText}>Social Sign-In</Text>
         <View style={styles.container}>
-          <TouchableOpacity onPress={() => console.log('Facebook Login')}>
+          {/* <TouchableOpacity onPress={() => console.log('Facebook Login')}>
             <Image source={ICONS.FaceBook} style={styles.icon} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <FacebookButton />
           <TouchableOpacity onPress={() => console.log('Google Login')}>
             <Image source={ICONS.Google} style={styles.icon} />
           </TouchableOpacity>
