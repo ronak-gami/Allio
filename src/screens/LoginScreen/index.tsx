@@ -1,6 +1,5 @@
 import React from 'react';
 import { ScrollView, KeyboardAvoidingView, View } from 'react-native';
-import LoginForm from '../../components/organisms/LoginForm';
 import SignInWithGoogle from '../../components/molecules/SocialSignInGoogle';
 import SignInWithFacebook from '../../components/molecules/SocialSignInFacebook';
 import { useStyle } from './style';

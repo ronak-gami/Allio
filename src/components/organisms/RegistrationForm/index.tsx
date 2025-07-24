@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { Formik } from 'formik';
-import styles from './style';
 import { useNavigation } from '@react-navigation/native';
 import {
   getAuth,
@@ -18,13 +17,14 @@ import { setStateKey } from 'src/redux/slices/AuthSlice';
 import useValidation from '../../../utils/validationSchema';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AUTH } from '@utils/constant';
-import { registrationValidationSchema } from '@utils/validationSchema';
-import { Button, Text } from 'react-native-paper';
 import FirstnameField from '@components/molecules/FirstnameField';
 import LastnameField from '@components/molecules/LastnameField';
 import MobilenoField from '@components/molecules/MobileFiled';
 import EmailField from '@components/molecules/EmailField';
 import PasswordField from '@components/molecules/PasswordFields';
+import useStyle from './style';
+import Text from '@components/atoms/Text';
+import Button from '@components/atoms/Button';
 
 type RegistrationValues = {
   firstName: string;
@@ -37,6 +37,7 @@ type RegistrationValues = {
 
 const RegistrationForm = () => {
   const [loading, setLoading] = useState(false);
+
   const initialValues: RegistrationValues = {
     firstName: '',
     lastName: '',
@@ -45,10 +46,10 @@ const RegistrationForm = () => {
     password: '',
     confirmPassword: '',
   };
-
   const dispatch = useDispatch();
   const auth = getAuth();
   const navigation = useNavigation();
+  const styles=useStyle()
   const { registrationValidationSchema } = useValidation();
 
   const saveUserToFirestore = async (userId: string, userData: any) => {

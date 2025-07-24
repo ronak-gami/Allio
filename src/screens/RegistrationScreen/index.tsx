@@ -6,9 +6,9 @@ const RegisterScreen = () => {
   const styles=useStyle()
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-      <ScrollView contentContainerStyle={styles.container}>
+      {/* <ScrollView contentContainerStyle={styles.container}> */}
         <RegistrationForm />
-      </ScrollView>
+      {/* </ScrollView> */}
     </KeyboardAvoidingView>
   );
 };

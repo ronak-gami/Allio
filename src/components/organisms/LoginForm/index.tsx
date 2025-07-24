@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
 import { View, Pressable } from 'react-native';
-import Input from '../../atoms/Input';
-import PasswordField from '../../molecules/PasswordFields';
-import Button from '../../atoms/Button';
 import useValidation from '../../../utils/validationSchema';
-import { ICONS } from '../../../assets';
-import styles from './style';
 import { useNavigation } from '@react-navigation/native';
 import {
   signInWithEmailAndPassword,
@@ -16,7 +10,6 @@ import { Formik } from 'formik';
 import { checkUserExistsByEmail, getAllUsers } from '@utils/helper';
 import { setStateKey } from 'src/redux/slices/AuthSlice';
 import Text from '@components/atoms/Text';
-import { loginValidationSchema } from '@utils/validationSchema';
 import Input from '@components/atoms/Input';
 import PasswordField from '@components/molecules/PasswordFields';
 import RememberForgot from '@components/molecules/RememberForget';
@@ -27,6 +20,7 @@ import { COLORS } from '@utils/color';
 import Button from '@components/atoms/Button';
 import SignInWithFacebook from '../../molecules/SocialSignInFacebook';
 import SignInWithGoogle from '../../molecules/SocialSignInGoogle';
+import styles from './style'
 
 const LoginForm = () => {
   const navigation = useNavigation();
@@ -126,7 +120,10 @@ const LoginForm = () => {
         </View>
       </View>
     </View>
+    </>
   );
+  
 };
+
 
 export default LoginForm;
