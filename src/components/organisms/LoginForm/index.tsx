@@ -17,6 +17,7 @@ import {
   GoogleAuthProvider,
   signInWithCredential,
 } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import { useDispatch } from 'react-redux';
 import { setStateKey } from '../../../redux/slices/AuthSlice';
 import { Formik } from 'formik';
@@ -66,6 +67,7 @@ const LoginForm = () => {
 
   const handleFacebookLogin = async () => {
     try {
+      console.log('[Facebook] Login process started...');
       const result = await LoginManager.logInWithPermissions([
         'public_profile',
         'email',
@@ -85,10 +87,26 @@ const LoginForm = () => {
         facebookCredential,
       );
       const user = userCredential.user;
-      console.log('user: ', user);
+      console.log('[Facebook] Firebase Auth user:', user);
       const token = await user.getIdToken();
+      const userExists = await checkUserExistsByEmail(user.email);
+      const userData = {
+        firstName: user.displayName?.split(' ')[0] || '',
+        lastName: user.displayName?.split(' ')[1] || '',
+        email: user.email,
+        profileImage: user.photoURL || '',
+        provider: 'facebook',
+        createdAt: new Date().toISOString(),
+      };
+      if (!userExists) {
+        console.log('[Firestore] New Facebook user detected, saving...');
+        await firestore().collection('users').doc(user.uid).set(userData);
+        console.log('[Firestore] Facebook user added:', userData);
+      } else {
+        console.log('[Firestore] Facebook user already exists, skipping add.');
+      }
       dispatch(setStateKey({ key: 'token', value: token }));
-      dispatch(setStateKey({ key: 'userData', value: user }));
+      dispatch(setStateKey({ key: 'userData', value: userData }));
     } catch (error) {
       console.error('Facebook Login Error:', error);
     }
@@ -96,6 +114,7 @@ const LoginForm = () => {
 
   const handleGoogleLogin = async () => {
     try {
+      console.log('[Google] Login process started...');
       await GoogleSignin.hasPlayServices({
         showPlayServicesUpdateDialog: true,
       });
@@ -106,11 +125,26 @@ const LoginForm = () => {
       const auth = getAuth();
       const result = await signInWithCredential(auth, credential);
       const user = result.user;
-
+      console.log('-=-=-=-=-=-=-=-=-=-=', user);
+      console.log('[Google] Firebase Auth user:', user);
+      const userExists = await checkUserExistsByEmail(user.email);
+      const userData = {
+        firstName: user.displayName?.split(' ')[0] || '',
+        lastName: user.displayName?.split(' ')[1] || '',
+        email: user.email,
+        profileImage: user.photoURL || '',
+        provider: 'google',
+        createdAt: new Date().toISOString(),
+      };
+      if (!userExists) {
+        console.log('[Firestore] New Google user detected, saving...');
+        await firestore().collection('users').doc(user.uid).set(userData);
+        console.log('[Firestore] Google user added:', userData);
+      } else {
+        console.log('[Firestore] Google user already exists, skipping add.');
+      }
       dispatch(setStateKey({ key: 'token', value: idToken }));
-      dispatch(setStateKey({ key: 'userData', value: user }));
-
-      console.log('Firebase User:', user);
+      dispatch(setStateKey({ key: 'userData', value: userData }));
     } catch (error) {
       console.error('Google Sign-In Error:', error);
     }
