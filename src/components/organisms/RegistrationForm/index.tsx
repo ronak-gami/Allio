@@ -53,15 +53,12 @@ const RegistrationForm = () => {
   const saveUserToFirestore = async (userId: string, userData: any) => {
     try {
       await firestore().collection('users').doc(userId).set(userData);
-      console.log('[Firestore] User data saved successfully:', userData);
     } catch (error) {
-      console.error('[Firestore] Error saving user data:', error);
     }
   };
 
   const handleRegister = async (values: RegistrationValues) => {
     try {
-      console.log('[Register] Registration started...');
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         values.email,
@@ -69,7 +66,6 @@ const RegistrationForm = () => {
       );
       const user = userCredential.user;
       if (user) {
-        console.log('[Register] User created:', user.uid);
         const userData = {
           firstName: values.firstName,
           lastName: values.lastName,
@@ -78,7 +74,6 @@ const RegistrationForm = () => {
         };
         await saveUserToFirestore(user.uid, userData);
         dispatch(setStateKey({ key: 'userData', value: userData }));
-        console.log('[Register] Registration complete, navigating to Login...');
         navigation.navigate(AUTH.Login);
       }
     } catch (error: any) {
@@ -94,7 +89,7 @@ const RegistrationForm = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+    <KeyboardAvoidingView  behavior="padding">
       <ScrollView contentContainerStyle={styles.container}>
         <Formik
           initialValues={initialValues}
@@ -119,6 +114,7 @@ const RegistrationForm = () => {
                 />
                 <MobilenoField
                   value={values.mobileNo}
+              
                   onChangeText={handleChange('mobileNo')}
                   error={touched.mobileNo ? errors.mobileNo : ''}
                 />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View,
+  View,StyleSheet,
   TextInput as RNTextInput,
   Pressable,
   Image,
@@ -144,10 +144,10 @@ const Input: React.FC<InputProps> = ({
       }
       right={renderRightIcon()}
       theme={{
-        colors: {
-          text: COLORS.black,
-          placeholder: COLORS.gray,
-        },
+        // colors: {
+        //   text: COLORS.black,
+        //   placeholder: COLORS.gray,
+        // },
         roundness: 15,
       }}
       render={inputProps => (

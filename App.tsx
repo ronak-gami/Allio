@@ -9,7 +9,6 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const OnBeforeLift = () => {
   const language = useSelector((state: RootState) => {
-    console.log('-------------state-------------', state);
     return state.language.language;
   });
 

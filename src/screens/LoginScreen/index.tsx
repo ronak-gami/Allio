@@ -1,22 +1,22 @@
 import React from 'react';
-import { StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { ScrollView, KeyboardAvoidingView, View } from 'react-native';
 import LoginForm from '../../components/organisms/LoginForm';
+import SignInWithGoogle from '../../components/molecules/SocialSignInGoogle';
+import SignInWithFacebook from '../../components/molecules/SocialSignInFacebook';
+import { useStyle } from './style';
 
 const LoginScreen = () => {
+  const styles=useStyle()
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <ScrollView contentContainerStyle={styles.container}>
+     
         <LoginForm />
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    justifyContent: 'center',
-  },
-});
+
 
 export default LoginScreen;

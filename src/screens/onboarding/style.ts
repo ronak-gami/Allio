@@ -1,15 +1,18 @@
-import {StyleSheet} from 'react-native';
-import {COLORS} from '../../utils/color';
 
-const styles = StyleSheet.create({
+import {StyleSheet} from 'react-native';
+import { scale } from 'react-native-size-matters';
+import { COLORS } from '../../utils/color';
+
+export const useStyle = () => {
+  return StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
   },
   button: {
     backgroundColor: COLORS.primary,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    paddingVertical: scale(14),
+    paddingHorizontal: scale(24),
     borderRadius: 8,
     position: 'absolute',
     bottom: 50,
@@ -29,9 +32,8 @@ const styles = StyleSheet.create({
   },
   skipText: {
     color: COLORS.primary,
-    fontSize: 16,
+    fontSize: scale(16),
     fontWeight: '600',
   },
-});
-
-export default styles;
+  });
+};

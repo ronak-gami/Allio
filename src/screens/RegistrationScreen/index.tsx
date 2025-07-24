@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
+import {  ScrollView, KeyboardAvoidingView } from 'react-native';
 import RegistrationForm from '../../components/organisms/RegistrationForm';
-
+import { useStyle } from './style';
 const RegisterScreen = () => {
+  const styles=useStyle()
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <ScrollView contentContainerStyle={styles.container}>
@@ -11,12 +12,5 @@ const RegisterScreen = () => {
     </KeyboardAvoidingView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    justifyContent: 'center',
-  },
-});
 
 export default RegisterScreen;

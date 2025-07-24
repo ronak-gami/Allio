@@ -7,14 +7,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputField: {
-    fontFamily: 'WinkyRough-Regular',
+    fontFamily: '',
     fontSize: scale(14),
     backgroundColor: COLORS.white,
   },
   textInput: {
     fontFamily: 'WinkyRough-Regular',
     fontSize: scale(14),
-    color: COLORS.black,
+    color: COLORS.error,
   },
   multiline: {
     minHeight: 100,

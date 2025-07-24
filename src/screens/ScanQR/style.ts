@@ -1,18 +1,19 @@
-import {StyleSheet} from 'react-native';
-import {COLORS} from '../../utils/color';
+import { StyleSheet } from 'react-native';
+import { COLORS } from '../../utils/color';
+import { scale } from 'react-native-size-matters';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.black,
-  },
-});
-
-export default styles;
+export const useStyle = () => {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: COLORS.white,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    title: {
+      fontSize: scale(16),
+      fontWeight: 'bold',
+      color: COLORS.black,
+    },
+  });
+};

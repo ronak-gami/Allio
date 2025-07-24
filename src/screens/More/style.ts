@@ -1,21 +1,23 @@
-import {StyleSheet} from 'react-native';
+
 import {COLORS} from '../../utils/color';
+import { scale } from 'react-native-size-matters';
+import {StyleSheet} from 'react-native';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.black,
-  },
-  logoutButton:  {
-      backgroundColor: COLORS.primary,
+export const useStyle = () => {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: COLORS.white,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
-});
-
-export default styles;
+    title: {
+      fontSize: scale(16),
+      fontWeight: 'bold',
+      color: COLORS.black,
+    },
+    logoutButton:  {
+        backgroundColor: COLORS.primary,
+      },
+  });
+};

@@ -9,11 +9,12 @@ import {
 import Onboarding from '../../components/atoms/CustomOnboarding';
 import { onboardingData } from '../../utils/constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import styles from './style';
+import { useStyle } from './style';
 import { useDispatch } from 'react-redux';
 import { setStateKey } from '../../redux/slices/AuthSlice';
 
 const OnboardingScreen = ({ navigation }: any) => {
+  const styles=useStyle()
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
