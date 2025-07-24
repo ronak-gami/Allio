@@ -8,7 +8,7 @@
       "@navigations": ["src/navigations/*"],
       "@screens/*": ["src/screens/*"],
       "@utils/*": ["src/utils/*"],
-      "@store/*": ["src/store/*"]
+      "@redux/*": ["src/redux/*"]
     }
   }
 }

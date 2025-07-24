@@ -35,33 +35,3 @@ const CustomLoader: React.FC<LoaderProps> = ({
 };
 
 export default CustomLoader;
-
-// Usage Example:
-/*
-import React, { useState } from 'react';
-import { View, Button } from 'react-native';
-import CustomLoader from './CustomLoader';
-
-const App = () => {
-  const [loading, setLoading] = useState(false);
-
-  const handlePress = () => {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 3000);
-  };
-
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Button title="Show Loader" onPress={handlePress} />
-      <CustomLoader 
-        visible={loading}
-        text="Please wait..."
-        size="large"
-        color="#007AFF"
-      />
-    </View>
-  );
-};
-
-export default App;
-*/
