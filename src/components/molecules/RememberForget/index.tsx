@@ -11,6 +11,7 @@ import { Checkbox } from 'react-native-paper';
 import { COLORS } from '../../../utils/color';
 import { scale } from 'react-native-size-matters';
 import { useNavigation } from '@react-navigation/native';
+import { AUTH } from '../../../utils/constant';
 
 interface RememberForgotProps {
   remember: boolean;
@@ -36,7 +37,7 @@ const RememberForgot: React.FC<RememberForgotProps> = ({
       />
 
       <Pressable
-        onPress={() => navigation.navigate('ForgetPassword')}
+        onPress={() => navigation.navigate(AUTH.ForgotPassword)}
         style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}>
         <Text style={Styles.forgotpassText}>Forgot Password?</Text>
       </Pressable>

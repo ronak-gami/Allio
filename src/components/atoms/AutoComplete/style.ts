@@ -2,9 +2,8 @@ import {StyleSheet} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from '../../../utils/color';
 
-export const useStyle = () =>
-  StyleSheet.create({
-    container: {
+const styles = StyleSheet.create({
+  container: {
       width: '100%',
     },
     input: {
@@ -33,4 +32,5 @@ export const useStyle = () =>
       fontSize: scale(12),
       fontFamily: 'WinkyRough-Regular',
     },
-  });
+});
+export default styles;

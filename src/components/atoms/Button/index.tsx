@@ -8,11 +8,9 @@ import {
   StyleProp,
 } from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
-import {useStyle} from './style';
-import {COLORS} from '../../../utils/color';
+import { COLORS } from '../../../utils/color';
 import Text from '../Text';
-
-const styles = useStyle();
+import styles from './style';
 
 interface ButtonProps {
   title: string;
@@ -73,7 +71,7 @@ const Button: React.FC<ButtonProps> = ({
   }
 
   if (disabled || loading) {
-    wrapperStyles.push({opacity: 0.6});
+    wrapperStyles.push({ opacity: 0.6 });
   }
 
   if (style) {
@@ -91,7 +89,7 @@ const Button: React.FC<ButtonProps> = ({
         ) : (
           <View style={styles.content}>
             {prefixLogo && <View style={styles.icon}>{prefixLogo}</View>}
-            <Text style={[styles.text, {color: currentTextColor}]}>
+            <Text style={[styles.text, { color: currentTextColor }]}>
               {title}
             </Text>
             {postfixLogo && <View style={styles.icon}>{postfixLogo}</View>}

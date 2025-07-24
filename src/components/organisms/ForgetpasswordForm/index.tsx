@@ -8,24 +8,31 @@ import { scale } from 'react-native-size-matters';
 import style from './style';
 import Text from '../../atoms/Text';
 import auth from '@react-native-firebase/auth';
+import { checkUserExistsByEmail } from '../../../utils/helper';
 
 const ForgotPasswordScreen: React.FC = () => {
   const handleForgotPassword = async (values: { email: string }) => {
-    console.log(
-      'Initiating password reset for email:',
-      values.email.trim().toLowerCase(),
-    );
+    const email = values.email.trim().toLowerCase();
+    console.log('Initiating password reset for email:', email);
+
     try {
-      if (!values.email) {
+      if (!email) {
         console.log('❌ No email provided!');
         return { success: false, message: 'Please enter your email address.' };
       }
-      console.log('🔍 Sending password reset email...');
-      await auth().sendPasswordResetEmail(values.email.trim().toLowerCase());
-      console.log(
-        '✅ Password reset email sent successfully to:',
-        values.email,
-      );
+
+      console.log('🔍 Checking if user exists in Firestore...');
+      const userExists = await checkUserExistsByEmail(email);
+
+      if (!userExists) {
+        console.log('❌ User not found in Firestore');
+        return { success: false, message: 'No user found with this email.' };
+      }
+
+      console.log('✅ User found, sending password reset email...');
+      await auth().sendPasswordResetEmail(email);
+
+      console.log('✅ Password reset email sent successfully to:', email);
       return {
         success: true,
         message: 'Password reset email sent successfully!',

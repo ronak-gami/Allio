@@ -6,17 +6,18 @@ import {
   Text,
   ImageSourcePropType,
 } from 'react-native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/Home';
 import PhotoMedia from '../screens/PhotoMedia';
 import ScanQR from '../screens/ScanQR';
 import VideoMedia from '../screens/VideoMedia';
 import MoreScreens from '../screens/More';
-import {IMAGES} from '../assets';
-import {height} from '../utils/helper';
-import {COLORS} from '../utils/color';
-import {scale} from 'react-native-size-matters';
-import {BottomTabNavigationOptions} from '@react-navigation/bottom-tabs';
+import { IMAGES } from '../assets';
+import { height } from '../utils/helper';
+import { COLORS } from '../utils/color';
+import { scale } from 'react-native-size-matters';
+import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
+import { HOME } from '../utils/constant';
 
 export type BottomTabParamList = {
   Home: undefined;
@@ -46,7 +47,7 @@ const TabNavigator: React.FC = () => {
   const screenOptions = ({
     route,
   }: {
-    route: {name: keyof BottomTabParamList};
+    route: { name: keyof BottomTabParamList };
   }): BottomTabNavigationOptions => ({
     headerShown: false,
     tabBarHideOnKeyboard: true,
@@ -54,21 +55,21 @@ const TabNavigator: React.FC = () => {
       height: Platform.OS === 'ios' ? height * 0.1 : height * 0.075,
       backgroundColor: COLORS.primary,
     },
-    tabBarIcon: ({focused}) => (
+    tabBarIcon: ({ focused }) => (
       <Image
         source={getIconByRouteName(route.name)}
         style={[
           styles.tabIcon,
-          {tintColor: focused ? COLORS.black : COLORS.lightgray},
+          { tintColor: focused ? COLORS.black : COLORS.lightgray },
         ]}
         resizeMode="contain"
       />
     ),
-    tabBarLabel: ({focused}) => (
+    tabBarLabel: ({ focused }) => (
       <Text
         style={[
           styles.tabLabel,
-          {color: focused ? COLORS.black : COLORS.lightgray},
+          { color: focused ? COLORS.black : COLORS.lightgray },
         ]}>
         {route.name}
       </Text>
@@ -77,11 +78,11 @@ const TabNavigator: React.FC = () => {
 
   return (
     <Tab.Navigator screenOptions={screenOptions}>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Photo" component={PhotoMedia} />
-      <Tab.Screen name="ScanQR" component={ScanQR} />
-      <Tab.Screen name="Video" component={VideoMedia} />
-      <Tab.Screen name="More" component={MoreScreens} />
+      <Tab.Screen name={HOME.Home} component={HomeScreen} />
+      <Tab.Screen name={HOME.Photo} component={PhotoMedia} />
+      <Tab.Screen name={HOME.ScanQR} component={ScanQR} />
+      <Tab.Screen name={HOME.Video} component={VideoMedia} />
+      <Tab.Screen name={HOME.More} component={MoreScreens} />
     </Tab.Navigator>
   );
 };

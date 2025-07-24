@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
-import LoginForm from '../../components/organisma/LoginForm';
+import LoginForm from '../../components/organisms/LoginForm';
 
 const LoginScreen = () => {
   return (

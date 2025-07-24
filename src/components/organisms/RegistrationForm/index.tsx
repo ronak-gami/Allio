@@ -20,11 +20,22 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
 } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import { useDispatch } from 'react-redux';
 import { setStateKey } from '../../../redux/slices/AuthSlice';
+import { AUTH } from '../../../utils/constant';
+
+type RegistrationValues = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobileNo: string;
+  password: string;
+  confirmPassword: string;
+};
 
 const RegistrationForm = () => {
-  const initialValues = {
+  const initialValues: RegistrationValues = {
     firstName: '',
     lastName: '',
     email: '',
@@ -37,8 +48,18 @@ const RegistrationForm = () => {
   const auth = getAuth();
   const navigation = useNavigation();
 
-  const handleRegister = async (values: typeof initialValues) => {
+  const saveUserToFirestore = async (userId: string, userData: any) => {
     try {
+      await firestore().collection('users').doc(userId).set(userData);
+      console.log('[Firestore] User data saved successfully:', userData);
+    } catch (error) {
+      console.error('[Firestore] Error saving user data:', error);
+    }
+  };
+
+  const handleRegister = async (values: RegistrationValues) => {
+    try {
+      console.log('[Register] Registration started...');
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         values.email,
@@ -46,18 +67,27 @@ const RegistrationForm = () => {
       );
       const user = userCredential.user;
       if (user) {
+        console.log('[Register] User created:', user.uid);
         const userData = {
-          uid: user.uid,
-          email: user.email,
-          displayName: `${values.firstName} ${values.lastName}`,
-          phoneNumber: values.mobileNo,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          mobileNo: values.mobileNo,
         };
-        console.log('userData:', userData);
+        await saveUserToFirestore(user.uid, userData);
         dispatch(setStateKey({ key: 'userData', value: userData }));
-        navigation.navigate('Login');
+        console.log('[Register] Registration complete, navigating to Login...');
+        navigation.navigate(AUTH.Login);
       }
-    } catch (error) {
-      console.error('Error into handleRegister :- ', error);
+    } catch (error: any) {
+      console.error('[Register] Error:', error);
+      if (error.code === 'auth/email-already-in-use') {
+        console.error('Email already in use');
+      } else if (error.code === 'auth/invalid-email') {
+        console.error('Invalid email format');
+      } else {
+        console.error('Something went wrong:', error.message);
+      }
     }
   };
 
@@ -118,7 +148,7 @@ const RegistrationForm = () => {
                   Already have an account?{' '}
                   <Text
                     style={styles.loginLink}
-                    onPress={() => navigation.navigate('LoginScreen')}>
+                    onPress={() => navigation.navigate(AUTH.Login)}>
                     Login
                   </Text>
                 </Text>
