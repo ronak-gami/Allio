@@ -1,11 +1,16 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView, KeyboardAvoidingView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+} from 'react-native';
 
-import ForgotPasswordScreen from '../../components/organisma/ForgetpasswordForm';
+import ForgotPasswordScreen from '../../components/organisms/ForgetpasswordForm';
 
 const ForgotPassword = () => {
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <ScrollView contentContainerStyle={styles.container}>
         <ForgotPasswordScreen />
       </ScrollView>

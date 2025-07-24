@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
-import {View, TouchableOpacity, Modal, FlatList, Image} from 'react-native';
-import {useStyle} from './style';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Modal, FlatList, Image } from 'react-native';
 import Text from '../Text';
-import {COLORS} from '../../../utils/color';
-import {ICONS} from '../../../assets';
+import { COLORS } from '../../../utils/color';
+import { ICONS } from '../../../assets';
+import styles from './style';
 
 interface DropdownProps {
   label: string;
@@ -22,7 +22,6 @@ const CustomDropdown: React.FC<DropdownProps> = ({
   error,
   touched,
 }) => {
-  const styles = useStyle();
   const [visible, setVisible] = useState(false);
 
   const handleSelect = (item: string) => {
@@ -37,7 +36,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
       <TouchableOpacity
         style={[
           styles.dropdown,
-          error && touched ? {borderColor: COLORS.error} : {},
+          error && touched ? { borderColor: COLORS.error } : {},
         ]}
         onPress={() => setVisible(true)}
         activeOpacity={0.7}>
@@ -57,7 +56,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
             <FlatList
               data={data}
               keyExtractor={item => item}
-              renderItem={({item, index}) => (
+              renderItem={({ item, index }) => (
                 <TouchableOpacity
                   style={[
                     styles.item,

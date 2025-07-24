@@ -1,21 +1,26 @@
 import React from 'react';
-import {View, Pressable, StyleSheet, StyleProp, TextStyle} from 'react-native';
+import {
+  View,
+  Pressable,
+  StyleSheet,
+  StyleProp,
+  TextStyle,
+} from 'react-native';
 import Text from '../../atoms/Text';
-import {Checkbox} from 'react-native-paper';
-import {COLORS} from '../../../utils/color';
-import {scale} from 'react-native-size-matters';
-import {useNavigation} from '@react-navigation/native';
+import { Checkbox } from 'react-native-paper';
+import { COLORS } from '../../../utils/color';
+import { scale } from 'react-native-size-matters';
+import { useNavigation } from '@react-navigation/native';
+import { AUTH } from '../../../utils/constant';
 
 interface RememberForgotProps {
   remember: boolean;
   onCheckboxPress: () => void;
-  onForgotPasswordPress: () => void;
 }
 
 const RememberForgot: React.FC<RememberForgotProps> = ({
   remember,
   onCheckboxPress,
-  onForgotPasswordPress,
 }) => {
   const navigation: any = useNavigation();
 
@@ -32,8 +37,8 @@ const RememberForgot: React.FC<RememberForgotProps> = ({
       />
 
       <Pressable
-        onPress={onForgotPasswordPress}
-        style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}>
+        onPress={() => navigation.navigate(AUTH.ForgotPassword)}
+        style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}>
         <Text style={Styles.forgotpassText}>Forgot Password?</Text>
       </Pressable>
     </View>

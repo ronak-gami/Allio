@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, ScrollView, KeyboardAvoidingView} from 'react-native';
-import LoginForm from '../../components/organisma/LoginForm';
+import { StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
+import LoginForm from '../../components/organisms/LoginForm';
 
 const LoginScreen = () => {
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <ScrollView contentContainerStyle={styles.container}>
         <LoginForm />
       </ScrollView>

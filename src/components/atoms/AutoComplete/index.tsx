@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {View, FlatList, TouchableOpacity, Text} from 'react-native';
-import {useStyle} from './style';
+import React, { useState } from 'react';
+import { View, FlatList, TouchableOpacity, Text } from 'react-native';
 import Input from '../Input';
+import styles from './style';
 
 interface AutoCompleteProps {
   data: string[];
@@ -18,7 +18,6 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({
   error,
   touched,
 }) => {
-  const styles = useStyle();
   const [query, setQuery] = useState('');
   const [filteredData, setFilteredData] = useState<string[]>([]);
 
@@ -63,7 +62,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({
           data={filteredData}
           keyExtractor={(item, index) => index.toString()}
           keyboardShouldPersistTaps="handled"
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.item}
               onPress={() => handleSelect(item)}>
