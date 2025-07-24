@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import styles from './style';
-import { COLORS } from '../../../utils/color';
+import { COLORS } from '@utils/color';
 
 interface LoaderProps {
   visible: boolean;

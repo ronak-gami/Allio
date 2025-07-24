@@ -1,6 +1,6 @@
+import Input from '@components/atoms/Input';
 import React from 'react';
-import {StyleProp, TextStyle} from 'react-native';
-import Input from '../../atoms/Input';
+import { StyleProp, TextStyle } from 'react-native';
 
 interface LastnameFieldProps {
   value: string;

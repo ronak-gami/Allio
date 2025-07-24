@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, ImageSourcePropType} from 'react-native';
+import { View, Text, Image, ImageSourcePropType } from 'react-native';
 import styles from './style';
 
 export interface OnboardingScreenProps {
@@ -8,7 +8,7 @@ export interface OnboardingScreenProps {
   description: string;
 }
 
-const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
+const CustomOnboarding: React.FC<OnboardingScreenProps> = ({
   image,
   title,
   description,
@@ -22,4 +22,4 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({
   );
 };
 
-export default OnboardingScreen;
+export default CustomOnboarding;

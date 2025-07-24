@@ -6,12 +6,12 @@ import {
   Text,
   ActivityIndicator,
 } from 'react-native';
-import Onboarding from '../../../components/atoms/CustomOnboarding';
-import { onboardingData } from '../../../utils/constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
-import { setStateKey } from '../../../redux/slices/AuthSlice';
 import useStyle from './style';
+import CustomOnboarding from '@components/atoms/CustomOnboarding';
+import { onboardingData } from '@utils/constant';
+import { setStateKey } from 'src/redux/slices/AuthSlice';
 
 const OnboardingScreen = ({ navigation }: any) => {
   const styles = useStyle();
@@ -72,7 +72,7 @@ const OnboardingScreen = ({ navigation }: any) => {
         keyExtractor={item => item.id}
         removeClippedSubviews={false}
         renderItem={({ item }) => (
-          <Onboarding
+          <CustomOnboarding
             image={item.image}
             title={item.title}
             description={item.description}

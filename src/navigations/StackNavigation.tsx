@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { useColorScheme } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import SplashScreen from '../screens/Auth/Splash';
 import HomeNavigator from './HomeNavigator';
 import AuthNavigator from './AuthNavigator';
-import { DarkTheme, LightTheme } from '../utils/themes';
-import { RootState } from '../redux/store';
-import { setDarkMode } from '../redux/slices/ThemeSlice';
+import SplashScreen from '@screens/Auth/Splash';
+import { LightTheme } from '@utils/themes';
+import { RootState } from 'src/redux/store';
+import { setDarkMode } from 'src/redux/slices/ThemeSlice';
 
 const StackNavigator: React.FC = () => {
   const token = useSelector((state: RootState) => state.auth.token);

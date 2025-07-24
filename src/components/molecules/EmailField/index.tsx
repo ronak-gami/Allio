@@ -1,8 +1,6 @@
+import Input from '@components/atoms/Input';
 import React from 'react';
-import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
-import {scale} from 'react-native-size-matters';
-import {COLORS} from '../../../utils/color';
-import Input from '../../atoms/Input';
+import { TextStyle, ViewStyle } from 'react-native';
 
 interface EmailFieldProps {
   value: string;
@@ -31,12 +29,3 @@ const EmailField: React.FC<EmailFieldProps> = ({
 };
 
 export default EmailField;
-
-const styles = StyleSheet.create({
-  emailText: {
-    alignSelf: 'flex-start',
-    fontSize: scale(14),
-    fontWeight: '400',
-    color: COLORS.gray,
-  },
-});

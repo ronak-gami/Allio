@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
-import ForgotPasswordForm from '../../../components/organisms/ForgetpasswordForm';
 import useStyle from './style';
+import ForgotPasswordForm from '@components/organisms/ForgetpasswordForm';
 
 const ForgotPassword = () => {
   const styles = useStyle();

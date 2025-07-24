@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
-import Text from '../../atoms/Text';
-import { COLORS } from '../../../utils/color';
 import { scale } from 'react-native-size-matters';
 import { useNavigation } from '@react-navigation/native';
-import { AUTH } from '../../../utils/constant';
-import CustomCheckBox from '../../atoms/CheckBox';
+import CustomCheckBox from '@components/atoms/CheckBox';
+import Text from '@components/atoms/Text';
+import { COLORS } from '@utils/color';
 
 interface RememberForgotProps {
   remember: boolean;

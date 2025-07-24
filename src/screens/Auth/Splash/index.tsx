@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image } from 'react-native';
-import { IMAGES } from '../../../assets';
 import useStyle from './style';
+import { IMAGES } from '@assets/index';
 
 const SplashScreen = () => {
   const styles = useStyle();

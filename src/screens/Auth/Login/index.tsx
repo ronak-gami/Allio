@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
-import LoginForm from '../../../components/organisms/LoginForm';
 import useStyle from './style';
+import LoginForm from '@components/organisms/LoginForm';
 
 const LoginScreen = () => {
   const styles = useStyle();

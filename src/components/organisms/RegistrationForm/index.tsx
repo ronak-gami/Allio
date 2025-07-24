@@ -6,15 +6,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { Formik } from 'formik';
-import { registrationValidationSchema } from '../../../utils/validationSchema';
-import FirstnameField from '../../molecules/FirstnameField';
-import LastnameField from '../../molecules/LastnameField';
-import MobilenoField from '../../molecules/MobileFiled';
-import EmailField from '../../molecules/EmailField';
-import PasswordField from '../../molecules/PasswordFields';
-import Button from '../../atoms/Button';
 import styles from './style';
-import Text from '../../atoms/Text';
 import { useNavigation } from '@react-navigation/native';
 import {
   getAuth,
@@ -22,8 +14,15 @@ import {
 } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useDispatch } from 'react-redux';
-import { setStateKey } from '../../../redux/slices/AuthSlice';
-import { AUTH } from '../../../utils/constant';
+import { setStateKey } from 'src/redux/slices/AuthSlice';
+import { AUTH } from '@utils/constant';
+import { registrationValidationSchema } from '@utils/validationSchema';
+import { Button, Text } from 'react-native-paper';
+import FirstnameField from '@components/molecules/FirstnameField';
+import LastnameField from '@components/molecules/LastnameField';
+import MobilenoField from '@components/molecules/MobileFiled';
+import EmailField from '@components/molecules/EmailField';
+import PasswordField from '@components/molecules/PasswordFields';
 
 type RegistrationValues = {
   firstName: string;
