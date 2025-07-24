@@ -23,6 +23,7 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import { useDispatch } from 'react-redux';
 import { setStateKey } from '../../../redux/slices/AuthSlice';
+import { AUTH } from '../../../utils/constant';
 
 type RegistrationValues = {
   firstName: string;
@@ -76,7 +77,7 @@ const RegistrationForm = () => {
         await saveUserToFirestore(user.uid, userData);
         dispatch(setStateKey({ key: 'userData', value: userData }));
         console.log('[Register] Registration complete, navigating to Login...');
-        navigation.navigate('Login');
+        navigation.navigate(AUTH.Login);
       }
     } catch (error: any) {
       console.error('[Register] Error:', error);
@@ -147,7 +148,7 @@ const RegistrationForm = () => {
                   Already have an account?{' '}
                   <Text
                     style={styles.loginLink}
-                    onPress={() => navigation.navigate('Login')}>
+                    onPress={() => navigation.navigate(AUTH.Login)}>
                     Login
                   </Text>
                 </Text>

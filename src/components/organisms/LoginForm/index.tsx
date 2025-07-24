@@ -22,6 +22,7 @@ import { setStateKey } from '../../../redux/slices/AuthSlice';
 import { Formik } from 'formik';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { checkUserExistsByEmail, getAllUsers } from '../../../utils/helper';
+import { AUTH } from '../../../utils/constant';
 
 const LoginForm = () => {
   const navigation = useNavigation();
@@ -172,7 +173,7 @@ const LoginForm = () => {
         </View>
         <View style={styles.dividerContainer}>
           <Text label="no_account" style={styles.orText} />
-          <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
+          <TouchableOpacity onPress={() => navigation.navigate(AUTH.Register)}>
             <Text label="register" style={styles.signUpText} type="semibold" />
           </TouchableOpacity>
         </View>
