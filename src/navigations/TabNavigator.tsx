@@ -7,11 +7,11 @@ import {
   ImageSourcePropType,
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/Home';
-import PhotoMedia from '../screens/PhotoMedia';
-import ScanQR from '../screens/ScanQR';
-import VideoMedia from '../screens/VideoMedia';
-import MoreScreens from '../screens/More';
+import HomeScreen from '../screens/App/Home';
+import PhotoMedia from '../screens/App/PhotoMedia';
+import ScanQR from '../screens/App/ScanQR';
+import VideoMedia from '../screens/App/VideoMedia';
+import MoreScreens from '../screens/App/More';
 import { IMAGES } from '../assets';
 import { height } from '../utils/helper';
 import { COLORS } from '../utils/color';

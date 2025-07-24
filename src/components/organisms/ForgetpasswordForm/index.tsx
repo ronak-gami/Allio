@@ -10,7 +10,7 @@ import Text from '../../atoms/Text';
 import auth from '@react-native-firebase/auth';
 import { checkUserExistsByEmail } from '../../../utils/helper';
 
-const ForgotPasswordScreen: React.FC = () => {
+const ForgotPasswordForm: React.FC = () => {
   const handleForgotPassword = async (values: { email: string }) => {
     const email = values.email.trim().toLowerCase();
     console.log('Initiating password reset for email:', email);
@@ -59,7 +59,7 @@ const ForgotPasswordScreen: React.FC = () => {
   return (
     <KeyboardAvoidingView
       style={style.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={scale(60)}>
       <ScrollView
         contentContainerStyle={style.scrollView}
@@ -96,4 +96,4 @@ const ForgotPasswordScreen: React.FC = () => {
   );
 };
 
-export default ForgotPasswordScreen;
+export default ForgotPasswordForm;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useColorScheme } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import SplashScreen from '../screens/splash';
+import SplashScreen from '../screens/Auth/Splash';
 import HomeNavigator from './HomeNavigator';
 import AuthNavigator from './AuthNavigator';
 import { DarkTheme, LightTheme } from '../utils/themes';

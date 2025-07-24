@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -35,6 +35,7 @@ type RegistrationValues = {
 };
 
 const RegistrationForm = () => {
+  const [loading, setLoading] = useState(false);
   const initialValues: RegistrationValues = {
     firstName: '',
     lastName: '',
@@ -58,6 +59,7 @@ const RegistrationForm = () => {
   };
 
   const handleRegister = async (values: RegistrationValues) => {
+    setLoading(true);
     try {
       console.log('[Register] Registration started...');
       const userCredential = await createUserWithEmailAndPassword(
@@ -88,6 +90,8 @@ const RegistrationForm = () => {
       } else {
         console.error('Something went wrong:', error.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,6 +144,8 @@ const RegistrationForm = () => {
               <Button
                 title="Register"
                 onPress={handleSubmit as () => void}
+                disabled={loading}
+                loading={loading}
                 style={styles.loginButton}
               />
 
