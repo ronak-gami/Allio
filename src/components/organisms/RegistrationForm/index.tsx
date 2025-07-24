@@ -118,7 +118,7 @@ const RegistrationForm = () => {
                   Already have an account?{' '}
                   <Text
                     style={styles.loginLink}
-                    onPress={() => navigation.navigate('LoginScreen')}>
+                    onPress={() => navigation.navigate('Login')}>
                     Login
                   </Text>
                 </Text>
