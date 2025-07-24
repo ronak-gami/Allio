@@ -3,14 +3,14 @@ import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import useStyle from './style';
-import { RootState } from 'src/redux/store';
 import { DarkTheme } from '@react-navigation/native';
 import { LightTheme } from '@utils/themes';
-import { setLanguage } from 'src/redux/slices/languageSlice';
-import { toggleTheme } from 'src/redux/slices/ThemeSlice';
 import Text from '@components/atoms/Text';
 import CustomDropdown from '@components/atoms/Dropdown';
 import Button from '@components/atoms/Button';
+import { RootState } from '@redux/store';
+import { setLanguage } from '@redux/slices/languageSlice';
+import { toggleTheme } from '@redux/slices/ThemeSlice';
 
 const languages = [
   { label: 'English', value: 'en' },

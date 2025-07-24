@@ -8,9 +8,9 @@ import {
 import { Image } from 'react-native';
 import { useDispatch } from 'react-redux';
 import styles from './style';
-import { setStateKey } from 'src/redux/slices/AuthSlice';
 import { ICONS } from '@assets/index';
 import Button from '@components/atoms/Button';
+import { setStateKey } from '@redux/slices/AuthSlice';
 
 const FacebookButton = ({ onLoginSuccess }: any) => {
   const [loading, setLoading] = useState(false);
