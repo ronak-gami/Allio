@@ -6,9 +6,12 @@ import Button from '../../atoms/Button';
 import useValidation from '../../../utils/validationSchema';
 import { scale } from 'react-native-size-matters';
 import style from './style';
-import Text from '../../atoms/Text';
 import auth from '@react-native-firebase/auth';
-import { checkUserExistsByEmail } from '../../../utils/helper';
+import { checkUserExistsByEmail } from '@utils/helper';
+import { forgotPasswordSchema } from '@utils/validationSchema';
+import Text from '@components/atoms/Text';
+import EmailField from '@components/molecules/EmailField';
+import Button from '@components/atoms/Button';
 
 const ForgotPasswordScreen: React.FC = () => {
   const { forgotPasswordSchema } = useValidation();
@@ -49,7 +52,7 @@ const ForgotPasswordScreen: React.FC = () => {
   return (
     <KeyboardAvoidingView
       style={style.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={scale(60)}>
       <ScrollView
         contentContainerStyle={style.scrollView}
@@ -86,4 +89,4 @@ const ForgotPasswordScreen: React.FC = () => {
   );
 };
 
-export default ForgotPasswordScreen;
+export default ForgotPasswordForm;

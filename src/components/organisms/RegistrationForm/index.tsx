@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,14 +6,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { Formik } from 'formik';
-import FirstnameField from '../../molecules/FirstnameField';
-import LastnameField from '../../molecules/LastnameField';
-import MobilenoField from '../../molecules/MobileFiled';
-import EmailField from '../../molecules/EmailField';
-import PasswordField from '../../molecules/PasswordFields';
-import Button from '../../atoms/Button';
 import styles from './style';
-import Text from '../../atoms/Text';
 import { useNavigation } from '@react-navigation/native';
 import {
   getAuth,
@@ -21,10 +14,17 @@ import {
 } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useDispatch } from 'react-redux';
-import { setStateKey } from '../../../redux/slices/AuthSlice';
+import { setStateKey } from 'src/redux/slices/AuthSlice';
 import useValidation from '../../../utils/validationSchema';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AUTH } from '../../../utils/constant';
+import { AUTH } from '@utils/constant';
+import { registrationValidationSchema } from '@utils/validationSchema';
+import { Button, Text } from 'react-native-paper';
+import FirstnameField from '@components/molecules/FirstnameField';
+import LastnameField from '@components/molecules/LastnameField';
+import MobilenoField from '@components/molecules/MobileFiled';
+import EmailField from '@components/molecules/EmailField';
+import PasswordField from '@components/molecules/PasswordFields';
 
 type RegistrationValues = {
   firstName: string;
@@ -36,6 +36,7 @@ type RegistrationValues = {
 };
 
 const RegistrationForm = () => {
+  const [loading, setLoading] = useState(false);
   const initialValues: RegistrationValues = {
     firstName: '',
     lastName: '',
@@ -58,6 +59,7 @@ const RegistrationForm = () => {
   };
 
   const handleRegister = async (values: RegistrationValues) => {
+    setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -85,6 +87,8 @@ const RegistrationForm = () => {
       } else {
         console.error('Something went wrong:', error.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -138,6 +142,8 @@ const RegistrationForm = () => {
               <Button
                 title="Register"
                 onPress={handleSubmit as () => void}
+                disabled={loading}
+                loading={loading}
                 style={styles.loginButton}
               />
 

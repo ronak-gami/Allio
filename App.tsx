@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { Provider, useSelector } from 'react-redux';
 import { PaperProvider } from 'react-native-paper';
 import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor, RootState } from './src/redux/store';
 import i18n from './src/assets/i18n';
 import StackNavigator from './src/navigations/StackNavigation';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { persistor, RootState, store } from '@redux/store';
 
 const OnBeforeLift = () => {
   const language = useSelector((state: RootState) => {

@@ -1,4 +1,4 @@
-import { IMAGES } from '../assets/index';
+import { IMAGES } from '@assets/index';
 
 export const onboardingData = [
   {

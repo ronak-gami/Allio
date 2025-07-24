@@ -1,9 +1,9 @@
 import React from 'react';
 import { Pressable, Image } from 'react-native';
-import { ICONS } from '../../../assets';
 import { useNavigation } from '@react-navigation/native';
 import { scale } from 'react-native-size-matters';
 import styles from './style';
+import { ICONS } from '@assets/index';
 
 const BackButton = () => {
   const navigation = useNavigation();

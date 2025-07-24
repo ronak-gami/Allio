@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, FlatList, TouchableOpacity, Text } from 'react-native';
-import Input from '../Input';
 import styles from './style';
+import Input from '../Input';
 
 interface AutoCompleteProps {
   data: string[];

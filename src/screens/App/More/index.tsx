@@ -1,16 +1,16 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { useStyle } from '../LoginScreen/style';
-import Button from '../../components/atoms/Button';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../redux/slices/AuthSlice';
+import useStyle from './style';
+import { logout } from 'src/redux/slices/AuthSlice';
+import Button from '@components/atoms/Button';
 
-const Tab4: React.FC = () => {
-  const styles=useStyle()
+const More: React.FC = () => {
+  const styles = useStyle();
   const dispatch = useDispatch();
   const handleLogout = async () => {
-    await dispatch(logout());
+    dispatch(logout());
   };
   return (
     <View style={styles.container}>
@@ -23,4 +23,4 @@ const Tab4: React.FC = () => {
     </View>
   );
 };
-export default Tab4;
+export default More;

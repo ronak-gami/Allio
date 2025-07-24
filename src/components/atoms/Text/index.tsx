@@ -6,8 +6,8 @@ import {
   GestureResponderEvent,
   TextProps as RNTextProps,
 } from 'react-native';
-import {FONTS} from '../../../utils/helper';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { FONTS } from '@utils/helper';
 
 interface TextProps extends RNTextProps {
   label?: string;
@@ -52,14 +52,13 @@ const Text: React.FC<TextProps> = ({
     }
   };
 
-
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const content = label ? t(label) : children;
 
   return (
     <RNText
-      style={ style}
+      style={style}
       numberOfLines={numberOfLines}
       onPress={onPress}
       {...rest}>

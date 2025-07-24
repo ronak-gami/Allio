@@ -1,17 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Pressable,
-  StyleSheet,
-  StyleProp,
-  TextStyle,
-} from 'react-native';
-import Text from '../../atoms/Text';
-import { Checkbox } from 'react-native-paper';
-import { COLORS } from '../../../utils/color';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 import { useNavigation } from '@react-navigation/native';
-import { AUTH } from '../../../utils/constant';
+import CustomCheckBox from '@components/atoms/CheckBox';
+import Text from '@components/atoms/Text';
+import { COLORS } from '@utils/color';
 
 interface RememberForgotProps {
   remember: boolean;
@@ -25,21 +18,18 @@ const RememberForgot: React.FC<RememberForgotProps> = ({
   const navigation: any = useNavigation();
 
   return (
-    <View style={Styles.rememberForgotView}>
-      <Checkbox.Item
-        style={Styles.checkbox}
-        position="leading"
+    <View style={styles.rememberForgotView}>
+      {/* ✅ Replace old Checkbox with custom one */}
+      <CustomCheckBox
         label="Remember me"
-        labelStyle={Styles.checkboxLabel as StyleProp<TextStyle>}
-        status={remember ? 'checked' : 'unchecked'}
+        checked={remember}
         onPress={onCheckboxPress}
-        color={COLORS.black}
       />
 
       <Pressable
         onPress={() => navigation.navigate(AUTH.ForgotPassword)}
         style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}>
-        <Text style={Styles.forgotpassText}>Forgot Password?</Text>
+        <Text style={styles.forgotpassText}>Forgot Password?</Text>
       </Pressable>
     </View>
   );
@@ -47,7 +37,7 @@ const RememberForgot: React.FC<RememberForgotProps> = ({
 
 export default RememberForgot;
 
-const Styles = StyleSheet.create({
+const styles = StyleSheet.create({
   rememberForgotView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -57,14 +47,5 @@ const Styles = StyleSheet.create({
     color: COLORS.black,
     fontSize: scale(16),
     fontWeight: 'bold',
-  },
-  checkbox: {
-    paddingHorizontal: 0,
-    paddingVertical: 0,
-  },
-  checkboxLabel: {
-    color: COLORS.black,
-    fontSize: scale(16),
-    fontFamily: 'WinkyRough-Regular',
   },
 });

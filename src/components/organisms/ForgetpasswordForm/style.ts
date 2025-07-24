@@ -1,13 +1,10 @@
-import {StyleSheet} from 'react-native';
-import {scale} from 'react-native-size-matters';
-import {COLORS} from '../../../utils/color';
-import {height, width} from '../../../utils/helper';
-
+import { COLORS } from '@utils/color';
+import { StyleSheet } from 'react-native';
+import { scale } from 'react-native-size-matters';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
   },
   scrollView: {
     flexGrow: 1,
