@@ -1,8 +1,8 @@
 import React from 'react';
 import { TouchableOpacity, View, Image } from 'react-native';
-import { ICONS } from '../../../assets';
 import Text from '../Text';
 import styles from './style';
+import { ICONS } from '@assets/index';
 
 interface CustomCheckBoxProps {
   label: string;

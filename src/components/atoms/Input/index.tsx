@@ -14,10 +14,10 @@ import { TextInput } from 'react-native-paper';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
-import { COLORS } from '../../../utils/color';
 import Text from '../Text';
-import { ICONS } from '../../../assets';
 import styles from './style';
+import { COLORS } from '@utils/color';
+import { ICONS } from '@assets/index';
 
 interface InputProps {
   placeholder: string;

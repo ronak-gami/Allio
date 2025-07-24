@@ -1,6 +1,6 @@
+import { COLORS } from '@utils/color';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { COLORS } from '../../../utils/color';
 
 const styles = StyleSheet.create({
   label: {

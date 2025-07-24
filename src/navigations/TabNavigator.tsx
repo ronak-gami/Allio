@@ -7,17 +7,17 @@ import {
   ImageSourcePropType,
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/Home';
-import PhotoMedia from '../screens/PhotoMedia';
-import ScanQR from '../screens/ScanQR';
-import VideoMedia from '../screens/VideoMedia';
-import MoreScreens from '../screens/More';
-import { IMAGES } from '../assets';
-import { height } from '../utils/helper';
-import { COLORS } from '../utils/color';
 import { scale } from 'react-native-size-matters';
 import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
-import { HOME } from '../utils/constant';
+import { IMAGES } from '@assets/index';
+import { height } from '@utils/helper';
+import { COLORS } from '@utils/color';
+import { HOME } from '@utils/constant';
+import HomeScreen from '@screens/App/Home';
+import PhotoMedia from '@screens/App/PhotoMedia';
+import ScanQR from '@screens/App/ScanQR';
+import VideoMedia from '@screens/App/VideoMedia';
+import More from '@screens/App/More';
 
 export type BottomTabParamList = {
   Home: undefined;
@@ -82,7 +82,7 @@ const TabNavigator: React.FC = () => {
       <Tab.Screen name={HOME.Photo} component={PhotoMedia} />
       <Tab.Screen name={HOME.ScanQR} component={ScanQR} />
       <Tab.Screen name={HOME.Video} component={VideoMedia} />
-      <Tab.Screen name={HOME.More} component={MoreScreens} />
+      <Tab.Screen name={HOME.More} component={More} />
     </Tab.Navigator>
   );
 };

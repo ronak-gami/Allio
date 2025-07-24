@@ -1,8 +1,6 @@
+import Input from '@components/atoms/Input';
 import React from 'react';
-import {StyleSheet, StyleProp, TextStyle} from 'react-native';
-import Input from '../../atoms/Input';
-import {scale} from 'react-native-size-matters';
-import {COLORS} from '../../../utils/color';
+import { StyleProp, TextStyle } from 'react-native';
 
 interface PasswordFieldProps {
   value: string;
@@ -17,7 +15,6 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
   onChangeText,
   error,
   styleInput,
-  placeholder,
 }) => {
   return (
     <Input
@@ -32,12 +29,3 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
 };
 
 export default PasswordField;
-
-const Styles = StyleSheet.create({
-  passwordText: {
-    alignSelf: 'flex-start',
-    fontSize: scale(14),
-    fontWeight: '400', // ✅ TypeScript requires this as a string
-    color: COLORS.gray,
-  },
-});

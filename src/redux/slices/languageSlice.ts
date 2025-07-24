@@ -1,5 +1,5 @@
-import {createSlice} from '@reduxjs/toolkit';
-import i18n from '../../assets/i18n';
+import i18n from '@assets/i18n';
+import { createSlice } from '@reduxjs/toolkit';
 
 interface LanguageState {
   language: string;
@@ -20,5 +20,5 @@ const languageSlice = createSlice({
   },
 });
 
-export const {setLanguage} = languageSlice.actions;
+export const { setLanguage } = languageSlice.actions;
 export default languageSlice.reducer;

@@ -8,9 +8,9 @@ import {
   StyleProp,
 } from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
-import { COLORS } from '../../../utils/color';
-import Text from '../Text';
 import styles from './style';
+import { COLORS } from '@utils/color';
+import Text from '../Text';
 
 interface ButtonProps {
   title: string;
