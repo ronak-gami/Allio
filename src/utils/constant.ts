@@ -1,6 +1,13 @@
 import { IMAGES } from '@assets/index';
 
-export const onboardingData = [
+export interface OnboardingItem {
+  id: string;
+  image: any;
+  title: string;
+  description: string;
+}
+
+export const onboardingData: OnboardingItem[] = [
   {
     id: '1',
     image: IMAGES.First,
@@ -45,7 +52,9 @@ export const AUTH = {
   Register: 'Register',
   ForgotPassword: 'Forgot Password',
   ResetPassword: 'Reset Password',
-};
+} as const;
+
+export type AuthRoute = (typeof AUTH)[keyof typeof AUTH];
 
 export const HOME = {
   Home: 'Home',
@@ -53,4 +62,6 @@ export const HOME = {
   ScanQR: 'ScanQR',
   Video: 'Video',
   More: 'More',
-};
+} as const;
+
+export type HomeRoute = (typeof HOME)[keyof typeof HOME];

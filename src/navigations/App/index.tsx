@@ -1,7 +1,10 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Tabs from './TabNavigator';
+
+import Tabs from './Tabs';
+
 const Stack = createNativeStackNavigator();
+
 const HomeNavigator: React.FC = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

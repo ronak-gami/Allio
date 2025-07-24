@@ -11,12 +11,8 @@ import Button from '@components/atoms/Button';
 import { RootState } from '@redux/store';
 import { setLanguage } from '@redux/slices/languageSlice';
 import { toggleTheme } from '@redux/slices/ThemeSlice';
+import { languages } from '@utils/helper';
 
-const languages = [
-  { label: 'English', value: 'en' },
-  { label: 'हिंदी', value: 'hi' },
-  { label: 'ગુજરાતી', value: 'gu' },
-];
 
 const HomeScreen: React.FC = () => {
   const styles = useStyle();
@@ -61,9 +57,7 @@ const HomeScreen: React.FC = () => {
       />
 
       <Button
-        title={
-          isDarkMode ? '🌞 Switch to Light Mode' : '🌙 Switch to Dark Mode'
-        }
+        title={isDarkMode ? ' Switch to Light Mode' : ' Switch to Dark Mode'}
         onPress={handleThemeToggle}
         style={{ backgroundColor: theme.colors.primary }}
         textStyle={{ color: isDarkMode ? '#000000' : '#FFFFFF' }}
