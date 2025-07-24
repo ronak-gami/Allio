@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { setStateKey } from '../../../redux/slices/AuthSlice';
 import { Formik } from 'formik';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { checkUserExistsByEmail, getAllUsers } from '../../../utils/helper';
 
 const LoginForm = () => {
   const navigation = useNavigation();
@@ -36,17 +37,26 @@ const LoginForm = () => {
 
   const handleLogin = async (values: typeof initialValues) => {
     try {
-      console.log('Login Function called');
+      const exists = await checkUserExistsByEmail(values.email);
+      if (!exists) {
+        console.warn('User does not exist in Firestore collection!');
+        return;
+      }
+
       const userCredential = await signInWithEmailAndPassword(
         auth,
         values.email,
         values.password,
       );
+
       const user = userCredential.user;
       if (user) {
         const token = await user.getIdToken();
         console.log('Token:', token);
         dispatch(setStateKey({ key: 'token', value: token }));
+
+        const allUsers = await getAllUsers();
+        console.log('All Users:', allUsers);
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);
