@@ -6,8 +6,8 @@ import HomeNavigator from './HomeNavigator';
 import AuthNavigator from './AuthNavigator';
 import SplashScreen from '@screens/Auth/Splash';
 import { LightTheme } from '@utils/themes';
-import { RootState } from 'src/redux/store';
-import { setDarkMode } from 'src/redux/slices/ThemeSlice';
+import { RootState } from '@redux/store';
+import { setDarkMode } from '@redux/slices/ThemeSlice';
 
 const StackNavigator: React.FC = () => {
   const token = useSelector((state: RootState) => state.auth.token);

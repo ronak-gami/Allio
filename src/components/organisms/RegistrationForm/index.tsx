@@ -14,7 +14,6 @@ import {
 } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useDispatch } from 'react-redux';
-import { setStateKey } from 'src/redux/slices/AuthSlice';
 import { AUTH } from '@utils/constant';
 import { registrationValidationSchema } from '@utils/validationSchema';
 import { Button, Text } from 'react-native-paper';
@@ -23,6 +22,7 @@ import LastnameField from '@components/molecules/LastnameField';
 import MobilenoField from '@components/molecules/MobileFiled';
 import EmailField from '@components/molecules/EmailField';
 import PasswordField from '@components/molecules/PasswordFields';
+import { setStateKey } from '@redux/slices/AuthSlice';
 
 type RegistrationValues = {
   firstName: string;

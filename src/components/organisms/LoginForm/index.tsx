@@ -15,7 +15,6 @@ import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { checkUserExistsByEmail, getAllUsers } from '@utils/helper';
-import { setStateKey } from 'src/redux/slices/AuthSlice';
 import Text from '@components/atoms/Text';
 import { loginValidationSchema } from '@utils/validationSchema';
 import Input from '@components/atoms/Input';
@@ -26,6 +25,7 @@ import { AUTH } from '@utils/constant';
 import CustomLoader from '@components/atoms/CustomLoader';
 import { COLORS } from '@utils/color';
 import Button from '@components/atoms/Button';
+import { setStateKey } from '@redux/slices/AuthSlice';
 
 const LoginForm = () => {
   const navigation = useNavigation();
