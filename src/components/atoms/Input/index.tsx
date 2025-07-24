@@ -14,10 +14,10 @@ import { TextInput } from 'react-native-paper';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
-import { useStyle } from './style';
 import { COLORS } from '../../../utils/color';
 import Text from '../Text';
 import { ICONS } from '../../../assets';
+import styles from './style';
 
 interface InputProps {
   placeholder: string;
@@ -57,7 +57,6 @@ const Input: React.FC<InputProps> = ({
   onDateChange,
   ...props
 }) => {
-  const styles = useStyle();
   const [internalDate, setInternalDate] = useState<Date>(new Date());
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [isSecure, setIsSecure] = useState<boolean>(isPassword);

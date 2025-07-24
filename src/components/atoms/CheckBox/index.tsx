@@ -1,8 +1,8 @@
 import React from 'react';
-import {TouchableOpacity, View, Image} from 'react-native';
-import {useStyle} from './style';
-import {ICONS} from '../../../assets';
+import { TouchableOpacity, View, Image } from 'react-native';
+import { ICONS } from '../../../assets';
 import Text from '../Text';
+import styles from './style';
 
 interface CustomCheckBoxProps {
   label: string;
@@ -15,8 +15,6 @@ const CustomCheckBox: React.FC<CustomCheckBoxProps> = ({
   checked,
   onPress,
 }) => {
-  const styles = useStyle();
-
   const handleImageError = (e: any) => {
     console.warn('Check icon failed to load:', e.nativeEvent?.error);
   };

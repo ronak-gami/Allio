@@ -1,7 +1,6 @@
 export const COLORS = {
   primary: '#FBC02D',
   lightyellow: '#FFF9C4',
-
   black: '#000000',
   white: '#FFFFFF',
   hoverColor: '#F2EADF',
@@ -14,7 +13,6 @@ export const COLORS = {
   navyBlue: '#000080',
   seconary: '#00BFFF',
   third: '#0076DF ',
-
   lightgray: '#B5B5B5',
   gray: '#909090',
   darkGray: '#323232',
