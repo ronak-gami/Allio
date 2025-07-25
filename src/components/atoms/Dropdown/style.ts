@@ -1,37 +1,39 @@
+import { useTheme } from '@react-navigation/native';
 import { COLORS } from '@utils/color';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
+  const { colors } = useTheme();
   return StyleSheet.create({
     label: {
       fontSize: scale(14),
       marginBottom: scale(6),
-      color: COLORS.darkGray,
+      color: colors.darkGray,
     },
     dropdown: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       borderWidth: 1,
-      borderColor: COLORS.gray,
+      borderColor: colors.gray,
       borderRadius: scale(6),
       paddingVertical: scale(10),
       paddingHorizontal: scale(12),
-      backgroundColor: COLORS.white,
+      backgroundColor: colors.white,
     },
     dropdownText: {
       fontSize: scale(14),
-      color: COLORS.black,
+      color: colors.black,
     },
     modalOverlay: {
       flex: 1,
-      backgroundColor: COLORS.modelbg,
+      backgroundColor: colors.modelbg,
       justifyContent: 'center',
       alignItems: 'center',
     },
     modalContainer: {
-      backgroundColor: COLORS.white,
+      backgroundColor: colors.white,
       borderRadius: scale(8),
       width: '80%',
       maxHeight: '50%',
@@ -42,10 +44,10 @@ const useStyle = () => {
     },
     itemText: {
       fontSize: scale(14),
-      color: COLORS.darkGray,
+      color: colors.darkGray,
     },
     errorText: {
-      color: COLORS.error,
+      color: colors.error,
       fontSize: 12,
       marginTop: scale(4),
     },

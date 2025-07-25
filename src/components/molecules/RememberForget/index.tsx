@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import CustomCheckBox from '@components/atoms/CheckBox';
 import Text from '@components/atoms/Text';
-import { COLORS } from '@utils/color';
 import { AUTH } from '@utils/constant';
 
 interface RememberForgotProps {
@@ -17,7 +16,7 @@ const RememberForgot: React.FC<RememberForgotProps> = ({
   onCheckboxPress,
 }) => {
   const navigation: any = useNavigation();
-
+  const { colors } = useTheme();
   return (
     <View style={styles.rememberForgotView}>
       {/* ✅ Replace old Checkbox with custom one */}
@@ -30,7 +29,9 @@ const RememberForgot: React.FC<RememberForgotProps> = ({
       <Pressable
         onPress={() => navigation.navigate(AUTH.ForgotPassword)}
         style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}>
-        <Text style={styles.forgotpassText}>Forgot Password?</Text>
+        <Text style={styles.forgotpassText} type="semibold">
+          Forgot Password?
+        </Text>
       </Pressable>
     </View>
   );
@@ -45,8 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   forgotpassText: {
-    color: COLORS.black,
+    color: colors.black,
     fontSize: scale(16),
-    fontWeight: 'bold',
   },
 });

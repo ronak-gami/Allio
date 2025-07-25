@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View,StyleSheet,
+  View,
   TextInput as RNTextInput,
   Pressable,
   Image,
@@ -15,19 +15,18 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import Text from '../Text';
-import { COLORS } from '@utils/color';
 import { ICONS } from '@assets/index';
 import useStyle from './style';
+import { useTheme } from '@react-navigation/native';
 
 interface InputProps {
   placeholder: string;
   value: string;
-  maxlength:10 |12|25 ;
+  maxlength: 10 | 12 | 25;
   onChangeText: (text: string) => void;
   keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
   isPassword?: boolean;
   error?: string;
-  // style?: object;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   backgroundColor?: string;
   multiline?: boolean;
@@ -47,7 +46,7 @@ const Input: React.FC<InputProps> = ({
   keyboardType = 'default',
   isPassword = false,
   error,
-  maxlength=10,
+  maxlength = 10,
   style,
   autoCapitalize = 'none',
   backgroundColor,
@@ -64,7 +63,8 @@ const Input: React.FC<InputProps> = ({
   const [isSecure, setIsSecure] = useState<boolean>(isPassword);
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
-  const styles=useStyle()
+  const styles = useStyle();
+  const { colors } = useTheme();
 
   useEffect(() => {
     if ((dataType === 'date' || dataType === 'time') && value) {
@@ -125,7 +125,7 @@ const Input: React.FC<InputProps> = ({
 
   const mainInputContent = (
     <TextInput
-    keyboardType={keyboardType}
+      keyboardType={keyboardType}
       mode="outlined"
       label={<Text>{placeholder}</Text>}
       onChangeText={!isPickerInput ? onChangeText : undefined}
@@ -137,8 +137,8 @@ const Input: React.FC<InputProps> = ({
         multiline && styles.multiline,
         backgroundColor ? { backgroundColor } : {},
       ]}
-      outlineColor={error ? COLORS.error : COLORS.darkGray}
-      activeOutlineColor={error ? COLORS.error : COLORS.primary}
+      outlineColor={error ? colors.error : colors.darkGray}
+      activeOutlineColor={error ? colors.error : colors.primary}
       left={
         prefixIcon ? (
           <TextInput.Icon
@@ -150,11 +150,7 @@ const Input: React.FC<InputProps> = ({
       }
       right={renderRightIcon()}
       theme={{
-        // colors: {
-        //   text: COLORS.black,
-        //   placeholder: COLORS.gray,
-        // },
-        roundness: 15,
+        roundness: 10,
       }}
       render={inputProps => (
         <RNTextInput

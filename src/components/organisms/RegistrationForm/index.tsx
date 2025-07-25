@@ -19,7 +19,7 @@ import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import useStyle from './style';
- 
+
 type RegistrationValues = {
   firstName: string;
   lastName: string;
@@ -28,10 +28,10 @@ type RegistrationValues = {
   password: string;
   confirmPassword: string;
 };
- 
+
 const RegistrationForm = () => {
   const [loading, setLoading] = useState(false);
- 
+
   const initialValues: RegistrationValues = {
     firstName: '',
     lastName: '',
@@ -45,13 +45,13 @@ const RegistrationForm = () => {
   const navigation = useNavigation();
   const styles = useStyle();
   const { registrationValidationSchema } = useValidation();
- 
+
   const saveUserToFirestore = async (userId: string, userData: any) => {
     try {
       await firestore().collection('users').doc(userId).set(userData);
     } catch (error) {}
   };
- 
+
   const handleRegister = async (values: RegistrationValues) => {
     setLoading(true);
     try {
@@ -85,59 +85,61 @@ const RegistrationForm = () => {
       setLoading(false);
     }
   };
- 
+
   return (
     <>
       <View style={styles.formContainer}>
         <Text style={styles.title}>Register</Text>
         <Text style={styles.subtitle}>Create your account to get started</Text>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={registrationValidationSchema}
-          onSubmit={handleRegister}>
-          {({ handleChange, handleSubmit, values, errors, touched }) => (
-            <>
-              <FirstnameField
-                value={values.firstName}
-                onChangeText={handleChange('firstName')}
-                error={touched.firstName ? errors.firstName : ''}
-              />
-              <LastnameField
-                value={values.lastName}
-                onChangeText={handleChange('lastName')}
-                error={touched.lastName ? errors.lastName : ''}
-              />
-              <MobilenoField
-                value={values.mobileNo}
-                onChangeText={handleChange('mobileNo')}
-                error={touched.mobileNo ? errors.mobileNo : ''}
-              />
-              <EmailField
-                value={values.email}
-                onChangeText={handleChange('email')}
-                error={touched.email ? errors.email : ''}
-              />
-              <PasswordField
-                value={values.password}
-                onChangeText={handleChange('password')}
-                error={touched.password ? errors.password : ''}
-              />
-              <PasswordField
-                value={values.confirmPassword}
-                onChangeText={handleChange('confirmPassword')}
-                error={touched.confirmPassword ? errors.confirmPassword : ''}
-                placeholder="Confirm Password"
-              />
-              <Button
-                title="Register"
-                onPress={handleSubmit as () => void}
-                disabled={loading}
-                loading={loading}
-                style={styles.loginButton}
-              />
-            </>
-          )}
-        </Formik>
+        <View style={styles.inputContainer}>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={registrationValidationSchema}
+            onSubmit={handleRegister}>
+            {({ handleChange, handleSubmit, values, errors, touched }) => (
+              <>
+                <FirstnameField
+                  value={values.firstName}
+                  onChangeText={handleChange('firstName')}
+                  error={touched.firstName ? errors.firstName : ''}
+                />
+                <LastnameField
+                  value={values.lastName}
+                  onChangeText={handleChange('lastName')}
+                  error={touched.lastName ? errors.lastName : ''}
+                />
+                <MobilenoField
+                  value={values.mobileNo}
+                  onChangeText={handleChange('mobileNo')}
+                  error={touched.mobileNo ? errors.mobileNo : ''}
+                />
+                <EmailField
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                  error={touched.email ? errors.email : ''}
+                />
+                <PasswordField
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  error={touched.password ? errors.password : ''}
+                />
+                <PasswordField
+                  value={values.confirmPassword}
+                  onChangeText={handleChange('confirmPassword')}
+                  error={touched.confirmPassword ? errors.confirmPassword : ''}
+                  placeholder="Confirm Password"
+                />
+                <Button
+                  title="Register"
+                  onPress={handleSubmit as () => void}
+                  disabled={loading}
+                  loading={loading}
+                  style={styles.loginButton}
+                />
+              </>
+            )}
+          </Formik>
+        </View>
         <Text style={styles.loginText}>
           Already have an account?{' '}
           <TouchableOpacity>
@@ -152,5 +154,5 @@ const RegistrationForm = () => {
     </>
   );
 };
- 
+
 export default RegistrationForm;

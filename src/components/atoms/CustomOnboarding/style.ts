@@ -1,13 +1,14 @@
-import { COLORS } from '@utils/color';
+import { useTheme } from '@react-navigation/native';
 import { height, width } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
+  const { colors } = useTheme();
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: COLORS.lightyellow,
+      backgroundColor: colors.lightyellow,
       justifyContent: 'center',
       paddingHorizontal: scale(20),
     },
@@ -20,17 +21,16 @@ const useStyle = () => {
     },
     title: {
       fontSize: scale(18),
-      fontWeight: 'bold',
       textAlign: 'left',
       marginTop: scale(16),
-      color: COLORS.black,
+      color: colors.black,
     },
     description: {
       fontSize: scale(18),
       textAlign: 'left',
       width: '50%',
       marginTop: scale(8),
-      color: COLORS.black,
+      color: colors.black,
     },
   });
 };

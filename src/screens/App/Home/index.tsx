@@ -10,11 +10,12 @@ import { RootState } from '@redux/store';
 import { setLanguage } from '@redux/slices/languageSlice';
 import { toggleTheme } from '@redux/slices/ThemeSlice';
 import { languages } from '@utils/helper';
-import { COLORS } from '@utils/color';
+import { useTheme } from '@react-navigation/native';
 
 const HomeScreen: React.FC = () => {
   const styles = useStyle();
   const dispatch = useDispatch();
+  const { colors } = useTheme();
   const { t } = useTranslation();
 
   const currentLanguage = useSelector(
@@ -31,12 +32,8 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
-      <Text
-        label={t('home_title')}
-        style={[styles.title, { color: COLORS.text }]}
-      />
-
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.text }]}>login</Text>
       <CustomDropdown
         label={t('select_language')}
         data={languages.map(lang => lang.label)}
@@ -54,7 +51,7 @@ const HomeScreen: React.FC = () => {
       <Button
         title={isDarkMode ? ' Switch to Light Mode' : ' Switch to Dark Mode'}
         onPress={handleThemeToggle}
-        style={{ backgroundColor: COLORS.primary }}
+        style={{ backgroundColor: colors.primary }}
         textStyle={{ color: isDarkMode ? '#000000' : '#FFFFFF' }}
       />
     </View>

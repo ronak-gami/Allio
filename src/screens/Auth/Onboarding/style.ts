@@ -1,26 +1,27 @@
-import { COLORS } from '@utils/color';
+import { useTheme } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 
 const useStyle = () => {
+  const { colors } = useTheme();
   return StyleSheet.create({
     container: {
       flex: 1,
       justifyContent: 'center',
     },
     button: {
-      backgroundColor: COLORS.primary,
+      backgroundColor: colors.primary,
       paddingVertical: 12,
       paddingHorizontal: 24,
       borderRadius: 8,
       position: 'absolute',
       bottom: 50,
-      marginLeft:30,
+      marginLeft: 30,
       alignSelf: 'flex-start',
     },
     buttonText: {
-      color: COLORS.white,
+      color: colors.white,
       fontSize: 18,
- 
+
       fontWeight: 'bold',
     },
     skipButton: {
@@ -31,7 +32,7 @@ const useStyle = () => {
       padding: 10,
     },
     skipText: {
-      color: COLORS.primary,
+      color: colors.primary,
       fontSize: 16,
       fontWeight: '600',
     },

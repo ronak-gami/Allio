@@ -1,11 +1,11 @@
+import { FONTS } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
   return StyleSheet.create({
     button: {
-      borderRadius: scale(12),
-      paddingVertical: scale(9),
+      borderRadius: 10,
       paddingHorizontal: scale(24),
       alignItems: 'center',
       justifyContent: 'center',
@@ -15,8 +15,8 @@ const useStyle = () => {
       alignItems: 'center',
     },
     text: {
-      fontSize: scale(14),
-      fontWeight: '600',
+      fontSize: scale(16),
+      fontFamily: FONTS.medium,
     },
     icon: {
       marginHorizontal: scale(8),

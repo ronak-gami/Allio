@@ -7,17 +7,17 @@ export interface OnboardingScreenProps {
   title: string;
   description: string;
 }
-const styles=useStyle()
 const CustomOnboarding: React.FC<OnboardingScreenProps> = ({
   image,
   title,
   description,
 }) => {
+  const styles = useStyle();
   return (
     <View style={styles.container}>
       <Image source={image} style={styles.image} resizeMode="contain" />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+      <Text label={title} style={styles.title} />
+      <Text label={description} style={styles.description} />
     </View>
   );
 };

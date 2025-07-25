@@ -1,9 +1,9 @@
-import { COLORS } from '@utils/color';
+import { useTheme } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
-
 const useStyle = () => {
+  const { colors } = useTheme();
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -25,10 +25,8 @@ const useStyle = () => {
     },
     title: {
       fontSize: scale(24),
-      fontWeight: 'bold',
       textAlign: 'center',
     },
-  
     logoContainer: {
       alignItems: 'center',
       marginBottom: scale(20),
@@ -36,15 +34,15 @@ const useStyle = () => {
     subtitle: {
       fontSize: scale(16),
       textAlign: 'center',
-      color: COLORS.gray,
+      color: colors.gray,
     },
     loginButton: {
       marginTop: scale(16),
       marginVertical: scale(6),
-      backgroundColor: COLORS.primary,
+      backgroundColor: colors.primary,
       borderRadius: scale(8),
       paddingVertical: scale(12),
     },
-});
-}
+  });
+};
 export default useStyle;

@@ -1,8 +1,10 @@
-import { COLORS } from '@utils/color';
+import { useTheme } from '@react-navigation/native';
+import { height } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
+  const { colors } = useTheme();
   return StyleSheet.create({
     logoContainer: {
       alignItems: 'center',
@@ -11,21 +13,20 @@ const useStyle = () => {
     title: {
       fontSize: scale(34),
       fontWeight: 'bold',
-      color: COLORS.primary,
-      textAlign: 'center',
-      marginBottom: scale(20),
+      color: colors.primary,
+      textAlign: 'left',
     },
     subtitle: {
       fontSize: scale(16),
-      color: COLORS.black,
-      textAlign: 'center',
+      color: colors.black,
+      textAlign: 'left',
       marginBottom: scale(30),
     },
     formContainer: {
       flex: 1,
       justifyContent: 'center',
       padding: scale(16),
-      backgroundColor: COLORS.white,
+      backgroundColor: colors.white,
     },
     logo: {
       width: scale(200),
@@ -37,11 +38,11 @@ const useStyle = () => {
       justifyContent: 'center',
       marginTop: scale(20),
       alignItems: 'center',
-      // marginVertical: scale(12),
+      gap: 3,
     },
     socialSignInText: {
       fontSize: scale(16),
-      color: COLORS.primary,
+      color: colors.primary,
       textAlign: 'center',
       fontWeight: 'bold',
       marginVertical: scale(10),
@@ -54,7 +55,7 @@ const useStyle = () => {
     inputContainer: {
       marginBottom: scale(10),
       gap: scale(10),
-      // backgroundColor: COLORS.lightGray,
+      // backgroundColor: colors.lightGray,
     },
 
     button: {
@@ -62,8 +63,8 @@ const useStyle = () => {
     },
     loginButton: {
       marginVertical: scale(6),
-      backgroundColor: COLORS.primary,
-      paddingVertical: scale(12),
+      backgroundColor: colors.primary,
+      paddingVertical: height * 0.02,
     },
     socialButtonsWrapper: {
       marginTop: scale(12),
@@ -76,20 +77,18 @@ const useStyle = () => {
 
     dividerText: {
       // paddingHorizontal: scale(15),
-      color: COLORS.primary,
+      color: colors.primary,
       fontSize: scale(16),
       justifyContent: 'center',
       textAlign: 'center',
     },
     orText: {
-      color: COLORS.primary,
+      color: colors.gray,
       fontSize: scale(16),
-      fontWeight: 'bold',
     },
     signUpText: {
-      color: COLORS.primary,
+      color: colors.primary,
       fontSize: scale(16),
-      fontWeight: 'bold',
     },
     container: {
       flexDirection: 'row',
@@ -107,6 +106,18 @@ const useStyle = () => {
       flexDirection: 'row',
       justifyContent: 'center',
       marginVertical: 12,
+    },
+    loginText: {
+      paddingVertical: scale(20),
+      fontSize: scale(18),
+      textAlign: 'center',
+      color: colors.gray,
+    },
+    loginLink: {
+      fontSize: scale(18),
+      color: colors.primary,
+      fontWeight: 'bold',
+      textAlign: 'center',
     },
   });
 };

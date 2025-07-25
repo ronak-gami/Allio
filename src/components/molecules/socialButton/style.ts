@@ -1,24 +1,25 @@
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { COLORS } from '../../../utils/color';
+import { useTheme } from '@react-navigation/native';
 
 const useStyle = () => {
+  const { colors } = useTheme();
   return StyleSheet.create({
     button: {
       marginHorizontal: scale(8),
       borderRadius: scale(20),
       padding: scale(6),
-      backgroundColor: COLORS.white,
+      backgroundColor: colors.white,
       alignItems: 'center',
       justifyContent: 'center',
       elevation: 2,
-      shadowColor: COLORS.black,
+      shadowColor: colors.black,
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.1,
       shadowRadius: 2,
     },
     pressed: {
-      backgroundColor: COLORS.hoverColor,
+      backgroundColor: colors.hoverColor,
       opacity: 0.8,
     },
     icon: {

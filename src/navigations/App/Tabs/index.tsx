@@ -2,19 +2,16 @@ import React from 'react';
 import { Platform, Image, Text, ImageSourcePropType } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
-
 import { IMAGES } from '@assets/index';
 import { height } from '@utils/helper';
-import { COLORS } from '@utils/color';
 import { HOME } from '@utils/constant';
-
 import HomeScreen from '@screens/App/Home';
 import PhotoMedia from '@screens/App/PhotoMedia';
 import ScanQR from '@screens/App/ScanQR';
 import VideoMedia from '@screens/App/VideoMedia';
 import More from '@screens/App/More';
-
 import useStyle from './style';
+import { useTheme } from '@react-navigation/native';
 
 export type BottomTabParamList = {
   Home: undefined;
@@ -28,7 +25,7 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const TabNavigator: React.FC = () => {
   const styles = useStyle();
-
+  const { colors } = useTheme();
   const icons: Record<keyof BottomTabParamList, ImageSourcePropType> = {
     Home: IMAGES.Home,
     Photo: IMAGES.ImageMedia,
@@ -50,14 +47,14 @@ const TabNavigator: React.FC = () => {
     tabBarHideOnKeyboard: true,
     tabBarStyle: {
       height: Platform.OS === 'ios' ? height * 0.1 : height * 0.075,
-      backgroundColor: COLORS.primary,
+      backgroundColor: colors.primary,
     },
     tabBarIcon: ({ focused }) => (
       <Image
         source={getIconByRouteName(route.name)}
         style={[
           styles.tabIcon,
-          { tintColor: focused ? COLORS.black : COLORS.lightgray },
+          { tintColor: focused ? colors.black : colors.lightgray },
         ]}
         resizeMode="contain"
       />
@@ -66,7 +63,7 @@ const TabNavigator: React.FC = () => {
       <Text
         style={[
           styles.tabLabel,
-          { color: focused ? COLORS.black : COLORS.lightgray },
+          { color: focused ? colors.black : colors.lightgray },
         ]}>
         {route.name}
       </Text>

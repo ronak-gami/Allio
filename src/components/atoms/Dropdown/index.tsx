@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Modal, FlatList, Image } from 'react-native';
 import Text from '../Text';
-import { COLORS } from '@utils/color';
 import { ICONS } from '@assets/index';
 import useStyle from './style';
+import { useTheme } from '@react-navigation/native';
 
 interface DropdownProps {
   label: string;
@@ -23,7 +23,8 @@ const CustomDropdown: React.FC<DropdownProps> = ({
   touched,
 }) => {
   const [visible, setVisible] = useState(false);
-  const styles=useStyle()
+  const styles = useStyle();
+  const { colors } = useTheme();
 
   const handleSelect = (item: string) => {
     onSelect(item);
@@ -37,7 +38,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
       <TouchableOpacity
         style={[
           styles.dropdown,
-          error && touched ? { borderColor: COLORS.error } : {},
+          error && touched ? { borderColor: colors.error } : {},
         ]}
         onPress={() => setVisible(true)}
         activeOpacity={0.7}>
@@ -63,7 +64,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
                     styles.item,
                     index !== data.length - 1 && {
                       borderBottomWidth: 1,
-                      borderBottomColor: COLORS.black,
+                      borderBottomColor: colors.black,
                     },
                   ]}
                   onPress={() => handleSelect(item)}>

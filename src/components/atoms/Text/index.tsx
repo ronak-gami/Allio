@@ -15,20 +15,19 @@ interface TextProps extends RNTextProps {
   numberOfLines?: number;
   onPress?: (event: GestureResponderEvent) => void;
   type?: string;
-  children?: React.ReactNode;
+  children?: string | React.ReactNode;
   fontFamily?: string;
 }
 
 const Text: React.FC<TextProps> = ({
   label,
   style,
-  numberOfLines,
-  onPress,
   type = 'regular',
   children,
-
   ...rest
 }) => {
+  const { t } = useTranslation();
+
   const getFontFamily = () => {
     switch (type.toLowerCase()) {
       case 'black':
@@ -39,7 +38,7 @@ const Text: React.FC<TextProps> = ({
         return FONTS.extraBold;
       case 'light':
         return FONTS.light;
-      case 'extraLight':
+      case 'extralight':
         return FONTS.extraLight;
       case 'medium':
         return FONTS.medium;
@@ -52,16 +51,18 @@ const Text: React.FC<TextProps> = ({
     }
   };
 
-  const { t } = useTranslation();
+  let content: React.ReactNode = null;
 
-  const content = label ? t(label) : children;
+  if (label) {
+    content = t(label);
+  } else if (typeof children === 'string') {
+    content = t(children);
+  } else {
+    content = children;
+  }
 
   return (
-    <RNText
-      style={style}
-      numberOfLines={numberOfLines}
-      onPress={onPress}
-      {...rest}>
+    <RNText style={[style, { fontFamily: getFontFamily() }]} {...rest}>
       {content}
     </RNText>
   );

@@ -1,8 +1,9 @@
-import { COLORS } from '@utils/color';
+import { useTheme } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
+  const { colors } = useTheme();
   return StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -10,26 +11,26 @@ const useStyle = () => {
       marginVertical: scale(5),
     },
     circle: {
-      width: scale(20),
-      height: scale(20),
-      borderRadius: scale(10),
+      width: scale(18),
+      height: scale(18),
+      borderRadius: 4,
       borderWidth: 1,
-      borderColor: COLORS.gray,
+      borderColor: colors.gray,
       alignItems: 'center',
       justifyContent: 'center',
-      marginRight: scale(10),
+      marginRight: scale(8),
     },
     selectedCircle: {
-      backgroundColor: COLORS.primary,
-      borderColor: COLORS.primary,
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
     },
     checkIcon: {
       width: scale(12),
       height: scale(12),
-      tintColor: COLORS.white,
+      tintColor: colors.white,
     },
     label: {
-      fontSize: scale(14),
+      fontSize: scale(16),
     },
   });
 };

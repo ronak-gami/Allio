@@ -1,18 +1,19 @@
-import { COLORS } from '@utils/color';
+import { useTheme } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 
 const useStyle = () => {
+  const { colors } = useTheme();
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: COLORS.white,
+      backgroundColor: colors.white,
       justifyContent: 'center',
       alignItems: 'center',
     },
     title: {
       fontSize: 18,
       fontWeight: 'bold',
-      color: COLORS.black,
+      color: colors.black,
     },
   });
 };

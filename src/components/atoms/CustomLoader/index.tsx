@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import styles from './style';
-import { COLORS } from '@utils/color';
+import { useTheme } from '@react-navigation/native';
+import useStyle from './style';
 
 interface LoaderProps {
   visible: boolean;
@@ -16,18 +17,26 @@ const CustomLoader: React.FC<LoaderProps> = ({
   visible,
   text = 'Loading...',
   size = 'large',
-  color = COLORS.primary,
-  backgroundColor = 'rgba(251, 192, 45, 0.25)',
-  textColor = COLORS.primary,
+  color,
+  backgroundColor,
+  textColor,
 }) => {
+  const { colors } = useTheme();
+  const styles = useStyle();
+  const loaderColor = color || colors.primary;
+  const loaderBgColor = backgroundColor || 'rgba(251, 192, 45, 0.25)';
+  const loaderTextColor = textColor || colors.text;
+
   if (!visible) return null;
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
+    <View style={[styles.container, { backgroundColor: loaderBgColor }]}>
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size={size} color={color} />
+        <ActivityIndicator size={size} color={loaderColor} />
         {text && (
-          <Text style={[styles.loadingText, { color: textColor }]}>{text}</Text>
+          <Text style={[styles.loadingText, { color: loaderTextColor }]}>
+            {text}
+          </Text>
         )}
       </View>
     </View>

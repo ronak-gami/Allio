@@ -7,10 +7,10 @@ import {
   GestureResponderEvent,
   StyleProp,
 } from 'react-native';
-// import LinearGradient from 'react-native-linear-gradient';
 import { COLORS } from '@utils/color';
 import Text from '../Text';
 import useStyle from './style';
+import { useTheme } from '@react-navigation/native';
 
 interface ButtonProps {
   title: string;
@@ -40,6 +40,7 @@ const Button: React.FC<ButtonProps> = ({
   outlineColor,
   outlineWidth = 1,
 }) => {
+  const { colors } = useTheme();
   const styles = useStyle();
   let currentTextColor = textColor;
   let wrapperStyles: StyleProp<ViewStyle>[] = [styles.button];
@@ -60,13 +61,11 @@ const Button: React.FC<ButtonProps> = ({
       backgroundColor: bgColor,
     });
     if (!textColor) {
-      currentTextColor = COLORS.white;
+      currentTextColor = colors.white;
     }
   } else {
-    // WrapperComponent = LinearGradient;
-    // specificWrapperProps.colors = gradientColors;
     if (!textColor) {
-      currentTextColor = COLORS.white;
+      currentTextColor = colors.white;
     }
   }
 

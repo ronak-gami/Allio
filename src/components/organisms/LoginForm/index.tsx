@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Pressable } from 'react-native';
+import { View, Pressable, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { signInWithEmailAndPassword } from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
@@ -91,7 +91,7 @@ const LoginForm = () => {
                   onCheckboxPress={() => setRemember(!remember)}
                 />
                 <Button
-                  title="login"
+                  title="Login"
                   onPress={handleSubmit as () => void}
                   disabled={loading}
                   loading={loading}
@@ -108,7 +108,7 @@ const LoginForm = () => {
             <SignInWithFacebook />
             <SignInWithGoogle />
           </View>
-          <View style={styles.dividerContainer}>
+          {/* <View style={styles.dividerContainer}>
             <Text label="no_account" style={styles.orText} />
             <Pressable onPress={() => navigation.navigate(AUTH.Register)}>
               <Text
@@ -117,6 +117,16 @@ const LoginForm = () => {
                 type="semibold"
               />
             </Pressable>
+          </View> */}
+          <View style={styles.dividerContainer}>
+            <Text label="no_account" style={styles.orText} />
+            <TouchableOpacity>
+              <Text
+                label="register"
+                style={styles.signUpText}
+                type="semibold"
+              />
+            </TouchableOpacity>
           </View>
         </View>
       </View>

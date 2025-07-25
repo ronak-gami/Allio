@@ -18,7 +18,7 @@ const CustomCheckBox: React.FC<CustomCheckBoxProps> = ({
   const handleImageError = (e: any) => {
     console.warn('Check icon failed to load:', e.nativeEvent?.error);
   };
-const styles=useStyle()
+  const styles = useStyle();
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={[styles.circle, checked && styles.selectedCircle]}>
@@ -31,7 +31,9 @@ const styles=useStyle()
           />
         )}
       </View>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label} type="medium">
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 };
