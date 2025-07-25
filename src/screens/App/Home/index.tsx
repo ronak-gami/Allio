@@ -3,20 +3,14 @@ import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import useStyle from './style';
-import { DarkTheme } from '@react-navigation/native';
-import { LightTheme } from '@utils/themes';
 import Text from '@components/atoms/Text';
 import CustomDropdown from '@components/atoms/Dropdown';
 import Button from '@components/atoms/Button';
 import { RootState } from '@redux/store';
 import { setLanguage } from '@redux/slices/languageSlice';
 import { toggleTheme } from '@redux/slices/ThemeSlice';
-
-const languages = [
-  { label: 'English', value: 'en' },
-  { label: 'हिंदी', value: 'hi' },
-  { label: 'ગુજરાતી', value: 'gu' },
-];
+import { languages } from '@utils/helper';
+import { COLORS } from '@utils/color';
 
 const HomeScreen: React.FC = () => {
   const styles = useStyle();
@@ -28,8 +22,6 @@ const HomeScreen: React.FC = () => {
   );
   const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
 
-  const theme = isDarkMode ? DarkTheme : LightTheme;
-
   const handleLanguageChange = (value: string) => {
     dispatch(setLanguage(value));
   };
@@ -39,11 +31,10 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.container, { backgroundColor: COLORS.background }]}>
       <Text
         label={t('home_title')}
-        style={[styles.title, { color: theme.colors.text }]}
+        style={[styles.title, { color: COLORS.text }]}
       />
 
       <CustomDropdown
@@ -61,11 +52,9 @@ const HomeScreen: React.FC = () => {
       />
 
       <Button
-        title={
-          isDarkMode ? '🌞 Switch to Light Mode' : '🌙 Switch to Dark Mode'
-        }
+        title={isDarkMode ? ' Switch to Light Mode' : ' Switch to Dark Mode'}
         onPress={handleThemeToggle}
-        style={{ backgroundColor: theme.colors.primary }}
+        style={{ backgroundColor: COLORS.primary }}
         textStyle={{ color: isDarkMode ? '#000000' : '#FFFFFF' }}
       />
     </View>

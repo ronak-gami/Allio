@@ -1,23 +1,20 @@
 import React from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Image,
-  Text,
-  ImageSourcePropType,
-} from 'react-native';
+import { Platform, Image, Text, ImageSourcePropType } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { scale } from 'react-native-size-matters';
 import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
+
 import { IMAGES } from '@assets/index';
 import { height } from '@utils/helper';
 import { COLORS } from '@utils/color';
 import { HOME } from '@utils/constant';
+
 import HomeScreen from '@screens/App/Home';
 import PhotoMedia from '@screens/App/PhotoMedia';
 import ScanQR from '@screens/App/ScanQR';
 import VideoMedia from '@screens/App/VideoMedia';
 import More from '@screens/App/More';
+
+import useStyle from './style';
 
 export type BottomTabParamList = {
   Home: undefined;
@@ -30,6 +27,8 @@ export type BottomTabParamList = {
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const TabNavigator: React.FC = () => {
+  const styles = useStyle();
+
   const icons: Record<keyof BottomTabParamList, ImageSourcePropType> = {
     Home: IMAGES.Home,
     Photo: IMAGES.ImageMedia,
@@ -40,9 +39,7 @@ const TabNavigator: React.FC = () => {
 
   const getIconByRouteName = (
     name: keyof BottomTabParamList,
-  ): ImageSourcePropType => {
-    return icons[name];
-  };
+  ): ImageSourcePropType => icons[name];
 
   const screenOptions = ({
     route,
@@ -88,15 +85,3 @@ const TabNavigator: React.FC = () => {
 };
 
 export default TabNavigator;
-
-const styles = StyleSheet.create({
-  tabIcon: {
-    height: height * 0.03,
-    width: height * 0.03,
-    marginTop: 10,
-  },
-  tabLabel: {
-    fontSize: scale(12),
-    marginTop: 5,
-  },
-});
