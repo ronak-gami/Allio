@@ -1,38 +1,29 @@
 import React, { useState } from 'react';
 import { View, Pressable } from 'react-native';
-import useValidation from '../../../utils/validationSchema';
 import { useNavigation } from '@react-navigation/native';
-import {
-  signInWithEmailAndPassword,
-} from '@react-native-firebase/auth';
+import { signInWithEmailAndPassword } from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
-
-import { checkUserExistsByEmail, getAllUsers } from '@utils/helper';
+import { checkUserExistsByEmail } from '@utils/helper';
 import Text from '@components/atoms/Text';
 import Input from '@components/atoms/Input';
 import PasswordField from '@components/molecules/PasswordFields';
 import RememberForgot from '@components/molecules/RememberForget';
-import { ICONS } from '@assets/index';
 import { AUTH } from '@utils/constant';
-import CustomLoader from '@components/atoms/CustomLoader';
-import { COLORS } from '@utils/color';
 import Button from '@components/atoms/Button';
 import SignInWithFacebook from '../../molecules/SocialSignInFacebook';
 import SignInWithGoogle from '../../molecules/SocialSignInGoogle';
-import useStyle from './style'
+import useStyle from './style';
 import { setStateKey } from '@redux/slices/AuthSlice';
-
+import useValidation from '@utils/validationSchema';
 
 const LoginForm = () => {
   const navigation = useNavigation();
   const [remember, setRemember] = useState(false);
-  const { loginValidationSchema } = useValidation();
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
-  const [facebookLoading, setfacebookLoading] = useState(false);
   const dispatch = useDispatch();
-  const styles=useStyle()
+  const styles = useStyle();
+  const { loginValidationSchema } = useValidation();
 
   const initialValues = {
     email: '',
@@ -60,8 +51,6 @@ const LoginForm = () => {
       if (user) {
         const token = await user.getIdToken();
         dispatch(setStateKey({ key: 'token', value: token }));
-
-        const allUsers = await getAllUsers();
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);
@@ -113,24 +102,26 @@ const LoginForm = () => {
           </Formik>
         </View>
 
-      <View style={styles.socialButtonsWrapper}>
-        <Text style={styles.socialSignInText}>Social Sign-In</Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 12 }}>
-          <SignInWithFacebook />
-          <SignInWithGoogle />
-        </View>
-        <View style={styles.dividerContainer}>
-          <Text label="no_account" style={styles.orText} />
-          <Pressable onPress={() => navigation.navigate(AUTH.Register)}>
-            <Text label="register" style={styles.signUpText} type="semibold" />
-          </Pressable>
+        <View style={styles.socialButtonsWrapper}>
+          <Text style={styles.socialSignInText}>Social Sign-In</Text>
+          <View style={styles.SocialButtonStyle}>
+            <SignInWithFacebook />
+            <SignInWithGoogle />
+          </View>
+          <View style={styles.dividerContainer}>
+            <Text label="no_account" style={styles.orText} />
+            <Pressable onPress={() => navigation.navigate(AUTH.Register)}>
+              <Text
+                label="register"
+                style={styles.signUpText}
+                type="semibold"
+              />
+            </Pressable>
+          </View>
         </View>
       </View>
-    </View>
     </>
   );
-  
 };
-
 
 export default LoginForm;

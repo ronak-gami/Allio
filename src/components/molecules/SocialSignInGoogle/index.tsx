@@ -1,7 +1,11 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { GoogleAuthProvider, getAuth, signInWithCredential } from '@react-native-firebase/auth';
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithCredential,
+} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import SocialButton from '../socialButton';
 import { checkUserExistsByEmail } from '@utils/helper';
@@ -13,7 +17,9 @@ const SignInWithGoogle = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
       await GoogleSignin.signIn();
       const { idToken } = await GoogleSignin.getTokens();
       if (!idToken) throw new Error('ID token is missing');
@@ -50,4 +56,4 @@ const SignInWithGoogle = () => {
   );
 };
 
-export default SignInWithGoogle; 
+export default SignInWithGoogle;

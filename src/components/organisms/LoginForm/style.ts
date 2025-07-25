@@ -56,7 +56,7 @@ const useStyle = () => {
       gap: scale(10),
       // backgroundColor: COLORS.lightGray,
     },
-  
+
     button: {
       marginVertical: scale(6),
     },
@@ -73,7 +73,7 @@ const useStyle = () => {
       height: scale(18),
       resizeMode: 'contain',
     },
-  
+
     dividerText: {
       // paddingHorizontal: scale(15),
       color: COLORS.primary,
@@ -103,6 +103,11 @@ const useStyle = () => {
       height: scale(32),
       resizeMode: 'contain',
     },
-});
-}
-export default useStyle
+    SocialButtonStyle: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginVertical: 12,
+    },
+  });
+};
+export default useStyle;
