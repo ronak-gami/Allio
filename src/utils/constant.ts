@@ -1,6 +1,13 @@
 import { IMAGES } from '@assets/index';
 
-export const onboardingData = [
+interface OnboardingItem {
+  id: string;
+  image: any;
+  title: string;
+  description: string;
+}
+
+const onboardingData: OnboardingItem[] = [
   {
     id: '1',
     image: IMAGES.First,
@@ -38,7 +45,7 @@ export const onboardingData = [
   },
 ];
 
-export const AUTH = {
+const AUTH = {
   Splash: 'Splash',
   Onboarding: 'Onboarding',
   Login: 'Login',
@@ -46,11 +53,12 @@ export const AUTH = {
   ForgotPassword: 'Forgot Password',
   ResetPassword: 'Reset Password',
 };
-
-export const HOME = {
+const HOME = {
   Home: 'Home',
   Photo: 'Photo',
   ScanQR: 'ScanQR',
   Video: 'Video',
   More: 'More',
 };
+
+export { onboardingData, AUTH, HOME };

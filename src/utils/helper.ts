@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 export const height = Dimensions.get('screen').height;
 export const width = Dimensions.get('screen').width;
 
-export const FONTS = {
+export const FONTS: Record<string, string> = {
   black: 'Montserrat-Black',
   bold: 'Montserrat-Bold',
   extraBold: 'Montserrat-ExtraBold',
@@ -16,17 +16,20 @@ export const FONTS = {
   thin: 'Montserrat-Thin',
 };
 
-export const getAllUsers = async () => {
+interface FirestoreUser {
+  id: string;
+  email?: string;
+}
+
+const getAllUsers = async (): Promise<FirestoreUser[]> => {
   try {
-    console.log('[Firestore] Fetching all users...');
     const snapshot = await firestore().collection('users').get();
 
-    const users = snapshot.docs.map(doc => ({
+    const users: FirestoreUser[] = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
 
-    console.log(`[Firestore] Found ${users.length} users`);
     return users;
   } catch (error) {
     console.error('[Firestore] Error fetching users:', error);
@@ -34,16 +37,14 @@ export const getAllUsers = async () => {
   }
 };
 
-export const checkUserExistsByEmail = async email => {
+const checkUserExistsByEmail = async (email: string): Promise<boolean> => {
   try {
-    console.log(`[Firestore] Checking user with email: ${email}`);
     const querySnapshot = await firestore()
       .collection('users')
       .where('email', '==', email)
       .get();
 
     const exists = !querySnapshot.empty;
-    console.log(`[Firestore] User exists: ${exists}`);
     return exists;
   } catch (error) {
     console.error('[Firestore] Error checking user existence:', error);
@@ -51,15 +52,29 @@ export const checkUserExistsByEmail = async email => {
   }
 };
 
-export const updateUserInFirestore = async (userId, updatedData) => {
+const updateUserInFirestore = async (
+  userId: string,
+  updatedData: Partial<FirestoreUser>,
+): Promise<boolean> => {
   try {
-    console.log(`[Firestore] Updating user ${userId} with:`, updatedData);
     await firestore().collection('users').doc(userId).update(updatedData);
 
-    console.log('[Firestore] User updated successfully');
     return true;
   } catch (error) {
     console.error('[Firestore] Error updating user:', error);
     return false;
   }
+};
+
+const languages = [
+  { label: 'English', value: 'en' },
+  { label: 'हिंदी', value: 'hi' },
+  { label: 'ગુજરાતી', value: 'gu' },
+];
+
+export {
+  getAllUsers,
+  checkUserExistsByEmail,
+  updateUserInFirestore,
+  languages,
 };
