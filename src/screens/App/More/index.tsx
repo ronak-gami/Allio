@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import useStyle from './style';
-import { logout } from 'src/redux/slices/AuthSlice';
 import Button from '@components/atoms/Button';
+import { logout } from '@redux/slices/AuthSlice';
 
 const More: React.FC = () => {
   const styles = useStyle();

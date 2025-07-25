@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import useStyle from './style';
 import CustomOnboarding from '@components/atoms/CustomOnboarding';
 import { onboardingData } from '@utils/constant';
-import { setStateKey } from 'src/redux/slices/AuthSlice';
+import { setStateKey } from '@redux/slices/AuthSlice';
 
 const OnboardingScreen = ({ navigation }: any) => {
   const styles = useStyle();

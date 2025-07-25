@@ -7,8 +7,8 @@ import {
 } from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
+
 import { checkUserExistsByEmail, getAllUsers } from '@utils/helper';
-import { setStateKey } from 'src/redux/slices/AuthSlice';
 import Text from '@components/atoms/Text';
 import Input from '@components/atoms/Input';
 import PasswordField from '@components/molecules/PasswordFields';
@@ -20,13 +20,19 @@ import { COLORS } from '@utils/color';
 import Button from '@components/atoms/Button';
 import SignInWithFacebook from '../../molecules/SocialSignInFacebook';
 import SignInWithGoogle from '../../molecules/SocialSignInGoogle';
-import styles from './style'
+import useStyle from './style'
+import { setStateKey } from '@redux/slices/AuthSlice';
+
 
 const LoginForm = () => {
   const navigation = useNavigation();
   const [remember, setRemember] = useState(false);
   const { loginValidationSchema } = useValidation();
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [facebookLoading, setfacebookLoading] = useState(false);
   const dispatch = useDispatch();
+  const styles=useStyle()
 
   const initialValues = {
     email: '',
