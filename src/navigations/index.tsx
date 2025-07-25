@@ -4,14 +4,12 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import i18n from '../assets/i18n';
-// import colors from '../assets/theme';
 import SplashScreen from '@screens/Auth/Splash';
 import { setDarkMode } from '@redux/slices/ThemeSlice';
 import HomeNavigator from './App';
 import AuthNavigator from './Auth';
 import colors from '@assets/theme';
-// import i18n from '@assets/i18n';
-// import SplashScreen from '@screens/Auth/Splash';
+
 
 const lightTheme = {
   ...DefaultTheme,

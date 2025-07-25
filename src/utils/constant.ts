@@ -1,13 +1,13 @@
 import { IMAGES } from '@assets/index';
 
-export interface OnboardingItem {
+interface OnboardingItem {
   id: string;
   image: any;
   title: string;
   description: string;
 }
 
-export const onboardingData: OnboardingItem[] = [
+const onboardingData: OnboardingItem[] = [
   {
     id: '1',
     image: IMAGES.First,
@@ -45,23 +45,20 @@ export const onboardingData: OnboardingItem[] = [
   },
 ];
 
-export const AUTH = {
+const AUTH = {
   Splash: 'Splash',
   Onboarding: 'Onboarding',
   Login: 'Login',
   Register: 'Register',
   ForgotPassword: 'Forgot Password',
   ResetPassword: 'Reset Password',
-} as const;
-
-export type AuthRoute = (typeof AUTH)[keyof typeof AUTH];
-
-export const HOME = {
+};
+const HOME = {
   Home: 'Home',
   Photo: 'Photo',
   ScanQR: 'ScanQR',
   Video: 'Video',
   More: 'More',
-} as const;
+};
 
-export type HomeRoute = (typeof HOME)[keyof typeof HOME];
+export { onboardingData, AUTH, HOME };

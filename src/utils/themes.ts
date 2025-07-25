@@ -28,7 +28,7 @@ import {
   DarkTheme as NavigationDarkTheme,
 } from '@react-navigation/native';
 
-export const LightTheme = {
+ const LightTheme = {
   ...PaperLightTheme,
   ...NavigationLightTheme,
   dark: false,
@@ -45,7 +45,7 @@ export const LightTheme = {
   },
 };
 
-export const DarkTheme = {
+ const DarkTheme = {
   ...PaperDarkTheme,
   ...NavigationDarkTheme,
   dark: true,
@@ -61,3 +61,6 @@ export const DarkTheme = {
     notification: '#FBC02D',
   },
 };
+
+
+export { LightTheme, DarkTheme };
