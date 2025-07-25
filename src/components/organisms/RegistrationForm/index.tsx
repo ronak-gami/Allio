@@ -1,17 +1,13 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
-import { useNavigation } from '@react-navigation/native';
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
 import Input from '@components/atoms/Input';
-import { AUTH } from '@utils/constant';
 import useRegister from './useRegisterForm';
 import useStyle from './style';
 
-
 const RegistrationForm = () => {
-  const navigation = useNavigation();
   const styles = useStyle();
 
   const {
@@ -19,6 +15,7 @@ const RegistrationForm = () => {
     registrationValidationSchema,
     handleRegister,
     loading,
+    navigateToLogin,
   } = useRegister();
 
   return (
@@ -94,7 +91,7 @@ const RegistrationForm = () => {
       </View>
       <Text style={styles.loginText}>
         Already have an account?{' '}
-        <TouchableOpacity onPress={() => navigation.navigate(AUTH.Login)}>
+        <TouchableOpacity onPress={navigateToLogin}>
           <Text style={styles.loginLink}>Login</Text>
         </TouchableOpacity>
       </Text>

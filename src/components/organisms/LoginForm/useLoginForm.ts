@@ -7,11 +7,15 @@ import {
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { checkUserExistsByEmail } from '@utils/helper';
 import useValidation from '@utils/validationSchema';
+import { useNavigation } from '@react-navigation/native';
+import { AUTH } from '@utils/constant';
+import { AuthNavigationProp } from '@types/navigations';
 
 export const useLoginForm = () => {
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const navigation = useNavigation<AuthNavigationProp>();
   const { loginValidationSchema } = useValidation();
 
   const initialValues = {
@@ -47,6 +51,10 @@ export const useLoginForm = () => {
     }
   };
 
+  const navigateToRegister = () => {
+    navigation.navigate(AUTH.Register);
+  };
+
   return {
     remember,
     setRemember: () => setRemember(prev => !prev),
@@ -54,5 +62,6 @@ export const useLoginForm = () => {
     handleLogin,
     initialValues,
     loginValidationSchema,
+    navigateToRegister,
   };
 };

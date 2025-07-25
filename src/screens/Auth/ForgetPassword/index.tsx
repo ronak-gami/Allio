@@ -2,8 +2,12 @@ import React from 'react';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import useStyle from './style';
 import ForgotPasswordForm from '@components/organisms/ForgetpasswordForm';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '@types/navigations';
 
-const ForgotPassword = () => {
+type Props = NativeStackScreenProps<AuthStackParamList, 'ForgotPassword'>;
+
+const ForgetPassword: React.FC<Props> = () => {
   const styles = useStyle();
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -14,4 +18,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ForgetPassword;

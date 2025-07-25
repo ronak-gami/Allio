@@ -10,16 +10,7 @@ import SignInWithFacebook from '@components/molecules/SocialSignInFacebook';
 import SignInWithGoogle from '@components/molecules/SocialSignInGoogle';
 import useStyle from './style';
 
-interface LoginFormUIProps {
-  initialValues: { email: string; password: string };
-  validationSchema: any;
-  handleLogin: (values: { email: string; password: string }) => void;
-  remember: boolean;
-  setRemember: () => void;
-  loading: boolean;
-}
-
-const LoginForm: React.FC<LoginFormUIProps> = () => {
+const LoginForm: React.FC = () => {
   const styles = useStyle();
   const {
     initialValues,
@@ -28,6 +19,7 @@ const LoginForm: React.FC<LoginFormUIProps> = () => {
     remember,
     setRemember,
     loading,
+    navigateToRegister,
   } = useLoginForm();
   return (
     <View style={styles.formContainer}>
@@ -83,8 +75,7 @@ const LoginForm: React.FC<LoginFormUIProps> = () => {
           </View>
           <View style={styles.dividerContainer}>
             <Text label="no_account" style={styles.orText} />
-            <TouchableOpacity
-              onPress={() => navigation.navigate(AUTH.Register)}>
+            <TouchableOpacity onPress={navigateToRegister}>
               <Text
                 label="register"
                 style={styles.signUpText}

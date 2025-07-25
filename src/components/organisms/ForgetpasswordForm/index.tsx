@@ -6,13 +6,13 @@ import { scale } from 'react-native-size-matters';
 import auth from '@react-native-firebase/auth';
 import { checkUserExistsByEmail } from '@utils/helper';
 import Text from '@components/atoms/Text';
-import EmailField from '@components/molecules/EmailField';
 import Button from '@components/atoms/Button';
 import useStyle from './style';
+import Input from '@components/atoms/Input';
 
 const ForgotPasswordScreen: React.FC = () => {
   const { forgotPasswordSchema } = useValidation();
-  const style=useStyle()
+  const style = useStyle();
   const handleForgotPassword = async (values: { email: string }) => {
     const email = values.email.trim().toLowerCase();
 
@@ -67,13 +67,15 @@ const ForgotPasswordScreen: React.FC = () => {
               <Text style={style.subtitle}>
                 Enter your email to receive a password reset link
               </Text>
-
-              <EmailField
+              <Input
+                placeholder="email"
+                maxlength={25}
+                keyboardType="email-address"
+                autoCapitalize="none"
                 value={values.email}
                 onChangeText={handleChange('email')}
-                error={touched.email && errors.email ? errors.email : ''}
+                error={touched.email ? errors.email : ''}
               />
-
               <Button
                 title="Send Reset Link"
                 onPress={handleSubmit as () => void}

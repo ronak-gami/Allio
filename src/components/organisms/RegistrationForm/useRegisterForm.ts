@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import useValidation from '@utils/validationSchema';
 import { AUTH } from '@utils/constant';
+import { AuthNavigationProp } from '@types/navigations';
 
 export type RegistrationValues = {
   firstName: string;
@@ -23,7 +24,7 @@ const useRegister = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const auth = getAuth();
-  const navigation = useNavigation();
+  const navigation = useNavigation<AuthNavigationProp>();
   const { registrationValidationSchema } = useValidation();
 
   const initialValues: RegistrationValues = {
@@ -79,11 +80,16 @@ const useRegister = () => {
     }
   };
 
+  const navigateToLogin = () => {
+    navigation.navigate(AUTH.Login);
+  };
+
   return {
     initialValues,
     registrationValidationSchema,
     handleRegister,
     loading,
+    navigateToLogin,
   };
 };
 

@@ -2,8 +2,12 @@ import React from 'react';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import useStyle from './style';
 import RegistrationForm from '@components/organisms/RegistrationForm';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '@types/navigations';
 
-const RegisterScreen = () => {
+type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
+
+const Registration: React.FC<Props> = () => {
   const styles = useStyle();
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -13,4 +17,4 @@ const RegisterScreen = () => {
     </KeyboardAvoidingView>
   );
 };
-export default RegisterScreen;
+export default Registration;

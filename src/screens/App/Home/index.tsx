@@ -11,8 +11,12 @@ import { setLanguage } from '@redux/slices/languageSlice';
 import { toggleTheme } from '@redux/slices/ThemeSlice';
 import { languages } from '@utils/helper';
 import { useTheme } from '@react-navigation/native';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { TabParamList } from '@types/navigations';
 
-const HomeScreen: React.FC = () => {
+type Props = BottomTabScreenProps<TabParamList, 'Home'>;
+
+const Home: React.FC<Props> = () => {
   const styles = useStyle();
   const dispatch = useDispatch();
   const { colors } = useTheme();
@@ -58,4 +62,4 @@ const HomeScreen: React.FC = () => {
   );
 };
 
-export default HomeScreen;
+export default Home;

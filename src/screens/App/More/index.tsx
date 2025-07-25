@@ -5,8 +5,12 @@ import { useDispatch } from 'react-redux';
 import useStyle from './style';
 import Button from '@components/atoms/Button';
 import { logout } from '@redux/slices/AuthSlice';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { TabParamList } from '@types/navigations';
 
-const More: React.FC = () => {
+type Props = BottomTabScreenProps<TabParamList, 'More'>;
+
+const More: React.FC<Props> = () => {
   const styles = useStyle();
   const dispatch = useDispatch();
   const handleLogout = async () => {
