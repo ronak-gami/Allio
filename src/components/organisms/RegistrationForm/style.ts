@@ -1,8 +1,7 @@
-import { BackgroundFetch } from './../../../../node_modules/path-scurry/node_modules/lru-cache/dist/commonjs/index.d';
 import { COLORS } from '@utils/color';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
- 
+
 const useStyle = () => {
   return StyleSheet.create({
     formContainer: {
@@ -26,7 +25,6 @@ const useStyle = () => {
       color: COLORS.primary,
       fontWeight: 'bold',
       textAlign: 'justify',
-
     },
     loginButton: {
       backgroundColor: COLORS.primary,
@@ -39,5 +37,5 @@ const useStyle = () => {
     },
   });
 };
- 
+
 export default useStyle;

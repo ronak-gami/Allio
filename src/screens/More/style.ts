@@ -1,8 +1,6 @@
-
-import {COLORS} from '../../utils/color';
+import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import {StyleSheet} from 'react-native';
-
+import { COLORS } from '../../utils/color';
 export const useStyle = () => {
   return StyleSheet.create({
     container: {
@@ -16,8 +14,8 @@ export const useStyle = () => {
       fontWeight: 'bold',
       color: COLORS.black,
     },
-    logoutButton:  {
-        backgroundColor: COLORS.primary,
-      },
+    logoutButton: {
+      backgroundColor: COLORS.primary,
+    },
   });
 };

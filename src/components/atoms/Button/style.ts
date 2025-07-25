@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
-
   return StyleSheet.create({
     button: {
       borderRadius: scale(12),
@@ -22,10 +21,7 @@ const useStyle = () => {
     icon: {
       marginHorizontal: scale(8),
     },
-  
-
-});
-
-}
+  });
+};
 
 export default useStyle;

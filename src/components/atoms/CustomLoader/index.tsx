@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
-import styles from './style';
 import { COLORS } from '@utils/color';
 import useStyle from './style';
 
@@ -12,7 +11,6 @@ interface LoaderProps {
   backgroundColor?: string;
   textColor?: string;
 }
-
 const CustomLoader: React.FC<LoaderProps> = ({
   visible,
   text = 'Loading...',
@@ -21,8 +19,9 @@ const CustomLoader: React.FC<LoaderProps> = ({
   backgroundColor = 'rgba(0, 0, 0, 0.5)',
   textColor = COLORS.primary,
 }) => {
+  const styles = useStyle();
   if (!visible) return null;
-const styles=useStyle()
+
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <View style={styles.loaderContainer}>

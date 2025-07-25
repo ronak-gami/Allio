@@ -26,13 +26,13 @@ const useStyle = () => {
       fontSize: scale(12),
     },
     icon: {
-      width: 20,
-      height: 20,
+      width: scale(20),
+      height: scale(20),
       tintColor: COLORS.black,
     },
     prefixIcon: {
-      width: 20,
-      height: 20,
+      width: scale(18),
+      height: scale(18),
       tintColor: COLORS.gray,
     },
   });

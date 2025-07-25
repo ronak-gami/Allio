@@ -27,7 +27,6 @@ interface ButtonProps {
   outlineWidth?: number;
 }
 
-const styles=useStyle()
 const Button: React.FC<ButtonProps> = ({
   title,
   textColor,
@@ -36,17 +35,16 @@ const Button: React.FC<ButtonProps> = ({
   prefixLogo,
   postfixLogo,
   loading = false,
-  //   gradientColors = [COLORS.primary, COLORS.pink],
   disabled = false,
   bgColor,
   outlineColor,
   outlineWidth = 1,
 }) => {
+  const styles = useStyle();
   let currentTextColor = textColor;
   let wrapperStyles: StyleProp<ViewStyle>[] = [styles.button];
   let WrapperComponent: React.ElementType = View;
   let specificWrapperProps: any = {};
-
 
   if (outlineColor) {
     wrapperStyles.push({

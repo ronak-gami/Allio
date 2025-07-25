@@ -14,12 +14,12 @@ const More: React.FC = () => {
   };
   return (
     <View style={styles.container}>
-      <Text>More Screens</Text>
+      <Text style={styles.title}>More Screens</Text>
       <Button
         title="Logout"
         onPress={handleLogout}
+        style={styles.logoutButton}
       />
-      
     </View>
   );
 };

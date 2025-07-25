@@ -1,5 +1,6 @@
 import { COLORS } from '@utils/color';
 import { height, width } from '@utils/helper';
+import { scale } from 'react-native-size-matters';
 import { StyleSheet } from 'react-native';
 
 const useStyle = () => {
@@ -16,8 +17,8 @@ const useStyle = () => {
     },
     loaderContainer: {
       backgroundColor: COLORS.white,
-      borderRadius: 10,
-      padding: 20,
+      borderRadius: scale(8),
+      padding: scale(10),
       alignItems: 'center',
       justifyContent: 'center',
       minWidth: 100,
@@ -32,8 +33,8 @@ const useStyle = () => {
       elevation: 5,
     },
     loadingText: {
-      marginTop: 15,
-      fontSize: 16,
+      marginTop: scale(10),
+      fontSize: scale(16),
       fontWeight: '500',
       textAlign: 'center',
     },
