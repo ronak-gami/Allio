@@ -36,7 +36,3 @@ const colors = Object.freeze({
 });
 
 export default colors;
-export type AppColors = typeof common & {
-  background: string;
-  text: string;
-};
