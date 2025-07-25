@@ -18,6 +18,7 @@ const FirstnameField: React.FC<FirstnameFieldProps> = ({
 }) => {
   return (
     <Input
+    maxlength={25}
       style={styleInput}
       placeholder="Firstname"
       value={value}

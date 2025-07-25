@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { GoogleAuthProvider, getAuth, signInWithCredential } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { setStateKey } from '../../../redux/slices/AuthSlice';
-import { checkUserExistsByEmail } from '../../../utils/helper';
-import { ICONS } from '../../../assets';
 import SocialButton from '../socialButton';
+import { checkUserExistsByEmail } from '@utils/helper';
+import { setStateKey } from '@redux/slices/AuthSlice';
+import { ICONS } from '@assets/index';
 
 const SignInWithGoogle = () => {
   const dispatch = useDispatch();

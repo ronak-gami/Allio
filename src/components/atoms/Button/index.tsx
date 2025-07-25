@@ -8,9 +8,9 @@ import {
   StyleProp,
 } from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
-import styles from './style';
 import { COLORS } from '@utils/color';
 import Text from '../Text';
+import useStyle from './style';
 
 interface ButtonProps {
   title: string;
@@ -27,6 +27,7 @@ interface ButtonProps {
   outlineWidth?: number;
 }
 
+const styles=useStyle()
 const Button: React.FC<ButtonProps> = ({
   title,
   textColor,
@@ -45,6 +46,7 @@ const Button: React.FC<ButtonProps> = ({
   let wrapperStyles: StyleProp<ViewStyle>[] = [styles.button];
   let WrapperComponent: React.ElementType = View;
   let specificWrapperProps: any = {};
+
 
   if (outlineColor) {
     wrapperStyles.push({

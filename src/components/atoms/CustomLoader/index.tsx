@@ -2,6 +2,7 @@ import React from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import styles from './style';
 import { COLORS } from '@utils/color';
+import useStyle from './style';
 
 interface LoaderProps {
   visible: boolean;
@@ -21,7 +22,7 @@ const CustomLoader: React.FC<LoaderProps> = ({
   textColor = COLORS.primary,
 }) => {
   if (!visible) return null;
-
+const styles=useStyle()
   return (
     <View style={[styles.container, { backgroundColor }]}>
       <View style={styles.loaderContainer}>

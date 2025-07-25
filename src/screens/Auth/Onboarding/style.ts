@@ -14,17 +14,19 @@ const useStyle = () => {
       borderRadius: 8,
       position: 'absolute',
       bottom: 50,
-      alignSelf: 'center',
+      marginLeft:30,
+      alignSelf: 'flex-start',
     },
     buttonText: {
       color: COLORS.white,
       fontSize: 18,
+ 
       fontWeight: 'bold',
     },
     skipButton: {
       position: 'absolute',
       bottom: 50,
-      right: 20,
+      right: 40,
       zIndex: 1,
       padding: 10,
     },

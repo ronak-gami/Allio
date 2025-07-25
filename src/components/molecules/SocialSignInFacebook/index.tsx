@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { FacebookAuthProvider, getAuth, signInWithCredential } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { setStateKey } from '../../../redux/slices/AuthSlice';
-import { checkUserExistsByEmail } from '../../../utils/helper';
-import { ICONS } from '../../../assets';
 import SocialButton from '../socialButton';
+import { setStateKey } from '@redux/slices/AuthSlice';
+import { checkUserExistsByEmail } from '@utils/helper';
+import { ICONS } from '@assets/index';
 
 const SignInWithFacebook = () => {
   const dispatch = useDispatch();

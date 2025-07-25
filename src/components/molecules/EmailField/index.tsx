@@ -19,9 +19,10 @@ const EmailField: React.FC<EmailFieldProps> = ({
     <Input
       style={style}
       placeholder="Email"
+      maxlength={25}
       value={value}
       onChangeText={onChangeText}
-      keyboardType="email-address"
+      keyboardType='email-address'
       autoCapitalize="none"
       error={error}
     />

@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
@@ -87,11 +88,11 @@ const OnboardingScreen = ({ navigation }: any) => {
         }}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleNext}>
+      <Pressable style={styles.button} onPress={handleNext}>
         <Text style={styles.buttonText}>
           {currentIndex === onboardingData.length - 1 ? 'Get Started' : 'Next'}
         </Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 };

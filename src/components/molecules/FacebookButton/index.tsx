@@ -11,10 +11,13 @@ import styles from './style';
 import { ICONS } from '@assets/index';
 import Button from '@components/atoms/Button';
 import { setStateKey } from '@redux/slices/AuthSlice';
+import useStyle from './style';
 
 const FacebookButton = ({ onLoginSuccess }: any) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
+  const styles=useStyle()
 
   const handleFacebookLogin = async () => {
     try {

@@ -18,6 +18,7 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
 }) => {
   return (
     <Input
+    maxlength={12}
       style={styleInput}
       placeholder="Password"
       value={value}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, FlatList, TouchableOpacity, Text } from 'react-native';
-import styles from './style';
 import Input from '../Input';
+import useStyle from './style'
 
 interface AutoCompleteProps {
   data: string[];
@@ -20,6 +20,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({
 }) => {
   const [query, setQuery] = useState('');
   const [filteredData, setFilteredData] = useState<string[]>([]);
+  const styles=useStyle()
 
   const handleSearch = (text: string) => {
     setQuery(text);

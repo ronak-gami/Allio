@@ -15,13 +15,14 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import Text from '../Text';
-import styles from './style';
 import { COLORS } from '@utils/color';
 import { ICONS } from '@assets/index';
+import useStyle from './style';
 
 interface InputProps {
   placeholder: string;
   value: string;
+  maxlength:10 |12|25 ;
   onChangeText: (text: string) => void;
   keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
   isPassword?: boolean;
@@ -46,6 +47,7 @@ const Input: React.FC<InputProps> = ({
   keyboardType = 'default',
   isPassword = false,
   error,
+  maxlength=10,
   style,
   autoCapitalize = 'none',
   backgroundColor,
@@ -61,6 +63,8 @@ const Input: React.FC<InputProps> = ({
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [isSecure, setIsSecure] = useState<boolean>(isPassword);
   const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const styles=useStyle()
 
   useEffect(() => {
     if ((dataType === 'date' || dataType === 'time') && value) {
@@ -121,11 +125,13 @@ const Input: React.FC<InputProps> = ({
 
   const mainInputContent = (
     <TextInput
+    keyboardType={keyboardType}
       mode="outlined"
       label={<Text>{placeholder}</Text>}
       onChangeText={!isPickerInput ? onChangeText : undefined}
       editable={!isPickerInput}
       secureTextEntry={isPassword && isSecure}
+      maxLength={maxlength}
       style={[
         styles.inputField,
         multiline && styles.multiline,

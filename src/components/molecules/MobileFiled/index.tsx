@@ -18,6 +18,7 @@ const MobilenoField: React.FC<MobilenoFieldProps> = ({
   return (
     <Input
       style={styleInput}
+      maxlength={10}
       keyboardType="numeric"
       placeholder="Mobile No."
       value={value}

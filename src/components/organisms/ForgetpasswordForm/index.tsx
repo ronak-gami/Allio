@@ -1,20 +1,18 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { Formik } from 'formik';
-import EmailField from '../../molecules/EmailField';
-import Button from '../../atoms/Button';
 import useValidation from '../../../utils/validationSchema';
 import { scale } from 'react-native-size-matters';
-import style from './style';
 import auth from '@react-native-firebase/auth';
 import { checkUserExistsByEmail } from '@utils/helper';
-import { forgotPasswordSchema } from '@utils/validationSchema';
 import Text from '@components/atoms/Text';
 import EmailField from '@components/molecules/EmailField';
 import Button from '@components/atoms/Button';
+import useStyle from './style';
 
 const ForgotPasswordScreen: React.FC = () => {
   const { forgotPasswordSchema } = useValidation();
+  const style=useStyle()
   const handleForgotPassword = async (values: { email: string }) => {
     const email = values.email.trim().toLowerCase();
 
@@ -89,4 +87,4 @@ const ForgotPasswordScreen: React.FC = () => {
   );
 };
 
-export default ForgotPasswordForm;
+export default ForgotPasswordScreen;
