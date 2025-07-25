@@ -7,7 +7,6 @@ import {
   GestureResponderEvent,
   StyleProp,
 } from 'react-native';
-import { COLORS } from '@utils/color';
 import Text from '../Text';
 import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
