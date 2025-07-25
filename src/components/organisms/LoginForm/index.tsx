@@ -3,13 +3,12 @@ import { View, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import Text from '@components/atoms/Text';
 import Input from '@components/atoms/Input';
-import PasswordField from '@components/molecules/PasswordFields';
 import RememberForgot from '@components/molecules/RememberForget';
 import Button from '@components/atoms/Button';
-import SignInWithFacebook from '../../molecules/SocialSignInFacebook';
-import SignInWithGoogle from '../../molecules/SocialSignInGoogle';
-import useStyle from './style';
 import { useLoginForm } from './useLoginForm';
+import SignInWithFacebook from '@components/molecules/SocialSignInFacebook';
+import SignInWithGoogle from '@components/molecules/SocialSignInGoogle';
+import useStyle from './style';
 
 interface LoginFormUIProps {
   initialValues: { email: string; password: string };
@@ -24,13 +23,12 @@ const LoginForm: React.FC<LoginFormUIProps> = () => {
   const styles = useStyle();
   const {
     initialValues,
-    validationSchema,
+    loginValidationSchema,
     handleLogin,
     remember,
     setRemember,
     loading,
   } = useLoginForm();
-
   return (
     <View style={styles.formContainer}>
       <Text label="login" style={styles.title} type="bold" />
@@ -39,7 +37,7 @@ const LoginForm: React.FC<LoginFormUIProps> = () => {
       <View style={styles.inputContainer}>
         <Formik
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          validationSchema={loginValidationSchema}
           onSubmit={handleLogin}>
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <>
@@ -52,10 +50,13 @@ const LoginForm: React.FC<LoginFormUIProps> = () => {
                 onChangeText={handleChange('email')}
                 error={touched.email ? errors.email : ''}
               />
-              <PasswordField
+              <Input
+                placeholder="Password"
+                maxlength={25}
                 value={values.password}
                 onChangeText={handleChange('password')}
                 error={touched.password ? errors.password : ''}
+                isPassword
               />
               <RememberForgot
                 remember={remember}

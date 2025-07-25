@@ -10,7 +10,6 @@ import HomeNavigator from './App';
 import AuthNavigator from './Auth';
 import colors from '@assets/theme';
 
-
 const lightTheme = {
   ...DefaultTheme,
   dark: false,
