@@ -17,7 +17,7 @@ const CustomLoader: React.FC<LoaderProps> = ({
   text = 'Loading...',
   size = 'large',
   color = COLORS.primary,
-  backgroundColor = 'rgba(0, 0, 0, 0.5)',
+  backgroundColor = 'rgba(251, 192, 45, 0.25)',
   textColor = COLORS.primary,
 }) => {
   if (!visible) return null;

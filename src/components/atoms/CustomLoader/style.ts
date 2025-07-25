@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     zIndex: 9999,
   },
   loaderContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: COLORS.white,
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',

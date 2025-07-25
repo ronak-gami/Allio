@@ -1,21 +1,26 @@
-import { COLORS } from '@utils/color';
 import { StyleSheet } from 'react-native';
+import { useTheme } from '@react-navigation/native';
+import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
+  const { colors } = useTheme();
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: COLORS.white,
+      backgroundColor: colors.background,
       justifyContent: 'center',
       alignItems: 'center',
     },
     title: {
-      fontSize: 18,
+      fontSize: scale(24),
       fontWeight: 'bold',
-      color: COLORS.black,
+      color: colors.text,
     },
     logoutButton: {
-      backgroundColor: COLORS.primary,
+      backgroundColor: colors.primary,
+      paddingHorizontal: scale(20),
+      paddingVertical: scale(10),
+      borderRadius: scale(5),
     },
   });
 };
