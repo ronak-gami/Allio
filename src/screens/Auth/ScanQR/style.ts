@@ -1,23 +1,18 @@
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { width } from '../../utils/helper';
-import { COLORS } from '../../utils/color';
+
+import { COLORS } from '../../../utils/color';
 
 export const useStyle = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: COLORS.white,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: COLORS.primary,
     },
-    animation: {
-      width: width * 0.8,
-      height: width * 0.8,
-    },
-    text: {
-      fontSize: scale(40),
-      fontFamily: 'Poppins-Bold',
+    title: {
+      fontSize: scale(16),
       fontWeight: 'bold',
       color: COLORS.black,
     },

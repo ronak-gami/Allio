@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { COLORS } from '../../utils/color';
+import { COLORS } from '../../../utils/color';
+
 export const useStyle = () => {
   return StyleSheet.create({
     container: {
@@ -13,9 +14,6 @@ export const useStyle = () => {
       fontSize: scale(16),
       fontWeight: 'bold',
       color: COLORS.black,
-    },
-    logoutButton: {
-      backgroundColor: COLORS.primary,
     },
   });
 };
