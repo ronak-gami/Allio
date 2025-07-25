@@ -32,7 +32,6 @@ const getAllUsers = async (): Promise<FirestoreUser[]> => {
 
     return users;
   } catch (error) {
-    console.error('[Firestore] Error fetching users:', error);
     return [];
   }
 };

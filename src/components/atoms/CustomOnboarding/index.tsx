@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, Image, ImageSourcePropType } from 'react-native';
-import styles from './style';
+import useStyle from './style';
 
 export interface OnboardingScreenProps {
   image: ImageSourcePropType;
   title: string;
   description: string;
 }
-
+const styles=useStyle()
 const CustomOnboarding: React.FC<OnboardingScreenProps> = ({
   image,
   title,

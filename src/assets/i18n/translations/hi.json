@@ -3,6 +3,10 @@
   "login_subtitle": "वापसी पर स्वागत है! कृपया अपने खाते में लॉगिन करें",
   "email": "ईमेल",
   "password": "पासवर्ड",
+  "first_name": "पहला नाम",
+  "last_name": "अंतिम नाम",
+  "mobile": "मोबाइल नंबर",
+  "confirm_password": "कन्फर्म पासवर्ड",
   "remember_me": "मुझे याद रखें",
   "forgot_password": "पासवर्ड भूल गए?",
   "continue_facebook": "फेसबुक से जारी रखें",
@@ -10,5 +14,14 @@
   "continue_github": "गिटहब से जारी रखें",
   "continue_linkedin": "लिंक्डइन से जारी रखें",
   "no_account": "क्या आपका खाता नहीं है?",
-  "register": "रजिस्टर करें"
+  "register": "रजिस्टर करें",
+  "register_subtitle": "नया खाता बनाने के लिए शुरू करें",
+  "validation": {
+    "field_required": "{{field}} आवश्यक है",
+    "field_min": "{{field}} कम से कम {{min}} अक्षरों का होना चाहिए",
+    "email_valid": "कृपया मान्य {{field}} पता दर्ज करें",
+    "mobile_pattern": "{{field}} 10 अंकों का होना चाहिए",
+    "password_pattern": "{{field}} में कम से कम एक बड़ा अक्षर, एक छोटा अक्षर और एक संख्या होनी चाहिए",
+    "confirm_password_match": "पासवर्ड मेल खाने चाहिए"
+  }
 }

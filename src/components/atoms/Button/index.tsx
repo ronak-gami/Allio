@@ -8,9 +8,9 @@ import {
   StyleProp,
 } from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
-import styles from './style';
 import { COLORS } from '@utils/color';
 import Text from '../Text';
+import useStyle from './style';
 
 interface ButtonProps {
   title: string;
@@ -35,12 +35,12 @@ const Button: React.FC<ButtonProps> = ({
   prefixLogo,
   postfixLogo,
   loading = false,
-  //   gradientColors = [COLORS.primary, COLORS.pink],
   disabled = false,
   bgColor,
   outlineColor,
   outlineWidth = 1,
 }) => {
+  const styles = useStyle();
   let currentTextColor = textColor;
   let wrapperStyles: StyleProp<ViewStyle>[] = [styles.button];
   let WrapperComponent: React.ElementType = View;

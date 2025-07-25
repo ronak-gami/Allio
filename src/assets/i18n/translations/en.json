@@ -4,11 +4,25 @@
   "email": "Email",
   "password": "Password",
   "remember_me": "Remember me",
+  "first_name": "First Name",
+  "last_name": "Last Name",
+  "mobile": "Mobile Number",
+  "confirm_password": "Confirm Password",
   "forgot_password": "Forgot Password?",
   "continue_facebook": "Continue with Facebook",
   "continue_google": "Continue with Google",
   "continue_github": "Continue with GitHub",
   "continue_linkedin": "Continue with LinkedIn",
   "no_account": "Don't have an account?",
-  "register": "Register"
+  "register": "Register",
+  "register_subtitle": "Create a new account to get started",
+
+  "validation": {
+    "field_required": "{{field}} is required",
+    "field_min": "{{field}} must be at least {{min}} characters",
+    "email_valid": "Please enter valid {{field}} address",
+    "mobile_pattern": "{{field}} must be 10 digits",
+    "password_pattern": "{{field}} must contain at least one uppercase letter, one lowercase letter, and one number",
+    "confirm_password_match": "Passwords must match"
+  }
 }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Modal, FlatList, Image } from 'react-native';
 import Text from '../Text';
-import styles from './style';
 import { COLORS } from '@utils/color';
 import { ICONS } from '@assets/index';
+import useStyle from './style';
 
 interface DropdownProps {
   label: string;
@@ -23,6 +23,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
   touched,
 }) => {
   const [visible, setVisible] = useState(false);
+  const styles=useStyle()
 
   const handleSelect = (item: string) => {
     onSelect(item);

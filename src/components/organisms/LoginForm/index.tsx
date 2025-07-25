@@ -1,46 +1,34 @@
 import React, { useState } from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
-import styles from './style';
+import { View, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  FacebookAuthProvider,
-  GoogleAuthProvider,
-  signInWithCredential,
-} from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import { signInWithEmailAndPassword } from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { checkUserExistsByEmail, getAllUsers } from '@utils/helper';
+import { checkUserExistsByEmail } from '@utils/helper';
 import Text from '@components/atoms/Text';
-import { loginValidationSchema } from '@utils/validationSchema';
 import Input from '@components/atoms/Input';
 import PasswordField from '@components/molecules/PasswordFields';
 import RememberForgot from '@components/molecules/RememberForget';
-import { ICONS } from '@assets/index';
 import { AUTH } from '@utils/constant';
-import CustomLoader from '@components/atoms/CustomLoader';
-import { COLORS } from '@utils/color';
 import Button from '@components/atoms/Button';
+import SignInWithFacebook from '../../molecules/SocialSignInFacebook';
+import SignInWithGoogle from '../../molecules/SocialSignInGoogle';
+import useStyle from './style';
 import { setStateKey } from '@redux/slices/AuthSlice';
+import useValidation from '@utils/validationSchema';
 
 const LoginForm = () => {
   const navigation = useNavigation();
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
-  const [facebookLoading, setfacebookLoading] = useState(false);
+  const dispatch = useDispatch();
+  const styles = useStyle();
+  const { loginValidationSchema } = useValidation();
 
   const initialValues = {
     email: '',
     password: '',
   };
-
-  const auth = getAuth();
-  const dispatch = useDispatch();
 
   const handleLogin = async (values: typeof initialValues) => {
     setLoading(true);
@@ -51,6 +39,8 @@ const LoginForm = () => {
         return;
       }
 
+      const { getAuth } = require('@react-native-firebase/auth');
+      const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(
         auth,
         values.email,
@@ -60,106 +50,12 @@ const LoginForm = () => {
       const user = userCredential.user;
       if (user) {
         const token = await user.getIdToken();
-        console.log('Token:', token);
         dispatch(setStateKey({ key: 'token', value: token }));
-
-        const allUsers = await getAllUsers();
-        console.log('All Users:', allUsers);
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleFacebookLogin = async () => {
-    setfacebookLoading(true);
-    try {
-      console.log('[Facebook] Login process started...');
-      const result = await LoginManager.logInWithPermissions([
-        'public_profile',
-        'email',
-      ]);
-      if (result.isCancelled) {
-        throw new Error('User cancelled the login process');
-      }
-      const data = await AccessToken.getCurrentAccessToken();
-      if (!data) {
-        throw new Error('Something went wrong obtaining access token');
-      }
-      const facebookCredential = FacebookAuthProvider.credential(
-        data.accessToken,
-      );
-      const userCredential = await signInWithCredential(
-        getAuth(),
-        facebookCredential,
-      );
-      const user = userCredential.user;
-      console.log('[Facebook] Firebase Auth user:', user);
-      const token = await user.getIdToken();
-      const userExists = await checkUserExistsByEmail(user.email);
-      const userData = {
-        firstName: user.displayName?.split(' ')[0] || '',
-        lastName: user.displayName?.split(' ')[1] || '',
-        email: user.email,
-        profileImage: user.photoURL || '',
-        provider: 'facebook',
-        createdAt: new Date().toISOString(),
-      };
-      if (!userExists) {
-        console.log('[Firestore] New Facebook user detected, saving...');
-        await firestore().collection('users').doc(user.uid).set(userData);
-        console.log('[Firestore] Facebook user added:', userData);
-      } else {
-        console.log('[Firestore] Facebook user already exists, skipping add.');
-      }
-      dispatch(setStateKey({ key: 'token', value: token }));
-      dispatch(setStateKey({ key: 'userData', value: userData }));
-    } catch (error) {
-      console.error('Facebook Login Error:', error);
-    } finally {
-      setfacebookLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    setGoogleLoading(true);
-    try {
-      console.log('[Google] Login process started...');
-      await GoogleSignin.hasPlayServices({
-        showPlayServicesUpdateDialog: true,
-      });
-      await GoogleSignin.signIn();
-      const { idToken } = await GoogleSignin.getTokens();
-      if (!idToken) throw new Error('ID token is missing');
-      const credential = GoogleAuthProvider.credential(idToken);
-      const auth = getAuth();
-      const result = await signInWithCredential(auth, credential);
-      const user = result.user;
-      console.log('[Google] Firebase Auth user:', user);
-      const userExists = await checkUserExistsByEmail(user.email);
-      const userData = {
-        firstName: user.displayName?.split(' ')[0] || '',
-        lastName: user.displayName?.split(' ')[1] || '',
-        email: user.email,
-        profileImage: user.photoURL || '',
-        provider: 'google',
-        createdAt: new Date().toISOString(),
-      };
-      if (!userExists) {
-        console.log('[Firestore] New Google user detected, saving...');
-        await firestore().collection('users').doc(user.uid).set(userData);
-        console.log('[Firestore] Google user added:', userData);
-      } else {
-        console.log('[Firestore] Google user already exists, skipping add.');
-      }
-      dispatch(setStateKey({ key: 'token', value: idToken }));
-      dispatch(setStateKey({ key: 'userData', value: userData }));
-    } catch (error) {
-      console.error('Google Sign-In Error:', error);
-    } finally {
-      setGoogleLoading(false);
     }
   };
 
@@ -178,6 +74,7 @@ const LoginForm = () => {
               <>
                 <Input
                   placeholder="email"
+                  maxlength={25}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   value={values.email}
@@ -207,39 +104,22 @@ const LoginForm = () => {
 
         <View style={styles.socialButtonsWrapper}>
           <Text style={styles.socialSignInText}>Social Sign-In</Text>
-          <View style={styles.container}>
-            <TouchableOpacity onPress={handleFacebookLogin}>
-              <Image source={ICONS.FaceBook} style={styles.icon} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleGoogleLogin}>
-              <Image source={ICONS.Google} style={styles.icon} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log('GitHub Login')}>
-              <Image source={ICONS.Github} style={styles.icon} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log('LinkedIn Login')}>
-              <Image source={ICONS.LinkedIn} style={styles.icon} />
-            </TouchableOpacity>
+          <View style={styles.SocialButtonStyle}>
+            <SignInWithFacebook />
+            <SignInWithGoogle />
           </View>
           <View style={styles.dividerContainer}>
             <Text label="no_account" style={styles.orText} />
-            <TouchableOpacity
-              onPress={() => navigation.navigate(AUTH.Register)}>
+            <Pressable onPress={() => navigation.navigate(AUTH.Register)}>
               <Text
                 label="register"
                 style={styles.signUpText}
                 type="semibold"
               />
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </View>
-      <CustomLoader
-        visible={googleLoading || facebookLoading}
-        text="Please wait..."
-        size="large"
-        color={COLORS.primary}
-      />
     </>
   );
 };

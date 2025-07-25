@@ -2,52 +2,40 @@ import { COLORS } from '@utils/color';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
-export default StyleSheet.create({
-  formContainer: {
-    backgroundColor: COLORS.white,
-    flex: 1,
-  },
-  container: {
-    justifyContent: 'center',
-    padding: scale(16),
-    borderRadius: scale(8),
-    backgroundColor: COLORS.white,
-  },
-  title: {
-    fontSize: scale(24),
-    fontWeight: 'bold',
-    color: COLORS.primary,
-    textAlign: 'center',
-    marginBottom: scale(20),
-  },
-  loginText: {
-    marginTop: scale(20),
-    fontSize: scale(18),
-    textAlign: 'center',
-    color: COLORS.gray,
-  },
-  loginLink: {
-    color: COLORS.primary,
-    fontWeight: 'bold',
-  },
-  loginButton: {
-    marginVertical: scale(6),
-    backgroundColor: COLORS.primary,
-    paddingVertical: scale(12),
-    marginTop: scale(16),
-  },
-  form: {
-    justifyContent: 'center',
-    marginTop: scale(12),
-    gap: scale(10),
+const useStyle = () => {
+  return StyleSheet.create({
+    formContainer: {
+      flex: 1,
+      gap: scale(10),
+    },
+    title: {
+      fontSize: scale(24),
+      fontWeight: 'bold',
+      color: COLORS.primary,
+      textAlign: 'center',
+    },
+    loginText: {
+      paddingVertical: scale(20),
+      fontSize: scale(18),
+      textAlign: 'center',
+      color: COLORS.gray,
+    },
+    loginLink: {
+      fontSize: scale(18),
+      color: COLORS.primary,
+      fontWeight: 'bold',
+      textAlign: 'justify',
+    },
+    loginButton: {
+      backgroundColor: COLORS.primary,
+      paddingVertical: scale(12),
+    },
+    subtitle: {
+      fontSize: scale(16),
+      color: COLORS.black,
+      textAlign: 'center',
+    },
+  });
+};
 
-    borderRadius: scale(8),
-    backgroundColor: COLORS.white,
-  },
-  subtitle: {
-    fontSize: scale(16),
-    color: COLORS.black,
-    textAlign: 'center',
-    marginBottom: scale(30),
-  },
-});
+export default useStyle;

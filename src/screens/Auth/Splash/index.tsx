@@ -11,5 +11,4 @@ const SplashScreen = () => {
     </View>
   );
 };
-
 export default SplashScreen;

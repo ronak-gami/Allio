@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import CustomCheckBox from '@components/atoms/CheckBox';
 import Text from '@components/atoms/Text';
 import { COLORS } from '@utils/color';
+import { AUTH } from '@utils/constant';
 
 interface RememberForgotProps {
   remember: boolean;
