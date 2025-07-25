@@ -1,7 +1,11 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
-import { FacebookAuthProvider, getAuth, signInWithCredential } from '@react-native-firebase/auth';
+import {
+  FacebookAuthProvider,
+  getAuth,
+  signInWithCredential,
+} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import SocialButton from '../socialButton';
 import { setStateKey } from '@redux/slices/AuthSlice';
@@ -13,7 +17,10 @@ const SignInWithFacebook = () => {
 
   const handleFacebookLogin = async () => {
     try {
-      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
       if (result.isCancelled) {
         throw new Error('User cancelled the login process');
       }
@@ -21,8 +28,13 @@ const SignInWithFacebook = () => {
       if (!data) {
         throw new Error('Something went wrong obtaining access token');
       }
-      const facebookCredential = FacebookAuthProvider.credential(data.accessToken);
-      const userCredential = await signInWithCredential(getAuth(), facebookCredential);
+      const facebookCredential = FacebookAuthProvider.credential(
+        data.accessToken,
+      );
+      const userCredential = await signInWithCredential(
+        getAuth(),
+        facebookCredential,
+      );
       const user = userCredential.user;
       const token = await user.getIdToken();
       const userExists = await checkUserExistsByEmail(user.email);
@@ -54,4 +66,4 @@ const SignInWithFacebook = () => {
   );
 };
 
-export default SignInWithFacebook; 
+export default SignInWithFacebook;

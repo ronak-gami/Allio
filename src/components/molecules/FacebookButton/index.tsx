@@ -7,7 +7,6 @@ import {
 } from '@react-native-firebase/auth';
 import { Image } from 'react-native';
 import { useDispatch } from 'react-redux';
-import styles from './style';
 import { ICONS } from '@assets/index';
 import Button from '@components/atoms/Button';
 import { setStateKey } from '@redux/slices/AuthSlice';
@@ -16,14 +15,12 @@ import useStyle from './style';
 const FacebookButton = ({ onLoginSuccess }: any) => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-
-  const styles=useStyle()
+  const styles = useStyle();
 
   const handleFacebookLogin = async () => {
     try {
       setLoading(true);
 
-      // Attempt login with permissions
       const result = await LoginManager.logInWithPermissions([
         'public_profile',
         'email',
@@ -33,18 +30,15 @@ const FacebookButton = ({ onLoginSuccess }: any) => {
         throw new Error('User cancelled the login process');
       }
 
-      // Get the access token
       const data = await AccessToken.getCurrentAccessToken();
       if (!data) {
         throw new Error('Something went wrong obtaining access token');
       }
 
-      // Create a Firebase credential with the token
       const facebookCredential = FacebookAuthProvider.credential(
         data.accessToken,
       );
 
-      // Sign-in the user with the credential
       const userCredential = await signInWithCredential(
         getAuth(),
         facebookCredential,

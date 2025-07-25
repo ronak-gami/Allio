@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Pressable, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { signInWithEmailAndPassword } from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
@@ -120,7 +120,8 @@ const LoginForm = () => {
           </View> */}
           <View style={styles.dividerContainer}>
             <Text label="no_account" style={styles.orText} />
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate(AUTH.Register)}>
               <Text
                 label="register"
                 style={styles.signUpText}
