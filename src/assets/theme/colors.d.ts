@@ -27,6 +27,8 @@ export type Theme = {
     google: Color;
     pink: Color;
     modelbg: Color;
+    background: Color;
+    text: Color;
   };
 };
 
