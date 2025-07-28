@@ -4,7 +4,6 @@ import {
   FlatList,
   TouchableOpacity,
   Text,
-  ActivityIndicator,
   Pressable,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,7 +20,6 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'Onboarding'>;
 const Onboarding: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList<any>>(null);
 
@@ -30,8 +28,6 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
       const onboardingWatched = await AsyncStorage.getItem('onboardingWatched');
       if (onboardingWatched === 'true') {
         navigation.replace('Login');
-      } else {
-        setLoading(false);
       }
     };
     checkOnboardingStatus();
@@ -53,14 +49,6 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
     dispatch(setStateKey({ key: 'onboardingCompleted', value: true }));
     navigation.replace('Login');
   };
-
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#000" />
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
