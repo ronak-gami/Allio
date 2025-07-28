@@ -1,8 +1,17 @@
+import { useTheme } from '@react-navigation/native';
+import { height } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
-export const useStyle = () =>
-  StyleSheet.create({
+const useStyle = () => {
+  const { colors } = useTheme();
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      marginHorizontal: height * 0.02,
+    },
+    subView: { flexGrow: 1 },
     title: {
       fontSize: scale(34),
       marginBottom: scale(20),
@@ -35,3 +44,5 @@ export const useStyle = () =>
       borderRadius: scale(10),
     },
   });
+};
+export default useStyle;

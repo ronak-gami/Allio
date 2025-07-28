@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { Buffer } from 'buffer';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
+import type { HomeStackParamList } from '@types/navigations';
+import { HOME } from '@utils/constant';
+
+type MPINNavigationProp = NativeStackNavigationProp<HomeStackParamList, 'MPIN'>;
 
 const useMPINForm = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<MPINNavigationProp>();
   const userData = useSelector((state: RootState) => state.auth.userData);
 
   const [userDocId, setUserDocId] = useState('');
@@ -20,14 +25,13 @@ const useMPINForm = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('userData in useMPINForm:', userData);
     if (userData?.email) {
-      checkIfMPINExists(userData.email );
+      checkIfMPINExists(userData.email);
     } else {
       console.warn('No email in userData');
       setLoading(false);
     }
-  }, [userData?.email]);
+  }, [userData, userData.email]);
 
   const checkIfMPINExists = async (email: string) => {
     try {
@@ -90,9 +94,9 @@ const useMPINForm = () => {
         const encryptedInput = encryptMPIN(mpin);
         if (encryptedInput === storedEncryptedMPIN) {
           await AsyncStorage.setItem('@user_mpin', encryptedInput);
-          navigation.replace('HomeTabs');
-
-          console.log('ca;;;');
+          navigation.navigate('HomeTabs', {
+            screen: HOME.Home,
+          });
         } else {
           setErrorMessage('Incorrect MPIN');
         }
@@ -104,7 +108,9 @@ const useMPINForm = () => {
           createdAt: firestore.FieldValue.serverTimestamp(),
         });
         await AsyncStorage.setItem('@mpin_setup_done', 'true');
-         navigation.replace('HomeTabs');
+        navigation.navigate('HomeTabs', {
+          screen: HOME.Home,
+        });
       }
     } catch (error: any) {
       Alert.alert('Error', error.message);
