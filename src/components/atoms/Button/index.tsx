@@ -62,11 +62,11 @@ const Button: React.FC<ButtonProps> = ({
       backgroundColor: bgColor,
     });
     if (!textColor) {
-      currentTextColor = colors.white;
+      currentTextColor = colors.black;
     }
   } else {
     if (!textColor) {
-      currentTextColor = colors.white;
+      currentTextColor = colors.black;
     }
   }
 
@@ -98,7 +98,9 @@ const Button: React.FC<ButtonProps> = ({
         ) : (
           <View style={styles.content}>
             {prefixLogo && <View style={styles.icon}>{prefixLogo}</View>}
-            <Text style={[styles.text, { color: currentTextColor }]}>
+            <Text
+              type="semibold"
+              style={[styles.text, { color: currentTextColor }]}>
               {title}
             </Text>
             {postfixLogo && <View style={styles.icon}>{postfixLogo}</View>}

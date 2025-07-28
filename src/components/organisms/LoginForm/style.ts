@@ -33,7 +33,6 @@ const useStyle = () => {
     dividerContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
-      marginTop: scale(20),
       alignItems: 'center',
       gap: 3,
     },
@@ -112,6 +111,11 @@ const useStyle = () => {
       fontSize: scale(18),
       color: colors.primary,
       textAlign: 'center',
+    },
+    line: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.text,
     },
   });
 };

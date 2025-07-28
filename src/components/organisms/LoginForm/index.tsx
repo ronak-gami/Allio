@@ -64,23 +64,22 @@ const LoginForm: React.FC = () => {
           )}
         </Formik>
       </View>
-
-      <View style={styles.socialButtonsWrapper}>
-        <View style={styles.socialButtonsWrapper}>
-          <Text style={styles.socialSignInText}>Social Sign-In</Text>
-          <View style={styles.SocialButtonStyle}>
-            <SignInWithFacebook />
-            <SignInWithGoogle />
-          </View>
-          <View style={styles.dividerContainer}>
-            <Text label="no_account" style={styles.orText} />
-            <TouchableOpacity onPress={navigateToRegister}>
-              <Text style={styles.signUpText} type="semibold">
-                Register
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+      <View style={styles.dividerContainer}>
+        <View style={styles.line} />
+        <Text style={styles.socialSignInText}>Social Sign-In</Text>
+        <View style={styles.line} />
+      </View>
+      <View style={styles.SocialButtonStyle}>
+        <SignInWithFacebook />
+        <SignInWithGoogle />
+      </View>
+      <View style={styles.dividerContainer}>
+        <Text label="no_account" style={styles.orText} />
+        <TouchableOpacity onPress={navigateToRegister}>
+          <Text style={styles.signUpText} type="semibold">
+            Register
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
