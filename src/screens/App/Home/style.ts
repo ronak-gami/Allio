@@ -6,7 +6,7 @@ const useStyle = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.background,
       justifyContent: 'center',
       alignItems: 'center',
     },

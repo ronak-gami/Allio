@@ -36,7 +36,7 @@ const Home: React.FC<Props> = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={styles.container}>
       <Text style={[styles.title, { color: colors.text }]}>login</Text>
       <CustomDropdown
         label={t('select_language')}
