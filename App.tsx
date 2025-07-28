@@ -5,7 +5,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './src/redux/store';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import StackNavigator from './src/navigations';
-
+import ToastManager from 'toastify-react-native';
 const App = () => {
   useEffect(() => {
     GoogleSignin.configure({
@@ -19,6 +19,19 @@ const App = () => {
     <Provider store={store}>
       <PaperProvider>
         <PersistGate loading={null} persistor={persistor}>
+          <ToastManager
+            position="bottom"
+            theme="light"
+            icons={{
+              success: 'check-circle',
+              error: 'error',
+              info: 'info',
+              warn: 'warning',
+              default: 'notifications',
+            }}
+            iconFamily="MaterialIcons"
+            iconSize={24}
+          />
           <StackNavigator />
         </PersistGate>
       </PaperProvider>

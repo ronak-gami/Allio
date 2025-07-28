@@ -1,9 +1,9 @@
-// useForgotPassword.ts
 import auth from '@react-native-firebase/auth';
 import { checkUserExistsByEmail } from '@utils/helper';
 import { useNavigation } from '@react-navigation/native';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
+import { showError, showSuccess } from '@utils/toast';
 
 export const useForgotPassword = () => {
   const navigation = useNavigation<AuthNavigationProp>();
@@ -16,21 +16,17 @@ export const useForgotPassword = () => {
 
     try {
       if (!email) {
-        return { success: false, message: 'Please enter your email address.' };
+        showError('Email is required');
+        return;
       }
-
       const userExists = await checkUserExistsByEmail(email);
-
       if (!userExists) {
-        return { success: false, message: 'No user found with this email.' };
+        showError('Email Does Not Exist!');
+        return;
       }
-
       await auth().sendPasswordResetEmail(email);
-
-      return {
-        success: true,
-        message: 'Password reset email sent successfully!',
-      };
+      showSuccess('Password reset email sent successfully!');
+      return;
     } catch (error: any) {
       let message = 'Something went wrong';
       if (error.code === 'auth/invalid-email') {
