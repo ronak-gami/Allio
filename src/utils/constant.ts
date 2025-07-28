@@ -59,6 +59,7 @@ const HOME = {
   ScanQR: 'ScanQR' as const,
   Video: 'Video' as const,
   More: 'More' as const,
+  MPIN: 'MPIN' as const,
 } as const;
 
 export { onboardingData, AUTH, HOME };

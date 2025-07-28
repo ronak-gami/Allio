@@ -24,4 +24,5 @@ export const ICONS = {
   LinkedIn: require('./icons/message.png'),
   Github: require('./icons/github.png'),
   ArrowRight: require('./icons/right-arrow.png'),
+  mpinSecure: require('./icons/mobilesecure.png'),
 };

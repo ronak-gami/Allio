@@ -38,7 +38,7 @@ const StackNavigator: React.FC = () => {
 
   useEffect(() => {
     dispatch(setDarkMode(systemColorScheme === 'dark'));
-  }, [systemColorScheme]);
+  }, [dispatch, systemColorScheme]);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsSplashVisible(false), 2500);

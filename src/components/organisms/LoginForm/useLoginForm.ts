@@ -39,6 +39,8 @@ export const useLoginForm = () => {
         values.password,
       );
 
+      dispatch(setStateKey({ key: 'userData', value: values }));
+
       const user = userCredential.user;
       if (user) {
         const token = await user.getIdToken();

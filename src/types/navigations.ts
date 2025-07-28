@@ -17,8 +17,7 @@ export type AuthStackParamList = {
 
 export type HomeStackParamList = {
   HomeTabs: undefined;
-  Profile: { userId: string };
-  Settings: undefined;
+  MPIN: undefined;
 };
 
 export type TabParamList = {
