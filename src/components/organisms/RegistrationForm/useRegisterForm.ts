@@ -10,6 +10,7 @@ import { setStateKey } from '@redux/slices/AuthSlice';
 import useValidation from '@utils/validationSchema';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
+import { showError, showSuccess } from '@utils/toast';
 
 export type RegistrationValues = {
   firstName: string;
@@ -64,6 +65,7 @@ const useRegister = () => {
 
         await saveUserToFirestore(user.uid, userData);
         dispatch(setStateKey({ key: 'userData', value: userData }));
+        showSuccess('Registration Successful!');
         navigation.navigate(AUTH.Login);
       }
     } catch (error: any) {
@@ -74,6 +76,10 @@ const useRegister = () => {
         console.error('Invalid email format');
       } else {
         console.error('Something went wrong:', error.message);
+        showError(
+          error?.response?.data?.message ||
+            'Registration failed. Please try again.',
+        );
       }
     } finally {
       setLoading(false);

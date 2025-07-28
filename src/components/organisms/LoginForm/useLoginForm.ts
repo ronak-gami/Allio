@@ -30,7 +30,6 @@ export const useLoginForm = () => {
     try {
       const exists = await checkUserExistsByEmail(values.email);
       if (!exists) {
-        console.warn('User does not exist in Firestore collection!');
         showError('User does not exist!');
         return;
       }
@@ -50,7 +49,9 @@ export const useLoginForm = () => {
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);
-      showError('Login Failed!');
+      showError(
+        error?.response?.data?.message || 'Login failed. Please try again.',
+      );
     } finally {
       setLoading(false);
     }

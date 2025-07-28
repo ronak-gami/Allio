@@ -53,7 +53,7 @@ const RegistrationForm = () => {
                 onChangeText={handleChange('mobileNo')}
                 error={touched.mobileNo ? errors.mobileNo : ''}
                 keyboardType="phone-pad"
-                maxlength={12}
+                maxlength={10}
               />
               <Input
                 placeholder="Email"
