@@ -10,6 +10,8 @@ import {
 import Text from '../Text';
 import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
+import { height } from '@utils/helper';
+import { scale } from 'react-native-size-matters';
 
 interface ButtonProps {
   title: string;
@@ -60,11 +62,11 @@ const Button: React.FC<ButtonProps> = ({
       backgroundColor: bgColor,
     });
     if (!textColor) {
-      currentTextColor = colors.white;
+      currentTextColor = colors.black;
     }
   } else {
     if (!textColor) {
-      currentTextColor = colors.white;
+      currentTextColor = colors.black;
     }
   }
 
@@ -81,13 +83,24 @@ const Button: React.FC<ButtonProps> = ({
       activeOpacity={0.5}
       onPress={onPress}
       disabled={disabled || loading}>
-      <WrapperComponent {...specificWrapperProps} style={wrapperStyles}>
+      <WrapperComponent
+        {...specificWrapperProps}
+        style={[
+          wrapperStyles,
+          {
+            marginVertical: scale(6),
+            backgroundColor: colors.primary,
+            paddingVertical: height * 0.02,
+          },
+        ]}>
         {loading ? (
           <ActivityIndicator color={currentTextColor} />
         ) : (
           <View style={styles.content}>
             {prefixLogo && <View style={styles.icon}>{prefixLogo}</View>}
-            <Text style={[styles.text, { color: currentTextColor }]}>
+            <Text
+              type="semibold"
+              style={[styles.text, { color: currentTextColor }]}>
               {title}
             </Text>
             {postfixLogo && <View style={styles.icon}>{postfixLogo}</View>}

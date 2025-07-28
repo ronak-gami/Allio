@@ -16,13 +16,10 @@
   "no_account": "Don't have an account?",
   "register": "Register",
   "register_subtitle": "Create a new account to get started",
-
-  "validation": {
-    "field_required": "{{field}} is required",
-    "field_min": "{{field}} must be at least {{min}} characters",
-    "email_valid": "Please enter valid {{field}} address",
-    "mobile_pattern": "{{field}} must be 10 digits",
-    "password_pattern": "{{field}} must contain at least one uppercase letter, one lowercase letter, and one number",
-    "confirm_password_match": "Passwords must match"
-  }
+  "field_required": "{{field}} is required",
+  "field_min": "{{field}} must be at least {{min}} characters",
+  "email_valid": "Please enter valid {{field}} address",
+  "mobile_pattern": "{{field}} must be 10 digits",
+  "password_pattern": "{{field}} must contain at least one uppercase letter, one lowercase letter, and one number",
+  "confirm_password_match": "Passwords must match"
 }

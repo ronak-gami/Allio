@@ -16,12 +16,11 @@
   "no_account": "શું તમારું એકાઉન્ટ નથી?",
   "register": "રજિસ્ટ્રેશન કરો",
   "register_subtitle": "નવું એકાઉન્ટ બનાવવા માટે શરૂ કરો",
-  "validation": {
-    "field_required": "{{field}} જરૂરી છે",
+   "field_required": "{{field}} જરૂરી છે",
     "field_min": "{{field}} ઓછામાં ઓછા {{min}} અક્ષરોનો હોવો જોઈએ",
     "email_valid": "કૃપા કરીને માન્ય {{field}} એડ્રેસ દાખલ કરો",
     "mobile_pattern": "{{field}} 10 અંકનો હોવો જોઈએ",
     "password_pattern": "{{field}}માં ઓછામાં ઓછું એક મોટું અક્ષર, એક નાનું અક્ષર અને એક સંખ્યા હોવી જોઈએ",
     "confirm_password_match": "પાસવર્ડ મેળ ખાતા હોવા જોઈએ"
-  }
+ 
 }

@@ -13,8 +13,12 @@ import useStyle from './style';
 import CustomOnboarding from '@components/atoms/CustomOnboarding';
 import { onboardingData } from '@utils/constant';
 import { setStateKey } from '@redux/slices/AuthSlice';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '@types/navigations';
 
-const OnboardingScreen = ({ navigation }: any) => {
+type Props = NativeStackScreenProps<AuthStackParamList, 'Onboarding'>;
+
+const Onboarding: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -97,4 +101,4 @@ const OnboardingScreen = ({ navigation }: any) => {
   );
 };
 
-export default OnboardingScreen;
+export default Onboarding;

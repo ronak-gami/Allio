@@ -16,12 +16,10 @@
   "no_account": "क्या आपका खाता नहीं है?",
   "register": "रजिस्टर करें",
   "register_subtitle": "नया खाता बनाने के लिए शुरू करें",
-  "validation": {
-    "field_required": "{{field}} आवश्यक है",
-    "field_min": "{{field}} कम से कम {{min}} अक्षरों का होना चाहिए",
-    "email_valid": "कृपया मान्य {{field}} पता दर्ज करें",
-    "mobile_pattern": "{{field}} 10 अंकों का होना चाहिए",
-    "password_pattern": "{{field}} में कम से कम एक बड़ा अक्षर, एक छोटा अक्षर और एक संख्या होनी चाहिए",
-    "confirm_password_match": "पासवर्ड मेल खाने चाहिए"
-  }
+  "field_required": "{{field}} आवश्यक है",
+  "field_min": "{{field}} कम से कम {{min}} अक्षरों का होना चाहिए",
+  "email_valid": "कृपया मान्य {{field}} पता दर्ज करें",
+  "mobile_pattern": "{{field}} 10 अंकों का होना चाहिए",
+  "password_pattern": "{{field}} में कम से कम एक बड़ा अक्षर, एक छोटा अक्षर और एक संख्या होनी चाहिए",
+  "confirm_password_match": "पासवर्ड मेल खाने चाहिए"
 }

@@ -2,8 +2,12 @@ import React from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import useStyle from './style';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { TabParamList } from '@types/navigations';
 
-const ScanQR: React.FC = () => {
+type Props = BottomTabScreenProps<TabParamList, 'ScanQR'>;
+
+const ScanQR: React.FC<Props> = () => {
   const styles = useStyle();
   return (
     <View style={styles.container}>

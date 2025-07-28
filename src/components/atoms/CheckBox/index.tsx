@@ -20,8 +20,10 @@ const CustomCheckBox: React.FC<CustomCheckBoxProps> = ({
   };
   const styles = useStyle();
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <View style={[styles.circle, checked && styles.selectedCircle]}>
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={[styles.circle, checked && styles.selectedCircle]}
+        onPress={onPress}>
         {checked && (
           <Image
             source={ICONS.check}
@@ -30,11 +32,11 @@ const CustomCheckBox: React.FC<CustomCheckBoxProps> = ({
             onError={handleImageError}
           />
         )}
-      </View>
+      </TouchableOpacity>
       <Text style={styles.label} type="medium">
         {label}
       </Text>
-    </TouchableOpacity>
+    </View>
   );
 };
 

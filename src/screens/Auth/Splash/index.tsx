@@ -3,7 +3,7 @@ import { View, Image } from 'react-native';
 import useStyle from './style';
 import { IMAGES } from '@assets/index';
 
-const SplashScreen = () => {
+const Splash: React.FC = () => {
   const styles = useStyle();
   return (
     <View style={styles.container}>
@@ -11,4 +11,4 @@ const SplashScreen = () => {
     </View>
   );
 };
-export default SplashScreen;
+export default Splash;

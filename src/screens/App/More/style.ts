@@ -13,7 +13,6 @@ const useStyle = () => {
     },
     title: {
       fontSize: scale(24),
-      fontWeight: 'bold',
       color: colors.text,
     },
     logoutButton: {

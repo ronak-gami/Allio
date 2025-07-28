@@ -12,6 +12,7 @@ module.exports = {
           '@navigations': './src/navigations',
           '@redux': './src/redux',
           '@screens': './src/screens',
+          '@types': './src/types',
           '@utils': './src/utils',
         },
       },

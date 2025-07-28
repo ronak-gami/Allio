@@ -11,8 +11,12 @@ import { setLanguage } from '@redux/slices/languageSlice';
 import { toggleTheme } from '@redux/slices/ThemeSlice';
 import { languages } from '@utils/helper';
 import { useTheme } from '@react-navigation/native';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { TabParamList } from '@types/navigations';
 
-const HomeScreen: React.FC = () => {
+type Props = BottomTabScreenProps<TabParamList, 'Home'>;
+
+const Home: React.FC<Props> = () => {
   const styles = useStyle();
   const dispatch = useDispatch();
   const { colors } = useTheme();
@@ -32,7 +36,7 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={styles.container}>
       <Text style={[styles.title, { color: colors.text }]}>login</Text>
       <CustomDropdown
         label={t('select_language')}
@@ -51,11 +55,9 @@ const HomeScreen: React.FC = () => {
       <Button
         title={isDarkMode ? ' Switch to Light Mode' : ' Switch to Dark Mode'}
         onPress={handleThemeToggle}
-        style={{ backgroundColor: colors.primary }}
-        textStyle={{ color: isDarkMode ? '#000000' : '#FFFFFF' }}
       />
     </View>
   );
 };
 
-export default HomeScreen;
+export default Home;

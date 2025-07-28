@@ -12,13 +12,11 @@ const useStyle = () => {
     },
     title: {
       fontSize: scale(34),
-      fontWeight: 'bold',
       color: colors.primary,
-      textAlign: 'left',
     },
     subtitle: {
       fontSize: scale(16),
-      color: colors.black,
+      color: colors.text,
       textAlign: 'left',
       marginBottom: scale(30),
     },
@@ -26,7 +24,6 @@ const useStyle = () => {
       flex: 1,
       justifyContent: 'center',
       padding: scale(16),
-      backgroundColor: colors.white,
     },
     logo: {
       width: scale(200),
@@ -36,7 +33,6 @@ const useStyle = () => {
     dividerContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
-      marginTop: scale(20),
       alignItems: 'center',
       gap: 3,
     },
@@ -44,7 +40,6 @@ const useStyle = () => {
       fontSize: scale(16),
       color: colors.primary,
       textAlign: 'center',
-      fontWeight: 'bold',
       marginVertical: scale(10),
     },
     emailInput: {
@@ -55,7 +50,6 @@ const useStyle = () => {
     inputContainer: {
       marginBottom: scale(10),
       gap: scale(10),
-      // backgroundColor: colors.lightGray,
     },
 
     button: {
@@ -83,7 +77,7 @@ const useStyle = () => {
       textAlign: 'center',
     },
     orText: {
-      color: colors.gray,
+      color: colors.text,
       fontSize: scale(16),
     },
     signUpText: {
@@ -116,8 +110,12 @@ const useStyle = () => {
     loginLink: {
       fontSize: scale(18),
       color: colors.primary,
-      fontWeight: 'bold',
       textAlign: 'center',
+    },
+    line: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.text,
     },
   });
 };

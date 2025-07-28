@@ -6,9 +6,10 @@
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
       "@navigations": ["src/navigations/*"],
+      "@redux/*": ["src/redux/*"],
       "@screens/*": ["src/screens/*"],
-      "@utils/*": ["src/utils/*"],
-      "@redux/*": ["src/redux/*"]
+      "@types/*": ["src/types/*"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }

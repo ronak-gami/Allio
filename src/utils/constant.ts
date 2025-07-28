@@ -50,15 +50,15 @@ const AUTH = {
   Onboarding: 'Onboarding',
   Login: 'Login',
   Register: 'Register',
-  ForgotPassword: 'Forgot Password',
-  ResetPassword: 'Reset Password',
-};
+  ForgotPassword: 'ForgotPassword',
+} as const;
+
 const HOME = {
-  Home: 'Home',
-  Photo: 'Photo',
-  ScanQR: 'ScanQR',
-  Video: 'Video',
-  More: 'More',
-};
+  Home: 'Home' as const,
+  Photo: 'Photo' as const,
+  ScanQR: 'ScanQR' as const,
+  Video: 'Video' as const,
+  More: 'More' as const,
+} as const;
 
 export { onboardingData, AUTH, HOME };
