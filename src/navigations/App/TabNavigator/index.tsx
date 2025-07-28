@@ -54,7 +54,7 @@ const TabNavigator: React.FC = () => {
         style={[
           styles.tabIcon,
           {
-            tintColor: focused ? colors.black : colors.lightgray,
+            tintColor: focused ? colors.white : colors.black,
             alignSelf: 'center',
           },
         ]}
@@ -66,7 +66,7 @@ const TabNavigator: React.FC = () => {
         style={[
           styles.tabLabel,
           {
-            color: focused ? colors.black : colors.lightgray,
+            color: focused ? colors.white : colors.black,
             textAlign: 'center',
             alignSelf: 'center',
           },
