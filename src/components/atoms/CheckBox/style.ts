@@ -31,6 +31,7 @@ const useStyle = () => {
     },
     label: {
       fontSize: scale(16),
+      color: colors.text,
     },
   });
 };

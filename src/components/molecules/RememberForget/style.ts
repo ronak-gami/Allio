@@ -11,7 +11,7 @@ const useStyle = () => {
       alignItems: 'center',
     },
     forgotpassText: {
-      color: colors.black,
+      color: colors.text,
       fontSize: scale(16),
     },
   });

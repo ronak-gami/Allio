@@ -64,7 +64,6 @@ const FacebookButton = ({ onLoginSuccess }: any) => {
       onPress={handleFacebookLogin}
       loading={loading}
       bgColor="#3b5998"
-      style={styles.button}
     />
   );
 };

@@ -19,11 +19,7 @@ const More: React.FC<Props> = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>More Screens</Text>
-      <Button
-        title="Logout"
-        onPress={handleLogout}
-        style={styles.logoutButton}
-      />
+      <Button title="Logout" onPress={handleLogout} />
     </View>
   );
 };

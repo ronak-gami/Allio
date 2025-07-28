@@ -21,8 +21,6 @@ const useStyle = () => {
     buttonText: {
       color: colors.white,
       fontSize: 18,
-
-      fontWeight: 'bold',
     },
     skipButton: {
       position: 'absolute',
@@ -34,7 +32,6 @@ const useStyle = () => {
     skipText: {
       color: colors.primary,
       fontSize: 16,
-      fontWeight: '600',
     },
   });
 };

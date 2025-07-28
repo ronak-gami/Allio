@@ -10,7 +10,6 @@ const useStyle = () => {
     },
     title: {
       fontSize: 18,
-      fontWeight: 'bold',
       color: COLORS.black,
     },
   });

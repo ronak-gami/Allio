@@ -59,7 +59,6 @@ const LoginForm: React.FC = () => {
                 onPress={handleSubmit as () => void}
                 disabled={loading}
                 loading={loading}
-                style={styles.loginButton}
               />
             </>
           )}
@@ -76,11 +75,9 @@ const LoginForm: React.FC = () => {
           <View style={styles.dividerContainer}>
             <Text label="no_account" style={styles.orText} />
             <TouchableOpacity onPress={navigateToRegister}>
-              <Text
-                label="register"
-                style={styles.signUpText}
-                type="semibold"
-              />
+              <Text style={styles.signUpText} type="semibold">
+                Register
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

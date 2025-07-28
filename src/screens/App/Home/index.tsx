@@ -55,8 +55,6 @@ const Home: React.FC<Props> = () => {
       <Button
         title={isDarkMode ? ' Switch to Light Mode' : ' Switch to Dark Mode'}
         onPress={handleThemeToggle}
-        style={{ backgroundColor: colors.primary }}
-        textStyle={{ color: isDarkMode ? '#000000' : '#FFFFFF' }}
       />
     </View>
   );

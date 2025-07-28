@@ -24,8 +24,8 @@ const useStyle = () => {
       gap: scale(20),
     },
     title: {
-      fontSize: scale(24),
-      textAlign: 'center',
+      fontSize: scale(34),
+      color: colors.primary,
     },
     logoContainer: {
       alignItems: 'center',
@@ -33,8 +33,7 @@ const useStyle = () => {
     },
     subtitle: {
       fontSize: scale(16),
-      textAlign: 'center',
-      color: colors.gray,
+      color: colors.text,
     },
     loginButton: {
       marginTop: scale(16),
@@ -42,6 +41,23 @@ const useStyle = () => {
       backgroundColor: colors.primary,
       borderRadius: scale(8),
       paddingVertical: scale(12),
+    },
+    dividerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: scale(20),
+      alignItems: 'center',
+      gap: 3,
+    },
+    orText: {
+      color: colors.text,
+      fontSize: scale(16),
+    },
+    loginText: {
+      paddingVertical: scale(20),
+      fontSize: scale(18),
+      textAlign: 'center',
+      color: colors.primary,
     },
   });
 };

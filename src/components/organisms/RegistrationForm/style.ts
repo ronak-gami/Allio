@@ -1,4 +1,5 @@
 import { useTheme } from '@react-navigation/native';
+import { height } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
@@ -9,39 +10,45 @@ const useStyle = () => {
       flex: 1,
       justifyContent: 'center',
       padding: scale(16),
-      backgroundColor: colors.white,
     },
     title: {
       fontSize: scale(34),
-      fontWeight: 'bold',
       color: colors.primary,
-      textAlign: 'left',
     },
     subtitle: {
       fontSize: scale(16),
-      color: colors.black,
+      color: colors.text,
       textAlign: 'left',
       marginBottom: scale(30),
     },
     loginText: {
-      paddingVertical: scale(20),
-      fontSize: scale(18),
-      textAlign: 'center',
-      color: colors.gray,
+      color: colors.primary,
+      fontSize: scale(16),
     },
     loginLink: {
       fontSize: scale(18),
       color: colors.primary,
-      fontWeight: 'bold',
       textAlign: 'center',
     },
-    loginButton: {
+    registerButton: {
+      marginVertical: scale(6),
       backgroundColor: colors.primary,
-      paddingVertical: scale(12),
+      paddingVertical: height * 0.02,
     },
     inputContainer: {
       marginBottom: scale(10),
       gap: scale(10),
+    },
+    dividerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: scale(20),
+      alignItems: 'center',
+      gap: 3,
+    },
+    orText: {
+      color: colors.text,
+      fontSize: scale(16),
     },
   });
 };

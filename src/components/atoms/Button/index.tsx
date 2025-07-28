@@ -10,6 +10,8 @@ import {
 import Text from '../Text';
 import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
+import { height } from '@utils/helper';
+import { scale } from 'react-native-size-matters';
 
 interface ButtonProps {
   title: string;
@@ -81,7 +83,16 @@ const Button: React.FC<ButtonProps> = ({
       activeOpacity={0.5}
       onPress={onPress}
       disabled={disabled || loading}>
-      <WrapperComponent {...specificWrapperProps} style={wrapperStyles}>
+      <WrapperComponent
+        {...specificWrapperProps}
+        style={[
+          wrapperStyles,
+          {
+            marginVertical: scale(6),
+            backgroundColor: colors.primary,
+            paddingVertical: height * 0.02,
+          },
+        ]}>
         {loading ? (
           <ActivityIndicator color={currentTextColor} />
         ) : (

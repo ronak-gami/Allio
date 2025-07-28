@@ -20,7 +20,9 @@ const RegistrationForm = () => {
 
   return (
     <View style={styles.formContainer}>
-      <Text style={styles.title}>Register</Text>
+      <Text style={styles.title} type="bold">
+        Register
+      </Text>
       <Text style={styles.subtitle}>Create your account to get started</Text>
       <View style={styles.inputContainer}>
         <Formik
@@ -83,18 +85,19 @@ const RegistrationForm = () => {
                 onPress={handleSubmit as () => void}
                 disabled={loading}
                 loading={loading}
-                style={styles.loginButton}
               />
             </>
           )}
         </Formik>
       </View>
-      <Text style={styles.loginText}>
-        Already have an account?{' '}
+      <View style={styles.dividerContainer}>
+        <Text label="no_account" style={styles.orText} />
         <TouchableOpacity onPress={navigateToLogin}>
-          <Text style={styles.loginLink}>Login</Text>
+          <Text style={styles.loginText} type="semibold">
+            Login{' '}
+          </Text>
         </TouchableOpacity>
-      </Text>
+      </View>
     </View>
   );
 };
