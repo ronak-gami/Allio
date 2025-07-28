@@ -9,7 +9,6 @@ const useStyle = () => {
       backgroundColor: colors.background,
     },
     ScrollingStyle: {
-      flexGrow: 1,
       justifyContent: 'center',
     },
   });

@@ -23,8 +23,7 @@ const ForgotPasswordScreen: React.FC = () => {
   return (
     <KeyboardAvoidingView
       style={style.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={scale(60)}>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView
         contentContainerStyle={style.scrollView}
         keyboardShouldPersistTaps="handled">

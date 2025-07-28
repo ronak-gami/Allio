@@ -26,6 +26,7 @@ export const useForgotPassword = () => {
       }
       await auth().sendPasswordResetEmail(email);
       showSuccess('Password reset email sent successfully!');
+      navigation.navigate(AUTH.Login);
       return;
     } catch (error: any) {
       let message = 'Something went wrong';

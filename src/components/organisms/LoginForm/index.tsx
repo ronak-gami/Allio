@@ -10,7 +10,11 @@ import SignInWithFacebook from '@components/molecules/SocialSignInFacebook';
 import SignInWithGoogle from '@components/molecules/SocialSignInGoogle';
 import useStyle from './style';
 
-const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
   const styles = useStyle();
   const {
     initialValues,
@@ -70,8 +74,8 @@ const LoginForm: React.FC = () => {
         <View style={styles.line} />
       </View>
       <View style={styles.SocialButtonStyle}>
-        <SignInWithFacebook />
-        <SignInWithGoogle />
+        <SignInWithFacebook setLoading={setLoading} />
+        <SignInWithGoogle setLoading={setLoading} />
       </View>
       <View style={styles.dividerContainer}>
         <Text label="no_account" style={styles.orText} />

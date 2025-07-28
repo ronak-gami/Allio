@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
 import type { HomeStackParamList } from '@types/navigations';
 import { HOME } from '@utils/constant';
+import { showError } from '@utils/toast';
 
 type MPINNavigationProp = NativeStackNavigationProp<HomeStackParamList, 'MPIN'>;
 
@@ -28,7 +29,7 @@ const useMPINForm = () => {
     if (userData?.email) {
       checkIfMPINExists(userData.email);
     } else {
-      console.warn('No email in userData');
+      showError('Email Does Not Exist!');
       setLoading(false);
     }
   }, [userData, userData.email]);
@@ -55,7 +56,7 @@ const useMPINForm = () => {
         Alert.alert('Error', 'User not found in Firestore');
       }
     } catch (error: any) {
-      Alert.alert('Firestore Error', error.message);
+      showError('Email Does Not Exist!');
     } finally {
       setLoading(false);
     }
@@ -69,6 +70,7 @@ const useMPINForm = () => {
     setMpin(text);
     if (!isExistingUser && confirmMpin.length === 4 && text !== confirmMpin) {
       setErrorMessage('MPINs do not match');
+      showError('MPINs do not match');
     } else {
       setErrorMessage('');
     }
@@ -80,13 +82,14 @@ const useMPINForm = () => {
       setErrorMessage('');
     } else if (text.length === 4 && text !== mpin) {
       setErrorMessage('MPINs do not match');
+      showError('MPINs do not match');
     }
   };
 
   const handleSubmit = async () => {
     try {
       if (!userDocId) {
-        Alert.alert('Error', 'User document not found');
+        showError('User document not found');
         return;
       }
 
@@ -113,7 +116,7 @@ const useMPINForm = () => {
         });
       }
     } catch (error: any) {
-      Alert.alert('Error', error.message);
+      console.error('error during mpin', error);
     }
   };
 

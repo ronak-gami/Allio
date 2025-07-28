@@ -1,5 +1,5 @@
 import { useTheme } from '@react-navigation/native';
-import { height } from '@utils/helper';
+import { height, width } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
@@ -9,7 +9,8 @@ const useStyle = () => {
     formContainer: {
       flex: 1,
       justifyContent: 'center',
-      padding: scale(16),
+      paddingHorizontal: scale(10),
+      paddingVertical: width * 0.11,
     },
     title: {
       fontSize: scale(34),

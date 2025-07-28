@@ -11,8 +11,7 @@ const useStyle = () => {
     scrollView: {
       flexGrow: 1,
       justifyContent: 'center',
-      paddingHorizontal: scale(20),
-      paddingTop: scale(80),
+      paddingHorizontal: scale(10),
     },
     backButton: {
       position: 'absolute',
