@@ -10,6 +10,8 @@ import useValidation from '@utils/validationSchema';
 import { useNavigation } from '@react-navigation/native';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
+import { showError, showSuccess } from '@utils/toast';
+import { Toast } from 'toastify-react-native';
 
 export const useLoginForm = () => {
   const [remember, setRemember] = useState(false);
@@ -29,6 +31,7 @@ export const useLoginForm = () => {
       const exists = await checkUserExistsByEmail(values.email);
       if (!exists) {
         console.warn('User does not exist in Firestore collection!');
+        showError('User does not exist!');
         return;
       }
 
@@ -43,9 +46,11 @@ export const useLoginForm = () => {
       if (user) {
         const token = await user.getIdToken();
         dispatch(setStateKey({ key: 'token', value: token }));
+        showSuccess('Login Successful!');
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);
+      showError('Login Failed!');
     } finally {
       setLoading(false);
     }
