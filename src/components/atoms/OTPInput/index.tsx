@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import { View } from 'react-native';
 import { OtpInput } from 'react-native-otp-entry';
@@ -10,12 +8,12 @@ import { useStyle } from './style';
 import Text from '../Text';
 
 interface OTPInputProps {
-  label: string;
-  value: string;
+  label?: string;
   onChange: (value: string) => void;
+  [key: string]: any;
 }
 
-const OTPInput = ({ label, value, onChange }: OTPInputProps) => {
+const OTPInput = ({ label, onChange, ...props }: OTPInputProps) => {
   const styles = useStyle();
   const { colors } = useTheme();
 
@@ -27,7 +25,6 @@ const OTPInput = ({ label, value, onChange }: OTPInputProps) => {
 
       <OtpInput
         numberOfDigits={4}
-        value={value}
         onTextChange={onChange}
         focusColor={colors.primary}
         autoFocus={false}
@@ -49,6 +46,7 @@ const OTPInput = ({ label, value, onChange }: OTPInputProps) => {
             color: colors.text,
           },
         }}
+        {...props}
       />
     </View>
   );

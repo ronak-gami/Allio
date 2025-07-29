@@ -10,7 +10,13 @@ import { useForgotPassword } from './useForgetpassForm';
 import useValidation from '@utils/validationSchema';
 import { useNavigation, useTheme } from '@react-navigation/native';
 
-const MpinForgetpasswordForm: React.FC = ({ setLoading }) => {
+interface MpinForgetpasswordFormProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const MpinForgetpasswordForm: React.FC<MpinForgetpasswordFormProps> = ({
+  setLoading,
+}) => {
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { forgotPasswordSchema } = useValidation();
@@ -26,7 +32,7 @@ const MpinForgetpasswordForm: React.FC = ({ setLoading }) => {
     isVerifying,
     resendTimer,
     isSubmittingEmail,
-  } = useForgotPassword();
+  } = useForgotPassword(setLoading);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;

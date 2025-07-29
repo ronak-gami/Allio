@@ -7,6 +7,8 @@ interface OnboardingItem {
   description: string;
 }
 
+export const BASE_URL = 'https://allio-backend.onrender.com/api/user' as const;
+
 const onboardingData: OnboardingItem[] = [
   {
     id: '1',

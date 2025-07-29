@@ -3,8 +3,15 @@ import { showError, showSuccess } from '@utils/toast';
 import { checkUserExistsByEmail } from '@utils/helper';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { BASE_URL } from '@utils/constant';
 
-export const useForgotPassword = () => {
+interface useForgotPasswordProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const useForgotPassword: React.FC<useForgotPasswordProps> = ({
+  setLoading,
+}) => {
   const navigation = useNavigation();
   const [showOtpBox, setShowOtpBox] = useState(false);
   const [otp, setOtp] = useState('');
@@ -38,10 +45,9 @@ export const useForgotPassword = () => {
       console.log(values.email);
       setEmail(values.email);
       console.log('API START');
-      const response = await axios.post(
-        'https://64dc1112a1f9.ngrok-free.app/api/user/send-otp',
-        { email: values.email },
-      );
+      const response = await axios.post(`${BASE_URL}/send-otp`, {
+        email: values.email,
+      });
       console.log('response: ', response?.data);
       if (response?.data?.status === true) {
         setShowOtpBox(true);
@@ -56,12 +62,12 @@ export const useForgotPassword = () => {
   };
 
   const handleResendOtp = async () => {
+    setLoading(true);
     console.log('handleResendOtp function called');
     try {
-      const response = await axios.post(
-        'https://64dc1112a1f9.ngrok-free.app/api/user/send-otp',
-        { email: Email },
-      );
+      const response = await axios.post(`${BASE_URL}/send-otp`, {
+        email: Email,
+      });
       if (response?.data?.status === true) {
         showSuccess('OTP resent to your email');
         startResendTimer();
@@ -69,19 +75,17 @@ export const useForgotPassword = () => {
     } catch (error: any) {
       showError(error?.response?.data?.message || 'Failed to resend OTP');
     } finally {
+      setLoading(false);
     }
   };
 
   const handleOTPVerify = async (values: { email: string }) => {
     try {
       setIsVerifying(true);
-      const response = await axios.post(
-        'https://64dc1112a1f9.ngrok-free.app/api/user/validate-otp',
-        {
-          email: Email,
-          otp: otp,
-        },
-      );
+      const response = await axios.post(`${BASE_URL}/validate-otp`, {
+        email: Email,
+        otp: otp,
+      });
 
       if (response?.data?.status === true) {
         showSuccess('OTP verified');
