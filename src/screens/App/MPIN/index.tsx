@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Image,
@@ -9,9 +9,29 @@ import {
 import useStyle from './style';
 import MPINForm from '@components/organisms/MPINForm';
 import { ICONS } from '@assets/index';
+import { promptAppLock } from '@utils/auth';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { RootState } from '@redux/store';
 
 const MPINSetupScreen = () => {
   const styles = useStyle();
+  const navigation = useNavigation();
+    const token = useSelector((s: RootState) => s.auth.token);
+    const isAuth = useSelector(
+      (s: RootState) => s.biometric.isBiometricAuthenticated,
+    );
+
+
+  useEffect(() => {
+    if (token && !isAuth) {
+      promptAppLock().then(success => {
+        if (success) {
+          navigation.replace('HomeTabs');
+        }
+      });
+    }
+  }, [token, isAuth, navigation]);
 
   return (
     <KeyboardAvoidingView

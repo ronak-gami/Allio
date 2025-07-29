@@ -21,5 +21,7 @@
   "email_valid": "कृपया मान्य {{field}} पता दर्ज करें",
   "mobile_pattern": "{{field}} 10 अंकों का होना चाहिए",
   "password_pattern": "{{field}} में कम से कम एक बड़ा अक्षर, एक छोटा अक्षर और एक संख्या होनी चाहिए",
-  "confirm_password_match": "पासवर्ड मेल खाने चाहिए"
+  "confirm_password_match": "पासवर्ड मेल खाने चाहिए",
+  " enter_mpin": "4 अंकों का MPIN दर्ज करें",
+  "set_mpin": "4 अंकों का MPIN सेट करें"
 }

@@ -9,6 +9,7 @@ import { useLoginForm } from './useLoginForm';
 import SignInWithFacebook from '@components/molecules/SocialSignInFacebook';
 import SignInWithGoogle from '@components/molecules/SocialSignInGoogle';
 import useStyle from './style';
+import SignInWithGitHub from '@components/molecules/SocialGithub';
 
 interface LoginFormProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -76,6 +77,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
       <View style={styles.SocialButtonStyle}>
         <SignInWithFacebook setLoading={setLoading} />
         <SignInWithGoogle setLoading={setLoading} />
+        <SignInWithGitHub/>
       </View>
       <View style={styles.dividerContainer}>
         <Text label="no_account" style={styles.orText} />

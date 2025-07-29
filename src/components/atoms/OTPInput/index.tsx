@@ -34,8 +34,8 @@ const OTPInput = ({ label, value, onChange }: OTPInputProps) => {
         secureTextEntry
         theme={{
           pinCodeContainerStyle: {
-            width: scale(50),
-            height: scale(50),
+            width: scale(70),
+            height: scale(60),
             borderWidth: 1,
             borderRadius: scale(10),
             justifyContent: 'center',

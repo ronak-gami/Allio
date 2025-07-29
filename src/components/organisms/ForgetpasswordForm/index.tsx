@@ -7,7 +7,6 @@ import {
   View,
 } from 'react-native';
 import { Formik } from 'formik';
-import { scale } from 'react-native-size-matters';
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
 import Input from '@components/atoms/Input';

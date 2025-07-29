@@ -21,5 +21,7 @@
   "email_valid": "Please enter valid {{field}} address",
   "mobile_pattern": "{{field}} must be 10 digits",
   "password_pattern": "{{field}} must contain at least one uppercase letter, one lowercase letter, and one number",
-  "confirm_password_match": "Passwords must match"
+  "confirm_password_match": "Passwords must match",
+  "enter_mpin": "Enter 4‑Digit MPIN",
+  "set_mpin": "Set 4‑Digit MPIN"
 }
