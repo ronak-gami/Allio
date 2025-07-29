@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState,useRef } from 'react';
 import { useColorScheme } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import AuthNavigator from './Auth';
 import HomeNavigator from './App';
 import colors from '@assets/theme';
 import Splash from '@screens/Auth/Splash';
+import { useScreenTracking } from '../navigations/App/ScreeenTrack';
 
 const lightTheme = {
   ...DefaultTheme,
@@ -35,6 +36,7 @@ const StackNavigator: React.FC = () => {
   const dispatch = useDispatch();
   const systemColorScheme = useColorScheme();
   const [isSplashVisible, setIsSplashVisible] = useState(true);
+  const navigationRef = useRef(null);
 
   useEffect(() => {
     dispatch(setDarkMode(systemColorScheme === 'dark'));
@@ -45,11 +47,20 @@ const StackNavigator: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+
+
+
+
+
+  
   useEffect(() => {
     if (language) {
       i18n.changeLanguage(language);
     }
   }, [language]);
+
+  // Use the custom hook for screen tracking
+  useScreenTracking(navigationRef);
 
   const appTheme = useMemo(
     () => (isDarkMode ? darkTheme : lightTheme),
@@ -66,7 +77,7 @@ const StackNavigator: React.FC = () => {
  
 
   return (
-    <NavigationContainer theme={appTheme}>
+    <NavigationContainer ref={navigationRef} theme={appTheme}>
       {token ? <HomeNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );

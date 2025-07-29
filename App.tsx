@@ -6,6 +6,10 @@ import { store, persistor } from './src/redux/store';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import StackNavigator from './src/navigations';
 import ToastManager from 'toastify-react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
+import perf from '@react-native-firebase/perf';
+
 const App = () => {
   useEffect(() => {
     GoogleSignin.configure({
@@ -14,7 +18,16 @@ const App = () => {
       offlineAccess: true,
     });
   }, []);
-
+  useEffect(() => {
+    crashlytics().log('App mounted');
+    analytics().logAppOpen();
+    // Optionally start a performance trace
+    const trace = perf().newTrace('app_start');
+    trace.start();
+    return () => {
+      trace.stop();
+    };
+  }, []);
   return (
     <Provider store={store}>
       <PaperProvider>

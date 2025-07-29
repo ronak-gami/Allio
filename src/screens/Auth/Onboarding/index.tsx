@@ -15,6 +15,9 @@ import { onboardingData } from '@utils/constant';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@types/navigations';
+import crashlytics from '@react-native-firebase/crashlytics';
+import perf from '@react-native-firebase/perf';
+import analytics from '@react-native-firebase/analytics';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Onboarding'>;
 
@@ -26,6 +29,10 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
   const flatListRef = useRef<FlatList<any>>(null);
 
   useEffect(() => {
+    // No need for analytics().logScreenView here! It's handled globally.
+    crashlytics().log('OnboardingScreen mounted');
+    const trace = perf().newTrace('onboarding_screen_load');
+    trace.start();
     const checkOnboardingStatus = async () => {
       const onboardingWatched = await AsyncStorage.getItem('onboardingWatched');
       if (onboardingWatched === 'true') {
@@ -35,6 +42,9 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
       }
     };
     checkOnboardingStatus();
+    return () => {
+      trace.stop();
+    };
   }, [navigation]);
 
   const handleNext = async () => {
@@ -44,6 +54,7 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
     } else {
       await AsyncStorage.setItem('onboardingWatched', 'true');
       dispatch(setStateKey({ key: 'onboardingCompleted', value: true }));
+      await analytics().logEvent('onboarding_get_started'); // Custom event
       navigation.replace('Login');
     }
   };
@@ -51,6 +62,7 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
   const handleSkip = async () => {
     await AsyncStorage.setItem('onboardingWatched', 'true');
     dispatch(setStateKey({ key: 'onboardingCompleted', value: true }));
+    await analytics().logEvent('onboarding_skipped'); // Custom event
     navigation.replace('Login');
   };
 

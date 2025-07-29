@@ -69,6 +69,7 @@ const LoginForm: React.FC = () => {
         <Text style={styles.socialSignInText}>Social Sign-In</Text>
         <View style={styles.line} />
       </View>
+
       <View style={styles.SocialButtonStyle}>
         <SignInWithFacebook />
         <SignInWithGoogle />
