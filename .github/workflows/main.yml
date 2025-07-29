@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - develop
-      
+
   pull_request:
     branches:
       - main
@@ -55,14 +55,14 @@ jobs:
           cd android
           ./gradlew assembleDebug
 
-      - name: Build Release APK
-        run: |
-          cd android
-          ./gradlew assembleRelease
-        # env:
-        #   RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-        #   RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-        #   RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+      # - name: Build Release APK
+      #   run: |
+      #     cd android
+      #     ./gradlew assembleRelease
+      # env:
+      #   RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+      #   RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+      #   RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
 
       # Extract project name and version (from gradle.properties)
       - name: Extract project name and version
