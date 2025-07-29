@@ -45,9 +45,22 @@ const useStyle = () => {
       alignItems: 'center',
       gap: 3,
     },
-
     otpLabel: {
       fontSize: scale(25),
+    },
+    buttonGrow: {
+      flexGrow: 1,
+    },
+    otpInput: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    textResetotp: {
+      textAlign: 'center',
+      marginTop: 10,
+      fontSize: scale(15),
+      borderWidth: 1,
     },
   });
 };

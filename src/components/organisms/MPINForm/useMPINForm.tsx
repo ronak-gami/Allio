@@ -111,19 +111,18 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
         showError('Email is missing');
         return;
       }
-
       const response = await axios.post(
-        'https://allio-backend.onrender.com/api/user/set-new-mpin',
+        'https://64dc1112a1f9.ngrok-free.app/api/user/set-new-mpin',
         {
           email,
           newMpin: mpin,
         },
       );
-
-
-      showSuccess('MPIN reset successfully');
-      await AsyncStorage.setItem('@mpin_setup_done', 'true');
-      navigation.navigate('HomeTabs');
+      if (response?.data?.status === true) {
+        showSuccess('MPIN reset successfully');
+        await AsyncStorage.setItem('@mpin_setup_done', 'true');
+        navigation.navigate('HomeTabs');
+      }
     } catch (error: any) {
       console.log('Reset MPIN error:', error);
       showError(

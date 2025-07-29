@@ -9,9 +9,8 @@ import useStyle from './style';
 import { useForgotPassword } from './useForgetpassForm';
 import useValidation from '@utils/validationSchema';
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { scale } from 'react-native-size-matters';
 
-const MpinForgetpasswordForm: React.FC = () => {
+const MpinForgetpasswordForm: React.FC = ({ setLoading }) => {
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { forgotPasswordSchema } = useValidation();
@@ -26,7 +25,6 @@ const MpinForgetpasswordForm: React.FC = () => {
     showOtpBox,
     isVerifying,
     resendTimer,
-
     isSubmittingEmail,
   } = useForgotPassword();
 
@@ -45,7 +43,7 @@ const MpinForgetpasswordForm: React.FC = () => {
           onSubmit={handleForgotPassword}>
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <View style={style.form}>
-              <View style={{ flexGrow: 1 }}>
+              <View style={style.buttonGrow}>
                 <Text
                   type="bold"
                   style={[style.title, { color: colors.primary }]}
@@ -64,7 +62,6 @@ const MpinForgetpasswordForm: React.FC = () => {
                   value={values.email}
                   onChangeText={handleChange('email')}
                   error={touched.email ? errors.email : ''}
-                  maxlength={50}
                 />
 
                 <Pressable
@@ -91,14 +88,14 @@ const MpinForgetpasswordForm: React.FC = () => {
                 title="mpin_forgot_button"
                 onPress={handleSubmit as () => void}
                 isLabel
-                loading={isSubmittingEmail} // <- Show loading while email is being submitted
+                loading={isSubmittingEmail}
               />
             </View>
           )}
         </Formik>
       ) : (
         <View style={style.form}>
-          <View style={{ flexGrow: 1 }}>
+          <View style={style.buttonGrow}>
             <Text
               type="bold"
               style={[style.title, { color: colors.primary }]}
@@ -110,13 +107,7 @@ const MpinForgetpasswordForm: React.FC = () => {
               style={style.subtitle}
               label="mpin_otp_subtitle"
             />
-
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
+            <View style={style.otpInput}>
               <OTPInput value={otp} onChange={setOtp} />
             </View>
 
@@ -127,12 +118,10 @@ const MpinForgetpasswordForm: React.FC = () => {
               label={
                 resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend otp'
               }
-              style={{
-                color: resendTimer > 0 ? colors.gray : colors.primary,
-                textAlign: 'center',
-                marginTop: 10,
-                fontSize: scale(15),
-              }}
+              style={[
+                style.textResetotp,
+                { color: resendTimer > 0 ? colors.gray : colors.primary },
+              ]}
             />
           </View>
 

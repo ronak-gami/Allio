@@ -8,14 +8,13 @@ export const useForgotPassword = () => {
   const navigation = useNavigation();
   const [showOtpBox, setShowOtpBox] = useState(false);
   const [otp, setOtp] = useState('');
-  const [verificationId, setVerificationId] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
   const [Email, setEmail] = useState('');
   const [resendTimer, setResendTimer] = useState(56);
 
   const startResendTimer = () => {
-    setResendTimer(56);
+    setResendTimer(59);
     const interval = setInterval(() => {
       setResendTimer(prev => {
         if (prev <= 1) {
@@ -29,24 +28,26 @@ export const useForgotPassword = () => {
 
   const handleForgotPassword = async (values: { email: string }) => {
     try {
-      setIsSubmittingEmail(true); // <- Start loading
+      console.log('API CALLING');
+      setIsSubmittingEmail(true);
       const userExists = await checkUserExistsByEmail(values.email);
       if (!userExists) {
         showError('No user found with this email.');
         return;
       }
-
+      console.log(values.email);
       setEmail(values.email);
+      console.log('API START');
       const response = await axios.post(
-        'https://allio-backend.onrender.com/api/user/send-otp',
+        'https://64dc1112a1f9.ngrok-free.app/api/user/send-otp',
         { email: values.email },
       );
-
-      setShowOtpBox(true);
-      const { verificationId } = response.data;
-      setVerificationId(verificationId || '123456');
-      showSuccess('OTP sent to your email');
-      startResendTimer();
+      console.log('response: ', response?.data);
+      if (response?.data?.status === true) {
+        setShowOtpBox(true);
+        showSuccess('OTP sent to your email');
+        startResendTimer();
+      }
     } catch (error: any) {
       showError(error?.response?.data?.message || 'Failed to send reset code');
     } finally {
@@ -55,18 +56,19 @@ export const useForgotPassword = () => {
   };
 
   const handleResendOtp = async () => {
+    console.log('handleResendOtp function called');
     try {
-      showSuccess('OTP resent to your email');
-      startResendTimer();
       const response = await axios.post(
-        'https://allio-backend.onrender.com/api/user/send-otp',
+        'https://64dc1112a1f9.ngrok-free.app/api/user/send-otp',
         { email: Email },
       );
-
-      const { verificationId } = response.data;
-      setVerificationId(verificationId || '123456');
+      if (response?.data?.status === true) {
+        showSuccess('OTP resent to your email');
+        startResendTimer();
+      }
     } catch (error: any) {
       showError(error?.response?.data?.message || 'Failed to resend OTP');
+    } finally {
     }
   };
 
@@ -74,18 +76,20 @@ export const useForgotPassword = () => {
     try {
       setIsVerifying(true);
       const response = await axios.post(
-        'https://allio-backend.onrender.com/api/user/validate-otp',
+        'https://64dc1112a1f9.ngrok-free.app/api/user/validate-otp',
         {
           email: Email,
           otp: otp,
         },
       );
 
-      showSuccess('OTP verified');
-      navigation.navigate('MPIN', {
-        email: Email,
-        resetMpin: true,
-      });
+      if (response?.data?.status === true) {
+        showSuccess('OTP verified');
+        navigation.navigate('MPIN', {
+          email: Email,
+          resetMpin: true,
+        });
+      }
     } catch (error: any) {
       showError(error?.response?.data?.message || 'OTP verification failed');
     } finally {

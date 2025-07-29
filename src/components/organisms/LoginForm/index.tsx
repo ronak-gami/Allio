@@ -40,7 +40,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
             <>
               <Input
                 placeholder="email"
-                maxlength={25}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={values.email}
@@ -49,7 +48,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
               />
               <Input
                 placeholder="Password"
-                maxlength={25}
+                maxlength={12}
                 value={values.password}
                 onChangeText={handleChange('password')}
                 error={touched.password ? errors.password : ''}
@@ -77,7 +76,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
       <View style={styles.SocialButtonStyle}>
         <SignInWithFacebook setLoading={setLoading} />
         <SignInWithGoogle setLoading={setLoading} />
-        <SignInWithGitHub/>
+        <SignInWithGitHub />
       </View>
       <View style={styles.dividerContainer}>
         <Text label="no_account" style={styles.orText} />

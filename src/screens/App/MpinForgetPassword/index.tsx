@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   KeyboardAvoidingView,
@@ -9,9 +9,11 @@ import {
 import MpinForgetpasswordForm from '@components/organisms/MpinForgetpasswordForm';
 import useStyle from './style';
 import { ICONS } from '@assets/index';
-
+import CustomLoader from '@components/atoms/CustomLoader';
 
 const MpinForgetPassword: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+
   const styles = useStyle();
   return (
     <KeyboardAvoidingView
@@ -25,7 +27,8 @@ const MpinForgetPassword: React.FC = () => {
             resizeMode="contain"
           />
         </View>
-        <MpinForgetpasswordForm />
+        <MpinForgetpasswordForm setLoading={setLoading} />
+        <CustomLoader visible={loading} />
       </ScrollView>
     </KeyboardAvoidingView>
   );

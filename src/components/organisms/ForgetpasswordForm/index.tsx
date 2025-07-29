@@ -40,7 +40,6 @@ const ForgotPasswordScreen: React.FC = () => {
               </Text>
               <Input
                 placeholder="email"
-                maxlength={25}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={values.email}
