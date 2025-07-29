@@ -12,38 +12,42 @@ const useStyle = () => {
       marginHorizontal: height * 0.02,
     },
     subView: { flexGrow: 1 },
+    form: {
+      flex: 1,
+      gap: scale(5),
+    },
     title: {
       fontSize: scale(34),
       color: colors.primary,
     },
+
     subtitle: {
       fontSize: scale(16),
       color: colors.text,
-      textAlign: 'left',
-      marginBottom: scale(10),
+      marginBottom: scale(15),
     },
-    otpContainer: {
-      marginVertical: scale(10),
-      justifyContent: 'space-between',
-    },
-    otpInput: {
-      borderRadius: scale(10),
-      borderWidth: 1,
-      width: scale(50),
-      height: scale(50),
-      textAlign: 'center',
-      fontSize: scale(18),
-    },
-    errorText: {
-      color: 'red',
-      alignSelf: 'flex-end',
-      fontSize: scale(14),
-    },
-    button: {},
     forgotpassText: {
       color: colors.text,
       fontSize: scale(16),
       textAlign: 'right',
+    },
+    loginButton: {
+      marginTop: scale(16),
+      marginVertical: scale(6),
+      backgroundColor: colors.primary,
+      borderRadius: scale(8),
+      paddingVertical: scale(12),
+    },
+    dividerContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: scale(20),
+      alignItems: 'center',
+      gap: 3,
+    },
+
+    otpLabel: {
+      fontSize: scale(25),
     },
   });
 };

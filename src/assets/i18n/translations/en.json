@@ -22,6 +22,29 @@
   "mobile_pattern": "{{field}} must be 10 digits",
   "password_pattern": "{{field}} must contain at least one uppercase letter, one lowercase letter, and one number",
   "confirm_password_match": "Passwords must match",
-  "enter_mpin": "Enter 4‑Digit MPIN",
-  "set_mpin": "Set 4‑Digit MPIN"
+
+  "mpin_reset_title": "Reset 4-Digit MPIN",
+  "mpin_enter_title": "Enter 4-Digit MPIN",
+  "mpin_set_title": "Set 4-Digit MPIN",
+
+  "mpin_reset_subtitle": "Enter your new MPIN to reset your account security",
+  "mpin_enter_subtitle": "Enter your MPIN to proceed to the next step",
+  "mpin_set_subtitle": "Create a new 4-digit MPIN to secure your account",
+
+  "mpin_reset_button": "Reset MPIN",
+  "mpin_enter_button": "Enter PIN",
+  "mpin_set_button": "Set MPIN",
+  "mpin_forgot_title": "Forgot Your MPIN?",
+  "mpin_forgot_subtitle": "Enter your email to receive a reset code for your MPIN.",
+  "mpin_forgot_button": "Send Reset Code",
+  "mpin_otp_title": "Enter MPIN OTP",
+  "mpin_otp_subtitle": "Enter the OTP sent to your email to reset your MPIN.",
+  "go_to_mpin": "Go to MPIN?",
+  "mpin": "MPIN",
+  "enter_mpin": "Enter MPIN",
+  "confirm_mpin": "Confirm MPIN",
+  "otp_sent_to": "Enter the OTP sent to",
+  "resend_otp": "Resend OTP",
+  "resend_otp_in": "Resend in",
+  "verify_otp": "Verify OTP"
 }

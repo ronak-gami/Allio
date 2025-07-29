@@ -10,21 +10,30 @@ import useStyle from './style';
 import MPINForm from '@components/organisms/MPINForm';
 import { ICONS } from '@assets/index';
 import { promptAppLock } from '@utils/auth';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
+
+type MPINScreenRouteParams = {
+  MPIN: {
+    email: string;
+    resetMpin: boolean;
+  };
+};
 
 const MPINSetupScreen = () => {
   const styles = useStyle();
   const navigation = useNavigation();
-    const token = useSelector((s: RootState) => s.auth.token);
-    const isAuth = useSelector(
-      (s: RootState) => s.biometric.isBiometricAuthenticated,
-    );
+  const route = useRoute<RouteProp<MPINScreenRouteParams, 'MPIN'>>();
 
+  const { resetMpin,email } = route.params || {};
+  const token = useSelector((s: RootState) => s.auth.token);
+  const isAuth = useSelector(
+    (s: RootState) => s.biometric.isBiometricAuthenticated,
+  );
 
   useEffect(() => {
-    if (token && !isAuth) {
+    if (token && !isAuth && !resetMpin) {
       promptAppLock().then(success => {
         if (success) {
           navigation.replace('HomeTabs');
@@ -36,8 +45,7 @@ const MPINSetupScreen = () => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
@@ -49,7 +57,8 @@ const MPINSetupScreen = () => {
             resizeMode="contain"
           />
         </View>
-        <MPINForm />
+
+        <MPINForm resetMpin={resetMpin} email={email} />
       </ScrollView>
     </KeyboardAvoidingView>
   );

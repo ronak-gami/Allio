@@ -60,6 +60,7 @@ const HOME = {
   Video: 'Video' as const,
   More: 'More' as const,
   MPIN: 'MPIN' as const,
+  ForgotPassword: 'ForgotPassword' as const,
 } as const;
 
 export { onboardingData, AUTH, HOME };

@@ -4,7 +4,6 @@ import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
   const { colors } = useTheme();
-
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -25,5 +24,4 @@ const useStyle = () => {
     },
   });
 };
-
 export default useStyle;
