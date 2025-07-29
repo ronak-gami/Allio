@@ -31,7 +31,7 @@ const darkTheme = {
 
 const StackNavigator: React.FC = () => {
   const token = useSelector((s: RootState) => s.auth.token);
-  
+
   const isDarkMode = useSelector((s: RootState) => s.theme.isDarkMode);
   const language = useSelector((s: RootState) => s.language.language);
   const dispatch = useDispatch();
@@ -54,8 +54,6 @@ const StackNavigator: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  
-
   const appTheme = isDarkMode ? darkTheme : lightTheme;
 
   if (splashVisible) {
@@ -73,8 +71,6 @@ const StackNavigator: React.FC = () => {
       </NavigationContainer>
     );
   }
-
-  
 
   return (
     <NavigationContainer theme={appTheme}>

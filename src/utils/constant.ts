@@ -56,13 +56,14 @@ const AUTH = {
 } as const;
 
 const HOME = {
-  Home: 'Home' as const,
-  Photo: 'Photo' as const,
-  ScanQR: 'ScanQR' as const,
-  Video: 'Video' as const,
-  More: 'More' as const,
-  MPIN: 'MPIN' as const,
-  ForgotPassword: 'ForgotPassword' as const,
+  HomeTabs: 'HomeTabs',
+  Home: 'Home',
+  Photo: 'Photo',
+  ScanQR: 'ScanQR',
+  Video: 'Video',
+  More: 'More',
+  MPIN: 'MPIN',
+  MpinForgetPassword: 'MpinForgetPassword',
 } as const;
 
 export { onboardingData, AUTH, HOME };
