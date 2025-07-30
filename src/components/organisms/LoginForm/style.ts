@@ -23,7 +23,7 @@ const useStyle = () => {
     formContainer: {
       flex: 1,
       justifyContent: 'center',
-      padding: scale(16),
+      paddingHorizontal: scale(10),
     },
     logo: {
       width: scale(200),

@@ -36,7 +36,6 @@ const RegistrationForm = () => {
                 value={values.firstName}
                 onChangeText={handleChange('firstName')}
                 error={touched.firstName ? errors.firstName : ''}
-                maxlength={25}
                 autoCapitalize="words"
               />
               <Input
@@ -44,7 +43,6 @@ const RegistrationForm = () => {
                 value={values.lastName}
                 onChangeText={handleChange('lastName')}
                 error={touched.lastName ? errors.lastName : ''}
-                maxlength={25}
                 autoCapitalize="words"
               />
               <Input
@@ -62,7 +60,6 @@ const RegistrationForm = () => {
                 error={touched.email ? errors.email : ''}
                 keyboardType="email-address"
                 autoCapitalize="none"
-                maxlength={25}
               />
               <Input
                 placeholder="Password"
@@ -70,7 +67,7 @@ const RegistrationForm = () => {
                 onChangeText={handleChange('password')}
                 error={touched.password ? errors.password : ''}
                 isPassword
-                maxlength={25}
+                maxlength={12}
               />
               <Input
                 placeholder="Confirm Password"
@@ -78,7 +75,7 @@ const RegistrationForm = () => {
                 onChangeText={handleChange('confirmPassword')}
                 error={touched.confirmPassword ? errors.confirmPassword : ''}
                 isPassword
-                maxlength={25}
+                maxlength={12}
               />
               <Button
                 title="Register"

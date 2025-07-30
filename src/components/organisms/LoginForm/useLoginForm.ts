@@ -11,7 +11,6 @@ import { useNavigation } from '@react-navigation/native';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
 import { showError, showSuccess } from '@utils/toast';
-import { Toast } from 'toastify-react-native';
 
 export const useLoginForm = () => {
   const [remember, setRemember] = useState(false);
@@ -40,6 +39,8 @@ export const useLoginForm = () => {
         values.email,
         values.password,
       );
+
+      dispatch(setStateKey({ key: 'userData', value: values }));
 
       const user = userCredential.user;
       if (user) {
