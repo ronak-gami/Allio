@@ -6,12 +6,12 @@ import {
   View,
   Image,
 } from 'react-native';
-import MpinForgetpasswordForm from '@components/organisms/MpinForgetpasswordForm';
+import ForgetMPINForm from '@components/organisms/MpinForgetpasswordForm';
 import useStyle from './style';
 import { ICONS } from '@assets/index';
 import CustomLoader from '@components/atoms/CustomLoader';
 
-const MpinForgetPassword: React.FC = () => {
+const ForgetMPIN: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const styles = useStyle();
@@ -27,11 +27,11 @@ const MpinForgetPassword: React.FC = () => {
             resizeMode="contain"
           />
         </View>
-        <MpinForgetpasswordForm setLoading={setLoading} />
+        <ForgetMPINForm setLoading={setLoading} />
         <CustomLoader visible={loading} />
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
-export default MpinForgetPassword;
+export default ForgetMPIN;

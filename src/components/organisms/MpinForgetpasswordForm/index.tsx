@@ -10,13 +10,11 @@ import { useForgotPassword } from './useForgetpassForm';
 import useValidation from '@utils/validationSchema';
 import { useNavigation, useTheme } from '@react-navigation/native';
 
-interface MpinForgetpasswordFormProps {
+interface ForgetMPINFormProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const MpinForgetpasswordForm: React.FC<MpinForgetpasswordFormProps> = ({
-  setLoading,
-}) => {
+const ForgetMPINForm: React.FC<ForgetMPINFormProps> = ({ setLoading }) => {
   const { colors } = useTheme();
   const navigation = useNavigation();
   const { forgotPasswordSchema } = useValidation();
@@ -143,4 +141,4 @@ const MpinForgetpasswordForm: React.FC<MpinForgetpasswordFormProps> = ({
   );
 };
 
-export default MpinForgetpasswordForm;
+export default ForgetMPINForm;

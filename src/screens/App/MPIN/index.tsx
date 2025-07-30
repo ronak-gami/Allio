@@ -13,6 +13,7 @@ import { promptAppLock } from '@utils/auth';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
+import { HOME } from '@utils/constant';
 
 type MPINScreenRouteParams = {
   MPIN: {
@@ -26,7 +27,7 @@ const MPINSetupScreen = () => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<MPINScreenRouteParams, 'MPIN'>>();
 
-  const { resetMpin,email } = route.params || {};
+  const { resetMpin, email } = route.params || {};
   const token = useSelector((s: RootState) => s.auth.token);
   const isAuth = useSelector(
     (s: RootState) => s.biometric.isBiometricAuthenticated,
@@ -36,11 +37,11 @@ const MPINSetupScreen = () => {
     if (token && !isAuth && !resetMpin) {
       promptAppLock().then(success => {
         if (success) {
-          navigation.replace('HomeTabs');
+          navigation.replace(HOME.HomeTabs);
         }
       });
     }
-  }, [token, isAuth, navigation]);
+  }, [token, isAuth, navigation, resetMpin]);
 
   return (
     <KeyboardAvoidingView

@@ -7,7 +7,7 @@ export const promptAppLock = async (): Promise<boolean> => {
   try {
     const { available, biometryType } = await rn.isSensorAvailable();
     if (!available) throw new Error('No biometric available');
-    console.log('Biometry type:', biometryType);
+    console.error('Biometry type:', biometryType);
 
     const { success } = await rn.simplePrompt({
       promptMessage: 'Unlock App',

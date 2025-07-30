@@ -5,13 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { BASE_URL } from '@utils/constant';
 
-interface useForgotPasswordProps {
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export const useForgotPassword: React.FC<useForgotPasswordProps> = ({
-  setLoading,
-}) => {
+export const useForgotPassword = (
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
   const navigation = useNavigation();
   const [showOtpBox, setShowOtpBox] = useState(false);
   const [otp, setOtp] = useState('');
@@ -35,20 +31,16 @@ export const useForgotPassword: React.FC<useForgotPasswordProps> = ({
 
   const handleForgotPassword = async (values: { email: string }) => {
     try {
-      console.log('API CALLING');
       setIsSubmittingEmail(true);
       const userExists = await checkUserExistsByEmail(values.email);
       if (!userExists) {
         showError('No user found with this email.');
         return;
       }
-      console.log(values.email);
       setEmail(values.email);
-      console.log('API START');
       const response = await axios.post(`${BASE_URL}/send-otp`, {
         email: values.email,
       });
-      console.log('response: ', response?.data);
       if (response?.data?.status === true) {
         setShowOtpBox(true);
         showSuccess('OTP sent to your email');
@@ -63,7 +55,6 @@ export const useForgotPassword: React.FC<useForgotPasswordProps> = ({
 
   const handleResendOtp = async () => {
     setLoading(true);
-    console.log('handleResendOtp function called');
     try {
       const response = await axios.post(`${BASE_URL}/send-otp`, {
         email: Email,

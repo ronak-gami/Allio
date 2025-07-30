@@ -6,6 +6,7 @@ import Button from '@components/atoms/Button';
 import Text from '@components/atoms/Text';
 import useMPINForm from './useMPINForm';
 import useStyle from './style';
+import { HOME } from '@utils/constant';
 
 type MPINFormProps = {
   email?: string;
@@ -74,7 +75,7 @@ const MPINForm: React.FC<MPINFormProps> = ({ resetMpin = false, email }) => {
 
         {isExistingUser && !resetMpin && (
           <Pressable
-            onPress={() => navigation.navigate('MpinForgetPassword')}
+            onPress={() => navigation.navigate(HOME.ForgetMPIN)}
             style={({ pressed }) => [
               {
                 opacity: pressed ? 0.5 : 1,
