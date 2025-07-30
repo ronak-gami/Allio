@@ -1,14 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useColorScheme } from 'react-native';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import i18n from '../assets/i18n';
-import { setDarkMode } from '@redux/slices/ThemeSlice';
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
 import AuthNavigator from './Auth';
 import HomeNavigator from './App';
-import colors from '@assets/theme';
+import { RootState } from '../redux/store';
 import Splash from '@screens/Auth/Splash';
+import { useColorScheme } from 'react-native';
+import { setDarkMode } from '../redux/slices/ThemeSlice';
+import i18n from '../assets/i18n';
+import { DefaultTheme } from '@react-navigation/native';
+import colors from '@assets/theme';
 
 const lightTheme = {
   ...DefaultTheme,
@@ -29,21 +30,18 @@ const darkTheme = {
 };
 
 const StackNavigator: React.FC = () => {
-  const token = useSelector((state: RootState) => state.auth.token);
-  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
-  const language = useSelector((state: RootState) => state.language.language);
+  const token = useSelector((s: RootState) => s.auth.token);
+
+  const isDarkMode = useSelector((s: RootState) => s.theme.isDarkMode);
+  const language = useSelector((s: RootState) => s.language.language);
   const dispatch = useDispatch();
   const systemColorScheme = useColorScheme();
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
+
+  const [splashVisible, setSplashVisible] = useState(true);
 
   useEffect(() => {
     dispatch(setDarkMode(systemColorScheme === 'dark'));
-  }, [systemColorScheme]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsSplashVisible(false), 2500);
-    return () => clearTimeout(timer);
-  }, []);
+  }, [dispatch, systemColorScheme]);
 
   useEffect(() => {
     if (language) {
@@ -51,23 +49,32 @@ const StackNavigator: React.FC = () => {
     }
   }, [language]);
 
-  const appTheme = useMemo(
-    () => (isDarkMode ? darkTheme : lightTheme),
-    [isDarkMode],
-  );
+  useEffect(() => {
+    const timer = setTimeout(() => setSplashVisible(false), 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
-  if (isSplashVisible) {
+  const appTheme = isDarkMode ? darkTheme : lightTheme;
+
+  if (splashVisible) {
     return (
-      <NavigationContainer>
+      <NavigationContainer theme={appTheme}>
         <Splash />
       </NavigationContainer>
     );
   }
- 
+
+  if (!token) {
+    return (
+      <NavigationContainer theme={appTheme}>
+        <AuthNavigator />
+      </NavigationContainer>
+    );
+  }
 
   return (
     <NavigationContainer theme={appTheme}>
-      {token ? <HomeNavigator /> : <AuthNavigator />}
+      <HomeNavigator />
     </NavigationContainer>
   );
 };

@@ -16,11 +16,30 @@
   "no_account": "શું તમારું એકાઉન્ટ નથી?",
   "register": "રજિસ્ટ્રેશન કરો",
   "register_subtitle": "નવું એકાઉન્ટ બનાવવા માટે શરૂ કરો",
-   "field_required": "{{field}} જરૂરી છે",
-    "field_min": "{{field}} ઓછામાં ઓછા {{min}} અક્ષરોનો હોવો જોઈએ",
-    "email_valid": "કૃપા કરીને માન્ય {{field}} એડ્રેસ દાખલ કરો",
-    "mobile_pattern": "{{field}} 10 અંકનો હોવો જોઈએ",
-    "password_pattern": "{{field}}માં ઓછામાં ઓછું એક મોટું અક્ષર, એક નાનું અક્ષર અને એક સંખ્યા હોવી જોઈએ",
-    "confirm_password_match": "પાસવર્ડ મેળ ખાતા હોવા જોઈએ"
- 
+  "field_required": "{{field}} જરૂરી છે",
+  "field_min": "{{field}} ઓછામાં ઓછા {{min}} અક્ષરોનો હોવો જોઈએ",
+  "email_valid": "કૃપા કરીને માન્ય {{field}} એડ્રેસ દાખલ કરો",
+  "mobile_pattern": "{{field}} 10 અંકનો હોવો જોઈએ",
+  "password_pattern": "{{field}}માં ઓછામાં ઓછું એક મોટું અક્ષર, એક નાનું અક્ષર અને એક સંખ્યા હોવી જોઈએ",
+  "confirm_password_match": "પાસવર્ડ મેળ ખાતા હોવા જોઈએ",
+  "mpin_reset_title": "4-અંકનું MPIN રીસેટ કરો",
+  "mpin_enter_title": "4-અંકનું MPIN દાખલ કરો",
+  "mpin_set_title": "4-અંકનું MPIN સેટ કરો",
+
+  "mpin_reset_subtitle": "તમારું ખાતું સુરક્ષિત કરવા માટે નવું MPIN દાખલ કરો",
+  "mpin_enter_subtitle": "આગળ વધવા માટે તમારું MPIN દાખલ કરો",
+  "mpin_set_subtitle": "તમારું ખાતું સુરક્ષિત કરવા માટે નવું 4-અંકનું MPIN બનાવો",
+
+  "mpin_reset_button": "MPIN રીસેટ કરો",
+  "mpin_enter_button": "PIN દાખલ કરો",
+  "mpin_set_button": "MPIN સેટ કરો",
+  "mpin_forgot_title": "તમારું MPIN ભૂલી ગયા છો?",
+  "mpin_forgot_subtitle": "તમારું MPIN રીસેટ કરવા માટે ઈમેઈલ દાખલ કરો.",
+  "mpin_forgot_button": "રીસેટ કોડ મોકલો",
+  "mpin_otp_title": "MPIN OTP દાખલ કરો",
+  "mpin_otp_subtitle": "તમારા ઈમેઈલ પર મોકલાયેલું OTP દાખલ કરો MPIN રીસેટ કરવા માટે.",
+  "go_to_mpin": "MPIN પર જાઓ?",
+  "mpin": "MPIN",
+  "enter_mpin": "એમપિન દાખલ કરો",
+  "confirm_mpin": "એમપિનની પુષ્ટિ કરો"
 }

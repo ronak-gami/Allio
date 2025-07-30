@@ -24,9 +24,11 @@ const CustomLoader: React.FC<LoaderProps> = ({
   const styles = useStyle();
   const loaderColor = color || colors.primary;
   const loaderBgColor = backgroundColor || 'rgba(251, 192, 45, 0.25)';
-  const loaderTextColor = textColor || colors.text;
+  const loaderTextColor = textColor || colors.primary;
 
-  if (!visible) return null;
+  if (!visible) {
+    return null;
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: loaderBgColor }]}>

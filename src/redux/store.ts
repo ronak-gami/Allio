@@ -5,11 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import authReducer from './slices/AuthSlice';
 import languageReducer from './slices/languageSlice';
 import themeReducer from './slices/ThemeSlice';
+import biometricReducer from './slices/BiometricSlice'
 
 const rootReducer = combineReducers({
   auth: authReducer,
   language: languageReducer,
   theme: themeReducer,
+  biometric:biometricReducer
 });
 
 type RootReducerType = ReturnType<typeof rootReducer>;

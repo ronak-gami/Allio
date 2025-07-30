@@ -1,4 +1,5 @@
 import { useTheme } from '@react-navigation/native';
+import { height } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
@@ -7,32 +8,28 @@ const useStyle = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: colors.background,
+      marginHorizontal: height * 0.02,
     },
-    scrollView: {
-      flexGrow: 1,
-      justifyContent: 'center',
-      paddingHorizontal: scale(10),
-    },
-    backButton: {
-      position: 'absolute',
-      top: scale(40),
-      left: scale(20),
-      zIndex: 1,
-    },
+    subView: { flexGrow: 1 },
     form: {
-      gap: scale(20),
+      flex: 1,
+      gap: scale(5),
     },
     title: {
       fontSize: scale(34),
       color: colors.primary,
     },
-    logoContainer: {
-      alignItems: 'center',
-      marginBottom: scale(20),
-    },
+
     subtitle: {
       fontSize: scale(16),
       color: colors.text,
+      marginBottom: scale(15),
+    },
+    forgotpassText: {
+      color: colors.text,
+      fontSize: scale(16),
+      textAlign: 'right',
     },
     loginButton: {
       marginTop: scale(16),
@@ -48,15 +45,21 @@ const useStyle = () => {
       alignItems: 'center',
       gap: 3,
     },
-    orText: {
-      color: colors.text,
-      fontSize: scale(16),
+    otpLabel: {
+      fontSize: scale(25),
     },
-    loginText: {
-      paddingVertical: scale(20),
-      fontSize: scale(18),
+    buttonGrow: {
+      flexGrow: 1,
+    },
+    otpInput: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    textResetotp: {
       textAlign: 'center',
-      color: colors.primary,
+      marginTop: 10,
+      fontSize: scale(15),
     },
   });
 };

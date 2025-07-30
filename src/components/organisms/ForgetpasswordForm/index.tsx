@@ -7,7 +7,6 @@ import {
   View,
 } from 'react-native';
 import { Formik } from 'formik';
-import { scale } from 'react-native-size-matters';
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
 import Input from '@components/atoms/Input';
@@ -23,8 +22,7 @@ const ForgotPasswordScreen: React.FC = () => {
   return (
     <KeyboardAvoidingView
       style={style.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={scale(60)}>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView
         contentContainerStyle={style.scrollView}
         keyboardShouldPersistTaps="handled">
@@ -42,7 +40,6 @@ const ForgotPasswordScreen: React.FC = () => {
               </Text>
               <Input
                 placeholder="email"
-                maxlength={25}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={values.email}

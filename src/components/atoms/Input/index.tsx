@@ -22,7 +22,7 @@ import { useTheme } from '@react-navigation/native';
 interface InputProps {
   placeholder: string;
   value: string;
-  maxlength: 10 | 12 | 25;
+  maxlength?: number;
   onChangeText: (text: string) => void;
   keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
   isPassword?: boolean;
@@ -46,7 +46,7 @@ const Input: React.FC<InputProps> = ({
   keyboardType = 'default',
   isPassword = false,
   error,
-  maxlength = 10,
+  maxlength,
   style,
   autoCapitalize = 'none',
   backgroundColor,
