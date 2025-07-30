@@ -60,7 +60,6 @@ const useStyle = () => {
       textAlign: 'center',
       marginTop: 10,
       fontSize: scale(15),
-      borderWidth: 1,
     },
   });
 };
