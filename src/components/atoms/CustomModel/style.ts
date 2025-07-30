@@ -18,7 +18,7 @@ const useStyle = () => {
       position: 'relative',
     },
     title: {
-      fontSize: scale(24),
+      fontSize: scale(20),
       marginBottom: width * 0.03,
     },
     description: {
@@ -28,13 +28,13 @@ const useStyle = () => {
     },
     closeIconContainer: {
       position: 'absolute',
-      top: scale(10),
-      right: scale(10),
-      padding: scale(5),
+      top: width * 0.025,
+      right: width * 0.025,
+      padding: width * 0.02,
     },
     closeIcon: {
-      width: scale(18),
-      height: scale(18),
+      width: width * 0.05,
+      height: width * 0.05,
     },
   });
 };

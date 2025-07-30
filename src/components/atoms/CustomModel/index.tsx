@@ -9,7 +9,7 @@ import {
 import { useTheme } from '@react-navigation/native';
 import useStyle from './style';
 import Text from '../Text';
-import { ICONS } from '@assets/index'; // Replace with your close icon asset path
+import { ICONS } from '@assets/index';
 
 interface CustomModalProps {
   visible: boolean | any;

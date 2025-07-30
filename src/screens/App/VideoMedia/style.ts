@@ -48,6 +48,10 @@ const useStyle = () => {
       alignItems: 'center',
       justifyContent: 'center',
     },
+    modalContent: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
   });
 };
 
