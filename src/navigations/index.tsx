@@ -9,7 +9,7 @@ import AuthNavigator from './Auth';
 import HomeNavigator from './App';
 import colors from '@assets/theme';
 import Splash from '@screens/Auth/Splash';
-import { useTrack } from '../hook';
+import useTrack from '@hooks/useTrack';
 
 const lightTheme = {
   ...DefaultTheme,

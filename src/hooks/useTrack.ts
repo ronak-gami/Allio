@@ -2,7 +2,7 @@ import { useNavigationContainerRef } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
 import React, { useRef, useEffect } from 'react';
 
-export function useTrack(navigationRef: any) {
+ function useTrack(navigationRef: any) {
   const routeNameRef = useRef<string | undefined>();
 
   useEffect(() => {
@@ -19,3 +19,4 @@ export function useTrack(navigationRef: any) {
     return unsubscribe;
   }, [navigationRef]);
 }
+export default useTrack

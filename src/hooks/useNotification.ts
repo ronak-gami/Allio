@@ -5,7 +5,7 @@ import messaging, {
 } from '@react-native-firebase/messaging';
 import { CustomToastRef } from '@components/atoms/CustomToast';
 
-export const useNotification = (toastRef: RefObject<CustomToastRef>) => {
+ const useNotification = (toastRef: RefObject<CustomToastRef>) => {
   // Accept toastRef as a prop
   const requestUserPermission = async () => {
     try {
@@ -109,3 +109,4 @@ messaging().setBackgroundMessageHandler(
     // because the app's UI is not active.
   },
 );
+export default useNotification

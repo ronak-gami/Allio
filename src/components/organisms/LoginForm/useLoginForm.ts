@@ -27,7 +27,7 @@ export const useLoginForm = () => {
     password: '',
   };
   const handleLogin = async (values: typeof initialValues) => {
-    const trace = await perf().startTrace('login');
+   
     setLoading(true);
     try {
       const exists = await checkUserExistsByEmail(values.email);
