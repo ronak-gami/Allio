@@ -6,14 +6,15 @@ export const promptAppLock = async (): Promise<boolean> => {
   const rn = new ReactNativeBiometrics();
   try {
     const { available, biometryType } = await rn.isSensorAvailable();
-    if (!available) throw new Error('No biometric available');
-    console.error('Biometry type:', biometryType);
+    console.log('Biometry type:', biometryType);
+    if (!available) {
+      throw new Error('No biometric available');
+    }
 
     const { success } = await rn.simplePrompt({
       promptMessage: 'Unlock App',
       cancelButtonText: 'cancel',
       fallbackPromptMessage: '',
-      allowDeviceCredentials: false,
     });
 
     store.dispatch(biometricStateChange(success));

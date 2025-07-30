@@ -23,7 +23,7 @@ const CustomLoader: React.FC<LoaderProps> = ({
   const { colors } = useTheme();
   const styles = useStyle();
   const loaderColor = color || colors.primary;
-  const loaderBgColor = backgroundColor || 'rgba(251, 192, 45, 0.25)';
+  const loaderBgColor = backgroundColor || colors.modelbg;
   const loaderTextColor = textColor || colors.primary;
 
   if (!visible) {

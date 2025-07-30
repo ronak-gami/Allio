@@ -1,12 +1,12 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {
   PERMISSIONS,
   RESULTS,
   requestMultiple,
-  check,
   Permission,
   PermissionStatus,
+  checkMultiple,
 } from 'react-native-permissions';
 
 const height = Dimensions.get('screen').height;
@@ -79,9 +79,9 @@ const languages = [
   { label: 'ગુજરાતી', value: 'gu' },
 ];
 
-type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
+export type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
-interface AndroidPermissionResult {
+export interface AndroidPermissionResult {
   granted: boolean;
   results: Record<string, PermissionStatus>;
   error?: string;
@@ -90,125 +90,104 @@ interface AndroidPermissionResult {
   canSaveVideos: boolean;
 }
 
-const handleVideoPermissions = async (
+const getAndroidPermissions = (
+  permissionType: AndroidPermissionType,
+): Permission[] => {
+  const isApiLevel33OrHigher = Platform.Version >= 33;
+
+  const cameraPermissions = [
+    PERMISSIONS.ANDROID.CAMERA,
+    PERMISSIONS.ANDROID.RECORD_AUDIO,
+  ];
+  const storagePermissions = isApiLevel33OrHigher
+    ? [PERMISSIONS.ANDROID.READ_MEDIA_VIDEO]
+    : [
+        PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+        PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+      ];
+
+  switch (permissionType) {
+    case 'camera':
+      return [PERMISSIONS.ANDROID.CAMERA];
+    case 'microphone':
+      return [PERMISSIONS.ANDROID.RECORD_AUDIO];
+    case 'storage':
+      return storagePermissions;
+    case 'all':
+    default:
+      return [...cameraPermissions, ...storagePermissions];
+  }
+};
+
+export const handleVideoPermissions = async (
   type: AndroidPermissionType = 'all',
   autoRequest: boolean = true,
 ): Promise<AndroidPermissionResult> => {
+  if (Platform.OS !== 'android') {
+    // For non-Android platforms, assume permissions are handled differently or granted.
+    return {
+      granted: true,
+      results: {},
+      canRecordVideo: true,
+      canAccessGallery: true,
+      canSaveVideos: true,
+    };
+  }
+
   try {
-    // Define Android permissions
-    const getAndroidPermissions = (
-      permissionType: AndroidPermissionType,
-    ): Permission[] => {
-      switch (permissionType) {
-        case 'camera':
-          return [PERMISSIONS.ANDROID.CAMERA];
-        case 'microphone':
-          return [PERMISSIONS.ANDROID.RECORD_AUDIO];
-        case 'storage':
-          return [
-            PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-            PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
-          ];
-        case 'all':
-        default:
-          return [
-            PERMISSIONS.ANDROID.CAMERA,
-            PERMISSIONS.ANDROID.RECORD_AUDIO,
-            PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-            PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
-          ];
-      }
-    };
-
     const requiredPermissions = getAndroidPermissions(type);
+    const statuses = await checkMultiple(requiredPermissions);
 
-    // Check current permission status
-    const currentStatus: Record<string, PermissionStatus> = {};
-    for (const permission of requiredPermissions) {
-      currentStatus[permission] = await check(permission);
-    }
+    const isApiLevel33OrHigher = Platform.Version >= 33;
 
-    // Calculate capabilities
-    const cameraGranted =
-      currentStatus[PERMISSIONS.ANDROID.CAMERA] === RESULTS.GRANTED;
-    const microphoneGranted =
-      currentStatus[PERMISSIONS.ANDROID.RECORD_AUDIO] === RESULTS.GRANTED;
-    const readStorageGranted =
-      currentStatus[PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE] ===
-      RESULTS.GRANTED;
-    const writeStorageGranted =
-      currentStatus[PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE] ===
-      RESULTS.GRANTED;
+    // Helper to check permission status
+    const has = (permission: Permission) =>
+      statuses[permission] === RESULTS.GRANTED;
 
-    const capabilities = {
-      canRecordVideo: cameraGranted && microphoneGranted,
-      canAccessGallery: readStorageGranted,
-      canSaveVideos: writeStorageGranted,
-    };
+    const calculateCapabilities = (
+      currentStatuses: Record<string, PermissionStatus>,
+    ) => ({
+      canRecordVideo:
+        has(PERMISSIONS.ANDROID.CAMERA) &&
+        has(PERMISSIONS.ANDROID.RECORD_AUDIO),
+      canAccessGallery: isApiLevel33OrHigher
+        ? has(PERMISSIONS.ANDROID.READ_MEDIA_VIDEO)
+        : has(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE),
+      canSaveVideos: isApiLevel33OrHigher
+        ? true // WRITE_EXTERNAL_STORAGE is not needed to save to gallery on API 33+
+        : has(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE),
+    });
 
-    // If not auto-requesting, return current status
-    if (!autoRequest) {
-      const allGranted = Object.values(currentStatus).every(
-        result => result === RESULTS.GRANTED,
-      );
-
-      return {
-        granted: allGranted,
-        results: currentStatus,
-        error: undefined,
-        ...capabilities,
-      };
-    }
-
-    // Filter permissions that need to be requested
-    const permissionsToRequest = requiredPermissions.filter(
-      permission => currentStatus[permission] !== RESULTS.GRANTED,
+    let finalStatuses = statuses;
+    const allCurrentlyGranted = Object.values(statuses).every(
+      s => s === RESULTS.GRANTED,
     );
 
-    // If all permissions are already granted
-    if (permissionsToRequest.length === 0) {
+    if (!autoRequest || allCurrentlyGranted) {
       return {
-        granted: true,
-        results: currentStatus,
-        error: undefined,
-        ...capabilities,
+        granted: allCurrentlyGranted,
+        results: statuses,
+        ...calculateCapabilities(statuses),
       };
     }
 
-    // Request missing permissions
-    const requestResults = await requestMultiple(permissionsToRequest);
+    const permissionsToRequest = requiredPermissions.filter(
+      p => statuses[p] !== RESULTS.GRANTED,
+    );
 
-    // Merge current status with request results
-    const finalResults = { ...currentStatus, ...requestResults };
+    if (permissionsToRequest.length > 0) {
+      const requestResults = await requestMultiple(permissionsToRequest);
+      finalStatuses = { ...statuses, ...requestResults };
+    }
 
-    // Recalculate capabilities after request
-    const finalCameraGranted =
-      finalResults[PERMISSIONS.ANDROID.CAMERA] === RESULTS.GRANTED;
-    const finalMicrophoneGranted =
-      finalResults[PERMISSIONS.ANDROID.RECORD_AUDIO] === RESULTS.GRANTED;
-    const finalReadStorageGranted =
-      finalResults[PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE] ===
-      RESULTS.GRANTED;
-    const finalWriteStorageGranted =
-      finalResults[PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE] ===
-      RESULTS.GRANTED;
-
-    const finalCapabilities = {
-      canRecordVideo: finalCameraGranted && finalMicrophoneGranted,
-      canAccessGallery: finalReadStorageGranted,
-      canSaveVideos: finalWriteStorageGranted,
-    };
-
-    // Check if all requested permissions are granted
-    const allGranted = Object.values(finalResults).every(
+    const allFinallyGranted = Object.values(finalStatuses).every(
       result => result === RESULTS.GRANTED,
     );
 
     return {
-      granted: allGranted,
-      results: finalResults,
-      error: undefined,
-      ...finalCapabilities,
+      granted: allFinallyGranted,
+      results: finalStatuses,
+      ...calculateCapabilities(finalStatuses),
     };
   } catch (error) {
     console.error('Android video permissions error:', error);
@@ -231,5 +210,4 @@ export {
   checkUserExistsByEmail,
   updateUserInFirestore,
   languages,
-  handleVideoPermissions,
 };

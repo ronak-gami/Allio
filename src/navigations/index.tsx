@@ -56,25 +56,15 @@ const StackNavigator: React.FC = () => {
 
   const appTheme = isDarkMode ? darkTheme : lightTheme;
 
-  if (splashVisible) {
-    return (
-      <NavigationContainer theme={appTheme}>
-        <Splash />
-      </NavigationContainer>
-    );
-  }
-
-  if (!token) {
-    return (
-      <NavigationContainer theme={appTheme}>
-        <AuthNavigator />
-      </NavigationContainer>
-    );
-  }
-
   return (
     <NavigationContainer theme={appTheme}>
-      <HomeNavigator />
+      {splashVisible ? (
+        <Splash />
+      ) : token ? (
+        <HomeNavigator />
+      ) : (
+        <AuthNavigator />
+      )}
     </NavigationContainer>
   );
 };
