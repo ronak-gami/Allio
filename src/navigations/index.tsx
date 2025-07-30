@@ -9,7 +9,7 @@ import AuthNavigator from './Auth';
 import HomeNavigator from './App';
 import colors from '@assets/theme';
 import Splash from '@screens/Auth/Splash';
-import { useScreenTracking } from '../navigations/App/ScreeenTrack';
+import { useTrack } from '../hook';
 
 const lightTheme = {
   ...DefaultTheme,
@@ -60,7 +60,7 @@ const StackNavigator: React.FC = () => {
   }, [language]);
 
   // Use the custom hook for screen tracking
-  useScreenTracking(navigationRef);
+  useTrack(navigationRef);
 
   const appTheme = useMemo(
     () => (isDarkMode ? darkTheme : lightTheme),

@@ -65,6 +65,7 @@ console.log('Sign in result', userCredential);
         crashlytics().setAttribute('email', values.email);
   
         showSuccess('Login Successful!');
+
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);

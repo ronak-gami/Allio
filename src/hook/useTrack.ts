@@ -2,7 +2,7 @@ import { useNavigationContainerRef } from '@react-navigation/native';
 import analytics from '@react-native-firebase/analytics';
 import React, { useRef, useEffect } from 'react';
 
-export function useScreenTracking(navigationRef: any) {
+export function useTrack(navigationRef: any) {
   const routeNameRef = useRef<string | undefined>();
 
   useEffect(() => {

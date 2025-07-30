@@ -1,0 +1,111 @@
+import { PermissionsAndroid } from 'react-native';
+import { useEffect, RefObject } from 'react'; // Import RefObject
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging';
+import { CustomToastRef } from '@components/atoms/CustomToast';
+
+export const useNotification = (toastRef: RefObject<CustomToastRef>) => {
+  // Accept toastRef as a prop
+  const requestUserPermission = async () => {
+    try {
+      const granted: 'granted' | 'denied' | 'never_ask_again' =
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Notification Permission granted');
+      } else {
+        console.log('Notification permission denied');
+      }
+    } catch (error: any) {
+      console.error('Failed to request notification permission:', error);
+    }
+  };
+
+  const getToken = async () => {
+    try {
+      const token: string = await messaging().getToken();
+      console.log('FCM Token:', token);
+    } catch (error: any) {
+      console.error('Failed to get FCM token:', error);
+    }
+  };
+
+  useEffect(() => {
+    // 1. Request User Permission and Get Token on Mount
+    requestUserPermission();
+    getToken();
+
+    // 2. Handle Foreground Messages
+    const unsubscribeOnMessage = messaging().onMessage(
+      async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+        console.log('FCM Message received in FOREGROUND:', remoteMessage);
+
+        if (remoteMessage.notification) {
+          // Show custom toast for foreground notification
+          toastRef.current?.show(
+            `${remoteMessage.notification.title || 'Notification'}\n${
+              remoteMessage.notification.body || ''
+            }`,
+            'success', // Or 'info', 'error' based on your needs
+          );
+        } else if (remoteMessage.data) {
+          // Handle data-only messages in foreground, e.g., update UI
+          toastRef.current?.show(
+            `Data-only message: ${JSON.stringify(remoteMessage.data)}`,
+            'info',
+          );
+        }
+      },
+    );
+
+    // 3. Handle Messages when App is Opened from a Quit State
+    messaging()
+      .getInitialNotification()
+      .then((remoteMessage: FirebaseMessagingTypes.RemoteMessage | null) => {
+        if (remoteMessage) {
+          console.log('FCM Message opened app from QUIT state:', remoteMessage);
+          if (remoteMessage.data?.screen) {
+            console.log(`Maps to screen: ${remoteMessage.data.screen}`);
+          }
+        }
+      });
+
+    // 4. Handle Messages when App is in Background and User Taps Notification
+    const unsubscribeOnNotificationOpenedApp =
+      messaging().onNotificationOpenedApp(
+        async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+          console.log(
+            'FCM Notification caused app to open from BACKGROUND:',
+            remoteMessage,
+          );
+          if (remoteMessage.data?.screen) {
+            console.log(
+              `Maps to screen from background tap: ${remoteMessage.data.screen}`,
+            );
+          }
+        },
+      );
+
+    // Cleanup listeners when the component unmounts
+    return () => {
+      unsubscribeOnMessage();
+      unsubscribeOnNotificationOpenedApp();
+    };
+  }, [toastRef]); // Add toastRef to dependency array
+};
+
+// IMPORTANT: Define this TOP-LEVEL, OUTSIDE your component or hook
+messaging().setBackgroundMessageHandler(
+  async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+    console.log(
+      'FCM Message handled in the BACKGROUND (via setBackgroundMessageHandler):',
+      remoteMessage,
+    );
+    // For background messages, you would typically use a local notification library like Notifee
+    // if you want to display a system notification banner. A custom toast won't work here
+    // because the app's UI is not active.
+  },
+);

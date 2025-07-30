@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useRef } from 'react';
 import { Provider } from 'react-redux';
 import { PaperProvider } from 'react-native-paper';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -9,8 +9,12 @@ import ToastManager from 'toastify-react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import perf from '@react-native-firebase/perf';
+import { useNotification } from './src/hook/useNotification';
+import CustomToast, { CustomToastRef } from '@components/atoms/CustomToast';
 
 const App = () => {
+  const customToastRef = useRef<CustomToastRef>(null);
+  useNotification(customToastRef)
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
@@ -28,10 +32,14 @@ const App = () => {
       trace.stop();
     };
   }, []);
+
+
+ 
   return (
     <Provider store={store}>
       <PaperProvider>
         <PersistGate loading={null} persistor={persistor}>
+        <CustomToast ref={customToastRef} />
           <ToastManager
             position="bottom"
             theme="light"
