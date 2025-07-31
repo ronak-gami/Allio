@@ -4,18 +4,19 @@ import {
   signInWithEmailAndPassword,
   getAuth,
 } from '@react-native-firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
-import { setStateKey, logout as reduxLogout } from '@redux/slices/AuthSlice'; // Import logout as reduxLogout to avoid name collision
-import { checkUserExistsByEmail } from '@utils/helper';
-import useValidation from '@utils/validationSchema';
-import { useNavigation } from '@react-navigation/native';
-import { AUTH } from '@utils/constant';
-import { AuthNavigationProp } from '@types/navigations';
-import { showError, showSuccess } from '@utils/toast';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
+import { setStateKey, logout as reduxLogout } from '@redux/slices/AuthSlice'; 
+import { checkUserExistsByEmail } from '@utils/helper';
+import useValidation from '@utils/validationSchema';
+import { AUTH } from '@utils/constant';
+import { AuthNavigationProp } from '@types/navigations';
+import { showError, showSuccess } from '@utils/toast';
+
 
 export const useLoginForm = () => {
   const [remember, setRemember] = useState(false);
@@ -55,9 +56,7 @@ export const useLoginForm = () => {
 
     try {
       const exists = await checkUserExistsByEmail(values.email);
-      console.log('Checking user exists for', values.email);
       if (!exists) {
-        console.log('User does not exist for', values.email);
         showError('User does not exist!');
         return;
       }
@@ -134,13 +133,10 @@ export const useLoginForm = () => {
 
         await auth.signOut(); // Sign out from Firebase Auth
         dispatch(reduxLogout()); // <-- Dispatch your Redux logout action here
-        showSuccess('Logged out successfully!');
-        console.log('logout succssfull');
       }
     } catch (error) {
       console.error('Error during logout:', error);
       crashlytics().recordError(error as Error);
-      showError('Logout failed. Please try again.');
     } finally {
       setLoading(false);
     }

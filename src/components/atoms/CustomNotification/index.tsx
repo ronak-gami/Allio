@@ -28,7 +28,7 @@ export interface CustomToastRef {
 
 const { width } = Dimensions.get('window');
 
-const CustomToast = forwardRef<CustomToastRef, {}>(({}, ref) => {
+const CustomNotification = forwardRef<CustomToastRef, {}>(({}, ref) => {
   const [isVisible, setIsVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [type, setType] = useState<'success' | 'info' | 'error'>('info');
@@ -97,4 +97,4 @@ const CustomToast = forwardRef<CustomToastRef, {}>(({}, ref) => {
   );
 });
 
-export default CustomToast;
+export default CustomNotification;

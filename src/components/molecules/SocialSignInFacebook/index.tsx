@@ -28,19 +28,16 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
         'public_profile',
         'email',
       ]);
-      console.log('result', result);
       if (result.isCancelled) {
         throw new Error('User cancelled the login process');
       }
       const data = await AccessToken.getCurrentAccessToken();
-      console.log('data', data);
       if (!data) {
         throw new Error('Something went wrong obtaining access token');
       }
       const facebookCredential = FacebookAuthProvider?.credential(
         data.accessToken,
       );
-      console.log('facebookCredential', facebookCredential);
       const userCredential = await signInWithCredential(
         getAuth(),
         facebookCredential,

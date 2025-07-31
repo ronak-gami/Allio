@@ -4,29 +4,12 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 import { CustomToastRef } from '@components/atoms/CustomNotification';
+import { requestUserPermission } from '@utils/helper';
 
 const useNotification = (toastRef: RefObject<CustomToastRef>) => {
-  const requestUserPermission = async () => {
-    try {
-      const granted: 'granted' | 'denied' | 'never_ask_again' =
-        await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        );
-
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Notification Permission granted');
-      } else {
-        console.log('Notification permission denied');
-      }
-    } catch (error: any) {
-      console.error('Failed to request notification permission:', error);
-    }
-  };
-
   const getToken = async () => {
     try {
       const token: string = await messaging().getToken();
-      console.log('FCM Token:', token);
     } catch (error: any) {
       console.error('Failed to get FCM token:', error);
     }
@@ -38,8 +21,6 @@ const useNotification = (toastRef: RefObject<CustomToastRef>) => {
 
     const unsubscribeOnMessage = messaging().onMessage(
       async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
-        console.log('FCM Message received in FOREGROUND:', remoteMessage);
-
         if (remoteMessage.notification) {
           toastRef.current?.show(
             `${remoteMessage.notification.title || 'Notification'}\n${
@@ -61,9 +42,7 @@ const useNotification = (toastRef: RefObject<CustomToastRef>) => {
       .getInitialNotification()
       .then((remoteMessage: FirebaseMessagingTypes.RemoteMessage | null) => {
         if (remoteMessage) {
-          console.log('FCM Message opened app from QUIT state:', remoteMessage);
           if (remoteMessage.data?.screen) {
-            console.log(`Maps to screen: ${remoteMessage.data.screen}`);
           }
         }
       });
