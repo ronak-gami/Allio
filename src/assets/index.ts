@@ -25,4 +25,5 @@ export const ICONS = {
   ArrowRight: require('./icons/right-arrow.png'),
   mpinSecure: require('./icons/mobilesecure.png'),
   compressed: require('./icons/compressed.png'),
+  NoVideo: require('./icons/video.png'),
 };

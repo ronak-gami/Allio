@@ -18,12 +18,12 @@ const useStyle = () => {
     },
     title: {
       fontSize: scale(24),
-      color: colors.text,
+      color: colors.black,
       textAlign: 'center',
     },
     description: {
       fontSize: scale(18),
-      color: colors.text,
+      color: colors.black,
       width: width * 0.8,
       textAlign: 'center',
     },

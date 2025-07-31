@@ -43,7 +43,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
               style={styles.closeIconContainer}>
               <Image
                 source={ICONS.cancel}
-                style={[styles.closeIcon, { tintColor: colors.background }]}
+                style={styles.closeIcon}
                 resizeMode="contain"
               />
             </TouchableOpacity>
@@ -61,7 +61,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
             </Text>
           )}
 
-          <View>{children}</View>
+          <View style={styles.children}>{children}</View>
         </View>
       </View>
     </Modal>
