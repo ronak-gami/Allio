@@ -11,7 +11,7 @@ import SocialButton from '../socialButton';
 import { checkUserExistsByEmail } from '@utils/helper';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { ICONS } from '@assets/index';
-
+import messaging from '@react-native-firebase/messaging';
 interface SignInWithGoogleProps {
   setLoading: (loading: boolean) => void;
 }
@@ -46,6 +46,20 @@ const SignInWithGoogle: React.FC<SignInWithGoogleProps> = ({ setLoading }) => {
       };
       if (!userExists) {
         await firestore().collection('users').doc(user.uid).set(userData);
+      }
+      if (user) {
+        const fcmToken = await messaging().getToken();
+        if (fcmToken) {
+          await firestore().collection('users').doc(user.uid).set(
+            {
+              fcmToken,
+              fcmUpdatedAt: firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true },
+          );
+        } else {
+          console.warn('FCM token not available after login.');
+        }
       }
       dispatch(setStateKey({ key: 'token', value: idToken }));
       dispatch(setStateKey({ key: 'userData', value: userData }));

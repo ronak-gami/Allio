@@ -48,16 +48,15 @@ const CustomToast = forwardRef<CustomToastRef, {}>(({}, ref) => {
       setIsVisible(true);
       Animated.timing(animatedValue, {
         toValue: 0, // Slide down to top of screen
-        duration: 300,
+     
         useNativeDriver: true,
       }).start();
 
-      // Auto-hide after 5 seconds (adjust as needed)
-      // CORRECTED: Call hide through the ref.current
-      setTimeout(() => {
-        // Ensure ref.current exists before calling hide
-        ref.current?.hide();
-      }, 3000);
+      
+      // setTimeout(() => {
+      //   // Ensure ref.current exists before calling hide
+      //   ref.current?.hide();
+      // }, 10000);
     },
     hide: () => {
       Animated.timing(animatedValue, {

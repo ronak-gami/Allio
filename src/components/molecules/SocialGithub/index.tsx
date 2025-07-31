@@ -6,6 +6,7 @@ import {
   signInWithCredential,
   getAuth,
 } from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 import firestore from '@react-native-firebase/firestore';
 import { ICONS } from '@assets/index';
 import SocialButton from '../socialButton';
@@ -89,6 +90,20 @@ const SignInWithGitHub = () => {
         await firestore().collection('users').doc(user.uid).set(userData);
       }
 
+      if (user) {
+        const fcmToken = await messaging().getToken();
+        if (fcmToken) {
+          await firestore().collection('users').doc(user.uid).set(
+            {
+              fcmToken,
+              fcmUpdatedAt: firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true },
+          );
+        } else {
+          console.warn('FCM token not available after login.');
+        }
+      }
       const token = await user.getIdToken();
       dispatch(setStateKey({ key: 'token', value: token }));
       dispatch(setStateKey({ key: 'userData', value: userData }));
