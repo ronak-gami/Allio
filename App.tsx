@@ -1,4 +1,4 @@
-import React, { useEffect,useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Provider } from 'react-redux';
 import { PaperProvider } from 'react-native-paper';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -14,7 +14,7 @@ import useNotification from '@hooks/useNotification';
 
 const App = () => {
   const customToastRef = useRef<CustomToastRef>(null);
-  useNotification(customToastRef)
+  useNotification(customToastRef);
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
@@ -37,7 +37,7 @@ const App = () => {
     <Provider store={store}>
       <PaperProvider>
         <PersistGate loading={null} persistor={persistor}>
-        <CustomToast ref={customToastRef} />
+          <CustomToast ref={customToastRef} />
           <ToastManager
             position="bottom"
             theme="light"

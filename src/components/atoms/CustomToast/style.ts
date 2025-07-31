@@ -16,7 +16,7 @@ const useStyle = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      zIndex: 9999, 
+      zIndex: 9999,
       shadowColor: COLORS.black,
       shadowOffset: { width: 0, height: 2 },
       elevation: 5,
@@ -32,7 +32,7 @@ const useStyle = () => {
     closeIcon: {
       width: scale(15),
       height: scale(15),
-      tintColor: COLORS.white, 
+      tintColor: COLORS.white,
     },
   });
 };

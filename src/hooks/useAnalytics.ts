@@ -18,7 +18,6 @@ const useAnalytics = ({
   signUp,
   search,
 }: AnalyticsHandlerProps) => {
-  // Log screen_view automatically using useEffect
   useEffect(() => {
     if (screenName) {
       analytics().logScreenView({
@@ -28,7 +27,6 @@ const useAnalytics = ({
     }
   }, [screenName]);
 
-  // Provide utility methods
   const track = {
     event: async (name: string, payload?: Record<string, any>) => {
       await analytics().logEvent(name, payload ?? {});

@@ -1,12 +1,11 @@
 import { PermissionsAndroid } from 'react-native';
-import { useEffect, RefObject } from 'react'; // Import RefObject
+import { useEffect, RefObject } from 'react';
 import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 import { CustomToastRef } from '@components/atoms/CustomToast';
 
- const useNotification = (toastRef: RefObject<CustomToastRef>) => {
-  // Accept toastRef as a prop
+const useNotification = (toastRef: RefObject<CustomToastRef>) => {
   const requestUserPermission = async () => {
     try {
       const granted: 'granted' | 'denied' | 'never_ask_again' =
@@ -34,17 +33,14 @@ import { CustomToastRef } from '@components/atoms/CustomToast';
   };
 
   useEffect(() => {
-    // 1. Request User Permission and Get Token on Mount
     requestUserPermission();
     getToken();
 
-    // 2. Handle Foreground Messages
     const unsubscribeOnMessage = messaging().onMessage(
       async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
         console.log('FCM Message received in FOREGROUND:', remoteMessage);
 
         if (remoteMessage.notification) {
-          // Show custom toast for foreground notification
           toastRef.current?.show(
             `${remoteMessage.notification.title || 'Notification'}\n${
               remoteMessage.notification.body || ''
@@ -52,7 +48,6 @@ import { CustomToastRef } from '@components/atoms/CustomToast';
             'success', // Or 'info', 'error' based on your needs
           );
         } else if (remoteMessage.data) {
-          // Handle data-only messages in foreground, e.g., update UI
           toastRef.current?.show(
             `Data-only message: ${JSON.stringify(remoteMessage.data)}`,
             'info',
@@ -73,7 +68,6 @@ import { CustomToastRef } from '@components/atoms/CustomToast';
         }
       });
 
-    // 4. Handle Messages when App is in Background and User Taps Notification
     const unsubscribeOnNotificationOpenedApp =
       messaging().onNotificationOpenedApp(
         async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
@@ -97,16 +91,12 @@ import { CustomToastRef } from '@components/atoms/CustomToast';
   }, [toastRef]); // Add toastRef to dependency array
 };
 
-// IMPORTANT: Define this TOP-LEVEL, OUTSIDE your component or hook
 messaging().setBackgroundMessageHandler(
   async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
     console.log(
       'FCM Message handled in the BACKGROUND (via setBackgroundMessageHandler):',
       remoteMessage,
     );
-    // For background messages, you would typically use a local notification library like Notifee
-    // if you want to display a system notification banner. A custom toast won't work here
-    // because the app's UI is not active.
   },
 );
-export default useNotification
+export default useNotification;
