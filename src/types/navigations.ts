@@ -21,6 +21,8 @@ export type AuthStackParamList = {
 export type HomeStackParamList = {
   MPIN: undefined;
   ForgetMPIN: undefined;
+  Camera: undefined;
+  EditPhoto: undefined;
   HomeTabs: NavigatorScreenParams<TabParamList> | undefined;
 };
 

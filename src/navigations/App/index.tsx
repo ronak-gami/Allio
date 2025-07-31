@@ -5,6 +5,8 @@ import { HomeStackParamList } from '@types/navigations';
 import MPINSetupScreen from '@screens/App/MPIN';
 import ForgetMPIN from '@screens/App/ForgetMPIN';
 import { HOME } from '@utils/constant';
+import CameraScreen from '@screens/App/CameraScreen';
+import EditPhotoScreen from '@screens/App/EditPhotoScreen';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
@@ -14,6 +16,8 @@ const HomeNavigator: React.FC = () => {
       <Stack.Screen name={HOME.MPIN} component={MPINSetupScreen} />
       <Stack.Screen name={HOME.ForgetMPIN} component={ForgetMPIN} />
       <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />
+      <Stack.Screen name={HOME.Camera} component={CameraScreen} />
+      <Stack.Screen name={HOME.EditPhoto} component={EditPhotoScreen} />
     </Stack.Navigator>
   );
 };

@@ -64,6 +64,8 @@ const HOME = {
   More: 'More',
   MPIN: 'MPIN',
   ForgetMPIN: 'ForgetMPIN',
+  Camera: 'Camera',
+  EditPhoto: 'EditPhoto',
 } as const;
 
 export { onboardingData, AUTH, HOME };

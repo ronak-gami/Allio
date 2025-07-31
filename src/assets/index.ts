@@ -8,6 +8,8 @@ export const IMAGES = {
   ScanQR: require('./images/scanQR.png'),
   VideoMedia: require('./images/video-media.png'),
   Allio_Logo: require('./images/Allio_logo.png'),
+  camera: require('./images/camera.png'),
+  background: require('./images/background.png'),
 };
 
 export const ICONS = {
@@ -24,4 +26,12 @@ export const ICONS = {
   Github: require('./icons/github.png'),
   ArrowRight: require('./icons/right-arrow.png'),
   mpinSecure: require('./icons/mobilesecure.png'),
+  albums: require('./icons/albums.png'),
+  videos: require('./icons/play.png'),
+  gallery: require('./icons/gallery.png'),
+  favourites: require('./icons/heart.png'),
+  add: require('./icons/add.png'),
+  galleryIcon: require('./icons/studio.png'),
+  cameraButton: require('./icons/footercamara.png'),
+  settings: require('./icons/settings.png'),
 };
