@@ -11,6 +11,7 @@ import IMGLYEditor, {
   EditorSettingsModel,
   SourceType,
 } from '@imgly/editor-react-native';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 
 interface VideoAsset {
   uri: string;
@@ -26,6 +27,7 @@ const useVideoMedia = () => {
   const [videoUri, setVideoUri] = useState<string | null>(null);
   const [videoAsset, setVideoAsset] = useState<VideoAsset | null>(null);
   const [model, setModel] = useState<Boolean>(false);
+  const [saveVisible, setSaveVisible] = useState<Boolean>(false);
 
   useEffect(() => {
     handleVideoPermissions('all');
@@ -78,6 +80,12 @@ const useVideoMedia = () => {
     return videoAsset !== null && videoAsset !== undefined && !!videoAsset.uri;
   };
 
+  const saveStateData = (uri: string) => {
+    setSaveVisible(true);
+    setVideoUri(uri);
+    setVideoAsset(prevAsset => (prevAsset ? { ...prevAsset, uri } : { uri }));
+  };
+
   // Single Edit function that opens Creative Video Editor
   const handleEdit = async () => {
     try {
@@ -87,51 +95,36 @@ const useVideoMedia = () => {
         );
         return;
       }
-
-      console.log('Opening Creative Video Editor...');
-
-      // Initialize editor settings
       const settings = new EditorSettingsModel({
         license:
           'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v',
       });
-
-      // Configure video source
       const source = {
         source: videoUri,
         type: SourceType.VIDEO,
       };
-
-      // Open the video editor
       const result = await IMGLYEditor?.openEditor(
         settings,
         source,
         EditorPreset.VIDEO,
       );
-
-      console.log('Video editor result:', result);
-
-      // Update the video asset with edited result if available
-      if (result && result.uri) {
-        setVideoUri(result.uri);
-        // Update video asset with new properties if available in result
-        setVideoAsset(prevAsset => ({
-          ...prevAsset,
-          uri: result.uri,
-          fileName: result.fileName || prevAsset?.fileName,
-          fileSize: result.fileSize || prevAsset?.fileSize,
-          duration: result.duration || prevAsset?.duration,
-          type: result.type || prevAsset?.type,
-          width: result.width || prevAsset?.width,
-          height: result.height || prevAsset?.height,
-        }));
+      if (result && result?.artifact) {
+        saveStateData(result?.artifact);
       }
-
-      return result;
+      console.log('Data update & result got');
+      console.log('result: ', result?.artifact);
+      return result?.artifact;
     } catch (error) {
       console.error('Error opening Creative Video Editor:', error);
       throw error;
     }
+  };
+
+  const handleVideoSaveToGallery = async (uri: any) => {
+    console.log('video will be save to gallery');
+    await CameraRoll.save(uri, { type: 'video' });
+    console.log('Save successfully');
+    setSaveVisible(false);
   };
 
   // Handle record video
@@ -285,7 +278,9 @@ const useVideoMedia = () => {
     handleRecordVideo,
     handleSelectVideo,
     handleClear,
-    handleEdit, // Single edit function that opens Creative Editor
+    handleEdit,
+    saveVisible,
+    handleVideoSaveToGallery,
 
     // Modal actions
     handleCompress,

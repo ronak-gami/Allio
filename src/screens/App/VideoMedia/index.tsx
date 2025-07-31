@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Image } from 'react-native';
+import { View, Image } from 'react-native';
 import useStyle from './style';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '@types/navigations';
@@ -32,6 +32,8 @@ const VideoMedia: React.FC<Props> = () => {
     getVideoFileName,
     getEstimatedCompressedSize,
     hasValidVideoAsset,
+    saveVisible,
+    handleVideoSaveToGallery,
   } = useVideoMedia();
 
   const styles = useStyle();
@@ -44,9 +46,13 @@ const VideoMedia: React.FC<Props> = () => {
           <>
             <View style={styles.headerView}>
               <CustomChip
-                label="Edit"
+                label={saveVisible ? 'Save' : 'Edit'}
                 bgColor={colors.primary}
-                onPress={handleEdit}
+                onPress={
+                  saveVisible
+                    ? () => handleVideoSaveToGallery(videoUri)
+                    : handleEdit
+                }
               />
               <CustomChip
                 label="Cancel"
@@ -129,7 +135,7 @@ const VideoMedia: React.FC<Props> = () => {
         </View>
       )}
 
-      <CustomModal
+      {/* <CustomModal
         visible={isModalOpen()}
         title="Video Compression"
         description="Compressing your video will reduce file size while maintaining quality."
@@ -210,7 +216,7 @@ const VideoMedia: React.FC<Props> = () => {
             disabled={!hasValidVideoAsset()}
           />
         </View>
-      </CustomModal>
+      </CustomModal> */}
     </View>
   );
 };

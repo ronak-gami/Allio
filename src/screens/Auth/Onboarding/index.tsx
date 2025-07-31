@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, FlatList, TouchableOpacity, Text } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 import useStyle from './style';
 import CustomOnboarding from '@components/atoms/CustomOnboarding';
@@ -18,16 +17,6 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList<any>>(null);
 
-  useEffect(() => {
-    const checkOnboardingStatus = async () => {
-      const onboardingWatched = await AsyncStorage.getItem('onboardingWatched');
-      if (onboardingWatched === 'true') {
-        navigation.replace('Login');
-      }
-    };
-    checkOnboardingStatus();
-  }, [navigation]);
-
   const handleNext = async () => {
     if (currentIndex < onboardingData.length - 1) {
       flatListRef.current?.scrollToIndex({
@@ -36,15 +25,13 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
       });
       setCurrentIndex(currentIndex + 1);
     } else {
-      await AsyncStorage.setItem('onboardingWatched', 'true');
-      dispatch(setStateKey({ key: 'onboardingCompleted', value: true }));
+      dispatch(setStateKey({ key: 'onboardingCompleted', value: false }));
       navigation.replace('Login');
     }
   };
 
   const handleSkip = async () => {
-    await AsyncStorage.setItem('onboardingWatched', 'true');
-    dispatch(setStateKey({ key: 'onboardingCompleted', value: true }));
+    dispatch(setStateKey({ key: 'onboardingCompleted', value: false }));
     navigation.replace('Login');
   };
 

@@ -42,7 +42,7 @@ const useStyle = () => {
     // Video Player Styles
     videoPlayer: {
       width: '100%',
-      height: height * 0.4,
+      height: height * 0.55,
       borderRadius: width * 0.03,
       backgroundColor: colors.text,
     },

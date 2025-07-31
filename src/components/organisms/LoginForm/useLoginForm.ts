@@ -32,16 +32,12 @@ export const useLoginForm = () => {
         showError('User does not exist!');
         return;
       }
-
-      const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(
-        auth,
+        getAuth(),
         values.email,
         values.password,
       );
-
       dispatch(setStateKey({ key: 'userData', value: values }));
-
       const user = userCredential.user;
       if (user) {
         const token = await user.getIdToken();

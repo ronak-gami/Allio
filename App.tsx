@@ -6,6 +6,7 @@ import { store, persistor } from './src/redux/store';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import StackNavigator from './src/navigations';
 import ToastManager from 'toastify-react-native';
+
 const App = () => {
   useEffect(() => {
     GoogleSignin.configure({
