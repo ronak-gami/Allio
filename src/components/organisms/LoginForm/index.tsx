@@ -9,17 +9,15 @@ import { useLoginForm } from './useLoginForm';
 import SignInWithFacebook from '@components/molecules/SocialSignInFacebook';
 import SignInWithGoogle from '@components/molecules/SocialSignInGoogle';
 import useStyle from './style';
-import useAnalytics from '@hooks/useAnalytics';
+import { useAnalytics } from '@hooks/index';
 import SignInWithGitHub from '@components/molecules/SocialGithub';
 
-
- 
 interface LoginFormProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
-   const { track } = useAnalytics({ screenName: 'LoginForm' });
+  const { track } = useAnalytics({ screenName: 'LoginForm' });
   const styles = useStyle();
   const {
     initialValues,
@@ -30,6 +28,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
     loading,
     navigateToRegister,
   } = useLoginForm();
+  const onLoginSubmit = async (
+    values: any,
+    track: ReturnType<typeof useAnalytics>['track'],
+    handleLogin: (values: any) => Promise<void>,
+  ) => {
+    track.event('login_click', { source: 'login_button' });
+    await track.login('email');
+    await handleLogin(values);
+  };
   return (
     <View style={styles.formContainer}>
       <Text label="login" style={styles.title} type="bold" />
@@ -39,11 +46,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
         <Formik
           initialValues={initialValues}
           validationSchema={loginValidationSchema}
-          onSubmit={async values => {
-            track.event('login_click', { source: 'login_button' });
-            await track.login('email');
-            await handleLogin(values);
-          }}>
+          onSubmit={values => onLoginSubmit(values, track, handleLogin)}>
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <>
               <Input

@@ -18,7 +18,7 @@ import { COLORS } from '@utils/color';
 
 interface ToastProps {
   message: string;
-  type?: 'success' | 'info' | 'error'; // You can expand these types
+  type?: 'success' | 'info' | 'error';
 }
 
 export interface CustomToastRef {
@@ -47,10 +47,10 @@ const CustomToast = forwardRef<CustomToastRef, {}>(({}, ref) => {
         useNativeDriver: true,
       }).start();
 
-      // setTimeout(() => {
-      //   // Ensure ref.current exists before calling hide
-      //   ref.current?.hide();
-      // }, 10000);
+      setTimeout(() => {
+        // Ensure ref.current exists before calling hide
+        ref.current?.hide();
+      }, 5000);
     },
     hide: () => {
       Animated.timing(animatedValue, {

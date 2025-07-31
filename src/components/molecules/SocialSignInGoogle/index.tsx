@@ -27,7 +27,7 @@ const SignInWithGoogle: React.FC<SignInWithGoogleProps> = ({ setLoading }) => {
       });
       await GoogleSignin.signOut();
       await GoogleSignin.signIn();
-      const { idToken } = await GoogleSignin.getTokens();
+      const { idToken } = await GoogleSignin?.getTokens();
       if (!idToken) {
         throw new Error('ID token is missing');
       }
@@ -48,7 +48,7 @@ const SignInWithGoogle: React.FC<SignInWithGoogleProps> = ({ setLoading }) => {
         await firestore().collection('users').doc(user.uid).set(userData);
       }
       if (user) {
-        const fcmToken = await messaging().getToken();
+        const fcmToken = await messaging()?.getToken();
         if (fcmToken) {
           await firestore().collection('users').doc(user.uid).set(
             {

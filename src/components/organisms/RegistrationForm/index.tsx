@@ -18,6 +18,16 @@ const RegistrationForm = () => {
     loading,
     navigateToLogin,
   } = useRegister();
+
+  const onLoginSubmit = async (
+    values: any,
+    track: ReturnType<typeof useAnalytics>['track'],
+    handleRegister: (values: any) => Promise<void>,
+  ) => {
+    track.event('signup_click', { source: 'register_button' });
+    await track.signup('email');
+    await handleRegister(values);
+  };
   return (
     <View style={styles.formContainer}>
       <Text style={styles.title} type="bold">
@@ -28,11 +38,7 @@ const RegistrationForm = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={registrationValidationSchema}
-          onSubmit={async values => {
-            track.event('signup_click', { source: 'register_button' });
-            await track.signup('email');
-            await handleRegister(values);
-          }}>
+          onSubmit={values => onLoginSubmit(values, track, handleRegister)}>
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <>
               <Input

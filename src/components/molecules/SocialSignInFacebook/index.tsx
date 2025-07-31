@@ -24,7 +24,7 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
   const handleFacebookLogin = async () => {
     setLoading(true);
     try {
-      const result = await LoginManager.logInWithPermissions([
+      const result = await LoginManager?.logInWithPermissions([
         'public_profile',
         'email',
       ]);
@@ -37,7 +37,7 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
       if (!data) {
         throw new Error('Something went wrong obtaining access token');
       }
-      const facebookCredential = FacebookAuthProvider.credential(
+      const facebookCredential = FacebookAuthProvider?.credential(
         data.accessToken,
       );
       console.log('facebookCredential', facebookCredential);
@@ -61,7 +61,7 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
         await firestore().collection('users').doc(user.uid).set(userData);
       }
       if (user) {
-        const fcmToken = await messaging().getToken();
+        const fcmToken = await messaging()?.getToken();
         if (fcmToken) {
           await firestore().collection('users').doc(user.uid).set(
             {

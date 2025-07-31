@@ -4,7 +4,7 @@ import useStyle from './style';
 import RegistrationForm from '@components/organisms/RegistrationForm';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@types/navigations';
-import useAnalytics from '@hooks/useAnalytics';
+import { useAnalytics } from '@hooks/index';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 

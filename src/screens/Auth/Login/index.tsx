@@ -4,7 +4,7 @@ import useStyle from './style';
 import LoginForm from '@components/organisms/LoginForm';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@types/navigations';
-import useAnalytics from '@hooks/useAnalytics';
+import { useAnalytics } from '@hooks/index';
 import CustomLoader from '@components/atoms/CustomLoader';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;

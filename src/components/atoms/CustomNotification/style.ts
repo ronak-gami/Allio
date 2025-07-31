@@ -1,4 +1,4 @@
-import { height, width } from './../../../utils/helper';
+import { height, width } from '@utils/helper';
 import { COLORS } from '@utils/color';
 import { StyleSheet } from 'react-native';
 import { scale, Scale } from 'react-native-size-matters';

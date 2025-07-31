@@ -48,40 +48,58 @@ const useRegister = () => {
     }
   };
 
- 
-
   const handleRegister = async (values: RegistrationValues) => {
     const trace = await perf().startTrace('registration');
     setLoading(true);
     try {
       crashlytics().log('Registration started for ' + values.email);
-  
-      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password,
+      );
       const user = userCredential.user;
       if (!user) throw new Error('No user created');
-  
-      const userData = { firstName: values.firstName, lastName: values.lastName, email: values.email, mobileNo: values.mobileNo };
+
+      const userData = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        mobileNo: values.mobileNo,
+      };
       await saveUserToFirestore(user.uid, userData);
       dispatch(setStateKey({ key: 'userData', value: userData }));
-  
-      await analytics().logEvent('register', { method: 'email', email: values.email });
+
+      await analytics().logEvent('register', {
+        method: 'email',
+        email: values.email,
+      });
       crashlytics().log('Registration successful');
       crashlytics().setUserId(user.uid);
       crashlytics().setAttribute('email', values.email);
-  
+
       showSuccess('Registration Successful!');
       navigation.navigate(AUTH.Login);
     } catch (error: any) {
       crashlytics().log('Registration error');
       crashlytics().recordError(error);
-      console.error('[Register] Error code:', error.code, 'message:', error.message);
-  
+      console.error(
+        '[Register] Error code:',
+        error.code,
+        'message:',
+        error.message,
+      );
+
       if (error.code === 'auth/email-already-in-use') {
         showError('Email already in use.');
       } else if (error.code === 'auth/invalid-email') {
         showError('Invalid email format.');
       } else {
-        showError(error?.response?.data?.message || 'Registration failed. Please try again.');
+        showError(
+          error?.response?.data?.message ||
+            'Registration failed. Please try again.',
+        );
       }
     } finally {
       setLoading(false);

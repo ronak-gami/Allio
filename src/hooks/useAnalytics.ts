@@ -18,18 +18,19 @@ const useAnalytics = ({
   signUp,
   search,
 }: AnalyticsHandlerProps) => {
-  useEffect(() => {
-    if (screenName) {
-      analytics().logScreenView({
-        screen_name: screenName,
-        screen_class: screenName,
-      });
-    }
-  }, [screenName]);
+  // useEffect(() => {
+  //   if (screenName) {
+  //     analytics().logScreenView({
+  //       screen_name: screenName,
+  //       screen_class: screenName,
+  //     });
+  //   }
+  // }, [screenName]);
 
   const track = {
     event: async (name: string, payload?: Record<string, any>) => {
       await analytics().logEvent(name, payload ?? {});
+      console.log("ho")
     },
     login: async (method: string) => {
       await analytics().logLogin({ method });
@@ -42,12 +43,10 @@ const useAnalytics = ({
     },
   };
 
-  useEffect(() => {
     if (functionName) track.event(functionName, data);
     if (login) track.login(login);
     if (signUp) track.signup(signUp);
     if (search) track.search(search);
-  }, [functionName, login, signUp, search]);
 
   return { track };
 };

@@ -91,7 +91,7 @@ const SignInWithGitHub = () => {
       }
 
       if (user) {
-        const fcmToken = await messaging().getToken();
+        const fcmToken = await messaging()?.getToken();
         if (fcmToken) {
           await firestore().collection('users').doc(user.uid).set(
             {
@@ -104,7 +104,7 @@ const SignInWithGitHub = () => {
           console.warn('FCM token not available after login.');
         }
       }
-      const token = await user.getIdToken();
+      const token = await user?.getIdToken();
       dispatch(setStateKey({ key: 'token', value: token }));
       dispatch(setStateKey({ key: 'userData', value: userData }));
     } catch (err) {

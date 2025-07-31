@@ -3,7 +3,7 @@ import { useEffect, RefObject } from 'react';
 import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
-import { CustomToastRef } from '@components/atoms/CustomToast';
+import { CustomToastRef } from '@components/atoms/CustomNotification';
 
 const useNotification = (toastRef: RefObject<CustomToastRef>) => {
   const requestUserPermission = async () => {
@@ -83,12 +83,11 @@ const useNotification = (toastRef: RefObject<CustomToastRef>) => {
         },
       );
 
-    // Cleanup listeners when the component unmounts
     return () => {
       unsubscribeOnMessage();
       unsubscribeOnNotificationOpenedApp();
     };
-  }, [toastRef]); // Add toastRef to dependency array
+  }, [toastRef]);
 };
 
 messaging().setBackgroundMessageHandler(

@@ -9,8 +9,10 @@ import ToastManager from 'toastify-react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import perf from '@react-native-firebase/perf';
-import CustomToast, { CustomToastRef } from '@components/atoms/CustomToast';
-import useNotification from '@hooks/useNotification';
+import CustomNotification, {
+  CustomToastRef,
+} from '@components/atoms/CustomNotification';
+import { useNotification } from '@hooks/index';
 
 const App = () => {
   const customToastRef = useRef<CustomToastRef>(null);
@@ -37,7 +39,7 @@ const App = () => {
     <Provider store={store}>
       <PaperProvider>
         <PersistGate loading={null} persistor={persistor}>
-          <CustomToast ref={customToastRef} />
+          <CustomNotification ref={customToastRef} />
           <ToastManager
             position="bottom"
             theme="light"
