@@ -12,10 +12,17 @@ import { setStateKey } from '@redux/slices/AuthSlice';
 import { checkUserExistsByEmail } from '@utils/helper';
 import { ICONS } from '@assets/index';
 
-const SignInWithFacebook = () => {
+interface SignInWithFacebookProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
+  setLoading,
+}) => {
   const dispatch = useDispatch();
 
   const handleFacebookLogin = async () => {
+    setLoading(true);
     try {
       const result = await LoginManager.logInWithPermissions([
         'public_profile',
@@ -53,6 +60,8 @@ const SignInWithFacebook = () => {
       dispatch(setStateKey({ key: 'userData', value: userData }));
     } catch (error) {
       console.error('Facebook Login Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

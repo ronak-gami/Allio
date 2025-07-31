@@ -10,10 +10,16 @@ import SignInWithFacebook from '@components/molecules/SocialSignInFacebook';
 import SignInWithGoogle from '@components/molecules/SocialSignInGoogle';
 import useStyle from './style';
 import useAnalytics from '@hooks/useAnalytics';
+import SignInWithGitHub from '@components/molecules/SocialGithub';
 
-const LoginForm: React.FC = () => {
-  const { track } = useAnalytics({ screenName: 'LoginForm' });
 
+ 
+interface LoginFormProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
+   const { track } = useAnalytics({ screenName: 'LoginForm' });
   const styles = useStyle();
   const {
     initialValues,
@@ -42,7 +48,6 @@ const LoginForm: React.FC = () => {
             <>
               <Input
                 placeholder="email"
-                maxlength={25}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={values.email}
@@ -51,7 +56,7 @@ const LoginForm: React.FC = () => {
               />
               <Input
                 placeholder="Password"
-                maxlength={25}
+                maxlength={12}
                 value={values.password}
                 onChangeText={handleChange('password')}
                 error={touched.password ? errors.password : ''}
@@ -78,8 +83,9 @@ const LoginForm: React.FC = () => {
       </View>
 
       <View style={styles.SocialButtonStyle}>
-        <SignInWithFacebook />
-        <SignInWithGoogle />
+        <SignInWithFacebook setLoading={setLoading} />
+        <SignInWithGoogle setLoading={setLoading} />
+        <SignInWithGitHub />
       </View>
       <View style={styles.dividerContainer}>
         <Text label="no_account" style={styles.orText} />

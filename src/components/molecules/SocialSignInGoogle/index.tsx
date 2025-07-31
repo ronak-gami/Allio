@@ -12,17 +12,25 @@ import { checkUserExistsByEmail } from '@utils/helper';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { ICONS } from '@assets/index';
 
-const SignInWithGoogle = () => {
+interface SignInWithGoogleProps {
+  setLoading: (loading: boolean) => void;
+}
+
+const SignInWithGoogle: React.FC<SignInWithGoogleProps> = ({ setLoading }) => {
   const dispatch = useDispatch();
 
   const handleGoogleLogin = async () => {
+    setLoading(true);
     try {
       await GoogleSignin.hasPlayServices({
         showPlayServicesUpdateDialog: true,
       });
+      await GoogleSignin.signOut();
       await GoogleSignin.signIn();
       const { idToken } = await GoogleSignin.getTokens();
-      if (!idToken) throw new Error('ID token is missing');
+      if (!idToken) {
+        throw new Error('ID token is missing');
+      }
       const credential = GoogleAuthProvider.credential(idToken);
       const auth = getAuth();
       const result = await signInWithCredential(auth, credential);
@@ -43,6 +51,8 @@ const SignInWithGoogle = () => {
       dispatch(setStateKey({ key: 'userData', value: userData }));
     } catch (error) {
       console.error('Google Sign-In Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -7,6 +7,8 @@ interface OnboardingItem {
   description: string;
 }
 
+export const BASE_URL = 'https://allio-backend.onrender.com/api/user' as const;
+
 const onboardingData: OnboardingItem[] = [
   {
     id: '1',
@@ -54,11 +56,14 @@ const AUTH = {
 } as const;
 
 const HOME = {
-  Home: 'Home' as const,
-  Photo: 'Photo' as const,
-  ScanQR: 'ScanQR' as const,
-  Video: 'Video' as const,
-  More: 'More' as const,
+  HomeTabs: 'HomeTabs',
+  Home: 'Home',
+  Photo: 'Photo',
+  ScanQR: 'ScanQR',
+  Video: 'Video',
+  More: 'More',
+  MPIN: 'MPIN',
+  ForgetMPIN: 'ForgetMPIN',
 } as const;
 
 export { onboardingData, AUTH, HOME };

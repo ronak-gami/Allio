@@ -1,4 +1,5 @@
 import { useTheme } from '@react-navigation/native';
+import { width } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 
 const useStyle = () => {
@@ -7,9 +8,9 @@ const useStyle = () => {
     container: {
       flex: 1,
       backgroundColor: colors.background,
+      paddingVertical: width * 0.25,
     },
     contentContainer: {
-      flexGrow: 1,
       justifyContent: 'center',
     },
   });

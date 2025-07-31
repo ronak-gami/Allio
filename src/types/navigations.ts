@@ -1,6 +1,9 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { CompositeNavigationProp } from '@react-navigation/native';
+import {
+  CompositeNavigationProp,
+  NavigatorScreenParams,
+} from '@react-navigation/native';
 
 export type RootStackParamList = {
   AuthNavigator: undefined;
@@ -16,9 +19,9 @@ export type AuthStackParamList = {
 };
 
 export type HomeStackParamList = {
-  HomeTabs: undefined;
-  Profile: { userId: string };
-  Settings: undefined;
+  MPIN: undefined;
+  ForgetMPIN: undefined;
+  HomeTabs: NavigatorScreenParams<TabParamList> | undefined;
 };
 
 export type TabParamList = {

@@ -1,6 +1,6 @@
 import { useTheme } from '@react-navigation/native';
-import { width } from '@utils/helper';
 import { StyleSheet } from 'react-native';
+import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
   const { colors } = useTheme();
@@ -8,10 +8,19 @@ const useStyle = () => {
     container: {
       flex: 1,
       backgroundColor: colors.background,
-      paddingVertical: width * 0.25,
     },
     contentContainer: {
-      justifyContent: 'center',
+      flexGrow: 1,
+    },
+    iconWrapper: {
+      alignItems: 'center',
+      marginTop: scale(30),
+      marginBottom: scale(20),
+    },
+    icon: {
+      width: scale(150),
+      height: scale(150),
+      tintColor: colors.primary,
     },
   });
 };

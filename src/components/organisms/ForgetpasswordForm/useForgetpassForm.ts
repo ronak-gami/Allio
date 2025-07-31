@@ -6,10 +6,11 @@ import { AuthNavigationProp } from '@types/navigations';
 import { showError, showSuccess } from '@utils/toast';
 
 export const useForgotPassword = () => {
-  const navigation = useNavigation<AuthNavigationProp>();
-  const navigateToLogin = () => {
-    navigation.navigate(AUTH.Login);
-  };
+
+    const navigation = useNavigation<AuthNavigationProp>();
+    const navigateToLogin = () => {
+        navigation.navigate(AUTH.Login);
+      };
 
   const handleForgotPassword = async (values: { email: string }) => {
     const email = values.email.trim().toLowerCase();
@@ -26,6 +27,7 @@ export const useForgotPassword = () => {
       }
       await auth().sendPasswordResetEmail(email);
       showSuccess('Password reset email sent successfully!');
+      navigation.navigate(AUTH.Login);
       return;
     } catch (error: any) {
       let message = 'Something went wrong';
@@ -40,5 +42,7 @@ export const useForgotPassword = () => {
     }
   };
 
-  return { handleForgotPassword, navigateToLogin };
+  return { handleForgotPassword ,
+    navigateToLogin
+  };
 };

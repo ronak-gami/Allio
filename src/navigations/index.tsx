@@ -1,14 +1,109 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { useColorScheme } from 'react-native';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import i18n from '../assets/i18n';
-import { setDarkMode } from '@redux/slices/ThemeSlice';
+// import React, { useEffect, useMemo, useState, useRef } from 'react';
+// import { useColorScheme } from 'react-native';
+// import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { RootState } from '../redux/store';
+// import i18n from '../assets/i18n';
+// import { setDarkMode } from '@redux/slices/ThemeSlice';
+// import AuthNavigator from './Auth';
+// import HomeNavigator from './App';
+// import Splash from '@screens/Auth/Splash';
+// import analytics from '@react-native-firebase/analytics';
+// import colors from '@assets/theme';
+
+// const lightTheme = {
+//   ...DefaultTheme,
+//   dark: false,
+//   colors: {
+//     ...DefaultTheme.colors,
+//     ...colors.light,
+//   },
+// };
+
+// const darkTheme = {
+//   ...DefaultTheme,
+//   dark: true,
+//   colors: {
+//     ...DefaultTheme.colors,
+//     ...colors.dark,
+//   },
+// };
+
+// const StackNavigator: React.FC = () => {
+//   const token = useSelector((s: RootState) => s.auth.token);
+
+//   const isDarkMode = useSelector((s: RootState) => s.theme.isDarkMode);
+//   const language = useSelector((s: RootState) => s.language.language);
+//   const dispatch = useDispatch();
+//   const systemColorScheme = useColorScheme();
+//   const [isSplashVisible, setIsSplashVisible] = useState(true);
+//   const navigationRef = useRef<any>(null);
+//   const routeNameRef = useRef<string>();
+
+//   const [splashVisible, setSplashVisible] = useState(true);
+
+//   useEffect(() => {
+//     dispatch(setDarkMode(systemColorScheme === 'dark'));
+//   }, [dispatch, systemColorScheme]);
+
+//   useEffect(() => {
+//     if (language) {
+//       i18n.changeLanguage(language);
+//     }
+//   }, [language]);
+
+//   // Use the custom hook for screen tracking
+
+//   useEffect(() => {
+//     const timer = setTimeout(() => setSplashVisible(false), 2500);
+//     return () => clearTimeout(timer);
+//   }, []);
+
+//   const appTheme = isDarkMode ? darkTheme : lightTheme;
+
+//   if (splashVisible) {
+//     return (
+//       <NavigationContainer theme={appTheme}>
+//         <Splash />
+//       </NavigationContainer>
+//     );
+//   }
+
+//   return (
+//     <NavigationContainer
+//       ref={navigationRef}
+//       theme={appTheme}
+//       onReady={() => {
+//         routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+//       }}
+//       onStateChange={async () => {
+//         const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
+//         if (routeNameRef.current !== currentRoute && currentRoute) {
+//           await analytics().logScreenView({
+//             screen_name: currentRoute,
+//             screen_class: currentRoute,
+//           });
+//           routeNameRef.current = currentRoute;
+//         }
+//       }}>
+//       {token ? <HomeNavigator /> : <AuthNavigator />}
+//     </NavigationContainer>
+//   );
+// };
+
+// export default StackNavigator;
+import React, { useEffect, useState, useRef } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
 import AuthNavigator from './Auth';
 import HomeNavigator from './App';
-import colors from '@assets/theme';
+import { RootState } from '../redux/store';
 import Splash from '@screens/Auth/Splash';
+import { useColorScheme } from 'react-native';
+import { setDarkMode } from '../redux/slices/ThemeSlice';
+import i18n from '../assets/i18n';
+import { DefaultTheme } from '@react-navigation/native';
+import colors from '@assets/theme';
 import analytics from '@react-native-firebase/analytics';
 const lightTheme = {
   ...DefaultTheme,
@@ -29,23 +124,19 @@ const darkTheme = {
 };
 
 const StackNavigator: React.FC = () => {
-  const token = useSelector((state: RootState) => state.auth.token);
-  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
-  const language = useSelector((state: RootState) => state.language.language);
+  const token = useSelector((s: RootState) => s.auth.token);
+
+  const isDarkMode = useSelector((s: RootState) => s.theme.isDarkMode);
+  const language = useSelector((s: RootState) => s.language.language);
   const dispatch = useDispatch();
   const systemColorScheme = useColorScheme();
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
+
+  const [splashVisible, setSplashVisible] = useState(true);
   const navigationRef = useRef<any>(null);
   const routeNameRef = useRef<string>();
-
   useEffect(() => {
     dispatch(setDarkMode(systemColorScheme === 'dark'));
-  }, [systemColorScheme]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsSplashVisible(false), 2500);
-    return () => clearTimeout(timer);
-  }, []);
+  }, [dispatch, systemColorScheme]);
 
   useEffect(() => {
     if (language) {
@@ -53,25 +144,17 @@ const StackNavigator: React.FC = () => {
     }
   }, [language]);
 
-  // Use the custom hook for screen tracking
+  useEffect(() => {
+    const timer = setTimeout(() => setSplashVisible(false), 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const appTheme = useMemo(
-    () => (isDarkMode ? darkTheme : lightTheme),
-    [isDarkMode],
-  );
-
-  if (isSplashVisible) {
-    return (
-      <NavigationContainer>
-        <Splash />
-      </NavigationContainer>
-    );
-  }
+  const appTheme = isDarkMode ? darkTheme : lightTheme;
 
   return (
     <NavigationContainer
-      ref={navigationRef}
       theme={appTheme}
+      ref={navigationRef}
       onReady={() => {
         routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
       }}
@@ -85,7 +168,13 @@ const StackNavigator: React.FC = () => {
           routeNameRef.current = currentRoute;
         }
       }}>
-      {token ? <HomeNavigator /> : <AuthNavigator />}
+      {splashVisible ? (
+        <Splash />
+      ) : token ? (
+        <HomeNavigator />
+      ) : (
+        <AuthNavigator />
+      )}
     </NavigationContainer>
   );
 };

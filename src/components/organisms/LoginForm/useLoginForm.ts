@@ -11,10 +11,10 @@ import { useNavigation } from '@react-navigation/native';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
 import { showError, showSuccess } from '@utils/toast';
-import { Toast } from 'toastify-react-native';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
-import perf from '@react-native-firebase/perf';
+import pref from '@react-native-firebase/perf';
+
 export const useLoginForm = () => {
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,27 +27,27 @@ export const useLoginForm = () => {
     password: '',
   };
   const handleLogin = async (values: typeof initialValues) => {
-   
     setLoading(true);
     try {
       const exists = await checkUserExistsByEmail(values.email);
       console.log('Checking user exists for', values.email);
-if (!exists) {
-  console.log('User does not exist for', values.email);
-  showError('User does not exist!');
-  return;
-}
+      if (!exists) {
+        console.log('User does not exist for', values.email);
+        showError('User does not exist!');
+        return;
+      }
       const auth = getAuth();
 
-
-
-
-
       console.log('Signing in user', values.email);
-const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-console.log('Sign in result', userCredential);
-  
-  
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password,
+      );
+      console.log('Sign in result', userCredential);
+
+      dispatch(setStateKey({ key: 'userData', value: values }));
+
       const user = userCredential.user;
       if (user) {
         const token = await user.getIdToken();
@@ -61,16 +61,13 @@ console.log('Sign in result', userCredential);
         crashlytics().log('Forcing test crash');
         crashlytics().crash();
         crashlytics().log('User login successful');
-  
         crashlytics().setAttribute('email', values.email);
-  
         showSuccess('Login Successful!');
-
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);
       crashlytics().recordError(error);
-      
+
       crashlytics().log('Error during login');
       // crashlytics().recordError(error);
       showError(
@@ -78,10 +75,9 @@ console.log('Sign in result', userCredential);
       );
     } finally {
       setLoading(false);
-      trace.stop();  
+      trace.stop();
     }
   };
- 
 
   const navigateToRegister = () => {
     navigation.navigate(AUTH.Register);
