@@ -8,7 +8,6 @@ import useVideoMedia from './useVideoMedia';
 import Video from 'react-native-video';
 import Text from '@components/atoms/Text';
 import { useTheme } from '@react-navigation/native';
-import CustomIcon from '@components/atoms/EditIcon';
 import { ICONS } from '@assets/index';
 import CustomModal from '@components/atoms/CustomModel';
 import CustomChip from '@components/atoms/CustomChip';
@@ -24,11 +23,8 @@ const VideoMedia: React.FC<Props> = () => {
     handleClear,
     handleEdit,
     handleCompress,
-    handleTrim,
-    handleFilter,
     closeModel,
     isVideoLoaded,
-    isInEditMode,
     isModalOpen,
     formatFileSize,
     formatDuration,
@@ -41,17 +37,6 @@ const VideoMedia: React.FC<Props> = () => {
   const styles = useStyle();
   const { colors } = useTheme();
 
-  // Handler for edit button press
-  const handleEditPress = async () => {
-    try {
-      await handleEdit(
-        'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v',
-      );
-    } catch (error) {
-      console.error('Failed to open video editor:', error);
-    }
-  };
-
   return (
     <View style={styles.container}>
       <View style={isVideoLoaded() ? styles.content : styles.contentNone}>
@@ -61,7 +46,7 @@ const VideoMedia: React.FC<Props> = () => {
               <CustomChip
                 label="Edit"
                 bgColor={colors.primary}
-                onPress={handleEditPress}
+                onPress={handleEdit}
               />
               <CustomChip
                 label="Cancel"
@@ -132,26 +117,6 @@ const VideoMedia: React.FC<Props> = () => {
           </View>
         )}
       </View>
-
-      {isInEditMode() && (
-        <View style={styles.editIconView}>
-          <CustomIcon
-            icon={ICONS.compressed}
-            onPress={handleCompress}
-            bottomLabel={'Compress'}
-          />
-          <CustomIcon
-            icon={ICONS.compressed}
-            onPress={handleTrim}
-            bottomLabel={'Trim'}
-          />
-          <CustomIcon
-            icon={ICONS.compressed}
-            onPress={handleFilter}
-            bottomLabel={'Filter'}
-          />
-        </View>
-      )}
 
       {!isVideoLoaded() && (
         <View style={styles.actionButtonContainer}>

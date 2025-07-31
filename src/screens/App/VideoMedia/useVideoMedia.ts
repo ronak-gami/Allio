@@ -4,7 +4,6 @@ import {
   MediaType,
   ImagePickerResponse,
 } from 'react-native-image-picker';
-import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { useEffect, useState } from 'react';
 import { handleVideoPermissions } from '@utils/helper';
 import IMGLYEditor, {
@@ -26,7 +25,6 @@ interface VideoAsset {
 const useVideoMedia = () => {
   const [videoUri, setVideoUri] = useState<string | null>(null);
   const [videoAsset, setVideoAsset] = useState<VideoAsset | null>(null);
-  const [editable, setEditable] = useState<Boolean>(false);
   const [model, setModel] = useState<Boolean>(false);
 
   useEffect(() => {
@@ -80,10 +78,8 @@ const useVideoMedia = () => {
     return videoAsset !== null && videoAsset !== undefined && !!videoAsset.uri;
   };
 
-  // Open Creative Video Editor
-  const openVideoEditor = async (
-    licenseKey: string = 'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v',
-  ) => {
+  // Single Edit function that opens Creative Video Editor
+  const handleEdit = async () => {
     try {
       if (!videoUri) {
         console.error(
@@ -96,7 +92,8 @@ const useVideoMedia = () => {
 
       // Initialize editor settings
       const settings = new EditorSettingsModel({
-        license: licenseKey,
+        license:
+          'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v',
       });
 
       // Configure video source
@@ -251,80 +248,15 @@ const useVideoMedia = () => {
     }
   };
 
-  // Save video to gallery
-  const saveVideoToGallery = async (uri: string): Promise<void> => {
-    try {
-      console.log('Attempting to save video to gallery...');
-      const permissionResult = await handleVideoPermissions('storage');
-      if (!permissionResult.canSaveVideos) {
-        console.error(
-          'Permission Error: Storage permission is required to save videos.',
-        );
-        return;
-      }
-      await CameraRoll.save(uri, { type: 'video' });
-      console.log('Video saved to gallery successfully.');
-    } catch (error) {
-      console.error('Failed to save video to gallery:', error);
-    }
-  };
-
-  // Get video info (legacy function for backward compatibility)
-  const getVideoInfo = (video: VideoAsset | null): string => {
-    if (!video || !video.uri) {
-      return 'No video information available';
-    }
-
-    const size = formatFileSize(video.fileSize);
-    const duration = formatDuration(video.duration);
-    const dimensions = getFormattedResolution(video);
-
-    return `📁 ${getVideoFileName(
-      video,
-    )}\n📏 ${size}\n⏱️ ${duration}\n📐 ${dimensions}`;
-  };
-
   // Handle clear video
   const handleClear = () => {
     setVideoUri(null);
     setVideoAsset(null);
-    setEditable(false);
-  };
-
-  // Handle edit toggle - Updated to use Creative Editor
-  const handleEdit = async (licenseKey?: string) => {
-    try {
-      setEditable(true);
-      await openVideoEditor(licenseKey);
-    } catch (error) {
-      console.error('Failed to open video editor:', error);
-      setEditable(false);
-    }
   };
 
   // Handle compression action
   const handleCompress = () => {
-    // Add compression logic here
     console.log('Compressing video...');
-    openModel();
-  };
-
-  // Handle trim action
-  const handleTrim = () => {
-    // Add trim logic here
-    console.log('Trimming video...');
-    openModel();
-  };
-
-  // Handle filter action
-  const handleFilter = () => {
-    // Add filter logic here
-    console.log('Applying filter to video...');
-    openModel();
-  };
-
-  // Open modal
-  const openModel = () => {
     setModel(true);
   };
 
@@ -338,11 +270,6 @@ const useVideoMedia = () => {
     return !!videoUri;
   };
 
-  // Check if in edit mode
-  const isInEditMode = (): boolean => {
-    return !!editable;
-  };
-
   // Check if modal is open
   const isModalOpen = (): boolean => {
     return !!model;
@@ -352,30 +279,19 @@ const useVideoMedia = () => {
     // States
     videoUri,
     videoAsset,
-    editable,
     model,
 
     // Video actions
     handleRecordVideo,
     handleSelectVideo,
     handleClear,
-    handleEdit,
-    saveVideoToGallery,
-
-    // Creative Editor
-    openVideoEditor,
-
-    // Edit actions
-    handleCompress,
-    handleTrim,
-    handleFilter,
+    handleEdit, // Single edit function that opens Creative Editor
 
     // Modal actions
-    openModel,
+    handleCompress,
     closeModel,
 
     // Utility functions
-    getVideoInfo,
     formatFileSize,
     formatDuration,
     getFormattedResolution,
@@ -385,7 +301,6 @@ const useVideoMedia = () => {
     // Status checkers
     hasValidVideoAsset,
     isVideoLoaded,
-    isInEditMode,
     isModalOpen,
   };
 };
