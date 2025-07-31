@@ -41,6 +41,17 @@ const VideoMedia: React.FC<Props> = () => {
   const styles = useStyle();
   const { colors } = useTheme();
 
+  // Handler for edit button press
+  const handleEditPress = async () => {
+    try {
+      await handleEdit(
+        'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v',
+      );
+    } catch (error) {
+      console.error('Failed to open video editor:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={isVideoLoaded() ? styles.content : styles.contentNone}>
@@ -50,7 +61,7 @@ const VideoMedia: React.FC<Props> = () => {
               <CustomChip
                 label="Edit"
                 bgColor={colors.primary}
-                onPress={handleEdit}
+                onPress={handleEditPress}
               />
               <CustomChip
                 label="Cancel"
@@ -132,12 +143,12 @@ const VideoMedia: React.FC<Props> = () => {
           <CustomIcon
             icon={ICONS.compressed}
             onPress={handleTrim}
-            bottomLabel={'Compress'}
+            bottomLabel={'Trim'}
           />
           <CustomIcon
             icon={ICONS.compressed}
             onPress={handleFilter}
-            bottomLabel={'Compress'}
+            bottomLabel={'Filter'}
           />
         </View>
       )}
