@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,8 @@ import { languages } from '@utils/helper';
 import { useTheme } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '@types/navigations';
+import crashlytics from '@react-native-firebase/crashlytics';
+import perf from '@react-native-firebase/perf';
 
 type Props = BottomTabScreenProps<TabParamList, 'Home'>;
 
@@ -26,6 +28,16 @@ const Home: React.FC<Props> = () => {
     (state: RootState) => state.language.language,
   );
   const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
+
+  useEffect(() => {
+    // No need for analytics().logScreenView here!
+    crashlytics().log('HomeScreen mounted');
+    const trace = perf().newTrace('home_screen_load');
+    trace.start();
+    return () => {
+      trace.stop();
+    };
+  }, []);
 
   const handleLanguageChange = (value: string) => {
     dispatch(setLanguage(value));

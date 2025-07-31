@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import AuthNavigator from './Auth';
@@ -10,7 +10,7 @@ import { setDarkMode } from '../redux/slices/ThemeSlice';
 import i18n from '../assets/i18n';
 import { DefaultTheme } from '@react-navigation/native';
 import colors from '@assets/theme';
-
+import analytics from '@react-native-firebase/analytics';
 const lightTheme = {
   ...DefaultTheme,
   dark: false,
@@ -38,7 +38,8 @@ const StackNavigator: React.FC = () => {
   const systemColorScheme = useColorScheme();
 
   const [splashVisible, setSplashVisible] = useState(true);
-
+  const navigationRef = useRef<any>(null);
+  const routeNameRef = useRef<string>();
   useEffect(() => {
     dispatch(setDarkMode(systemColorScheme === 'dark'));
   }, [dispatch, systemColorScheme]);
@@ -56,25 +57,30 @@ const StackNavigator: React.FC = () => {
 
   const appTheme = isDarkMode ? darkTheme : lightTheme;
 
-  if (splashVisible) {
-    return (
-      <NavigationContainer theme={appTheme}>
-        <Splash />
-      </NavigationContainer>
-    );
-  }
-
-  if (!token) {
-    return (
-      <NavigationContainer theme={appTheme}>
-        <AuthNavigator />
-      </NavigationContainer>
-    );
-  }
-
   return (
-    <NavigationContainer theme={appTheme}>
-      <HomeNavigator />
+    <NavigationContainer
+      theme={appTheme}
+      ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+      }}
+      onStateChange={async () => {
+        const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
+        if (routeNameRef.current !== currentRoute && currentRoute) {
+          await analytics().logScreenView({
+            screen_name: currentRoute,
+            screen_class: currentRoute,
+          });
+          routeNameRef.current = currentRoute;
+        }
+      }}>
+      {splashVisible ? (
+        <Splash />
+      ) : token ? (
+        <HomeNavigator />
+      ) : (
+        <AuthNavigator />
+      )}
     </NavigationContainer>
   );
 };
