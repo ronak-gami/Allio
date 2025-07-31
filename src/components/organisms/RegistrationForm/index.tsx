@@ -6,10 +6,11 @@ import Button from '@components/atoms/Button';
 import Input from '@components/atoms/Input';
 import useRegister from './useRegisterForm';
 import useStyle from './style';
+import useAnalytics from '@hooks/useAnalytics';
 
 const RegistrationForm = () => {
   const styles = useStyle();
-
+  const { track } = useAnalytics({ screenName: 'RegistrationForm' });
   const {
     initialValues,
     registrationValidationSchema,
@@ -17,7 +18,6 @@ const RegistrationForm = () => {
     loading,
     navigateToLogin,
   } = useRegister();
-
   return (
     <View style={styles.formContainer}>
       <Text style={styles.title} type="bold">
@@ -28,7 +28,11 @@ const RegistrationForm = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={registrationValidationSchema}
-          onSubmit={handleRegister}>
+          onSubmit={async values => {
+            track.event('signup_click', { source: 'register_button' });
+            await track.signup('email');
+            await handleRegister(values);
+          }}>
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <>
               <Input

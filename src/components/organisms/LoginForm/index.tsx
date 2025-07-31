@@ -13,7 +13,7 @@ import useAnalytics from '@hooks/useAnalytics';
 
 const LoginForm: React.FC = () => {
   const { track } = useAnalytics({ screenName: 'LoginForm' });
- 
+
   const styles = useStyle();
   const {
     initialValues,
@@ -33,12 +33,11 @@ const LoginForm: React.FC = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={loginValidationSchema}
-          onSubmit={async (values) => {
+          onSubmit={async values => {
             track.event('login_click', { source: 'login_button' });
             await track.login('email');
             await handleLogin(values);
-          }}
-          onSubmit={handleLogin}>
+          }}>
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <>
               <Input

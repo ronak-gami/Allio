@@ -10,7 +10,7 @@ export type AnalyticsHandlerProps = {
   search?: string;
 };
 
- const useAnalytics = ({
+const useAnalytics = ({
   screenName,
   functionName,
   data,
@@ -44,7 +44,6 @@ export type AnalyticsHandlerProps = {
     },
   };
 
-  // Automatically send named payloads
   useEffect(() => {
     if (functionName) track.event(functionName, data);
     if (login) track.login(login);
@@ -54,4 +53,4 @@ export type AnalyticsHandlerProps = {
 
   return { track };
 };
-export default useAnalytics
+export default useAnalytics;

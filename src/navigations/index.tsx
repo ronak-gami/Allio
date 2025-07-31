@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState,useRef } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useColorScheme } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,8 +9,7 @@ import AuthNavigator from './Auth';
 import HomeNavigator from './App';
 import colors from '@assets/theme';
 import Splash from '@screens/Auth/Splash';
-import useTrack from '@hooks/useTrack';
-
+import analytics from '@react-native-firebase/analytics';
 const lightTheme = {
   ...DefaultTheme,
   dark: false,
@@ -36,7 +35,8 @@ const StackNavigator: React.FC = () => {
   const dispatch = useDispatch();
   const systemColorScheme = useColorScheme();
   const [isSplashVisible, setIsSplashVisible] = useState(true);
-  const navigationRef = useRef(null);
+  const navigationRef = useRef<any>(null);
+  const routeNameRef = useRef<string>();
 
   useEffect(() => {
     dispatch(setDarkMode(systemColorScheme === 'dark'));
@@ -47,12 +47,6 @@ const StackNavigator: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-
-
-
-
-
-  
   useEffect(() => {
     if (language) {
       i18n.changeLanguage(language);
@@ -60,7 +54,6 @@ const StackNavigator: React.FC = () => {
   }, [language]);
 
   // Use the custom hook for screen tracking
-  useTrack(navigationRef);
 
   const appTheme = useMemo(
     () => (isDarkMode ? darkTheme : lightTheme),
@@ -74,10 +67,24 @@ const StackNavigator: React.FC = () => {
       </NavigationContainer>
     );
   }
- 
 
   return (
-    <NavigationContainer ref={navigationRef} theme={appTheme}>
+    <NavigationContainer
+      ref={navigationRef}
+      theme={appTheme}
+      onReady={() => {
+        routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+      }}
+      onStateChange={async () => {
+        const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
+        if (routeNameRef.current !== currentRoute && currentRoute) {
+          await analytics().logScreenView({
+            screen_name: currentRoute,
+            screen_class: currentRoute,
+          });
+          routeNameRef.current = currentRoute;
+        }
+      }}>
       {token ? <HomeNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
