@@ -28,6 +28,8 @@ const useVideoMedia = () => {
   const [videoAsset, setVideoAsset] = useState<VideoAsset | null>(null);
   const [model, setModel] = useState<Boolean>(false);
   const [saveVisible, setSaveVisible] = useState<Boolean>(false);
+  // Add new state for success modal
+  const [successModal, setSuccessModal] = useState<Boolean>(false);
 
   useEffect(() => {
     handleVideoPermissions('all');
@@ -120,11 +122,24 @@ const useVideoMedia = () => {
     }
   };
 
+  // Updated handleVideoSaveToGallery function to show success modal
   const handleVideoSaveToGallery = async (uri: any) => {
-    console.log('video will be save to gallery');
-    await CameraRoll.save(uri, { type: 'video' });
-    console.log('Save successfully');
-    setSaveVisible(false);
+    try {
+      console.log('video will be save to gallery');
+      await CameraRoll.save(uri, { type: 'video' });
+      console.log('Save successfully');
+      setSaveVisible(false);
+      // Show success modal after successful save
+      setSuccessModal(true);
+    } catch (error) {
+      console.error('Error saving video to gallery:', error);
+      // You might want to show an error modal here too
+    }
+  };
+
+  // Close success modal
+  const closeSuccessModal = () => {
+    setSuccessModal(false);
   };
 
   // Handle record video
@@ -268,6 +283,11 @@ const useVideoMedia = () => {
     return !!model;
   };
 
+  // Check if success modal is open
+  const isSuccessModalOpen = (): boolean => {
+    return !!successModal;
+  };
+
   return {
     // States
     videoUri,
@@ -285,6 +305,7 @@ const useVideoMedia = () => {
     // Modal actions
     handleCompress,
     closeModel,
+    closeSuccessModal,
 
     // Utility functions
     formatFileSize,
@@ -297,6 +318,7 @@ const useVideoMedia = () => {
     hasValidVideoAsset,
     isVideoLoaded,
     isModalOpen,
+    isSuccessModalOpen,
   };
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, ScrollView } from 'react-native';
 import useStyle from './style';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '@types/navigations';
@@ -24,8 +24,10 @@ const VideoMedia: React.FC<Props> = () => {
     handleEdit,
     handleCompress,
     closeModel,
+    closeSuccessModal,
     isVideoLoaded,
     isModalOpen,
+    isSuccessModalOpen,
     formatFileSize,
     formatDuration,
     getFormattedResolution,
@@ -135,18 +137,17 @@ const VideoMedia: React.FC<Props> = () => {
         </View>
       )}
 
-      {/* <CustomModal
-        visible={isModalOpen()}
-        title="Video Compression"
-        description="Compressing your video will reduce file size while maintaining quality."
-        onClose={closeModel}>
-        <ScrollView
-          style={styles.modalContent}
-          showsVerticalScrollIndicator={false}>
-          {hasValidVideoAsset() ? (
+      {/* Success Modal for Video Save */}
+      <CustomModal
+        visible={isSuccessModalOpen()}
+        title="Video Saved Successfully!"
+        description="Your video has been successfully saved to the gallery."
+        onClose={closeSuccessModal}>
+        <View style={styles.modalContent}>
+          {hasValidVideoAsset() && (
             <>
               <Text type="SEMIBOLD" style={styles.modalVideoTitle}>
-                Current Video Details
+                Saved Video Details
               </Text>
 
               <View style={styles.modalStatCard}>
@@ -185,38 +186,18 @@ const VideoMedia: React.FC<Props> = () => {
                 </Text>
               </View>
 
-              <View style={styles.compressionPreview}>
-                <Text type="MEDIUM" style={styles.compressionTitle}>
-                  Estimated after compression
-                </Text>
-                <Text type="REGULAR" style={styles.compressionText}>
-                  Size: ~{getEstimatedCompressedSize(videoAsset)}
-                </Text>
-                <Text type="REGULAR" style={styles.compressionText}>
-                  Quality: High (recommended)
+              <View style={styles.successMessage}>
+                <Text type="REGULAR" style={styles.successText}>
+                  Your video is now available in your device's gallery and can
+                  be shared or viewed anytime.
                 </Text>
               </View>
             </>
-          ) : (
-            <View style={styles.modalErrorState}>
-              <Text type="SEMIBOLD" style={styles.modalErrorText}>
-                No video information available
-              </Text>
-              <Text type="REGULAR" style={styles.modalErrorSubtext}>
-                Please select a video first before compressing
-              </Text>
-            </View>
           )}
-        </ScrollView>
-
-        <View style={styles.modalActions}>
-          <Button
-            title="Compress Video"
-            onPress={handleCompress}
-            disabled={!hasValidVideoAsset()}
-          />
         </View>
-      </CustomModal> */}
+
+        <Button title="OK" onPress={closeSuccessModal} />
+      </CustomModal>
     </View>
   );
 };
