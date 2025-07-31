@@ -34,4 +34,6 @@ export const ICONS = {
   galleryIcon: require('./icons/studio.png'),
   cameraButton: require('./icons/footercamara.png'),
   settings: require('./icons/settings.png'),
+  compressed: require('./icons/compressed.png'),
+  NoVideo: require('./icons/video.png'),
 };

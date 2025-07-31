@@ -35,8 +35,8 @@ interface InputProps {
   onClear?: () => void;
   dataType?: 'text' | 'date' | 'time';
   onDateChange?: (date: Date) => void;
-  [key: string]: any;
   style?: StyleProp<TextStyle>;
+  [key: string]: any;
 }
 
 const Input: React.FC<InputProps> = ({

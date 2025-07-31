@@ -9,28 +9,23 @@ const useStyle = () => {
     container: {
       flex: 1,
       backgroundColor: colors.lightyellow,
-      justifyContent: 'center',
-      paddingHorizontal: scale(20),
+      alignItems: 'center',
     },
     image: {
       width: width * 0.8,
       height: height * 0.5,
       resizeMode: 'contain',
-      alignItems: 'center',
-      borderRadius: scale(88),
     },
     title: {
-      fontSize: scale(18),
-      textAlign: 'left',
-      marginTop: scale(16),
+      fontSize: scale(24),
       color: colors.black,
+      textAlign: 'center',
     },
     description: {
       fontSize: scale(18),
-      textAlign: 'left',
-      width: '50%',
-      marginTop: scale(8),
       color: colors.black,
+      width: width * 0.8,
+      textAlign: 'center',
     },
   });
 };
