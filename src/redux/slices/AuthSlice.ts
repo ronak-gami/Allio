@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface AuthState {
   userData: Object;
   token: string | null;
-  onboardingCompleted: Boolean;
+  onboardingCompleted: boolean;
 }
 
 interface SetStateKeyPayload {

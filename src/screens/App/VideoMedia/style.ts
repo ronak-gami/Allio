@@ -54,11 +54,6 @@ const useStyle = () => {
       padding: width * 0.04,
       borderRadius: width * 0.03,
       borderWidth: 1,
-      elevation: 2,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
     },
     videoInfoHeader: {
       marginBottom: height * 0.015,
@@ -102,7 +97,6 @@ const useStyle = () => {
       marginBottom: height * 0.02,
       tintColor: colors.primary,
     },
-
     emptyStateTitle: {
       fontSize: scale(24),
       marginBottom: height * 0.01,
@@ -117,83 +111,6 @@ const useStyle = () => {
     actionButtonContainer: {
       padding: width * 0.04,
       gap: height * 0.015,
-    },
-    modalContent: {
-      maxHeight: height * 0.5,
-    },
-    modalVideoTitle: {
-      color: colors.primary,
-      fontSize: scale(18),
-      textAlign: 'center',
-    },
-    modalStatCard: {
-      paddingHorizontal: width * 0.03,
-      paddingVertical: width * 0.005,
-      borderRadius: width * 0.02,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    modalStatLabel: {
-      fontSize: scale(14),
-      color: colors.background,
-    },
-    modalStatValue: {
-      color: colors.background,
-      fontSize: scale(14),
-      flex: 1,
-      textAlign: 'right',
-    },
-    compressionPreview: {
-      paddingVertical: width * 0.03,
-      alignItems: 'center',
-    },
-    compressionTitle: {
-      color: colors.primary,
-      fontSize: scale(16),
-    },
-    compressionText: {
-      color: colors.background,
-      fontSize: scale(14),
-      lineHeight: scale(20),
-    },
-    modalErrorState: {
-      padding: width * 0.05,
-      borderRadius: width * 0.03,
-      alignItems: 'center',
-      marginBottom: height * 0.02,
-    },
-    modalErrorText: {
-      color: colors.background,
-      fontSize: scale(16),
-      marginBottom: height * 0.01,
-    },
-    modalErrorSubtext: {
-      color: colors.background,
-      fontSize: scale(14),
-      textAlign: 'center',
-      lineHeight: scale(20),
-    },
-    modalActions: {
-      flexDirection: 'row',
-      gap: width * 0.03,
-    },
-    successIconContainer: {
-      alignItems: 'center',
-    },
-    successIcon: {
-      color: colors.primary,
-      width: width * 0.22,
-      height: width * 0.22,
-      textAlign: 'center',
-    },
-    successMessage: {
-      padding: 16,
-    },
-    successText: {
-      fontSize: scale(14),
-      color: colors.primary,
-      textAlign: 'center',
     },
   });
 };

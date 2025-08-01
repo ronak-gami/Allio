@@ -9,8 +9,8 @@ import Video from 'react-native-video';
 import Text from '@components/atoms/Text';
 import { useTheme } from '@react-navigation/native';
 import { ICONS } from '@assets/index';
-import CustomModal from '@components/atoms/CustomModel';
 import CustomChip from '@components/atoms/CustomChip';
+import VideoSuccessModal from '@components/organisms/VideoSuccessModal';
 
 type Props = BottomTabScreenProps<TabParamList, 'Video'>;
 
@@ -134,66 +134,11 @@ const VideoMedia: React.FC<Props> = () => {
       )}
 
       {/* Success Modal for Video Save */}
-      <CustomModal
+      <VideoSuccessModal
         visible={isSuccessModalOpen()}
-        title="Video Saved Successfully!"
-        description="Your video has been successfully saved to the gallery."
-        onClose={closeSuccessModal}>
-        <View style={styles.modalContent}>
-          {hasValidVideoAsset() && (
-            <>
-              <Text type="SEMIBOLD" style={styles.modalVideoTitle}>
-                Saved Video Details
-              </Text>
-
-              <View style={styles.modalStatCard}>
-                <Text type="REGULAR" style={styles.modalStatLabel}>
-                  File Name
-                </Text>
-                <Text type="SEMIBOLD" style={styles.modalStatValue}>
-                  {getVideoFileName(videoAsset)}
-                </Text>
-              </View>
-
-              <View style={styles.modalStatCard}>
-                <Text type="REGULAR" style={styles.modalStatLabel}>
-                  File Size
-                </Text>
-                <Text type="SEMIBOLD" style={styles.modalStatValue}>
-                  {formatFileSize(videoAsset?.fileSize)}
-                </Text>
-              </View>
-
-              <View style={styles.modalStatCard}>
-                <Text type="REGULAR" style={styles.modalStatLabel}>
-                  Duration
-                </Text>
-                <Text type="SEMIBOLD" style={styles.modalStatValue}>
-                  {formatDuration(videoAsset?.duration)}
-                </Text>
-              </View>
-
-              <View style={styles.modalStatCard}>
-                <Text type="REGULAR" style={styles.modalStatLabel}>
-                  Resolution
-                </Text>
-                <Text type="SEMIBOLD" style={styles.modalStatValue}>
-                  {getFormattedResolution(videoAsset)}
-                </Text>
-              </View>
-
-              <View style={styles.successMessage}>
-                <Text type="REGULAR" style={styles.successText}>
-                  Your video is now available in your device's gallery and can
-                  be shared or viewed anytime.
-                </Text>
-              </View>
-            </>
-          )}
-        </View>
-
-        <Button title="OK" onPress={closeSuccessModal} />
-      </CustomModal>
+        onClose={closeSuccessModal}
+        hasValidVideoAsset={hasValidVideoAsset()}
+      />
     </View>
   );
 };

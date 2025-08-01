@@ -26,9 +26,9 @@ interface VideoAsset {
 const useVideoMedia = () => {
   const [videoUri, setVideoUri] = useState<string | null>(null);
   const [videoAsset, setVideoAsset] = useState<VideoAsset | null>(null);
-  const [model, setModel] = useState<Boolean>(false);
-  const [saveVisible, setSaveVisible] = useState<Boolean>(false);
-  const [successModal, setSuccessModal] = useState<Boolean>(false);
+  const [model, setModel] = useState<boolean>(false);
+  const [saveVisible, setSaveVisible] = useState<boolean>(false);
+  const [successModal, setSuccessModal] = useState<boolean>(false);
 
   useEffect(() => {
     handleVideoPermissions('all');
