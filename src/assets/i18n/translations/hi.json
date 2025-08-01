@@ -43,5 +43,6 @@
   "go_to_mpin": "MPIN पर जाएं?",
   "mpin": "MPIN",
   "enter_mpin": "एमपिन दर्ज करें",
-  "confirm_mpin": "एमपिन की पुष्टि करें"
+  "confirm_mpin": "एमपिन की पुष्टि करें",
+  "forgot_mpin": "एमपिन भूल गए?"
 }

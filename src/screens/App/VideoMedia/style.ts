@@ -21,7 +21,6 @@ const useStyle = () => {
       padding: width * 0.04,
     },
 
-    // Header Styles
     headerView: {
       flexDirection: 'row',
       justifyContent: 'space-between',

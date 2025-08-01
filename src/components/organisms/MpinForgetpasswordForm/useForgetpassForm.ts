@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+
 import { showError, showSuccess } from '@utils/toast';
 import { checkUserExistsByEmail } from '@utils/helper';
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
 import { BASE_URL } from '@utils/constant';
 
 export const useForgotPassword = (

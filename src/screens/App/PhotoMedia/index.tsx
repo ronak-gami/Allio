@@ -1,53 +1,126 @@
-import React, { useState } from 'react';
-import { View, Image, ImageBackground, SafeAreaView } from 'react-native';
-import Text from '@components/atoms/Text';
-import Button from '@components/atoms/Button';
-import useStyle from './style';
+import React from 'react';
+import { View, ScrollView, Image } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { TabParamList } from '@types/navigations';
-import { IMAGES } from '@assets/index';
-import Header from '@components/organisms/PhotoMediaHeader';
-import Footer from '@components/organisms/PhotoMediaFooter';
 
-type Props = BottomTabScreenProps<TabParamList, 'Photo'>;
+import { Button } from '@components/index';
+import Text from '@components/atoms/Text';
+import CustomChip from '@components/atoms/CustomChip';
+import { ICONS } from '@assets/index';
+
+import { TabParamList } from '@types/navigations';
+import useStyle from './style';
+import usePhotoMedia from './usePhotoMedia';
+
+type Props = BottomTabScreenProps<TabParamList, 'Video'>;
 
 const PhotoMedia: React.FC<Props> = () => {
+  const {
+    PhotoUri,
+    PhotoAsset,
+    handleCameraOpen,
+    handleSelectPhoto,
+    handleClear,
+    handleEdit,
+    isPhotoLoaded,
+    formatFileSize,
+
+    getFormattedResolution,
+    getPhotoFileName,
+    hasValidPhotoAsset,
+  } = usePhotoMedia();
+
   const styles = useStyle();
-  const [showEditor, setShowEditor] = useState(false);
-
-  const handleTryNow = () => {
-    setShowEditor(true);
-  };
-
-  if (!showEditor) {
-    return (
-      <ImageBackground
-        source={IMAGES.background}
-        style={styles.bgImage}
-        resizeMode="cover">
-        <Image
-          source={IMAGES.camera}
-          style={styles.icon}
-          resizeMode="contain"
-        />
-        <View style={styles.overlay}>
-          <View style={styles.contentContainer}>
-            <Text type="bold" style={styles.heading}>
-              Edit Photos and Videos Like a Pro in Just One Click.
-            </Text>
-            <Button title="Try it Now" onPress={handleTryNow} />
-          </View>
-        </View>
-      </ImageBackground>
-    );
-  }
+  const { colors } = useTheme();
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header title="My Studio" activeTab="Gallery" />
+    <ScrollView
+      contentContainerStyle={styles.scrollcontainer}
+      showsHorizontalScrollIndicator={false}>
+      <View style={styles.container}>
+        <View style={isPhotoLoaded() ? styles.content : styles.contentNone}>
+          {isPhotoLoaded() ? (
+            <>
+              <View style={styles.headerView}>
+                <CustomChip
+                  label="Edit"
+                  bgColor={colors.primary}
+                  onPress={handleEdit}
+                />
+                <CustomChip
+                  label="Cancel"
+                  outline
+                  outlineColor={colors.primary}
+                  onPress={handleClear}
+                />
+              </View>
 
-      <Footer />
-    </SafeAreaView>
+              <View style={styles.imageWrapper}>
+                <Image
+                  source={{ uri: PhotoUri }}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
+              </View>
+              {hasValidPhotoAsset() && (
+                <View style={[styles.videoInfoCard]}>
+                  <View style={styles.videoInfoHeader}>
+                    <Text type="SEMIBOLD" style={styles.videoTitle}>
+                      {getPhotoFileName(PhotoAsset)}
+                    </Text>
+                  </View>
+                  <View style={styles.videoStatsContainer}>
+                    <View style={styles.statItem}>
+                      <Text style={styles.statLabel}>Size</Text>
+                      <Text type="SEMIBOLD" style={styles.statValue}>
+                        {formatFileSize(PhotoAsset?.fileSize)}
+                      </Text>
+                    </View>
+
+                    <View style={styles.statDivider} />
+                    <View style={styles.statItem}>
+                      <Text type="REGULAR" style={styles.statLabel}>
+                        Resolution
+                      </Text>
+                      <Text type="SEMIBOLD" style={styles.statValue}>
+                        {getFormattedResolution(PhotoAsset)}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+            </>
+          ) : (
+            <View style={styles.emptyStateContainer}>
+              <Image
+                source={ICONS.gallery}
+                style={styles.noGalleryIcon}
+                resizeMode="contain"
+              />
+              <Text type="BOLD" style={styles.emptyStateTitle}>
+                No Image Selected
+              </Text>
+              <Text
+                type="REGULAR"
+                style={[styles.emptyStateSubtitle, { color: colors.text }]}>
+                Choose a Image from your gallery or Take a new one
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {!isPhotoLoaded() && (
+          <View style={styles.actionButtonContainer}>
+            <Button title="Take Photo " onPress={handleCameraOpen} />
+            <Button
+              title="Choose from Gallery"
+              onPress={handleSelectPhoto}
+              outlineColor={colors.primary}
+            />
+          </View>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
