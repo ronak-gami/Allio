@@ -1,10 +1,29 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, PermissionsAndroid, Platform } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import {
+  PERMISSIONS,
+  RESULTS,
+  requestMultiple,
+  Permission,
+  PermissionStatus,
+  checkMultiple,
+} from 'react-native-permissions';
 
-export const height = Dimensions.get('screen').height;
-export const width = Dimensions.get('screen').width;
-import { PermissionsAndroid, Platform } from 'react-native';
-export const FONTS: Record<string, string> = {
+type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
+
+interface AndroidPermissionResult {
+  granted: boolean;
+  results: Record<string, PermissionStatus>;
+  error?: string;
+  canRecordVideo: boolean;
+  canAccessGallery: boolean;
+  canSaveVideos: boolean;
+}
+
+const height = Dimensions.get('screen').height;
+const width = Dimensions.get('screen').width;
+
+const FONTS: Record<string, string> = {
   black: 'Montserrat-Black',
   bold: 'Montserrat-Bold',
   extraBold: 'Montserrat-ExtraBold',
@@ -64,52 +83,150 @@ const updateUserInFirestore = async (
     return false;
   }
 };
+
 const languages = [
   { label: 'English', value: 'en' },
   { label: 'हिंदी', value: 'hi' },
   { label: 'ગુજરાતી', value: 'gu' },
 ];
-  const requestUserPermission = async () => {
-    try {
-      const granted: 'granted' | 'denied' | 'never_ask_again' =
-        await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        );
 
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      } else {
-        console.log('Notification permission denied');
-      }
-    } catch (error: any) {
-      console.error('Failed to request notification permission:', error);
+const getAndroidPermissions = (
+  permissionType: AndroidPermissionType,
+): Permission[] => {
+  const isApiLevel33OrHigher = Platform.Version >= '33';
+
+  const cameraPermissions = [
+    PERMISSIONS.ANDROID.CAMERA,
+    PERMISSIONS.ANDROID.RECORD_AUDIO,
+  ];
+  const storagePermissions = isApiLevel33OrHigher
+    ? [PERMISSIONS.ANDROID.READ_MEDIA_VIDEO]
+    : [
+        PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+        PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+      ];
+
+  switch (permissionType) {
+    case 'camera':
+      return [PERMISSIONS.ANDROID.CAMERA];
+    case 'microphone':
+      return [PERMISSIONS.ANDROID.RECORD_AUDIO];
+    case 'storage':
+      return storagePermissions;
+    case 'all':
+    default:
+      return [...cameraPermissions, ...storagePermissions];
+  }
+};
+
+const handleVideoPermissions = async (
+  type: AndroidPermissionType = 'all',
+  autoRequest: boolean = true,
+): Promise<AndroidPermissionResult> => {
+  if (Platform.OS !== 'android') {
+    // For non-Android platforms, assume permissions are handled differently or granted.
+    return {
+      granted: true,
+      results: {},
+      canRecordVideo: true,
+      canAccessGallery: true,
+      canSaveVideos: true,
+    };
+  }
+
+  try {
+    const requiredPermissions = getAndroidPermissions(type);
+    const statuses = await checkMultiple(requiredPermissions);
+
+    const isApiLevel33OrHigher = Platform.Version >= 33;
+
+    // Helper to check permission status
+    const has = (permission: Permission) =>
+      statuses[permission] === RESULTS.GRANTED;
+
+    const calculateCapabilities = (
+      currentStatuses: Record<string, PermissionStatus>,
+    ) => ({
+      canRecordVideo:
+        has(PERMISSIONS.ANDROID.CAMERA) &&
+        has(PERMISSIONS.ANDROID.RECORD_AUDIO),
+      canAccessGallery: isApiLevel33OrHigher
+        ? has(PERMISSIONS.ANDROID.READ_MEDIA_VIDEO)
+        : has(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE),
+      canSaveVideos: isApiLevel33OrHigher
+        ? true // WRITE_EXTERNAL_STORAGE is not needed to save to gallery on API 33+
+        : has(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE),
+    });
+
+    let finalStatuses = statuses;
+    const allCurrentlyGranted = Object.values(statuses).every(
+      s => s === RESULTS.GRANTED,
+    );
+
+    if (!autoRequest || allCurrentlyGranted) {
+      return {
+        granted: allCurrentlyGranted,
+        results: statuses,
+        ...calculateCapabilities(statuses),
+      };
     }
-  };
-// const requestNotificationPermission = async (): Promise<boolean> => {
-//   if (Platform.OS === 'android' && Platform.Version >= 33) {
-//     try {
-//       const granted = await PermissionsAndroid.request(
-//         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-//         {
-//           title: 'Enable Notifications',
-//           message:
-//             'We’d like to show you notifications for alerts and updates.',
-//           buttonNeutral: 'Later',
-//           buttonNegative: 'Cancel',
-//           buttonPositive: 'OK',
-//         },
-//       );
 
-//       return granted === PermissionsAndroid.RESULTS.GRANTED;
-//     } catch (error: any) {
-//       console.error('Error requesting notification permission:', error);
-//       return false;
-//     }
-//   }
-// };
+    const permissionsToRequest = requiredPermissions.filter(
+      p => statuses[p] !== RESULTS.GRANTED,
+    );
+
+    if (permissionsToRequest.length > 0) {
+      const requestResults = await requestMultiple(permissionsToRequest);
+      finalStatuses = { ...statuses, ...requestResults };
+    }
+
+    const allFinallyGranted = Object.values(finalStatuses).every(
+      result => result === RESULTS.GRANTED,
+    );
+
+    return {
+      granted: allFinallyGranted,
+      results: finalStatuses,
+      ...calculateCapabilities(finalStatuses),
+    };
+  } catch (error) {
+    console.error('Android video permissions error:', error);
+    return {
+      granted: false,
+      results: {},
+      error:
+        error instanceof Error ? error.message : 'Unknown permission error',
+      canRecordVideo: false,
+      canAccessGallery: false,
+      canSaveVideos: false,
+    };
+  }
+};
+
+const requestUserPermission = async () => {
+  try {
+    const granted: 'granted' | 'denied' | 'never_ask_again' =
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
+
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    } else {
+      console.log('Notification permission denied');
+    }
+  } catch (error: any) {
+    console.error('Failed to request notification permission:', error);
+  }
+};
+
 export {
+  height,
+  width,
   getAllUsers,
   checkUserExistsByEmail,
   requestUserPermission,
   updateUserInFirestore,
+  handleVideoPermissions,
   languages,
+  FONTS,
 };

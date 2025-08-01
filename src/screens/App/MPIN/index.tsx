@@ -6,14 +6,16 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import useStyle from './style';
-import MPINForm from '@components/organisms/MPINForm';
-import { ICONS } from '@assets/index';
-import { promptAppLock } from '@utils/auth';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+
 import { RootState } from '@redux/store';
+import MPINForm from '@components/organisms/MPINForm';
+import { promptAppLock } from '@utils/auth';
 import { HOME } from '@utils/constant';
+import { ICONS } from '@assets/index';
+
+import useStyle from './style';
 
 type MPINScreenRouteParams = {
   MPIN: {

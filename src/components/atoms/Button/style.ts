@@ -1,4 +1,4 @@
-import { FONTS } from '@utils/helper';
+import { FONTS, width } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
@@ -6,7 +6,7 @@ const useStyle = () => {
   return StyleSheet.create({
     button: {
       borderRadius: 10,
-      paddingHorizontal: scale(24),
+      paddingHorizontal: width * 0.05,
       alignItems: 'center',
       justifyContent: 'center',
     },

@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
 import { Pressable, View } from 'react-native';
 import { Formik } from 'formik';
+import { useNavigation, useTheme } from '@react-navigation/native';
+
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
 import Input from '@components/atoms/Input';
 import OTPInput from '@components/atoms/OTPInput';
+import useValidation from '@utils/validationSchema';
+
 import useStyle from './style';
 import { useForgotPassword } from './useForgetpassForm';
-import useValidation from '@utils/validationSchema';
-import { useNavigation, useTheme } from '@react-navigation/native';
 
 interface ForgetMPINFormProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -87,13 +89,14 @@ const ForgetMPINForm: React.FC<ForgetMPINFormProps> = ({ setLoading }) => {
                   </Text>
                 </Pressable>
               </View>
-
-              <Button
-                title="mpin_forgot_button"
-                onPress={handleSubmit as () => void}
-                isLabel
-                loading={isSubmittingEmail}
-              />
+              <View style={style.button}>
+                <Button
+                  title="mpin_forgot_button"
+                  onPress={handleSubmit as () => void}
+                  isLabel
+                  loading={isSubmittingEmail}
+                />
+              </View>
             </View>
           )}
         </Formik>

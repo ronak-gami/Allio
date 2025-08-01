@@ -6,7 +6,7 @@ import Button from '@components/atoms/Button';
 import Input from '@components/atoms/Input';
 import useRegister from './useRegisterForm';
 import useStyle from './style';
-import useAnalytics from '@hooks/useAnalytics';
+import { useAnalytics } from '@hooks/index';
 
 const RegistrationForm = () => {
   const styles = useStyle();
