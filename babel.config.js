@@ -14,9 +14,10 @@ module.exports = {
           '@screens': './src/screens',
           '@types': './src/types',
           '@utils': './src/utils',
-          '@hooks': './src/hooks'
+          '@hooks': './src/hooks',
         },
       },
     ],
+    'react-native-reanimated/plugin',
   ],
 };
