@@ -9,12 +9,12 @@ export const useForgotPassword = (
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
   const navigation = useNavigation();
-  const [showOtpBox, setShowOtpBox] = useState(false);
+  const [showOtpBox, setShowOtpBox] = useState<boolean>(false);
   const [otp, setOtp] = useState('');
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
+  const [isSubmittingEmail, setIsSubmittingEmail] = useState<boolean>(false);
   const [Email, setEmail] = useState('');
-  const [resendTimer, setResendTimer] = useState(56);
+  const [resendTimer, setResendTimer] = useState<number>(56);
 
   const startResendTimer = () => {
     setResendTimer(59);

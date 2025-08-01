@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
-import AuthNavigator from './Auth';
-import HomeNavigator from './App';
-import { RootState } from '../redux/store';
+
 import Splash from '@screens/Auth/Splash';
 import { useColorScheme } from 'react-native';
 import { setDarkMode } from '../redux/slices/ThemeSlice';
@@ -11,6 +9,11 @@ import i18n from '../assets/i18n';
 import { DefaultTheme } from '@react-navigation/native';
 import colors from '@assets/theme';
 import analytics from '@react-native-firebase/analytics';
+
+import AuthNavigator from './Auth';
+import HomeNavigator from './App';
+import { RootState } from '../redux/store';
+
 const lightTheme = {
   ...DefaultTheme,
   dark: false,
@@ -37,7 +40,7 @@ const StackNavigator: React.FC = () => {
   const dispatch = useDispatch();
   const systemColorScheme = useColorScheme();
 
-  const [splashVisible, setSplashVisible] = useState(true);
+  const [splashVisible, setSplashVisible] = useState<boolean>(true);
   const navigationRef = useRef<any>(null);
   const routeNameRef = useRef<string>();
   useEffect(() => {

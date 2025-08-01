@@ -1,5 +1,7 @@
-import { useTheme } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
+
+import { useTheme } from '@react-navigation/native';
+import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
   const { colors } = useTheme();
@@ -10,7 +12,7 @@ const useStyle = () => {
     },
     button: {
       backgroundColor: colors.primary,
-      paddingVertical: 12,
+      paddingVertical: scale(10),
       paddingHorizontal: 24,
       borderRadius: 8,
       position: 'absolute',

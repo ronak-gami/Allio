@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, ImageSourcePropType } from 'react-native';
+
 import useStyle from './style';
 
 export interface OnboardingScreenProps {

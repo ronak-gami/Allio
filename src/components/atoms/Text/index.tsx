@@ -7,6 +7,7 @@ import {
   TextProps as RNTextProps,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
+
 import { FONTS } from '@utils/helper';
 
 interface TextProps extends RNTextProps {

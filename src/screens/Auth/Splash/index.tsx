@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Image } from 'react-native';
-import useStyle from './style';
+
 import { IMAGES } from '@assets/index';
 
+import useStyle from './style';
 const Splash: React.FC = () => {
   const styles = useStyle();
   return (

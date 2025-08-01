@@ -8,13 +8,13 @@ import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
 import firestore from '@react-native-firebase/firestore';
+
 import { useNavigation } from '@react-navigation/native';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import useValidation from '@utils/validationSchema';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
 import { showError, showSuccess } from '@utils/toast';
-
 
 export type RegistrationValues = {
   firstName: string;
@@ -26,7 +26,7 @@ export type RegistrationValues = {
 };
 
 const useRegister = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const auth = getAuth();
   const navigation = useNavigation<AuthNavigationProp>();

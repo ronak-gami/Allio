@@ -1,5 +1,6 @@
 import { PermissionsAndroid } from 'react-native';
 import { useEffect, RefObject } from 'react';
+
 import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';

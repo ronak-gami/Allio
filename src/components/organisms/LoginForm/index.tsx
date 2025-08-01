@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
+
 import { Formik } from 'formik';
 import Text from '@components/atoms/Text';
 import Input from '@components/atoms/Input';
@@ -8,10 +9,10 @@ import Button from '@components/atoms/Button';
 import { useLoginForm } from './useLoginForm';
 import SignInWithFacebook from '@components/molecules/SocialSignInFacebook';
 import SignInWithGoogle from '@components/molecules/SocialSignInGoogle';
-import useStyle from './style';
 import { useAnalytics } from '@hooks/index';
 import SignInWithGitHub from '@components/molecules/SocialGithub';
 
+import useStyle from './style';
 interface LoginFormProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }

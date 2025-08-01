@@ -77,35 +77,15 @@ const languages = [
         );
 
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+
       } else {
-        console.log('Notification permission denied');
+        
       }
     } catch (error: any) {
       console.error('Failed to request notification permission:', error);
     }
   };
-// const requestNotificationPermission = async (): Promise<boolean> => {
-//   if (Platform.OS === 'android' && Platform.Version >= 33) {
-//     try {
-//       const granted = await PermissionsAndroid.request(
-//         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-//         {
-//           title: 'Enable Notifications',
-//           message:
-//             'We’d like to show you notifications for alerts and updates.',
-//           buttonNeutral: 'Later',
-//           buttonNegative: 'Cancel',
-//           buttonPositive: 'OK',
-//         },
-//       );
 
-//       return granted === PermissionsAndroid.RESULTS.GRANTED;
-//     } catch (error: any) {
-//       console.error('Error requesting notification permission:', error);
-//       return false;
-//     }
-//   }
-// };
 export {
   getAllUsers,
   checkUserExistsByEmail,

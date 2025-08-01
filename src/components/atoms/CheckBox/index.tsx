@@ -1,7 +1,9 @@
 import React from 'react';
 import { TouchableOpacity, View, Image } from 'react-native';
-import Text from '../Text';
+
 import { ICONS } from '@assets/index';
+
+import Text from '../Text';
 import useStyle from './style';
 
 interface CustomCheckBoxProps {

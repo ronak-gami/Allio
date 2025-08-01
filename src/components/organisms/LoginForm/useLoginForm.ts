@@ -10,17 +10,17 @@ import messaging from '@react-native-firebase/messaging';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
-import { setStateKey, logout as reduxLogout } from '@redux/slices/AuthSlice'; 
+
+import { setStateKey, logout as reduxLogout } from '@redux/slices/AuthSlice';
 import { checkUserExistsByEmail } from '@utils/helper';
+import { showError, showSuccess } from '@utils/toast';
 import useValidation from '@utils/validationSchema';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
-import { showError, showSuccess } from '@utils/toast';
-
 
 export const useLoginForm = () => {
-  const [remember, setRemember] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [remember, setRemember] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigation = useNavigation<AuthNavigationProp>();
   const { loginValidationSchema } = useValidation();
@@ -70,7 +70,6 @@ export const useLoginForm = () => {
       );
       console.log('Sign in result', userCredential);
 
-      // Consider dispatching actual user data from userCredential.user here
       dispatch(setStateKey({ key: 'userData', value: values }));
 
       const user = userCredential.user;
@@ -131,8 +130,8 @@ export const useLoginForm = () => {
           console.warn('FCM token not available during logout.');
         }
 
-        await auth.signOut(); // Sign out from Firebase Auth
-        dispatch(reduxLogout()); // <-- Dispatch your Redux logout action here
+        await auth.signOut();
+        dispatch(reduxLogout());
       }
     } catch (error) {
       console.error('Error during logout:', error);

@@ -70,7 +70,6 @@ const useStyle = () => {
     },
 
     dividerText: {
-      // paddingHorizontal: scale(15),
       color: colors.primary,
       fontSize: scale(16),
       justifyContent: 'center',

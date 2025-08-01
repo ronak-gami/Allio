@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import useStyle from './style';
-import LoginForm from '@components/organisms/LoginForm';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+import LoginForm from '@components/organisms/LoginForm';
+import CustomLoader from '@components/atoms/CustomLoader';
 import { AuthStackParamList } from '@types/navigations';
 import { useAnalytics } from '@hooks/index';
-import CustomLoader from '@components/atoms/CustomLoader';
+
+import useStyle from './style';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
-
 const Login: React.FC<Props> = () => {
   const styles = useStyle();
   useAnalytics({ screenName: 'Login' });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   return (
     <>
       <KeyboardAvoidingView

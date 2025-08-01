@@ -7,11 +7,13 @@ import {
   GestureResponderEvent,
   StyleProp,
 } from 'react-native';
+
+import { useTheme } from '@react-navigation/native';
+import { scale } from 'react-native-size-matters';
+import { height } from '@utils/helper';
+
 import Text from '../Text';
 import useStyle from './style';
-import { useTheme } from '@react-navigation/native';
-import { height } from '@utils/helper';
-import { scale } from 'react-native-size-matters';
 
 interface ButtonProps {
   title: string;
