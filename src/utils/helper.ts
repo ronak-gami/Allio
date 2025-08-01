@@ -212,7 +212,6 @@ const requestUserPermission = async () => {
       );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
     } else {
-      console.log('Notification permission denied');
     }
   } catch (error: any) {
     console.error('Failed to request notification permission:', error);
@@ -237,8 +236,8 @@ const checkIfMPINExists = async (email: string): Promise<boolean> => {
       }
     } else {
       console.error('Error', 'User not found in Firestore');
+      return false;
     }
-    return false;
   } catch (error: any) {
     showError('Failed to check MPIN');
     return false;

@@ -31,7 +31,6 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
   const [isExistingUser, setIsExistingUser] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
-
   useEffect(() => {
     if (resetMpin) {
       setLoading(false);

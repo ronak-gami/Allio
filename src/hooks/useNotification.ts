@@ -50,14 +50,7 @@ const useNotification = (toastRef: RefObject<CustomToastRef>) => {
     const unsubscribeOnNotificationOpenedApp =
       messaging().onNotificationOpenedApp(
         async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
-          console.log(
-            'FCM Notification caused app to open from BACKGROUND:',
-            remoteMessage,
-          );
           if (remoteMessage.data?.screen) {
-            console.log(
-              `Maps to screen from background tap: ${remoteMessage.data.screen}`,
-            );
           }
         },
       );
@@ -70,11 +63,6 @@ const useNotification = (toastRef: RefObject<CustomToastRef>) => {
 };
 
 messaging().setBackgroundMessageHandler(
-  async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
-    console.log(
-      'FCM Message handled in the BACKGROUND (via setBackgroundMessageHandler):',
-      remoteMessage,
-    );
-  },
+  async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {},
 );
 export default useNotification;

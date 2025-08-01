@@ -198,7 +198,6 @@ const usePhotoMedia = () => {
   };
 
   const handleCompress = () => {
-    console.log('Compressing video...');
     setModel(true);
   };
 

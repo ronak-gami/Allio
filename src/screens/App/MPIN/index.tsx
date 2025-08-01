@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   View,
   Image,
@@ -17,6 +17,8 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { HOME } from '@utils/constant';
+import { useSelector } from 'react-redux';
+import { RootState } from '@redux/store';
 import { checkIfMPINExists } from '@utils/helper';
 
 type MPINScreenRouteParams = {
@@ -31,20 +33,35 @@ const MPINSetupScreen = () => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<MPINScreenRouteParams, 'MPIN'>>();
   const { resetMpin, email } = route.params || {};
+  const userData = useSelector((state: RootState) => state.auth.userData);
+  const isAuth = useSelector(
+    (s: RootState) => s.biometric.isBiometricAuthenticated,
+  );
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     promptAppLock().then(success => {
+  //       if (success) {
+  //         navigation.replace(HOME.HomeTabs);
+  //       }
+  //     });
+  //   }, [navigation, email]),
+  // );
 
   useFocusEffect(
-    useCallback(() => {
-      const checkMPINAndPrompt = async () => {
-        const mpinExist = await checkIfMPINExists(email);
-        if (mpinExist) {
+    React.useCallback(() => {
+      const verifyMPIN = async () => {
+        if (!userData?.email) return;
+        const mpinExist = await checkIfMPINExists(userData.email);
+        if (mpinExist && !resetMpin) {
           const success = await promptAppLock();
           if (success) {
             navigation.replace(HOME.HomeTabs);
           }
         }
       };
-      checkMPINAndPrompt();
-    }, [navigation, email]),
+      verifyMPIN();
+    }, [userData?.email, navigation, resetMpin]),
   );
 
   return (

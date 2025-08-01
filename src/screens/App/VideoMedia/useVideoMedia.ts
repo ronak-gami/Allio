@@ -112,8 +112,6 @@ const useVideoMedia = () => {
       if (result && result?.artifact) {
         saveStateData(result?.artifact);
       }
-      console.log('Data update & result got');
-      console.log('result: ', result?.artifact);
       return result?.artifact;
     } catch (error) {
       console.error('Error opening Creative Video Editor:', error);
@@ -124,9 +122,7 @@ const useVideoMedia = () => {
   // Updated handleVideoSaveToGallery function to show success modal
   const handleVideoSaveToGallery = async (uri: any) => {
     try {
-      console.log('video will be save to gallery');
       await CameraRoll.save(uri, { type: 'video' });
-      console.log('Save successfully');
       setSaveVisible(false);
       setSuccessModal(true);
     } catch (error) {
@@ -138,7 +134,6 @@ const useVideoMedia = () => {
   // Handle record video
   const handleRecordVideo = async () => {
     try {
-      console.log('Checking permissions and launching camera...');
       const permissionResult = await handleVideoPermissions('all');
 
       if (!permissionResult.canRecordVideo) {
@@ -157,7 +152,6 @@ const useVideoMedia = () => {
 
       launchCamera(cameraOptions, (response: ImagePickerResponse) => {
         if (response.didCancel) {
-          console.log('User cancelled the camera.');
           return;
         }
         if (response.errorMessage) {
@@ -170,7 +164,6 @@ const useVideoMedia = () => {
           response.assets[0].uri
         ) {
           const asset = response.assets[0];
-          console.log('Video captured successfully. URI:', asset.uri);
           setVideoUri(asset.uri);
           setVideoAsset({
             uri: asset.uri,
@@ -196,7 +189,6 @@ const useVideoMedia = () => {
   // Handle select video from gallery
   const handleSelectVideo = async () => {
     try {
-      console.log('Checking permissions and launching gallery...');
       const permissionResult = await handleVideoPermissions('storage');
 
       if (!permissionResult.canAccessGallery) {
@@ -213,7 +205,6 @@ const useVideoMedia = () => {
 
       launchImageLibrary(galleryOptions, (response: ImagePickerResponse) => {
         if (response.didCancel) {
-          console.log('User cancelled gallery selection.');
           return;
         }
         if (response.errorMessage) {
@@ -226,7 +217,6 @@ const useVideoMedia = () => {
           response.assets[0].uri
         ) {
           const asset = response.assets[0];
-          console.log('Video selected successfully. URI:', asset.uri);
           setVideoUri(asset.uri);
           setVideoAsset({
             uri: asset.uri,
@@ -263,7 +253,6 @@ const useVideoMedia = () => {
 
   // Handle compression action
   const handleCompress = () => {
-    console.log('Compressing video...');
     setModel(true);
   };
 
