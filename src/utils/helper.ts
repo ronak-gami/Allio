@@ -8,6 +8,7 @@ import {
   PermissionStatus,
   checkMultiple,
 } from 'react-native-permissions';
+import { showError } from './toast';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -170,7 +171,7 @@ const handleVideoPermissions = async (
         ? has(PERMISSIONS.ANDROID.READ_MEDIA_VIDEO)
         : has(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE),
       canSaveVideos: isApiLevel33OrHigher
-        ? true // WRITE_EXTERNAL_STORAGE is not needed to save to gallery on API 33+
+        ? true
         : has(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE),
     });
 
@@ -225,13 +226,37 @@ const requestUserPermission = async () => {
       await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
       );
-
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
     } else {
-      console.log('Notification permission denied');
     }
   } catch (error: any) {
     console.error('Failed to request notification permission:', error);
+  }
+};
+
+const checkIfMPINExists = async (email: string): Promise<boolean> => {
+  try {
+    const normalizedEmail = email.trim().toLowerCase();
+    const snapshot = await firestore()
+      .collection('users')
+      .where('email', '==', normalizedEmail)
+      .limit(1)
+      .get();
+
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      const data = doc.data();
+
+      if (data?.mpinSet && data?.mpin) {
+        return true;
+      }
+    } else {
+      console.error('Error', 'User not found in Firestore');
+      return false;
+    }
+  } catch (error: any) {
+    showError('Failed to check MPIN');
+    return false;
   }
 };
 
@@ -245,4 +270,5 @@ export {
   handleVideoPermissions,
   languages,
   FONTS,
+  checkIfMPINExists,
 };

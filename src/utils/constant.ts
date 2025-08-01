@@ -66,4 +66,7 @@ const HOME = {
   ForgetMPIN: 'ForgetMPIN',
 } as const;
 
-export { onboardingData, AUTH, HOME };
+const LICENSE_KEY =
+  'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
+
+export { onboardingData, AUTH, HOME, LICENSE_KEY };

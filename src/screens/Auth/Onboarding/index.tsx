@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, FlatList, TouchableOpacity, Text } from 'react-native';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
@@ -28,13 +26,6 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
     crashlytics().log('OnboardingScreen mounted');
     const trace = perf().newTrace('onboarding_screen_load');
     trace.start();
-    const checkOnboardingStatus = async () => {
-      const onboardingWatched = await AsyncStorage.getItem('onboardingWatched');
-      if (onboardingWatched === 'true') {
-        navigation.replace('Login');
-      }
-    };
-    checkOnboardingStatus();
     return () => {
       trace.stop();
     };
@@ -48,17 +39,15 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
       });
       setCurrentIndex(currentIndex + 1);
     } else {
-      await AsyncStorage.setItem('onboardingWatched', 'true');
-      dispatch(setStateKey({ key: 'onboardingCompleted', value: true }));
-      await analytics().logEvent('onboarding_get_started'); // Custom event
+      dispatch(setStateKey({ key: 'onboardingCompleted', value: false }));
+      await analytics().logEvent('onboarding_get_started');
       navigation.replace('Login');
     }
   };
 
   const handleSkip = async () => {
-    await AsyncStorage.setItem('onboardingWatched', 'true');
-    dispatch(setStateKey({ key: 'onboardingCompleted', value: true }));
-    await analytics().logEvent('onboarding_skipped'); // Custom event
+    dispatch(setStateKey({ key: 'onboardingCompleted', value: false }));
+    await analytics().logEvent('onboarding_skipped');
     navigation.replace('Login');
   };
 

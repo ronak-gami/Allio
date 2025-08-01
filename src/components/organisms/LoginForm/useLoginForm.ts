@@ -42,7 +42,6 @@ export const useLoginForm = () => {
         .collection('deviceTokens')
         .doc(token)
         .delete();
-      console.log('FCM token removed successfully for user:', userId);
     } catch (error) {
       console.error('Error removing FCM token:', error);
       crashlytics().recordError(error as Error);
@@ -60,18 +59,14 @@ export const useLoginForm = () => {
         showError('User does not exist!');
         return;
       }
-      const auth = getAuth();
-
-      console.log('Signing in user', values.email);
       const userCredential = await signInWithEmailAndPassword(
-        auth,
+        getAuth(),
         values.email,
         values.password,
       );
       console.log('Sign in result', userCredential);
 
       dispatch(setStateKey({ key: 'userData', value: values }));
-
       const user = userCredential.user;
       if (user) {
         const token = await user.getIdToken();
@@ -125,7 +120,6 @@ export const useLoginForm = () => {
         const fcmToken = await messaging().getToken();
         if (fcmToken) {
           await removeDeviceToken(currentUser.uid, fcmToken);
-          console.log('token remove successfully');
         } else {
           console.warn('FCM token not available during logout.');
         }

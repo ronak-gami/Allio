@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Image } from 'react-native';
+import { View, Image } from 'react-native';
 import useStyle from './style';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '@types/navigations';
@@ -8,10 +8,9 @@ import useVideoMedia from './useVideoMedia';
 import Video from 'react-native-video';
 import Text from '@components/atoms/Text';
 import { useTheme } from '@react-navigation/native';
-import CustomIcon from '@components/atoms/EditIcon';
 import { ICONS } from '@assets/index';
-import CustomModal from '@components/atoms/CustomModel';
 import CustomChip from '@components/atoms/CustomChip';
+import VideoSuccessModal from '@components/organisms/VideoSuccessModal';
 
 type Props = BottomTabScreenProps<TabParamList, 'Video'>;
 
@@ -23,19 +22,16 @@ const VideoMedia: React.FC<Props> = () => {
     handleSelectVideo,
     handleClear,
     handleEdit,
-    handleCompress,
-    handleTrim,
-    handleFilter,
-    closeModel,
+    closeSuccessModal,
     isVideoLoaded,
-    isInEditMode,
-    isModalOpen,
+    isSuccessModalOpen,
     formatFileSize,
     formatDuration,
     getFormattedResolution,
     getVideoFileName,
-    getEstimatedCompressedSize,
     hasValidVideoAsset,
+    saveVisible,
+    handleVideoSaveToGallery,
   } = useVideoMedia();
 
   const styles = useStyle();
@@ -48,9 +44,13 @@ const VideoMedia: React.FC<Props> = () => {
           <>
             <View style={styles.headerView}>
               <CustomChip
-                label="Edit"
+                label={saveVisible ? 'Save' : 'Edit'}
                 bgColor={colors.primary}
-                onPress={handleEdit}
+                onPress={
+                  saveVisible
+                    ? () => handleVideoSaveToGallery(videoUri)
+                    : handleEdit
+                }
               />
               <CustomChip
                 label="Cancel"
@@ -122,26 +122,6 @@ const VideoMedia: React.FC<Props> = () => {
         )}
       </View>
 
-      {isInEditMode() && (
-        <View style={styles.editIconView}>
-          <CustomIcon
-            icon={ICONS.compressed}
-            onPress={handleCompress}
-            bottomLabel={'Compress'}
-          />
-          <CustomIcon
-            icon={ICONS.compressed}
-            onPress={handleTrim}
-            bottomLabel={'Compress'}
-          />
-          <CustomIcon
-            icon={ICONS.compressed}
-            onPress={handleFilter}
-            bottomLabel={'Compress'}
-          />
-        </View>
-      )}
-
       {!isVideoLoaded() && (
         <View style={styles.actionButtonContainer}>
           <Button title="Record Video" onPress={handleRecordVideo} />
@@ -153,88 +133,12 @@ const VideoMedia: React.FC<Props> = () => {
         </View>
       )}
 
-      <CustomModal
-        visible={isModalOpen()}
-        title="Video Compression"
-        description="Compressing your video will reduce file size while maintaining quality."
-        onClose={closeModel}>
-        <ScrollView
-          style={styles.modalContent}
-          showsVerticalScrollIndicator={false}>
-          {hasValidVideoAsset() ? (
-            <>
-              <Text type="SEMIBOLD" style={styles.modalVideoTitle}>
-                Current Video Details
-              </Text>
-
-              <View style={styles.modalStatCard}>
-                <Text type="REGULAR" style={styles.modalStatLabel}>
-                  File Name
-                </Text>
-                <Text type="SEMIBOLD" style={styles.modalStatValue}>
-                  {getVideoFileName(videoAsset)}
-                </Text>
-              </View>
-
-              <View style={styles.modalStatCard}>
-                <Text type="REGULAR" style={styles.modalStatLabel}>
-                  File Size
-                </Text>
-                <Text type="SEMIBOLD" style={styles.modalStatValue}>
-                  {formatFileSize(videoAsset?.fileSize)}
-                </Text>
-              </View>
-
-              <View style={styles.modalStatCard}>
-                <Text type="REGULAR" style={styles.modalStatLabel}>
-                  Duration
-                </Text>
-                <Text type="SEMIBOLD" style={styles.modalStatValue}>
-                  {formatDuration(videoAsset?.duration)}
-                </Text>
-              </View>
-
-              <View style={styles.modalStatCard}>
-                <Text type="REGULAR" style={styles.modalStatLabel}>
-                  Resolution
-                </Text>
-                <Text type="SEMIBOLD" style={styles.modalStatValue}>
-                  {getFormattedResolution(videoAsset)}
-                </Text>
-              </View>
-
-              <View style={styles.compressionPreview}>
-                <Text type="MEDIUM" style={styles.compressionTitle}>
-                  Estimated after compression
-                </Text>
-                <Text type="REGULAR" style={styles.compressionText}>
-                  Size: ~{getEstimatedCompressedSize(videoAsset)}
-                </Text>
-                <Text type="REGULAR" style={styles.compressionText}>
-                  Quality: High (recommended)
-                </Text>
-              </View>
-            </>
-          ) : (
-            <View style={styles.modalErrorState}>
-              <Text type="SEMIBOLD" style={styles.modalErrorText}>
-                No video information available
-              </Text>
-              <Text type="REGULAR" style={styles.modalErrorSubtext}>
-                Please select a video first before compressing
-              </Text>
-            </View>
-          )}
-        </ScrollView>
-
-        <View style={styles.modalActions}>
-          <Button
-            title="Compress Video"
-            onPress={handleCompress}
-            disabled={!hasValidVideoAsset()}
-          />
-        </View>
-      </CustomModal>
+      {/* Success Modal for Video Save */}
+      <VideoSuccessModal
+        visible={isSuccessModalOpen()}
+        onClose={closeSuccessModal}
+        hasValidVideoAsset={hasValidVideoAsset()}
+      />
     </View>
   );
 };

@@ -1,9 +1,14 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
   userData: Object;
   token: string | null;
-  onboardingCompleted: Boolean;
+  onboardingCompleted: boolean;
+}
+
+interface SetStateKeyPayload {
+  key: keyof AuthState;
+  value: any;
 }
 
 const initialState: AuthState = {
@@ -12,24 +17,22 @@ const initialState: AuthState = {
   onboardingCompleted: true,
 };
 
-interface SetStateKeyPayload {
-  key: keyof AuthState;
-  value: any;
-}
-
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
     setStateKey: (state, action: PayloadAction<SetStateKeyPayload>) => {
-      const {key, value} = action.payload;
+      const { key, value } = action.payload;
       if (key in state) {
         state[key] = value;
       }
     },
-    logout: () => initialState,
+    logout: state => {
+      state.userData = {};
+      state.token = null;
+    },
   },
 });
 
-export const {setStateKey, logout} = authSlice.actions;
+export const { setStateKey, logout } = authSlice.actions;
 export default authSlice.reducer;
