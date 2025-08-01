@@ -16,6 +16,7 @@ import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 
 import { handleVideoPermissions } from '@utils/helper';
 import { showSuccess } from '@utils/toast';
+import { LICENSE_KEY } from '@utils/constant';
 
 interface VideoAsset {
   uri: string;
@@ -149,8 +150,7 @@ const usePhotoMedia = () => {
   const handleEdit = async () => {
     try {
       const settings = new EditorSettingsModel({
-        license:
-          'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v',
+        license: LICENSE_KEY,
         export: {
           filename: 'edited_image',
           image: {
@@ -184,12 +184,10 @@ const usePhotoMedia = () => {
         await CameraRoll.saveAsset(destPath, { type: 'photo' });
 
         showSuccess('Image saved to gallery!');
-        
       }
     } catch (error) {
       console.error('IMGLY Editor error:', error);
-    }
-    finally {
+    } finally {
       handleClear();
     }
   };
