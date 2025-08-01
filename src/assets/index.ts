@@ -24,6 +24,7 @@ export const ICONS = {
   Github: require('./icons/github.png'),
   ArrowRight: require('./icons/right-arrow.png'),
   mpinSecure: require('./icons/mobilesecure.png'),
+  gallery: require('./icons/gallery.png'),
   compressed: require('./icons/compressed.png'),
   NoVideo: require('./icons/video.png'),
 };

@@ -23,13 +23,14 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
   const navigation = useNavigation<MPINNavigationProp>();
   const userData = useSelector((state: RootState) => state.auth.userData);
 
-  const [userDocId, setUserDocId] = useState('');
-  const [storedEncryptedMPIN, setStoredEncryptedMPIN] = useState('');
-  const [mpin, setMpin] = useState('');
-  const [confirmMpin, setConfirmMpin] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isExistingUser, setIsExistingUser] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [userDocId, setUserDocId] = useState<string>('');
+  const [storedEncryptedMPIN, setStoredEncryptedMPIN] = useState<string>('');
+  const [mpin, setMpin] = useState<string>('');
+  const [confirmMpin, setConfirmMpin] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isExistingUser, setIsExistingUser] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+
 
   useEffect(() => {
     if (resetMpin) {

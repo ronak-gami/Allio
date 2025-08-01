@@ -1,5 +1,4 @@
 import analytics from '@react-native-firebase/analytics';
-import { useEffect } from 'react';
 
 export type AnalyticsHandlerProps = {
   screenName?: string;
@@ -11,7 +10,6 @@ export type AnalyticsHandlerProps = {
 };
 
 const useAnalytics = ({
-  screenName,
   functionName,
   data,
   login,

@@ -1,7 +1,8 @@
-import { useTheme } from '@react-navigation/native';
-import { height } from '@utils/helper';
 import { StyleSheet } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 import { scale } from 'react-native-size-matters';
+
+import { height } from '@utils/helper';
 
 const useStyle = () => {
   const { colors } = useTheme();
@@ -39,7 +40,7 @@ const useStyle = () => {
       alignSelf: 'flex-end',
       fontSize: scale(14),
     },
-    button: {},
+    button: { marginBottom: height * 0.02 },
     forgotpassText: {
       color: colors.text,
       fontSize: scale(16),
