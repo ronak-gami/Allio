@@ -1,10 +1,9 @@
 import React, { useEffect, useRef } from 'react';
+
 import { Provider } from 'react-redux';
 import { PaperProvider } from 'react-native-paper';
 import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './src/redux/store';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import StackNavigator from './src/navigations';
 import ToastManager from 'toastify-react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
@@ -13,6 +12,9 @@ import CustomNotification, {
   CustomToastRef,
 } from '@components/atoms/CustomNotification';
 import { useNotification } from '@hooks/index';
+
+import { store, persistor } from './src/redux/store';
+import StackNavigator from './src/navigations';
 
 const App = () => {
   const customToastRef = useRef<CustomToastRef>(null);

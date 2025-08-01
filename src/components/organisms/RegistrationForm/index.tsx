@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-
 import { Formik } from 'formik';
+
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
 import Input from '@components/atoms/Input';

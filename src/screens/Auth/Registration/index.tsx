@@ -7,6 +7,7 @@ import { AuthStackParamList } from '@types/navigations';
 import { useAnalytics } from '@hooks/index';
 
 import useStyle from './style';
+
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
 const Registration: React.FC<Props> = () => {
