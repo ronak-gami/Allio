@@ -9,6 +9,7 @@ const useStyle = () => {
       paddingHorizontal: width * 0.05,
       alignItems: 'center',
       justifyContent: 'center',
+      paddingVertical: width * 0.04,
     },
     content: {
       flexDirection: 'row',
