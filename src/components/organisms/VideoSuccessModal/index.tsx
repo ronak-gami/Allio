@@ -15,12 +15,8 @@ interface VideoAsset {
 
 interface VideoSuccessModalProps {
   visible: boolean;
-  videoAsset: VideoAsset | null;
+  videoAsset?: VideoAsset | null;
   onClose?: () => void;
-  formatFileSize?: (size?: number) => string;
-  formatDuration?: (duration?: number) => string;
-  getFormattedResolution?: (asset: VideoAsset | null) => string;
-  getVideoFileName?: (asset: VideoAsset | null) => string;
   hasValidVideoAsset: boolean;
 }
 

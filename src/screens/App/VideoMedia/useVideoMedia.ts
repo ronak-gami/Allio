@@ -12,6 +12,7 @@ import IMGLYEditor, {
   SourceType,
 } from '@imgly/editor-react-native';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import { LICENSE_KEY } from '@utils/constant';
 
 interface VideoAsset {
   uri: string;
@@ -97,8 +98,7 @@ const useVideoMedia = () => {
         return;
       }
       const settings = new EditorSettingsModel({
-        license:
-          'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v',
+        license: LICENSE_KEY,
       });
       const source = {
         source: videoUri,
