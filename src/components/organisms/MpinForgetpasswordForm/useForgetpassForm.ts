@@ -9,12 +9,12 @@ export const useForgotPassword = (
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
   const navigation = useNavigation();
-  const [showOtpBox, setShowOtpBox] = useState(false);
-  const [otp, setOtp] = useState('');
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
-  const [Email, setEmail] = useState('');
-  const [resendTimer, setResendTimer] = useState(56);
+  const [showOtpBox, setShowOtpBox] = useState<boolean>(false);
+  const [otp, setOtp] = useState<string>('');
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
+  const [isSubmittingEmail, setIsSubmittingEmail] = useState<boolean>(false);
+  const [Email, setEmail] = useState<string>('');
+  const [resendTimer, setResendTimer] = useState<number>(56);
 
   const startResendTimer = () => {
     setResendTimer(59);
@@ -70,7 +70,7 @@ export const useForgotPassword = (
     }
   };
 
-  const handleOTPVerify = async (values: { email: string }) => {
+  const handleOTPVerify = async () => {
     try {
       setIsVerifying(true);
       const response = await axios.post(`${BASE_URL}/validate-otp`, {

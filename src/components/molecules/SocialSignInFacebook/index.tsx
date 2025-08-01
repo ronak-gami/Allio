@@ -11,7 +11,7 @@ import SocialButton from '../socialButton';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { checkUserExistsByEmail } from '@utils/helper';
 import { ICONS } from '@assets/index';
-
+import messaging from '@react-native-firebase/messaging';
 interface SignInWithFacebookProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -24,7 +24,7 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
   const handleFacebookLogin = async () => {
     setLoading(true);
     try {
-      const result = await LoginManager.logInWithPermissions([
+      const result = await LoginManager?.logInWithPermissions([
         'public_profile',
         'email',
       ]);
@@ -35,13 +35,14 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
       if (!data) {
         throw new Error('Something went wrong obtaining access token');
       }
-      const facebookCredential = FacebookAuthProvider.credential(
+      const facebookCredential = FacebookAuthProvider?.credential(
         data.accessToken,
       );
       const userCredential = await signInWithCredential(
         getAuth(),
         facebookCredential,
       );
+      console.log('user', userCredential);
       const user = userCredential.user;
       const token = await user.getIdToken();
       const userExists = await checkUserExistsByEmail(user.email);
@@ -55,6 +56,20 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
       };
       if (!userExists) {
         await firestore().collection('users').doc(user.uid).set(userData);
+      }
+      if (user) {
+        const fcmToken = await messaging()?.getToken();
+        if (fcmToken) {
+          await firestore().collection('users').doc(user.uid).set(
+            {
+              fcmToken,
+              fcmUpdatedAt: firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true },
+          );
+        } else {
+          console.warn('FCM token not available after login.');
+        }
       }
       dispatch(setStateKey({ key: 'token', value: token }));
       dispatch(setStateKey({ key: 'userData', value: userData }));
