@@ -61,6 +61,7 @@ const useStyle = () => {
       marginTop: 10,
       fontSize: scale(15),
     },
+    button: { marginBottom: height * 0.02 },
   });
 };
 export default useStyle;

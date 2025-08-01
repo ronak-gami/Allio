@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+
 import { showError, showSuccess } from '@utils/toast';
 import { checkUserExistsByEmail } from '@utils/helper';
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
 import { BASE_URL } from '@utils/constant';
 
 export const useForgotPassword = (
@@ -10,10 +11,10 @@ export const useForgotPassword = (
 ) => {
   const navigation = useNavigation();
   const [showOtpBox, setShowOtpBox] = useState<boolean>(false);
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState<string>('');
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [isSubmittingEmail, setIsSubmittingEmail] = useState<boolean>(false);
-  const [Email, setEmail] = useState('');
+  const [Email, setEmail] = useState<string>('');
   const [resendTimer, setResendTimer] = useState<number>(56);
 
   const startResendTimer = () => {
@@ -70,7 +71,7 @@ export const useForgotPassword = (
     }
   };
 
-  const handleOTPVerify = async (values: { email: string }) => {
+  const handleOTPVerify = async () => {
     try {
       setIsVerifying(true);
       const response = await axios.post(`${BASE_URL}/validate-otp`, {

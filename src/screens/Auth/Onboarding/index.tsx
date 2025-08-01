@@ -1,11 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  Text,
-  Pressable,
-} from 'react-native';
+import { View, FlatList, TouchableOpacity, Text } from 'react-native';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -17,6 +12,7 @@ import { onboardingData } from '@utils/constant';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@types/navigations';
+import { width } from '@utils/helper';
 
 import useStyle from './style';
 
@@ -46,7 +42,10 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
 
   const handleNext = async () => {
     if (currentIndex < onboardingData.length - 1) {
-      flatListRef.current?.scrollToIndex({ index: currentIndex + 1 });
+      flatListRef.current?.scrollToIndex({
+        index: currentIndex + 1,
+        animated: true,
+      });
       setCurrentIndex(currentIndex + 1);
     } else {
       await AsyncStorage.setItem('onboardingWatched', 'true');
@@ -63,6 +62,12 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
     navigation.replace('Login');
   };
 
+  const getItemLayout = (data: any, index: number) => ({
+    length: width,
+    offset: width * index,
+    index,
+  });
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
@@ -77,27 +82,29 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
         showsHorizontalScrollIndicator={false}
         keyExtractor={item => item.id}
         removeClippedSubviews={false}
+        getItemLayout={getItemLayout}
+        snapToInterval={width}
+        snapToAlignment="start"
+        decelerationRate="fast"
         renderItem={({ item }) => (
           <CustomOnboarding
             image={item.image}
             title={item.title}
             description={item.description}
+            width={width}
           />
         )}
         onMomentumScrollEnd={event => {
-          const index = Math.round(
-            event.nativeEvent.contentOffset.x /
-              event.nativeEvent.layoutMeasurement.width,
-          );
+          const index = Math.round(event.nativeEvent.contentOffset.x / width);
           setCurrentIndex(index);
         }}
       />
 
-      <Pressable style={styles.button} onPress={handleNext}>
+      <TouchableOpacity style={styles.button} onPress={handleNext}>
         <Text style={styles.buttonText}>
           {currentIndex === onboardingData.length - 1 ? 'Get Started' : 'Next'}
         </Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

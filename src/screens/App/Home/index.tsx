@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
 import { useTranslation } from 'react-i18next';
+import { RootState } from '@redux/store';
 
 import Text from '@components/atoms/Text';
 import CustomDropdown from '@components/atoms/Dropdown';
 import Button from '@components/atoms/Button';
-import { RootState } from '@redux/store';
 import { setLanguage } from '@redux/slices/languageSlice';
 import { toggleTheme } from '@redux/slices/ThemeSlice';
 import { languages } from '@utils/helper';

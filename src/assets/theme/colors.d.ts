@@ -6,6 +6,7 @@ type Color = ColorValue;
 export type Theme = {
   dark: boolean;
   colors: {
+    [x: string]: ColorValue | undefined;
     primary: Color;
     lightyellow: Color;
     black: Color;

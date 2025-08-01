@@ -26,6 +26,7 @@
   "mpin_reset_title": "Reset 4-Digit MPIN",
   "mpin_enter_title": "Enter 4-Digit MPIN",
   "mpin_set_title": "Set 4-Digit MPIN",
+  "forgot_mpin": "Forgot MPIN?",
 
   "mpin_reset_subtitle": "Enter your new MPIN to reset your account security",
   "mpin_enter_subtitle": "Enter your MPIN to proceed to the next step",

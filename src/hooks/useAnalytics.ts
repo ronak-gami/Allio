@@ -10,7 +10,6 @@ export type AnalyticsHandlerProps = {
 };
 
 const useAnalytics = ({
-  screenName,
   functionName,
   data,
   login,

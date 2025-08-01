@@ -1,12 +1,14 @@
 import React from 'react';
 import { Pressable, View } from 'react-native';
 import { useTheme, useNavigation } from '@react-navigation/native';
+
 import OTPInput from '@components/atoms/OTPInput';
 import Button from '@components/atoms/Button';
 import Text from '@components/atoms/Text';
+import { HOME } from '@utils/constant';
+
 import useMPINForm from './useMPINForm';
 import useStyle from './style';
-import { HOME } from '@utils/constant';
 
 type MPINFormProps = {
   email?: string;
@@ -86,7 +88,7 @@ const MPINForm: React.FC<MPINFormProps> = ({ resetMpin = false, email }) => {
             <Text
               style={styles.forgotpassText}
               type="semibold"
-              label="forgot_password"
+              label="forgot_mpin"
             />
           </Pressable>
         )}
