@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, ScrollView } from 'react-native';
+import { View, Image } from 'react-native';
 import useStyle from './style';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '@types/navigations';
@@ -22,17 +22,13 @@ const VideoMedia: React.FC<Props> = () => {
     handleSelectVideo,
     handleClear,
     handleEdit,
-    handleCompress,
-    closeModel,
     closeSuccessModal,
     isVideoLoaded,
-    isModalOpen,
     isSuccessModalOpen,
     formatFileSize,
     formatDuration,
     getFormattedResolution,
     getVideoFileName,
-    getEstimatedCompressedSize,
     hasValidVideoAsset,
     saveVisible,
     handleVideoSaveToGallery,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback } from 'react';
 import {
   View,
   Image,
@@ -10,9 +10,12 @@ import useStyle from './style';
 import MPINForm from '@components/organisms/MPINForm';
 import { ICONS } from '@assets/index';
 import { promptAppLock } from '@utils/auth';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { RootState } from '@redux/store';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { HOME } from '@utils/constant';
 
 type MPINScreenRouteParams = {
@@ -26,22 +29,18 @@ const MPINSetupScreen = () => {
   const styles = useStyle();
   const navigation = useNavigation();
   const route = useRoute<RouteProp<MPINScreenRouteParams, 'MPIN'>>();
-
   const { resetMpin, email } = route.params || {};
-  const token = useSelector((s: RootState) => s.auth.token);
-  const isAuth = useSelector(
-    (s: RootState) => s.biometric.isBiometricAuthenticated,
-  );
 
-  useEffect(() => {
-    if (token && !isAuth && !resetMpin) {
+  useFocusEffect(
+    useCallback(() => {
+      // Always call promptAppLock on focus
       promptAppLock().then(success => {
         if (success) {
           navigation.replace(HOME.HomeTabs);
         }
       });
-    }
-  }, [token, isAuth, navigation, resetMpin]);
+    }, [navigation]),
+  );
 
   return (
     <KeyboardAvoidingView

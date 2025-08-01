@@ -28,7 +28,6 @@ const useVideoMedia = () => {
   const [videoAsset, setVideoAsset] = useState<VideoAsset | null>(null);
   const [model, setModel] = useState<Boolean>(false);
   const [saveVisible, setSaveVisible] = useState<Boolean>(false);
-  // Add new state for success modal
   const [successModal, setSuccessModal] = useState<Boolean>(false);
 
   useEffect(() => {
@@ -129,17 +128,11 @@ const useVideoMedia = () => {
       await CameraRoll.save(uri, { type: 'video' });
       console.log('Save successfully');
       setSaveVisible(false);
-      // Show success modal after successful save
       setSuccessModal(true);
     } catch (error) {
       console.error('Error saving video to gallery:', error);
       // You might want to show an error modal here too
     }
-  };
-
-  // Close success modal
-  const closeSuccessModal = () => {
-    setSuccessModal(false);
   };
 
   // Handle record video
@@ -260,6 +253,12 @@ const useVideoMedia = () => {
   const handleClear = () => {
     setVideoUri(null);
     setVideoAsset(null);
+  };
+
+  // Close success modal
+  const closeSuccessModal = () => {
+    handleClear();
+    setSuccessModal(false);
   };
 
   // Handle compression action
