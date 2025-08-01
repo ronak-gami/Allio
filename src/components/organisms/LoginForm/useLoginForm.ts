@@ -53,23 +53,31 @@ export const useLoginForm = () => {
     await trace.start();
 
     try {
-      const exists = await checkUserExistsByEmail(values.email);
+      // Normalize email and password
+      const email = values.email.trim().toLowerCase();
+      const password = values.password.trim();
+
+      const exists = await checkUserExistsByEmail(email);
       if (!exists) {
         showError('User does not exist!');
         return;
       }
+
       const userCredential = await signInWithEmailAndPassword(
         getAuth(),
-        values.email,
-        values.password,
+        email,
+        password,
       );
-      // Consider dispatching actual user data from userCredential.user here
-      dispatch(setStateKey({ key: 'userData', value: values }));
+
+      // Dispatch user data (use normalized email)
+      dispatch(setStateKey({ key: 'userData', value: { ...values, email } }));
+
       const user = userCredential.user;
       if (user) {
         const token = await user.getIdToken();
         dispatch(setStateKey({ key: 'token', value: token }));
 
+        // Handle FCM Token
         const fcmToken = await messaging().getToken();
         if (fcmToken) {
           await firestore().collection('users').doc(user.uid).set(
@@ -83,20 +91,18 @@ export const useLoginForm = () => {
           console.warn('FCM token not available after login.');
         }
 
-        await analytics().logEvent('login', {
-          method: 'email',
-          email: values.email,
-        });
-
+        // Analytics & Crashlytics
+        await analytics().logEvent('login', { method: 'email', email });
         crashlytics().log('User login successful');
-        crashlytics().setAttribute('email', values.email);
+        crashlytics().setAttribute('email', email);
+
         showSuccess('Login Successful!');
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);
       crashlytics().recordError(error as Error);
-
       crashlytics().log('Error during login');
+
       showError(
         (error as any)?.response?.data?.message ||
           'Login failed. Please try again.',
