@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Modal, FlatList, Image } from 'react-native';
-import Text from '../Text';
+import { useTheme } from '@react-navigation/native';
+
 import { ICONS } from '@assets/index';
 import useStyle from './style';
-import { useTheme } from '@react-navigation/native';
+import Text from '../Text';
 
 interface DropdownProps {
   label: string;

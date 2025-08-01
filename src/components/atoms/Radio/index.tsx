@@ -6,9 +6,9 @@ import {
   GestureResponderEvent,
   ViewStyle,
 } from 'react-native';
+
 import Text from '../Text';
-import styles from './style';
-// import Text from './Text';
+import useStyle from './style';
 
 interface RadioButtonProps {
   label: string;
@@ -27,6 +27,8 @@ const CustomRadioButton: React.FC<RadioButtonProps> = ({
   error,
   containerStyle,
 }) => {
+
+    const styles = useStyle();
   return (
     <View style={containerStyle}>
       <TouchableOpacity

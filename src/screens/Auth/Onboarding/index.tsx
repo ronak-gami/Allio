@@ -1,23 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, FlatList, TouchableOpacity, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
-import useStyle from './style';
+import crashlytics from '@react-native-firebase/crashlytics';
+import perf from '@react-native-firebase/perf';
+import analytics from '@react-native-firebase/analytics';
+
 import CustomOnboarding from '@components/atoms/CustomOnboarding';
 import { onboardingData } from '@utils/constant';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@types/navigations';
 import { width } from '@utils/helper';
-import crashlytics from '@react-native-firebase/crashlytics';
-import perf from '@react-native-firebase/perf';
-import analytics from '@react-native-firebase/analytics';
+
+import useStyle from './style';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Onboarding'>;
 
 const Onboarding: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const flatListRef = useRef<FlatList<any>>(null);
 
   useEffect(() => {

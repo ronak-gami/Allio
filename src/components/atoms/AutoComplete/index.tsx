@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, FlatList, TouchableOpacity, Text } from 'react-native';
+
 import useStyle from './style';
 import Input from '../Input';
 

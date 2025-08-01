@@ -1,16 +1,16 @@
-import auth from '@react-native-firebase/auth';
-import { checkUserExistsByEmail } from '@utils/helper';
 import { useNavigation } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+
+import { checkUserExistsByEmail } from '@utils/helper';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
 import { showError, showSuccess } from '@utils/toast';
 
 export const useForgotPassword = () => {
-
-    const navigation = useNavigation<AuthNavigationProp>();
-    const navigateToLogin = () => {
-        navigation.navigate(AUTH.Login);
-      };
+  const navigation = useNavigation<AuthNavigationProp>();
+  const navigateToLogin = () => {
+    navigation.navigate(AUTH.Login);
+  };
 
   const handleForgotPassword = async (values: { email: string }) => {
     const email = values.email.trim().toLowerCase();
@@ -42,7 +42,5 @@ export const useForgotPassword = () => {
     }
   };
 
-  return { handleForgotPassword ,
-    navigateToLogin
-  };
+  return { handleForgotPassword, navigateToLogin };
 };

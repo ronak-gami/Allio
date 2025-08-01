@@ -1,22 +1,20 @@
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { useTheme } from '@react-navigation/native';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { TabParamList } from '@types/navigations';
+import crashlytics from '@react-native-firebase/crashlytics';
+import perf from '@react-native-firebase/perf';
 import { useTranslation } from 'react-i18next';
-
 import { RootState } from '@redux/store';
+
 import Text from '@components/atoms/Text';
 import CustomDropdown from '@components/atoms/Dropdown';
 import Button from '@components/atoms/Button';
 import { setLanguage } from '@redux/slices/languageSlice';
 import { toggleTheme } from '@redux/slices/ThemeSlice';
 import { languages } from '@utils/helper';
-
-import crashlytics from '@react-native-firebase/crashlytics';
-import perf from '@react-native-firebase/perf';
+import { useTheme } from '@react-navigation/native';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { TabParamList } from '@types/navigations';
 
 import useStyle from './style';
 
@@ -34,7 +32,6 @@ const Home: React.FC<Props> = () => {
   const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
 
   useEffect(() => {
-    // No need for analytics().logScreenView here!
     crashlytics().log('HomeScreen mounted');
     const trace = perf().newTrace('home_screen_load');
     trace.start();

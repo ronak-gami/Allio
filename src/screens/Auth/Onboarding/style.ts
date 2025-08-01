@@ -1,5 +1,7 @@
-import { useTheme } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
+
+import { useTheme } from '@react-navigation/native';
+import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
   const { colors } = useTheme();
@@ -10,28 +12,28 @@ const useStyle = () => {
     },
     button: {
       backgroundColor: colors.primary,
-      paddingVertical: 12,
-      paddingHorizontal: 24,
+      paddingVertical: scale(10),
+      paddingHorizontal: scale(24),
       borderRadius: 8,
       position: 'absolute',
-      bottom: 50,
-      marginLeft: 30,
+      bottom: scale(35),
+      marginLeft: scale(25),
       alignSelf: 'flex-start',
     },
     buttonText: {
       color: colors.white,
-      fontSize: 18,
+      fontSize: scale(16),
     },
     skipButton: {
       position: 'absolute',
-      bottom: 50,
-      right: 40,
+      bottom: scale(40),
+      right: scale(40),
       zIndex: 1,
       padding: 10,
     },
     skipText: {
       color: colors.primary,
-      fontSize: 16,
+      fontSize: scale(16),
     },
   });
 };

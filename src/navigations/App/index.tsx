@@ -1,11 +1,12 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import TabNavigator from './TabNavigator';
+
 import { HomeStackParamList } from '@types/navigations';
 import MPINSetupScreen from '@screens/App/MPIN';
 import ForgetMPIN from '@screens/App/ForgetMPIN';
 import { HOME } from '@utils/constant';
 
+import TabNavigator from './TabNavigator';
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeNavigator: React.FC = () => {

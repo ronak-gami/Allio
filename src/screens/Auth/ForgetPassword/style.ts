@@ -1,6 +1,7 @@
+import { StyleSheet } from 'react-native';
+
 import { useTheme } from '@react-navigation/native';
 import { width } from '@utils/helper';
-import { StyleSheet } from 'react-native';
 
 const useStyle = () => {
   const { colors } = useTheme();

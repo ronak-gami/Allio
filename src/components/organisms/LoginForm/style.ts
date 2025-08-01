@@ -1,6 +1,7 @@
+import { StyleSheet } from 'react-native';
+
 import { useTheme } from '@react-navigation/native';
 import { height } from '@utils/helper';
-import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
@@ -24,6 +25,7 @@ const useStyle = () => {
       flex: 1,
       justifyContent: 'center',
       paddingHorizontal: scale(10),
+      paddingVertical: height * 0.15,
     },
     logo: {
       width: scale(200),
@@ -70,7 +72,6 @@ const useStyle = () => {
     },
 
     dividerText: {
-      // paddingHorizontal: scale(15),
       color: colors.primary,
       fontSize: scale(16),
       justifyContent: 'center',
