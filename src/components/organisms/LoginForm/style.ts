@@ -25,6 +25,7 @@ const useStyle = () => {
       flex: 1,
       justifyContent: 'center',
       paddingHorizontal: scale(10),
+      paddingVertical: height * 0.15,
     },
     logo: {
       width: scale(200),

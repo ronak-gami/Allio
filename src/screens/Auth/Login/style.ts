@@ -9,7 +9,6 @@ const useStyle = () => {
     container: {
       flex: 1,
       backgroundColor: colors.background,
-      paddingVertical: width * 0.25,
     },
     contentContainer: {
       justifyContent: 'center',

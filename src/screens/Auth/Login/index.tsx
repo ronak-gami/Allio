@@ -17,7 +17,7 @@ const Login: React.FC<Props> = () => {
   return (
     <>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.container}>
         <ScrollView contentContainerStyle={styles.contentContainer}>
           <LoginForm setLoading={setLoading} />

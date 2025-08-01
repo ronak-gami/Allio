@@ -12,6 +12,7 @@ const useStyle = () => {
       justifyContent: 'center',
       paddingHorizontal: scale(10),
       paddingVertical: width * 0.11,
+      
     },
     title: {
       fontSize: scale(34),
