@@ -20,9 +20,8 @@
   "field_min": "{{field}} must be at least {{min}} characters",
   "email_valid": "Please enter valid {{field}} address",
   "mobile_pattern": "{{field}} must be 10 digits",
-  "password_pattern": "{{field}} must contain at least one uppercase letter, one lowercase letter, and one number",
+  "password_pattern": "{{field}} must contain at least one uppercase letter, one lowercase letter and one number",
   "confirm_password_match": "Passwords must match",
-
   "mpin_reset_title": "Reset 4-Digit MPIN",
   "mpin_enter_title": "Enter 4-Digit MPIN",
   "mpin_set_title": "Set 4-Digit MPIN",

@@ -4,9 +4,15 @@ import {
   MediaType,
   ImagePickerResponse,
 } from 'react-native-image-picker';
-import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { useEffect, useState } from 'react';
 import { handleVideoPermissions } from '@utils/helper';
+import IMGLYEditor, {
+  EditorPreset,
+  EditorSettingsModel,
+  SourceType,
+} from '@imgly/editor-react-native';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import { LICENSE_KEY } from '@utils/constant';
 
 interface VideoAsset {
   uri: string;
@@ -20,16 +26,114 @@ interface VideoAsset {
 
 const useVideoMedia = () => {
   const [videoUri, setVideoUri] = useState<string | null>(null);
-  const [editable, setEditable] = useState<Boolean>(false);
-  const [model, setModel] = useState<Boolean>(false);
+  const [videoAsset, setVideoAsset] = useState<VideoAsset | null>(null);
+  const [model, setModel] = useState<boolean>(false);
+  const [saveVisible, setSaveVisible] = useState<boolean>(false);
+  const [successModal, setSuccessModal] = useState<boolean>(false);
 
   useEffect(() => {
     handleVideoPermissions('all');
   }, []);
 
+  // Format file size helper function
+  const formatFileSize = (bytes?: number): string => {
+    if (!bytes) {
+      return 'Unknown';
+    }
+    const mb = bytes / 1024 / 1024;
+    return mb < 1 ? `${(bytes / 1024).toFixed(1)} KB` : `${mb.toFixed(1)} MB`;
+  };
+
+  // Format duration helper function
+  const formatDuration = (seconds?: number): string => {
+    if (!seconds) {
+      return 'Unknown';
+    }
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return mins > 0
+      ? `${mins}:${secs.toString().padStart(2, '0')}`
+      : `${secs}s`;
+  };
+
+  // Get formatted resolution
+  const getFormattedResolution = (asset?: VideoAsset | null): string => {
+    if (!asset || !asset.width || !asset.height) {
+      return 'Unknown';
+    }
+    return `${asset.width}×${asset.height}`;
+  };
+
+  // Get video file name
+  const getVideoFileName = (asset?: VideoAsset | null): string => {
+    return asset?.fileName || 'Video File';
+  };
+
+  // Calculate estimated compressed size
+  const getEstimatedCompressedSize = (asset?: VideoAsset | null): string => {
+    if (!asset?.fileSize) {
+      return 'Unknown';
+    }
+    return formatFileSize(asset.fileSize * 0.6);
+  };
+
+  // Check if video asset exists and has valid data
+  const hasValidVideoAsset = (): boolean => {
+    return videoAsset !== null && videoAsset !== undefined && !!videoAsset.uri;
+  };
+
+  const saveStateData = (uri: string) => {
+    setSaveVisible(true);
+    setVideoUri(uri);
+    setVideoAsset(prevAsset => (prevAsset ? { ...prevAsset, uri } : { uri }));
+  };
+
+  // Single Edit function that opens Creative Video Editor
+  const handleEdit = async () => {
+    try {
+      if (!videoUri) {
+        console.error(
+          'No video selected. Please select or record a video first.',
+        );
+        return;
+      }
+      const settings = new EditorSettingsModel({
+        license: LICENSE_KEY,
+      });
+      const source = {
+        source: videoUri,
+        type: SourceType.VIDEO,
+      };
+      const result = await IMGLYEditor?.openEditor(
+        settings,
+        source,
+        EditorPreset.VIDEO,
+      );
+      if (result && result?.artifact) {
+        saveStateData(result?.artifact);
+      }
+      return result?.artifact;
+    } catch (error) {
+      console.error('Error opening Creative Video Editor:', error);
+      throw error;
+    }
+  };
+
+  // Updated handleVideoSaveToGallery function to show success modal
+  const handleVideoSaveToGallery = async (uri: any) => {
+    try {
+      await CameraRoll.save(uri, { type: 'video' });
+      setSaveVisible(false);
+      setSuccessModal(true);
+    } catch (error) {
+      console.error('Error saving video to gallery:', error);
+      // You might want to show an error modal here too
+    }
+  };
+
+  // Handle record video
   const handleRecordVideo = async () => {
     try {
-      console.log('Checking permissions and launching camera...');
       const permissionResult = await handleVideoPermissions('all');
 
       if (!permissionResult.canRecordVideo) {
@@ -48,7 +152,6 @@ const useVideoMedia = () => {
 
       launchCamera(cameraOptions, (response: ImagePickerResponse) => {
         if (response.didCancel) {
-          console.log('User cancelled the camera.');
           return;
         }
         if (response.errorMessage) {
@@ -60,9 +163,17 @@ const useVideoMedia = () => {
           response.assets.length > 0 &&
           response.assets[0].uri
         ) {
-          const uri = response.assets[0].uri;
-          console.log('Video captured successfully. URI:', uri);
-          setVideoUri(uri);
+          const asset = response.assets[0];
+          setVideoUri(asset.uri);
+          setVideoAsset({
+            uri: asset.uri,
+            fileName: asset.fileName,
+            fileSize: asset.fileSize,
+            duration: asset.duration,
+            type: asset.type,
+            width: asset.width,
+            height: asset.height,
+          });
         } else {
           console.error('No video was recorded.');
         }
@@ -75,9 +186,9 @@ const useVideoMedia = () => {
     }
   };
 
+  // Handle select video from gallery
   const handleSelectVideo = async () => {
     try {
-      console.log('Checking permissions and launching gallery...');
       const permissionResult = await handleVideoPermissions('storage');
 
       if (!permissionResult.canAccessGallery) {
@@ -94,7 +205,6 @@ const useVideoMedia = () => {
 
       launchImageLibrary(galleryOptions, (response: ImagePickerResponse) => {
         if (response.didCancel) {
-          console.log('User cancelled gallery selection.');
           return;
         }
         if (response.errorMessage) {
@@ -106,9 +216,17 @@ const useVideoMedia = () => {
           response.assets.length > 0 &&
           response.assets[0].uri
         ) {
-          const uri = response.assets[0].uri;
-          console.log('Video selected successfully. URI:', uri);
-          setVideoUri(uri);
+          const asset = response.assets[0];
+          setVideoUri(asset.uri);
+          setVideoAsset({
+            uri: asset.uri,
+            fileName: asset.fileName,
+            fileSize: asset.fileSize,
+            duration: asset.duration,
+            type: asset.type,
+            width: asset.width,
+            height: asset.height,
+          });
         } else {
           console.error('No video was selected.');
         }
@@ -121,67 +239,74 @@ const useVideoMedia = () => {
     }
   };
 
-  const saveVideoToGallery = async (uri: string): Promise<void> => {
-    try {
-      console.log('Attempting to save video to gallery...');
-      const permissionResult = await handleVideoPermissions('storage');
-      if (!permissionResult.canSaveVideos) {
-        console.error(
-          'Permission Error: Storage permission is required to save videos.',
-        );
-        return;
-      }
-      await CameraRoll.save(uri, { type: 'video' });
-      console.log('Video saved to gallery successfully.');
-    } catch (error) {
-      console.error('Failed to save video to gallery:', error);
-    }
-  };
-
-  const getVideoInfo = (video: VideoAsset): string => {
-    const size = video.fileSize
-      ? `${(video.fileSize / 1024 / 1024).toFixed(2)} MB`
-      : 'Unknown size';
-    const duration = video.duration
-      ? `${Math.round(video.duration)}s`
-      : 'Unknown duration';
-    const dimensions =
-      video.width && video.height
-        ? `${video.width}x${video.height}`
-        : 'Unknown dimensions';
-    return `📁 ${
-      video.fileName || 'video.mp4'
-    }\n📏 ${size}\n⏱️ ${duration}\n📐 ${dimensions}`;
-  };
-
+  // Handle clear video
   const handleClear = () => {
     setVideoUri(null);
-    setEditable(false);
+    setVideoAsset(null);
   };
 
-  const handleEdit = () => {
-    setEditable(true);
+  // Close success modal
+  const closeSuccessModal = () => {
+    handleClear();
+    setSuccessModal(false);
   };
 
-  const openModel = () => {
+  // Handle compression action
+  const handleCompress = () => {
     setModel(true);
   };
+
+  // Close modal
   const closeModel = () => {
     setModel(false);
   };
 
+  // Check if video is loaded
+  const isVideoLoaded = (): boolean => {
+    return !!videoUri;
+  };
+
+  // Check if modal is open
+  const isModalOpen = (): boolean => {
+    return !!model;
+  };
+
+  // Check if success modal is open
+  const isSuccessModalOpen = (): boolean => {
+    return !!successModal;
+  };
+
   return {
+    // States
     videoUri,
+    videoAsset,
+    model,
+
+    // Video actions
     handleRecordVideo,
     handleSelectVideo,
-    saveVideoToGallery,
-    getVideoInfo,
     handleClear,
     handleEdit,
-    editable,
-    openModel,
+    saveVisible,
+    handleVideoSaveToGallery,
+
+    // Modal actions
+    handleCompress,
     closeModel,
-    model,
+    closeSuccessModal,
+
+    // Utility functions
+    formatFileSize,
+    formatDuration,
+    getFormattedResolution,
+    getVideoFileName,
+    getEstimatedCompressedSize,
+
+    // Status checkers
+    hasValidVideoAsset,
+    isVideoLoaded,
+    isModalOpen,
+    isSuccessModalOpen,
   };
 };
 

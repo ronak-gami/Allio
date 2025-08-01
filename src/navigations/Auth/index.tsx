@@ -7,14 +7,19 @@ import LoginScreen from '@screens/Auth/Login';
 import RegisterScreen from '@screens/Auth/Registration';
 import ForgotPassword from '@screens/Auth/ForgetPassword';
 import { AuthStackParamList } from '@types/navigations';
+import { useSelector } from 'react-redux';
+import { RootState } from '@redux/store';
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthNavigator: React.FC = () => {
+  const onboarding = useSelector(
+    (state: RootState) => state.auth.onboardingCompleted,
+  );
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={AUTH.Onboarding}>
+      initialRouteName={onboarding ? AUTH.Onboarding : AUTH.Login}>
       <Stack.Screen name={AUTH.Splash} component={SplashScreen} />
       <Stack.Screen name={AUTH.Onboarding} component={OnboardingScreen} />
       <Stack.Screen name={AUTH.Login} component={LoginScreen} />

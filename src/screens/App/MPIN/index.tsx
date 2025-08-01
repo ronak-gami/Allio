@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   View,
   Image,
@@ -6,16 +6,20 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-
-import { RootState } from '@redux/store';
-import MPINForm from '@components/organisms/MPINForm';
-import { promptAppLock } from '@utils/auth';
-import { HOME } from '@utils/constant';
-import { ICONS } from '@assets/index';
-
 import useStyle from './style';
+import MPINForm from '@components/organisms/MPINForm';
+import { ICONS } from '@assets/index';
+import { promptAppLock } from '@utils/auth';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import { HOME } from '@utils/constant';
+import { useSelector } from 'react-redux';
+import { RootState } from '@redux/store';
+import { checkIfMPINExists } from '@utils/helper';
 
 type MPINScreenRouteParams = {
   MPIN: {
@@ -28,22 +32,37 @@ const MPINSetupScreen = () => {
   const styles = useStyle();
   const navigation = useNavigation();
   const route = useRoute<RouteProp<MPINScreenRouteParams, 'MPIN'>>();
-
   const { resetMpin, email } = route.params || {};
-  const token = useSelector((s: RootState) => s.auth.token);
+  const userData = useSelector((state: RootState) => state.auth.userData);
   const isAuth = useSelector(
     (s: RootState) => s.biometric.isBiometricAuthenticated,
   );
 
-  useEffect(() => {
-    if (token && !isAuth && !resetMpin) {
-      promptAppLock().then(success => {
-        if (success) {
-          navigation.replace(HOME.HomeTabs);
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     promptAppLock().then(success => {
+  //       if (success) {
+  //         navigation.replace(HOME.HomeTabs);
+  //       }
+  //     });
+  //   }, [navigation, email]),
+  // );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const verifyMPIN = async () => {
+        if (!userData?.email) return;
+        const mpinExist = await checkIfMPINExists(userData.email);
+        if (mpinExist && !resetMpin) {
+          const success = await promptAppLock();
+          if (success) {
+            navigation.replace(HOME.HomeTabs);
+          }
         }
-      });
-    }
-  }, [token, isAuth, navigation, resetMpin]);
+      };
+      verifyMPIN();
+    }, [userData?.email, navigation, resetMpin]),
+  );
 
   return (
     <KeyboardAvoidingView

@@ -5,8 +5,7 @@ import ReactNativeBiometrics from 'react-native-biometrics';
 export const promptAppLock = async (): Promise<boolean> => {
   const rn = new ReactNativeBiometrics();
   try {
-    const { available, biometryType } = await rn.isSensorAvailable();
-    console.log('Biometry type:', biometryType);
+    const { available } = await rn.isSensorAvailable();
     if (!available) {
       throw new Error('No biometric available');
     }

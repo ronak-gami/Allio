@@ -10,13 +10,12 @@ import messaging from '@react-native-firebase/messaging';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
-import { setStateKey, logout as reduxLogout } from '@redux/slices/AuthSlice'; 
+import { setStateKey, logout as reduxLogout } from '@redux/slices/AuthSlice';
 import { checkUserExistsByEmail } from '@utils/helper';
 import useValidation from '@utils/validationSchema';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
 import { showError, showSuccess } from '@utils/toast';
-
 
 export const useLoginForm = () => {
   const [remember, setRemember] = useState(false);
@@ -42,7 +41,6 @@ export const useLoginForm = () => {
         .collection('deviceTokens')
         .doc(token)
         .delete();
-      console.log('FCM token removed successfully for user:', userId);
     } catch (error) {
       console.error('Error removing FCM token:', error);
       crashlytics().recordError(error as Error);
@@ -60,19 +58,13 @@ export const useLoginForm = () => {
         showError('User does not exist!');
         return;
       }
-      const auth = getAuth();
-
-      console.log('Signing in user', values.email);
       const userCredential = await signInWithEmailAndPassword(
-        auth,
+        getAuth(),
         values.email,
         values.password,
       );
-      console.log('Sign in result', userCredential);
-
       // Consider dispatching actual user data from userCredential.user here
       dispatch(setStateKey({ key: 'userData', value: values }));
-
       const user = userCredential.user;
       if (user) {
         const token = await user.getIdToken();
@@ -126,7 +118,6 @@ export const useLoginForm = () => {
         const fcmToken = await messaging().getToken();
         if (fcmToken) {
           await removeDeviceToken(currentUser.uid, fcmToken);
-          console.log('token remove successfully');
         } else {
           console.warn('FCM token not available during logout.');
         }

@@ -35,7 +35,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
       animationType="fade"
       visible={visible}
       onRequestClose={onClose}>
-      <View style={[styles.overlay, { backgroundColor: colors.modalbg }]}>
+      <View style={[styles.overlay, { backgroundColor: colors.modelbg }]}>
         <View style={[styles.card, { backgroundColor: colors.text }]}>
           {onClose && (
             <TouchableOpacity

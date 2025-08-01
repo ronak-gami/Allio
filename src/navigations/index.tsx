@@ -11,6 +11,7 @@ import i18n from '../assets/i18n';
 import { DefaultTheme } from '@react-navigation/native';
 import colors from '@assets/theme';
 import analytics from '@react-native-firebase/analytics';
+
 const lightTheme = {
   ...DefaultTheme,
   dark: false,
