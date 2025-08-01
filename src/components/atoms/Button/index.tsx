@@ -11,7 +11,6 @@ import Text from '../Text';
 import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
 import { Color } from '@assets/theme/colors';
-import { height } from '@utils/helper';
 
 interface ButtonProps extends GestureResponderHandlers {
   title: string;
@@ -50,7 +49,6 @@ const Button: React.FC<ButtonProps> = ({
     styles.button,
     {
       backgroundColor: isOutline ? 'transparent' : colors.primary,
-      paddingVertical: height * 0.02,
     },
     !isOutline && bgColor && { backgroundColor: bgColor },
     isOutline && {
