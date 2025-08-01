@@ -1,4 +1,4 @@
-import { Dimensions, Platform } from 'react-native';
+import { Dimensions, PermissionsAndroid, Platform } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {
   PERMISSIONS,
@@ -9,10 +9,21 @@ import {
   checkMultiple,
 } from 'react-native-permissions';
 
+type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
+
+interface AndroidPermissionResult {
+  granted: boolean;
+  results: Record<string, PermissionStatus>;
+  error?: string;
+  canRecordVideo: boolean;
+  canAccessGallery: boolean;
+  canSaveVideos: boolean;
+}
+
 const height = Dimensions.get('screen').height;
 const width = Dimensions.get('screen').width;
 
-export const FONTS: Record<string, string> = {
+const FONTS: Record<string, string> = {
   black: 'Montserrat-Black',
   bold: 'Montserrat-Bold',
   extraBold: 'Montserrat-ExtraBold',
@@ -79,21 +90,10 @@ const languages = [
   { label: 'ગુજરાતી', value: 'gu' },
 ];
 
-export type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
-
-export interface AndroidPermissionResult {
-  granted: boolean;
-  results: Record<string, PermissionStatus>;
-  error?: string;
-  canRecordVideo: boolean;
-  canAccessGallery: boolean;
-  canSaveVideos: boolean;
-}
-
 const getAndroidPermissions = (
   permissionType: AndroidPermissionType,
 ): Permission[] => {
-  const isApiLevel33OrHigher = Platform.Version >= 33;
+  const isApiLevel33OrHigher = Platform.Version >= '33';
 
   const cameraPermissions = [
     PERMISSIONS.ANDROID.CAMERA,
@@ -119,7 +119,7 @@ const getAndroidPermissions = (
   }
 };
 
-export const handleVideoPermissions = async (
+const handleVideoPermissions = async (
   type: AndroidPermissionType = 'all',
   autoRequest: boolean = true,
 ): Promise<AndroidPermissionResult> => {
@@ -154,7 +154,7 @@ export const handleVideoPermissions = async (
         ? has(PERMISSIONS.ANDROID.READ_MEDIA_VIDEO)
         : has(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE),
       canSaveVideos: isApiLevel33OrHigher
-        ? true // WRITE_EXTERNAL_STORAGE is not needed to save to gallery on API 33+
+        ? true
         : has(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE),
     });
 
@@ -203,11 +203,29 @@ export const handleVideoPermissions = async (
   }
 };
 
+const requestUserPermission = async () => {
+  try {
+    const granted: 'granted' | 'denied' | 'never_ask_again' =
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+    } else {
+      console.log('Notification permission denied');
+    }
+  } catch (error: any) {
+    console.error('Failed to request notification permission:', error);
+  }
+};
+
 export {
   height,
   width,
   getAllUsers,
   checkUserExistsByEmail,
+  requestUserPermission,
   updateUserInFirestore,
+  handleVideoPermissions,
   languages,
+  FONTS,
 };

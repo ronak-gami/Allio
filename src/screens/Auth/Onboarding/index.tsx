@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, FlatList, TouchableOpacity, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
 import useStyle from './style';
@@ -8,6 +8,9 @@ import { setStateKey } from '@redux/slices/AuthSlice';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@types/navigations';
 import { width } from '@utils/helper';
+import crashlytics from '@react-native-firebase/crashlytics';
+import perf from '@react-native-firebase/perf';
+import analytics from '@react-native-firebase/analytics';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Onboarding'>;
 
@@ -16,6 +19,15 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList<any>>(null);
+
+  useEffect(() => {
+    crashlytics().log('OnboardingScreen mounted');
+    const trace = perf().newTrace('onboarding_screen_load');
+    trace.start();
+    return () => {
+      trace.stop();
+    };
+  }, [navigation]);
 
   const handleNext = async () => {
     if (currentIndex < onboardingData.length - 1) {
@@ -26,12 +38,14 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
       setCurrentIndex(currentIndex + 1);
     } else {
       dispatch(setStateKey({ key: 'onboardingCompleted', value: false }));
+      await analytics().logEvent('onboarding_get_started');
       navigation.replace('Login');
     }
   };
 
   const handleSkip = async () => {
     dispatch(setStateKey({ key: 'onboardingCompleted', value: false }));
+    await analytics().logEvent('onboarding_skipped');
     navigation.replace('Login');
   };
 

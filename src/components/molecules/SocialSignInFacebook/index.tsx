@@ -11,6 +11,7 @@ import { setStateKey } from '@redux/slices/AuthSlice';
 import { checkUserExistsByEmail } from '@utils/helper';
 import { ICONS } from '@assets/index';
 import { showError } from '@utils/toast';
+import messaging from '@react-native-firebase/messaging';
 
 interface SignInWithFacebookProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,7 +26,7 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
     setLoading(true);
     try {
       // Step 1: Trigger Facebook login
-      const result = await LoginManager.logInWithPermissions([
+      const result = await LoginManager?.logInWithPermissions([
         'public_profile',
         'email',
       ]);
@@ -41,14 +42,13 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
       }
 
       // Step 3: Create Facebook credential & sign in
-      const facebookCredential = FacebookAuthProvider.credential(
+      const facebookCredential = FacebookAuthProvider?.credential(
         data.accessToken,
       );
       const userCredential = await signInWithCredential(
         getAuth(),
         facebookCredential,
       );
-
       const user = userCredential.user;
       const token = await user.getIdToken();
 
@@ -65,6 +65,23 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
       };
 
       // Step 5: Save token & user data in Redux
+      if (!userExists) {
+        await firestore().collection('users').doc(user.uid).set(userData);
+      }
+      if (user) {
+        const fcmToken = await messaging()?.getToken();
+        if (fcmToken) {
+          await firestore().collection('users').doc(user.uid).set(
+            {
+              fcmToken,
+              fcmUpdatedAt: firestore.FieldValue.serverTimestamp(),
+            },
+            { merge: true },
+          );
+        } else {
+          console.warn('FCM token not available after login.');
+        }
+      }
       dispatch(setStateKey({ key: 'token', value: token }));
       dispatch(setStateKey({ key: 'userData', value: userData }));
     } catch (error: any) {
