@@ -8,6 +8,7 @@ import {
   PermissionStatus,
   checkMultiple,
 } from 'react-native-permissions';
+import { showError } from './toast';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -218,6 +219,32 @@ const requestUserPermission = async () => {
   }
 };
 
+const checkIfMPINExists = async (email: string): Promise<boolean> => {
+  try {
+    const normalizedEmail = email.trim().toLowerCase();
+    const snapshot = await firestore()
+      .collection('users')
+      .where('email', '==', normalizedEmail)
+      .limit(1)
+      .get();
+
+    if (!snapshot.empty) {
+      const doc = snapshot.docs[0];
+      const data = doc.data();
+
+      if (data?.mpinSet && data?.mpin) {
+        return true;
+      }
+    } else {
+      console.error('Error', 'User not found in Firestore');
+    }
+    return false;
+  } catch (error: any) {
+    showError('Failed to check MPIN');
+    return false;
+  }
+};
+
 export {
   height,
   width,
@@ -228,4 +255,5 @@ export {
   handleVideoPermissions,
   languages,
   FONTS,
+  checkIfMPINExists,
 };

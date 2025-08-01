@@ -47,7 +47,7 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
     }
   }, [userData?.email, email, resetMpin]);
 
-  const checkIfMPINExists = async (email: string) => {
+  const checkIfMPINExists = async (email: string): Promise<boolean> => {
     try {
       setLoading(true);
       const normalizedEmail = email.trim().toLowerCase();
@@ -65,12 +65,15 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
         if (data?.mpinSet && data?.mpin) {
           setIsExistingUser(true);
           setStoredEncryptedMPIN(data.mpin);
+          return true;
         }
       } else {
         Alert.alert('Error', 'User not found in Firestore');
       }
+      return false;
     } catch (error: any) {
       showError('Failed to check MPIN');
+      return false;
     } finally {
       setLoading(false);
     }

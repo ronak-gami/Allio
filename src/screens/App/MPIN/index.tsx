@@ -17,6 +17,7 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { HOME } from '@utils/constant';
+import { checkIfMPINExists } from '@utils/helper';
 
 type MPINScreenRouteParams = {
   MPIN: {
@@ -33,13 +34,17 @@ const MPINSetupScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      // Always call promptAppLock on focus
-      promptAppLock().then(success => {
-        if (success) {
-          navigation.replace(HOME.HomeTabs);
+      const checkMPINAndPrompt = async () => {
+        const mpinExist = await checkIfMPINExists(email);
+        if (mpinExist) {
+          const success = await promptAppLock();
+          if (success) {
+            navigation.replace(HOME.HomeTabs);
+          }
         }
-      });
-    }, [navigation]),
+      };
+      checkMPINAndPrompt();
+    }, [navigation, email]),
   );
 
   return (
