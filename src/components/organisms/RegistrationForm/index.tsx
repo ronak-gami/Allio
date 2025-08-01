@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
+
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
 import Input from '@components/atoms/Input';
 import useRegister from './useRegisterForm';
-import useStyle from './style';
-import { useAnalytics } from '@hooks/index';
+import useAnalytics from '@hooks/useAnalytics';
 
+import useStyle from './style';
 const RegistrationForm = () => {
   const styles = useStyle();
   const { track } = useAnalytics({ screenName: 'RegistrationForm' });

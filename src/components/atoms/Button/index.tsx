@@ -7,9 +7,12 @@ import {
   StyleProp,
   GestureResponderHandlers,
 } from 'react-native';
+
+import { useTheme } from '@react-navigation/native';
+import { scale } from 'react-native-size-matters';
+
 import Text from '../Text';
 import useStyle from './style';
-import { useTheme } from '@react-navigation/native';
 import { Color } from '@assets/theme/colors';
 
 interface ButtonProps extends GestureResponderHandlers {

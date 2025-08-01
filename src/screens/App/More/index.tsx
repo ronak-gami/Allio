@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
@@ -9,7 +9,7 @@ import { TabParamList } from '@types/navigations';
 import firestore from '@react-native-firebase/firestore';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { getAuth } from '@react-native-firebase/auth';
-import { logout as reduxLogout } from '@redux/slices/AuthSlice';
+import { logout } from '@redux/slices/AuthSlice';
 
 type Props = BottomTabScreenProps<TabParamList, 'More'>;
 
@@ -19,17 +19,20 @@ const More: React.FC<Props> = () => {
 
   const handleLogout = async () => {
     try {
-      const auth = getAuth();
-      const currentUser = auth.currentUser;
+      const authInstance = getAuth();
+      const currentUser = authInstance.currentUser;
+
       if (currentUser) {
         await firestore().collection('users').doc(currentUser.uid).update({
-          fcmToken: null,
-          fcmUpdatedAt: null,
+          fcmToken: firestore.FieldValue.delete(),
+          fcmUpdatedAt: firestore.FieldValue.delete(),
         });
-        await auth.signOut();
-        dispatch(reduxLogout());
+
+        await authInstance.signOut();
+        dispatch(logout());
       }
     } catch (error) {
+      console.error('Logout Error:', error);
       crashlytics().recordError(error as Error);
     }
   };

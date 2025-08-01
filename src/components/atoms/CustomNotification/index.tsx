@@ -4,36 +4,32 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from 'react';
-import {
-  View,
-  Text,
-  Animated,
-  Dimensions,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
-import useStyle from './style';
+import { Text, Animated, TouchableOpacity, Image } from 'react-native';
+
 import { ICONS } from '@assets/index';
 import { COLORS } from '@utils/color';
 
-interface ToastProps {
-  message: string;
-  type?: 'success' | 'info' | 'error';
-}
+import useStyle from './style';
 
 export interface CustomToastRef {
   show: (message: string, type?: 'success' | 'info' | 'error') => void;
   hide: () => void;
 }
+type NotificationType = 'success' | 'info' | 'error';
 
-const { width } = Dimensions.get('window');
-
+interface NotificationState {
+  isVisible: boolean;
+  message: string;
+  type: NotificationType;
+}
 const CustomNotification = forwardRef<CustomToastRef, {}>(({}, ref) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
   const [message, setMessage] = useState('');
-  const [type, setType] = useState<'success' | 'info' | 'error'>('info');
   const animatedValue = useRef(new Animated.Value(-100)).current;
+  // const [type, setType] = useState<NotificationState>({
 
+  // });
+  const [type, setType] = useState<NotificationType>('info');
   const styles = useStyle();
 
   useImperativeHandle(ref, () => ({
@@ -48,7 +44,6 @@ const CustomNotification = forwardRef<CustomToastRef, {}>(({}, ref) => {
       }).start();
 
       setTimeout(() => {
-        // Ensure ref.current exists before calling hide
         ref.current?.hide();
       }, 5000);
     },
@@ -90,7 +85,6 @@ const CustomNotification = forwardRef<CustomToastRef, {}>(({}, ref) => {
       <TouchableOpacity
         onPress={() => ref.current?.hide()}
         style={styles.closeButton}>
-        {/* Make sure ICONS.Clear is a valid image source */}
         <Image source={ICONS.Clear} style={styles.closeIcon} />
       </TouchableOpacity>
     </Animated.View>
