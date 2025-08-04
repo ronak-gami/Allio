@@ -26,7 +26,11 @@ export type RegistrationValues = {
   confirmPassword: string;
 };
 
-const useRegister = () => {
+type UseRegisterOptions = {
+  onNavigateToLogin?: () => void;
+};
+
+const useRegister = (options?: UseRegisterOptions) => {
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const auth = getAuth();
@@ -62,7 +66,9 @@ const useRegister = () => {
         values.password,
       );
       const user = userCredential.user;
-      if (!user) throw new Error('No user created');
+      if (!user) {
+        throw new Error('No user created');
+      }
 
       const userData = {
         firstName: values.firstName,
@@ -110,7 +116,10 @@ const useRegister = () => {
   };
 
   const navigateToLogin = () => {
-    navigation.navigate(AUTH.Login);
+    if (options?.onNavigateToLogin) {
+      options.onNavigateToLogin();
+    }
+    navigation.replace(AUTH.Login);
   };
 
   return {
