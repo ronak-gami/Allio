@@ -16,6 +16,7 @@
   "no_account": "શું તમારું એકાઉન્ટ નથી?",
   "register": "રજિસ્ટ્રેશન કરો",
   "register_subtitle": "નવું એકાઉન્ટ બનાવવા માટે શરૂ કરો",
+  "forgot_password_subtitle": "પાસવર્ડ રીસેટ લિંક મેળવવા માટે તમારું ઇમેઇલ દાખલ કરો",
   "field_required": "{{field}} જરૂરી છે",
   "field_min": "{{field}} ઓછામાં ઓછા {{min}} અક્ષરોનો હોવો જોઈએ",
   "email_valid": "કૃપા કરીને માન્ય {{field}} એડ્રેસ દાખલ કરો",
@@ -25,6 +26,8 @@
   "mpin_reset_title": "4-અંકનું MPIN રીસેટ કરો",
   "mpin_enter_title": "4-અંકનું MPIN દાખલ કરો",
   "mpin_set_title": "4-અંકનું MPIN સેટ કરો",
+  "social_sign_in": "સોશિયલ મીડિયા સાથે લૉગિન કરો",
+  "mpin_forgot_title": "તમારું MPIN ભૂલી ગયા છો?",
 
   "mpin_reset_subtitle": "તમારું ખાતું સુરક્ષિત કરવા માટે નવું MPIN દાખલ કરો",
   "mpin_enter_subtitle": "આગળ વધવા માટે તમારું MPIN દાખલ કરો",

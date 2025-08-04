@@ -17,7 +17,7 @@ const useNotification = (toastRef: RefObject<CustomToastRef>) => {
   };
 
   useEffect(() => {
-    requestUserPermission();
+    // requestUserPermission();
     getToken();
 
     const unsubscribeOnMessage = messaging().onMessage(

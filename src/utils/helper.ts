@@ -90,22 +90,22 @@ const languages = [
   { label: 'हिंदी', value: 'hi' },
   { label: 'ગુજરાતી', value: 'gu' },
 ];
-  // const requestUserPermission = async () => {
-  //   try {
-  //     const granted: 'granted' | 'denied' | 'never_ask_again' =
-  //       await PermissionsAndroid.request(
-  //         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-  //       );
+// const requestUserPermission = async () => {
+//   try {
+//     const granted: 'granted' | 'denied' | 'never_ask_again' =
+//       await PermissionsAndroid.request(
+//         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+//       );
 
-  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+//     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
 
-  //     } else {
-        
-  //     }
-  //   } catch (error: any) {
-  //     console.error('Failed to request notification permission:', error);
-  //   }
-  // };
+//     } else {
+
+//     }
+//   } catch (error: any) {
+//     console.error('Failed to request notification permission:', error);
+//   }
+// };
 
 const getAndroidPermissions = (
   permissionType: AndroidPermissionType,

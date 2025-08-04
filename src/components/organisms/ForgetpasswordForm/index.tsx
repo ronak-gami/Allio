@@ -34,12 +34,8 @@ const ForgotPasswordScreen: React.FC = () => {
           onSubmit={handleForgotPassword}>
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <View style={style.form}>
-              <Text style={style.title} type="bold">
-                Forgot Password
-              </Text>
-              <Text style={style.subtitle}>
-                Enter your email to receive a password reset link
-              </Text>
+              <Text style={style.title} label="forgot_password" type="bold" />
+              <Text style={style.subtitle} label="forgot_password_subtitle" />
               <Input
                 placeholder="email"
                 keyboardType="email-address"
@@ -58,9 +54,7 @@ const ForgotPasswordScreen: React.FC = () => {
         <View style={style.dividerContainer}>
           <Text label="no_account" style={style.orText} />
           <TouchableOpacity onPress={navigateToLogin}>
-            <Text style={style.loginText} type="semibold">
-              Login{' '}
-            </Text>
+            <Text style={style.loginText} label="login" type="semibold" />
           </TouchableOpacity>
         </View>
       </ScrollView>
