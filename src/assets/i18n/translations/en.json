@@ -46,5 +46,25 @@
   "otp_sent_to": "Enter the OTP sent to",
   "resend_otp": "Resend OTP",
   "resend_otp_in": "Resend in",
-  "verify_otp": "Verify OTP"
+  "verify_otp": "Verify OTP",
+  "choose_from_gallery": "Choose from Gallery",
+  "save": "Save",
+  "edit": "Edit",
+  "cancel": "Cancel",
+  "size": "Size",
+
+  "photoMedia": {
+    "no_image_selected": "No Image Selected",
+    "choose_image_prompt": "Choose an image from your gallery or take a new one",
+    "take_photo": "Take Photo"
+  },
+
+  "videoMedia": {
+    "no_video_selected": "No Video Selected",
+    "choose_video_prompt": "Choose a video from your gallery or record a new one",
+    "record_video": "Record Video",
+
+    "duration": "Duration",
+    "resolution": "Resolution"
+  }
 }

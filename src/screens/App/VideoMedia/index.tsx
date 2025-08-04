@@ -44,7 +44,7 @@ const VideoMedia: React.FC<Props> = () => {
           <>
             <View style={styles.headerView}>
               <CustomChip
-                label={saveVisible ? 'Save' : 'Edit'}
+                label={saveVisible ? 'videoMedia.save' : 'videoMedia.edit'}
                 bgColor={colors.primary}
                 onPress={
                   saveVisible
@@ -53,7 +53,7 @@ const VideoMedia: React.FC<Props> = () => {
                 }
               />
               <CustomChip
-                label="Cancel"
+                label="videoMedia.cancel"
                 outline
                 outlineColor={colors.primary}
                 onPress={handleClear}
@@ -68,7 +68,7 @@ const VideoMedia: React.FC<Props> = () => {
             />
 
             {hasValidVideoAsset() && (
-              <View style={[styles.videoInfoCard]}>
+              <View style={styles.videoInfoCard}>
                 <View style={styles.videoInfoHeader}>
                   <Text type="SEMIBOLD" style={styles.videoTitle}>
                     {getVideoFileName(videoAsset)}
@@ -76,25 +76,29 @@ const VideoMedia: React.FC<Props> = () => {
                 </View>
                 <View style={styles.videoStatsContainer}>
                   <View style={styles.statItem}>
-                    <Text style={styles.statLabel}>Size</Text>
+                    <Text style={styles.statLabel} label="videoMedia.size" />
                     <Text type="SEMIBOLD" style={styles.statValue}>
                       {formatFileSize(videoAsset?.fileSize)}
                     </Text>
                   </View>
                   <View style={styles.statDivider} />
                   <View style={styles.statItem}>
-                    <Text type="REGULAR" style={styles.statLabel}>
-                      Duration
-                    </Text>
+                    <Text
+                      type="REGULAR"
+                      style={styles.statLabel}
+                      label="videoMedia.duration"
+                    />
                     <Text type="SEMIBOLD" style={styles.statValue}>
                       {formatDuration(videoAsset?.duration)}
                     </Text>
                   </View>
                   <View style={styles.statDivider} />
                   <View style={styles.statItem}>
-                    <Text type="REGULAR" style={styles.statLabel}>
-                      Resolution
-                    </Text>
+                    <Text
+                      type="REGULAR"
+                      style={styles.statLabel}
+                      label="videoMedia.resolution"
+                    />
                     <Text type="SEMIBOLD" style={styles.statValue}>
                       {getFormattedResolution(videoAsset)}
                     </Text>
@@ -110,30 +114,31 @@ const VideoMedia: React.FC<Props> = () => {
               style={styles.NoVideoIcon}
               resizeMode="contain"
             />
-            <Text type="BOLD" style={styles.emptyStateTitle}>
-              No Video Selected
-            </Text>
+            <Text
+              type="BOLD"
+              style={styles.emptyStateTitle}
+              label="videoMedia.no_video_selected"
+            />
             <Text
               type="REGULAR"
-              style={[styles.emptyStateSubtitle, { color: colors.text }]}>
-              Choose a video from your gallery or record a new one
-            </Text>
+              label="videoMedia.choose_video_prompt"
+              style={[styles.emptyStateSubtitle, { color: colors.text }]}
+            />
           </View>
         )}
       </View>
 
       {!isVideoLoaded() && (
         <View style={styles.actionButtonContainer}>
-          <Button title="Record Video" onPress={handleRecordVideo} />
+          <Button title="videoMedia.record_video" onPress={handleRecordVideo} />
           <Button
-            title="Choose from Gallery"
+            title="choose_from_gallery"
             onPress={handleSelectVideo}
             outlineColor={colors.primary}
           />
         </View>
       )}
 
-      {/* Success Modal for Video Save */}
       <VideoSuccessModal
         visible={isSuccessModalOpen()}
         onClose={closeSuccessModal}

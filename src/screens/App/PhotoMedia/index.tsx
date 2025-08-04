@@ -97,23 +97,25 @@ const PhotoMedia: React.FC<Props> = () => {
                 style={styles.noGalleryIcon}
                 resizeMode="contain"
               />
-              <Text type="BOLD" style={styles.emptyStateTitle}>
-                No Image Selected
-              </Text>
+              <Text
+                type="BOLD"
+                label="no_image_selected"
+                style={styles.emptyStateTitle}
+              />
               <Text
                 type="REGULAR"
-                style={[styles.emptyStateSubtitle, { color: colors.text }]}>
-                Choose a Image from your gallery or Take a new one
-              </Text>
+                label="choose_image_prompt"
+                style={[styles.emptyStateSubtitle, { color: colors.text }]}
+              />
             </View>
           )}
         </View>
 
         {!isPhotoLoaded() && (
           <View style={styles.actionButtonContainer}>
-            <Button title="Take Photo " onPress={handleCameraOpen} />
+            <Button title="photoMedia.take_photo" onPress={handleCameraOpen} />
             <Button
-              title="Choose from Gallery"
+              title="choose_from_gallery"
               onPress={handleSelectPhoto}
               outlineColor={colors.primary}
             />

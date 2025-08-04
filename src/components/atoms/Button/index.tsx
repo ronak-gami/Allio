@@ -61,7 +61,6 @@ const Button: React.FC<ButtonProps> = ({
     (disabled || loading) && { opacity: 0.45 },
     style,
   ];
-
   let currentTextColor = colors.black;
   if (textColor) {
     currentTextColor = textColor;
