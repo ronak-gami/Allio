@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, ScrollView } from 'react-native';
 import useStyle from './style';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '@types/navigations';
@@ -38,7 +38,9 @@ const VideoMedia: React.FC<Props> = () => {
   const { colors } = useTheme();
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}>
       <View style={isVideoLoaded() ? styles.content : styles.contentNone}>
         {isVideoLoaded() ? (
           <>
@@ -139,7 +141,7 @@ const VideoMedia: React.FC<Props> = () => {
         onClose={closeSuccessModal}
         hasValidVideoAsset={hasValidVideoAsset()}
       />
-    </View>
+    </ScrollView>
   );
 };
 

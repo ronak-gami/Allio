@@ -7,8 +7,10 @@ const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
     container: {
-      flex: 1,
       backgroundColor: colors.background,
+    },
+    contentContainer: {
+      flex: 1,
     },
     content: {
       flex: 1,
