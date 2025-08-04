@@ -17,9 +17,29 @@ const api = {
         method: 'post',
         url: '/get-media',
         data,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      }),
+  },
+
+  MPIN: {
+    sendOtp: ({ data }: { data: { email: string } }) =>
+      client({
+        method: 'post',
+        url: '/send-otp',
+        data,
+      }),
+
+    validateOtp: ({ data }: { data: { email: string; otp: string } }) =>
+      client({
+        method: 'post',
+        url: '/validate-otp',
+        data,
+      }),
+
+    setNewMpin: ({ data }: { data: { email: string; newMpin: string } }) =>
+      client({
+        method: 'post',
+        url: '/set-new-mpin',
+        data,
       }),
   },
 };
