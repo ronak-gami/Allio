@@ -5,7 +5,6 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 import { CustomToastRef } from '@components/atoms/CustomNotification';
-import { requestUserPermission } from '@utils/helper';
 
 const useNotification = (toastRef: RefObject<CustomToastRef>) => {
   const getToken = async () => {
@@ -17,7 +16,7 @@ const useNotification = (toastRef: RefObject<CustomToastRef>) => {
   };
 
   useEffect(() => {
-    // requestUserPermission();
+ 
     getToken();
 
     const unsubscribeOnMessage = messaging().onMessage(
