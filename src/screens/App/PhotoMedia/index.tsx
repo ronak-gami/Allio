@@ -99,12 +99,12 @@ const PhotoMedia: React.FC<Props> = () => {
               />
               <Text
                 type="BOLD"
-                label="no_image_selected"
+                label="photoMedia.no_image_selected"
                 style={styles.emptyStateTitle}
               />
               <Text
                 type="REGULAR"
-                label="choose_image_prompt"
+                label="photoMedia.choose_image_prompt"
                 style={[styles.emptyStateSubtitle, { color: colors.text }]}
               />
             </View>
