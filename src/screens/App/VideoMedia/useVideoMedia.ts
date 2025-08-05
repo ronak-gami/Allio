@@ -11,8 +11,10 @@ import IMGLYEditor, {
   EditorSettingsModel,
   SourceType,
 } from '@imgly/editor-react-native';
-import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { LICENSE_KEY } from '@utils/constant';
+import api from '@api/index';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchVideos } from '@redux/slices/MediaSlice';
 
 interface VideoAsset {
   uri: string;
@@ -25,17 +27,38 @@ interface VideoAsset {
 }
 
 const useVideoMedia = () => {
+  const dispatch = useDispatch();
   const [videoUri, setVideoUri] = useState<string | null>(null);
   const [videoAsset, setVideoAsset] = useState<VideoAsset | null>(null);
-  const [model, setModel] = useState<boolean>(false);
   const [saveVisible, setSaveVisible] = useState<boolean>(false);
-  const [successModal, setSuccessModal] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [previewModal, setPreviewModal] = useState<boolean>(false);
+  const [previewVideoUri, setPreviewVideoUri] = useState<string | null>(null);
+  const [previewVideoTitle, setPreviewVideoTitle] = useState<string>('');
+  const { email } = useSelector((state: any) => state.auth.userData);
+  const Videos_data = useSelector((state: any) => state.media.videos);
 
   useEffect(() => {
     handleVideoPermissions('all');
-  }, []);
+    if (email) {
+      dispatch(fetchVideos(email));
+    }
+  }, [dispatch, email]);
 
-  // Format file size helper function
+  const states = {
+    videoUri,
+    setVideoUri,
+    videoAsset,
+    setVideoAsset,
+    loading,
+    setLoading,
+    previewVideoUri,
+    setPreviewVideoTitle,
+    saveVisible,
+    setSaveVisible,
+    previewVideoTitle,
+  };
+
   const formatFileSize = (bytes?: number): string => {
     if (!bytes) {
       return 'Unknown';
@@ -44,7 +67,6 @@ const useVideoMedia = () => {
     return mb < 1 ? `${(bytes / 1024).toFixed(1)} KB` : `${mb.toFixed(1)} MB`;
   };
 
-  // Format duration helper function
   const formatDuration = (seconds?: number): string => {
     if (!seconds) {
       return 'Unknown';
@@ -56,7 +78,6 @@ const useVideoMedia = () => {
       : `${secs}s`;
   };
 
-  // Get formatted resolution
   const getFormattedResolution = (asset?: VideoAsset | null): string => {
     if (!asset || !asset.width || !asset.height) {
       return 'Unknown';
@@ -64,22 +85,12 @@ const useVideoMedia = () => {
     return `${asset.width}×${asset.height}`;
   };
 
-  // Get video file name
   const getVideoFileName = (asset?: VideoAsset | null): string => {
     return asset?.fileName || 'Video File';
   };
 
-  // Calculate estimated compressed size
-  const getEstimatedCompressedSize = (asset?: VideoAsset | null): string => {
-    if (!asset?.fileSize) {
-      return 'Unknown';
-    }
-    return formatFileSize(asset.fileSize * 0.6);
-  };
-
-  // Check if video asset exists and has valid data
   const hasValidVideoAsset = (): boolean => {
-    return videoAsset !== null && videoAsset !== undefined && !!videoAsset.uri;
+    return videoAsset !== null && !!videoAsset.uri;
   };
 
   const saveStateData = (uri: string) => {
@@ -88,58 +99,64 @@ const useVideoMedia = () => {
     setVideoAsset(prevAsset => (prevAsset ? { ...prevAsset, uri } : { uri }));
   };
 
-  // Single Edit function that opens Creative Video Editor
+  const handleSaveMedia = async () => {
+    if (!videoAsset || !videoUri) return;
+
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('fileType', 'video');
+      formData.append('file', {
+        uri: videoUri.startsWith('file://') ? videoUri : `file://${videoUri}`,
+        type: videoAsset.type || 'video/mp4',
+        name: videoAsset.fileName || `video_${Date.now()}.mp4`,
+      });
+
+      const response = await api.MEDIA.upload({
+        data: formData,
+      });
+
+      if (response.data) {
+        dispatch(fetchVideos(email));
+        handleClear();
+      }
+    } catch (error) {
+      console.error('Upload Error:', error.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleEdit = async () => {
     try {
       if (!videoUri) {
-        console.error(
-          'No video selected. Please select or record a video first.',
-        );
+        console.error('No video selected.');
         return;
       }
-      const settings = new EditorSettingsModel({
-        license: LICENSE_KEY,
-      });
-      const source = {
-        source: videoUri,
-        type: SourceType.VIDEO,
-      };
+      const settings = new EditorSettingsModel({ license: LICENSE_KEY });
+      const source = { source: videoUri, type: SourceType.VIDEO };
       const result = await IMGLYEditor?.openEditor(
         settings,
         source,
         EditorPreset.VIDEO,
       );
-      if (result && result?.artifact) {
-        saveStateData(result?.artifact);
+      if (result && result.artifact) {
+        saveStateData(result.artifact);
       }
       return result?.artifact;
     } catch (error) {
-      console.error('Error opening Creative Video Editor:', error);
+      console.error('Error opening editor:', error);
       throw error;
     }
   };
 
-  // Updated handleVideoSaveToGallery function to show success modal
-  const handleVideoSaveToGallery = async (uri: any) => {
-    try {
-      await CameraRoll.save(uri, { type: 'video' });
-      setSaveVisible(false);
-      setSuccessModal(true);
-    } catch (error) {
-      console.error('Error saving video to gallery:', error);
-      // You might want to show an error modal here too
-    }
-  };
-
-  // Handle record video
   const handleRecordVideo = async () => {
     try {
       const permissionResult = await handleVideoPermissions('all');
-
       if (!permissionResult.canRecordVideo) {
-        console.error(
-          'Permission Error: Camera and microphone permissions are required.',
-        );
+        console.error('Permission denied.');
         return;
       }
 
@@ -151,162 +168,86 @@ const useVideoMedia = () => {
       };
 
       launchCamera(cameraOptions, (response: ImagePickerResponse) => {
-        if (response.didCancel) {
+        if (response.didCancel || response.errorMessage) {
           return;
         }
-        if (response.errorMessage) {
-          console.error('Camera Error:', response.errorMessage);
-          return;
-        }
-        if (
-          response.assets &&
-          response.assets.length > 0 &&
-          response.assets[0].uri
-        ) {
+        if (response.assets?.[0]?.uri) {
           const asset = response.assets[0];
           setVideoUri(asset.uri);
-          setVideoAsset({
-            uri: asset.uri,
-            fileName: asset.fileName,
-            fileSize: asset.fileSize,
-            duration: asset.duration,
-            type: asset.type,
-            width: asset.width,
-            height: asset.height,
-          });
-        } else {
-          console.error('No video was recorded.');
+          setVideoAsset(asset as VideoAsset);
+          setSaveVisible(false);
         }
       });
     } catch (error) {
-      console.error(
-        'An unexpected error occurred while trying to record a video:',
-        error,
-      );
+      console.error('Error recording video:', error);
     }
   };
 
-  // Handle select video from gallery
   const handleSelectVideo = async () => {
     try {
       const permissionResult = await handleVideoPermissions('storage');
-
       if (!permissionResult.canAccessGallery) {
-        console.error(
-          'Permission Error: Storage permission is required to access the gallery.',
-        );
+        console.error('Permission denied.');
         return;
       }
 
-      const galleryOptions = {
-        mediaType: 'video' as MediaType,
-        selectionLimit: 1,
-      };
-
-      launchImageLibrary(galleryOptions, (response: ImagePickerResponse) => {
-        if (response.didCancel) {
-          return;
-        }
-        if (response.errorMessage) {
-          console.error('Gallery Error:', response.errorMessage);
-          return;
-        }
-        if (
-          response.assets &&
-          response.assets.length > 0 &&
-          response.assets[0].uri
-        ) {
-          const asset = response.assets[0];
-          setVideoUri(asset.uri);
-          setVideoAsset({
-            uri: asset.uri,
-            fileName: asset.fileName,
-            fileSize: asset.fileSize,
-            duration: asset.duration,
-            type: asset.type,
-            width: asset.width,
-            height: asset.height,
-          });
-        } else {
-          console.error('No video was selected.');
-        }
-      });
-    } catch (error) {
-      console.error(
-        'An unexpected error occurred while selecting a video:',
-        error,
+      launchImageLibrary(
+        { mediaType: 'video', selectionLimit: 1 },
+        (response: ImagePickerResponse) => {
+          if (response.didCancel || response.errorMessage) {
+            return;
+          }
+          if (response.assets?.[0]?.uri) {
+            const asset = response.assets[0];
+            setVideoUri(asset.uri);
+            setVideoAsset(asset as VideoAsset);
+            setSaveVisible(false);
+          }
+        },
       );
+    } catch (error) {
+      console.error('Error selecting video:', error);
     }
   };
 
-  // Handle clear video
+  const handleSelectStoredVideo = (video: any) => {
+    setPreviewVideoUri(video.videoURL);
+    setPreviewVideoTitle('Video Preview');
+    setPreviewModal(true);
+  };
+
   const handleClear = () => {
     setVideoUri(null);
     setVideoAsset(null);
+    setSaveVisible(false);
   };
 
-  // Close success modal
-  const closeSuccessModal = () => {
-    handleClear();
-    setSuccessModal(false);
+  const closePreviewModal = () => {
+    setPreviewModal(false);
+    setPreviewVideoUri(null);
+    setPreviewVideoTitle('');
   };
 
-  // Handle compression action
-  const handleCompress = () => {
-    setModel(true);
-  };
-
-  // Close modal
-  const closeModel = () => {
-    setModel(false);
-  };
-
-  // Check if video is loaded
-  const isVideoLoaded = (): boolean => {
-    return !!videoUri;
-  };
-
-  // Check if modal is open
-  const isModalOpen = (): boolean => {
-    return !!model;
-  };
-
-  // Check if success modal is open
-  const isSuccessModalOpen = (): boolean => {
-    return !!successModal;
-  };
+  const isVideoLoaded = (): boolean => !!videoUri;
+  const isPreviewModalOpen = (): boolean => !!previewModal;
 
   return {
-    // States
-    videoUri,
-    videoAsset,
-    model,
-
-    // Video actions
+    Videos_data,
     handleRecordVideo,
     handleSelectVideo,
     handleClear,
     handleEdit,
-    saveVisible,
-    handleVideoSaveToGallery,
-
-    // Modal actions
-    handleCompress,
-    closeModel,
-    closeSuccessModal,
-
-    // Utility functions
+    handleSaveMedia,
+    closePreviewModal,
     formatFileSize,
     formatDuration,
     getFormattedResolution,
     getVideoFileName,
-    getEstimatedCompressedSize,
-
-    // Status checkers
     hasValidVideoAsset,
     isVideoLoaded,
-    isModalOpen,
-    isSuccessModalOpen,
+    isPreviewModalOpen,
+    handleSelectStoredVideo,
+    states,
   };
 };
 

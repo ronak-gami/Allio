@@ -59,6 +59,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
             <FlatList
               data={data}
               keyExtractor={item => item}
+              removeClippedSubviews={false}
               renderItem={({ item, index }) => (
                 <TouchableOpacity
                   style={[

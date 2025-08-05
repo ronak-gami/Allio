@@ -90,22 +90,6 @@ const languages = [
   { label: 'हिंदी', value: 'hi' },
   { label: 'ગુજરાતી', value: 'gu' },
 ];
-  // const requestUserPermission = async () => {
-  //   try {
-  //     const granted: 'granted' | 'denied' | 'never_ask_again' =
-  //       await PermissionsAndroid.request(
-  //         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-  //       );
-
-  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-
-  //     } else {
-        
-  //     }
-  //   } catch (error: any) {
-  //     console.error('Failed to request notification permission:', error);
-  //   }
-  // };
 
 const getAndroidPermissions = (
   permissionType: AndroidPermissionType,
@@ -141,7 +125,6 @@ const handleVideoPermissions = async (
   autoRequest: boolean = true,
 ): Promise<AndroidPermissionResult> => {
   if (Platform.OS !== 'android') {
-    // For non-Android platforms, assume permissions are handled differently or granted.
     return {
       granted: true,
       results: {},
