@@ -7,6 +7,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import ToastManager from 'toastify-react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import perf from '@react-native-firebase/perf';
 import CustomNotification, {
   CustomToastRef,
@@ -38,27 +39,29 @@ const App = () => {
   }, []);
 
   return (
-    <Provider store={store}>
-      <PaperProvider>
-        <PersistGate loading={null} persistor={persistor}>
-          <CustomNotification ref={customToastRef} />
-          <ToastManager
-            position="bottom"
-            theme="light"
-            icons={{
-              success: 'check-circle',
-              error: 'error',
-              info: 'info',
-              warn: 'warning',
-              default: 'notifications',
-            }}
-            iconFamily="MaterialIcons"
-            iconSize={24}
-          />
-          <StackNavigator />
-        </PersistGate>
-      </PaperProvider>
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <PaperProvider>
+          <PersistGate loading={null} persistor={persistor}>
+            <CustomNotification ref={customToastRef} />
+            <ToastManager
+              position="bottom"
+              theme="light"
+              icons={{
+                success: 'check-circle',
+                error: 'error',
+                info: 'info',
+                warn: 'warning',
+                default: 'notifications',
+              }}
+              iconFamily="MaterialIcons"
+              iconSize={24}
+            />
+            <StackNavigator />
+          </PersistGate>
+        </PaperProvider>
+      </Provider>
+    </GestureHandlerRootView>
   );
 };
 

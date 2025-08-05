@@ -52,10 +52,27 @@ const useValidation = () => {
       .required(t('field_required', { field: t('confirm_password') })),
   });
 
+  const contetUsValidationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required(t('field_required', { field: t('name') }))
+      .min(2, t('field_min', { field: t('name'), min: 2 })),
+    email: Yup.string()
+      .email(t('email_valid', { field: t('email') }))
+      .required(t('field_required', { field: t('email') }))
+      .trim(),
+    mobile: Yup.string()
+      .required(t('field_required', { field: t('mobile') }))
+      .matches(/^[0-9]{10}$/, t('mobile_pattern', { field: t('mobile') })),
+
+    message: Yup.string()
+      .required(t('field_required', { field: t('message') }))
+      .min(10, t('field_min', { field: t('message'), min: 10 })),
+  });
   return {
     loginValidationSchema,
     forgotPasswordSchema,
     registrationValidationSchema,
+    contetUsValidationSchema,
   };
 };
 

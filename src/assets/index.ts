@@ -1,3 +1,5 @@
+import HomeHeader from '@components/organisms/HomeHeader';
+
 export const IMAGES = {
   First: require('./images/firstScreen.png'),
   SecondOnboarding: require('./images/onboardingSecond.png'),
@@ -8,6 +10,11 @@ export const IMAGES = {
   ScanQR: require('./images/scanQR.png'),
   VideoMedia: require('./images/video-media.png'),
   Allio_Logo: require('./images/Allio_logo.png'),
+  Mobile: require('./images/mobile.png'),
+  Notification: require('./images/notification.jpg'),
+  Scanner: require('./images/scanner.jpg'),
+  Homeimage: require('./images/homeimage.png'),
+  Two: require('./images/two.png'),
 };
 
 export const ICONS = {
@@ -27,4 +34,17 @@ export const ICONS = {
   gallery: require('./icons/gallery.png'),
   compressed: require('./icons/compressed.png'),
   NoVideo: require('./icons/video.png'),
+  profile: require('./icons/profile.png'),
+  Left: require('./icons/arrow.png'),
+};
+export const FONTS = {
+  regular: 'Montserrat-Regular',
+  medium: 'Montserrat-Medium',
+  bold: 'Montserrat-Bold',
+  semiBold: 'Montserrat-SemiBold',
+  light: 'Montserrat-Light',
+  extraBold: 'Montserrat-ExtraBold',
+  extraLight: 'Montserrat-ExtraLight',
+  black: 'Montserrat-Black',
+  italic: 'Montserrat-Italic',
 };

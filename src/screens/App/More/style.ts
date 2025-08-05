@@ -11,6 +11,7 @@ const useStyle = () => {
       justifyContent: 'center',
       alignItems: 'center',
     },
+
     title: {
       fontSize: scale(24),
       color: colors.text,

@@ -1,76 +1,77 @@
-import React, { useEffect } from 'react';
-import { View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
-import perf from '@react-native-firebase/perf';
-import { useTranslation } from 'react-i18next';
-import { RootState } from '@redux/store';
+import React from 'react';
+import { View, ScrollView, StatusBar } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-import Text from '@components/atoms/Text';
-import CustomDropdown from '@components/atoms/Dropdown';
-import Button from '@components/atoms/Button';
-import { setLanguage } from '@redux/slices/languageSlice';
-import { toggleTheme } from '@redux/slices/ThemeSlice';
-import { languages } from '@utils/helper';
+import HomeHeader from '@components/organisms/HomeHeader';
+import More from '@screens/App/More';
+import AboutDetails from '@components/organisms/AboutDetails';
+import ImageSlider from '@components/organisms/ImageSlider';
+import { IMAGES } from '@assets/index';
+import { FeaturesCarousel } from '@components/organisms/FeaturesCorozal';
+import { FeaturesDataItem } from '@utils/constant';
+import ContactUsSection from '@components/organisms/ContactUs';
 import { useTheme } from '@react-navigation/native';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { TabParamList } from '@types/navigations';
 
 import useStyle from './style';
+const promoImages = [
+  IMAGES.OnboardingThree,
+  IMAGES.SecondOnboarding,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+];
 
-type Props = BottomTabScreenProps<TabParamList, 'Home'>;
-
-const Home: React.FC<Props> = () => {
+const HomeScreen: React.FC = () => {
+  const colors = useTheme().colors;
   const styles = useStyle();
-  const dispatch = useDispatch();
-  const { colors } = useTheme();
-  const { t } = useTranslation();
-
-  const currentLanguage = useSelector(
-    (state: RootState) => state.language.language,
-  );
-  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
-
-  useEffect(() => {
-    crashlytics().log('HomeScreen mounted');
-    const trace = perf().newTrace('home_screen_load');
-    trace.start();
-    return () => {
-      trace.stop();
-    };
-  }, []);
-
-  const handleLanguageChange = (value: string) => {
-    dispatch(setLanguage(value));
+  const navigation = useNavigation();
+  const handleProfilePress = () => {
+    navigation.navigate(More);
   };
-
-  const handleThemeToggle = () => {
-    dispatch(toggleTheme());
+  const handleFeaturePress = (buttonText: string) => {
+    switch (buttonText) {
+      case 'ScanQR':
+        navigation.navigate('ScanQR');
+        break;
+      case 'Video Editing':
+        navigation.navigate('Video');
+        break;
+      case 'Photo Editing':
+        navigation.navigate('Photo');
+        break;
+      case 'Home':
+        navigation.navigate('Home');
+        break;
+      default:
+        break;
+    }
   };
-
   return (
-    <View style={styles.container}>
-      <Text style={[styles.title, { color: colors.text }]}>login</Text>
-      <CustomDropdown
-        label={t('select_language')}
-        data={languages.map(lang => lang.label)}
-        selectedValue={
-          languages.find(lang => lang.value === currentLanguage)?.label || ''
-        }
-        onSelect={label => {
-          const selected = languages.find(lang => lang.label === label);
-          if (selected) {
-            handleLanguageChange(selected.value);
-          }
-        }}
+    <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={colors.primary}
+        translucent={false}
       />
-
-      <Button
-        title={isDarkMode ? ' Switch to Light Mode' : ' Switch to Dark Mode'}
-        onPress={handleThemeToggle}
-      />
-    </View>
+      <View style={styles.container}>
+        <HomeHeader onProfilePress={handleProfilePress} />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <AboutDetails />
+          <ImageSlider images={promoImages} />
+          <FeaturesCarousel
+            data={FeaturesDataItem}
+            onPress={handleFeaturePress}
+          />
+          <ContactUsSection />
+        </ScrollView>
+      </View>
+    </>
   );
 };
 
-export default Home;
+export default HomeScreen;
