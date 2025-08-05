@@ -5,7 +5,7 @@ import {
   ImagePickerResponse,
 } from 'react-native-image-picker';
 import { useEffect, useState } from 'react';
-import { handleVideoPermissions } from '@utils/helper';
+import { handlePermissions } from '@utils/helper';
 import IMGLYEditor, {
   EditorPreset,
   EditorSettingsModel,
@@ -32,7 +32,7 @@ const useVideoMedia = () => {
   const [successModal, setSuccessModal] = useState<boolean>(false);
 
   useEffect(() => {
-    handleVideoPermissions('all');
+    handlePermissions('all');
   }, []);
 
   // Format file size helper function
@@ -134,7 +134,7 @@ const useVideoMedia = () => {
   // Handle record video
   const handleRecordVideo = async () => {
     try {
-      const permissionResult = await handleVideoPermissions('all');
+      const permissionResult = await handlePermissions('all');
 
       if (!permissionResult.canRecordVideo) {
         console.error(
@@ -189,7 +189,7 @@ const useVideoMedia = () => {
   // Handle select video from gallery
   const handleSelectVideo = async () => {
     try {
-      const permissionResult = await handleVideoPermissions('storage');
+      const permissionResult = await handlePermissions('storage');
 
       if (!permissionResult.canAccessGallery) {
         console.error(

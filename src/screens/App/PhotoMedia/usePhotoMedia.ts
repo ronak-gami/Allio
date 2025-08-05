@@ -11,14 +11,16 @@ import IMGLYEditor, {
   EditorSettingsModel,
   SourceType,
 } from '@imgly/editor-react-native';
-import RNFS from 'react-native-fs';
-import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 
-import { handleVideoPermissions } from '@utils/helper';
-import { showSuccess } from '@utils/toast';
+import { handlePermissions } from '@utils/helper';
+import { showError, showSuccess } from '@utils/toast';
 import { LICENSE_KEY } from '@utils/constant';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@redux/store';
+import { fetchImages } from '@redux/slices/MediaSlice';
+import api from '@api/index';
 
-interface VideoAsset {
+interface PhotoAsset {
   uri: string;
   fileName?: string;
   fileSize?: number;
@@ -30,42 +32,53 @@ interface VideoAsset {
 
 const usePhotoMedia = () => {
   const [PhotoUri, setPhotoUri] = useState<string | null>(null);
-  const [PhotoAsset, setPhotoAsset] = useState<VideoAsset | null>(null);
+  const [PhotoAsset, setPhotoAsset] = useState<PhotoAsset | null>(null);
   const [model, setModel] = useState<Boolean>(false);
+  const [loading, setLoading] = useState(false);
+  const [noData, setNoData] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const userData = useSelector((state: RootState) => state.auth.userData);
+  const dispatch = useDispatch();
+  const images = useSelector((state: RootState) => state.media.images);
 
   useEffect(() => {
-    handleVideoPermissions('all');
+    handlePermissions('all');
   }, []);
 
-  const formatFileSize = (bytes?: number): string => {
-    if (!bytes) {
-      return 'Unknown';
+  useEffect(() => {
+    if (userData?.email) {
+      dispatch(fetchImages(userData?.email));
     }
+  }, [userData?.email, dispatch]);
+
+  useEffect(() => {
+    if (images && Array.isArray(images)) {
+      setNoData(images.length === 0);
+    }
+  }, [images]);
+
+  const formatFileSize = (bytes?: number): string => {
+    if (!bytes) return 'Unknown';
     const mb = bytes / 1024 / 1024;
     return mb < 1 ? `${(bytes / 1024).toFixed(1)} KB` : `${mb.toFixed(1)} MB`;
   };
 
-  const getFormattedResolution = (asset?: VideoAsset | null): string => {
-    if (!asset || !asset.width || !asset.height) {
-      return 'Unknown';
-    }
+  const getFormattedResolution = (asset?: PhotoAsset | null): string => {
+    if (!asset?.width || !asset?.height) return 'Unknown';
     return `${asset.width}×${asset.height}`;
   };
 
-  const getPhotoFileName = (asset?: VideoAsset | null): string => {
-    return asset?.fileName || 'Video File';
+  const getPhotoFileName = (asset?: PhotoAsset | null): string => {
+    return asset?.fileName || 'Image File';
   };
 
-  const getEstimatedCompressedSize = (asset?: VideoAsset | null): string => {
-    if (!asset?.fileSize) {
-      return 'Unknown';
-    }
-    return formatFileSize(asset.fileSize * 0.6);
+  const getEstimatedCompressedSize = (asset?: PhotoAsset | null): string => {
+    return asset?.fileSize ? formatFileSize(asset.fileSize * 0.6) : 'Unknown';
   };
 
-  const hasValidPhotoAsset = (): boolean => {
-    return PhotoAsset !== null && PhotoAsset !== undefined && !!PhotoAsset.uri;
-  };
+  const hasValidPhotoAsset = (): boolean => !!PhotoAsset?.uri;
 
   const handleCameraOpen = async () => {
     const cameraOptions = {
@@ -74,16 +87,13 @@ const usePhotoMedia = () => {
     };
 
     launchCamera(cameraOptions, (response: ImagePickerResponse) => {
-      if (response.didCancel) {
-      } else if (response.errorMessage) {
-        console.error('Camera error: ', response.errorMessage);
-      } else if (response.assets && response.assets.length > 0) {
-        const asset = response.assets[0];
+      if (response.didCancel || response.errorMessage) return;
 
+      const asset = response.assets?.[0];
+      if (asset?.uri) {
         setPhotoUri(asset.uri);
-
-        setPhotoAsset?.({
-          uri: asset.uri ?? '',
+        setPhotoAsset({
+          uri: asset.uri,
           fileName: asset.fileName,
           fileSize: asset.fileSize,
           type: asset.type,
@@ -95,99 +105,85 @@ const usePhotoMedia = () => {
   };
 
   const handleSelectPhoto = async () => {
-    try {
-      const permissionResult = await handleVideoPermissions('storage');
+    const permissionResult = await handlePermissions('storage');
+    if (!permissionResult.canAccessGallery) return;
 
-      if (!permissionResult.canAccessGallery) {
-        console.error(
-          'Permission Error: Storage permission is required to access the gallery.',
-        );
-        return;
+    const galleryOptions = {
+      mediaType: 'photo' as MediaType,
+      selectionLimit: 1,
+      includeExtra: true,
+    };
+
+    launchImageLibrary(galleryOptions, (response: ImagePickerResponse) => {
+      if (response.didCancel || response.errorMessage) return;
+
+      const asset = response.assets?.[0];
+      if (asset?.uri) {
+        setPhotoUri(asset.uri);
+        setPhotoAsset({
+          uri: asset.uri,
+          fileName: asset.fileName,
+          fileSize: asset.fileSize,
+          type: asset.type,
+          width: asset.width,
+          height: asset.height,
+        });
       }
-
-      const galleryOptions = {
-        mediaType: 'photo' as MediaType,
-        selectionLimit: 1,
-        includeExtra: true,
-        includeBase64: false,
-      };
-
-      launchImageLibrary(galleryOptions, (response: ImagePickerResponse) => {
-        if (response.didCancel) {
-          return;
-        }
-        if (response.errorMessage) {
-          console.error('Gallery Error:', response.errorMessage);
-          return;
-        }
-        if (
-          response.assets &&
-          response.assets.length > 0 &&
-          response.assets[0].uri
-        ) {
-          const asset = response.assets[0];
-          setPhotoUri(asset.uri);
-          setPhotoAsset?.({
-            uri: asset.uri,
-            fileName: asset.fileName,
-            fileSize: asset.fileSize,
-            type: asset.type,
-            width: asset.width,
-            height: asset.height,
-          });
-        } else {
-          console.error('No photo was selected.');
-        }
-      });
-    } catch (error) {
-      console.error(
-        'An unexpected error occurred while selecting a photo:',
-        error,
-      );
-    }
+    });
   };
 
   const handleEdit = async () => {
+    setLoading(true);
     try {
       const settings = new EditorSettingsModel({
         license: LICENSE_KEY,
         export: {
           filename: 'edited_image',
-          image: {
-            format: 'jpeg',
-            exportType: 'file-url',
-          },
+          image: { format: 'jpeg', exportType: 'file-url', quality: 0.1 },
         },
-        exportOptions: {
-          enableDownload: true,
-          show: true,
-        },
+        exportOptions: { enableDownload: true, show: true },
         enableExport: true,
       });
 
       const result = await IMGLYEditor.openEditor(
         settings,
-        {
-          source: PhotoUri,
-          type: SourceType.IMAGE,
-        },
+        { source: PhotoUri, type: SourceType.IMAGE },
         EditorPreset.PHOTO,
       );
 
-      if (result?.artifact) {
-        const fileName = `edited_${Date.now()}.jpg`;
-        const destPath = `${RNFS.PicturesDirectoryPath}/${fileName}`;
-        const sourcePath = result.artifact.replace('file://', '');
-
-        await RNFS.copyFile(sourcePath, destPath);
-
-        await CameraRoll.saveAsset(destPath, { type: 'photo' });
-
-        showSuccess('Image saved to gallery!');
+      if (!result?.artifact) {
+        showError('Image editing was cancelled or failed.');
+        return;
       }
-    } catch (error) {
-      console.error('IMGLY Editor error:', error);
+
+      const compressedUri = result.artifact.startsWith('file://')
+        ? result.artifact
+        : `file://${result.artifact}`;
+
+      const formData = new FormData();
+      formData.append('email', userData?.email);
+      formData.append('fileType', 'image');
+      formData.append('file', {
+        uri: compressedUri,
+        type: 'image/jpeg',
+        name: `image_${Date.now()}.jpg`,
+      });
+
+      const response = await api.MEDIA.upload({ data: formData });
+
+      if (response?.data?.success) {
+        showSuccess(response.data.message || 'Upload successful!');
+        dispatch(fetchImages(userData?.email));
+      }
+    } catch (error: any) {
+      const apiError =
+        error?.response?.data?.message ||
+        error?.message ||
+        'Something went wrong during upload.';
+      showError(apiError);
+      console.log('Caught error:', error);
     } finally {
+      setLoading(false);
       handleClear();
     }
   };
@@ -197,20 +193,19 @@ const usePhotoMedia = () => {
     setPhotoAsset(null);
   };
 
-  const handleCompress = () => {
-    setModel(true);
+  const handleCompress = () => setModel(true);
+  const closeModel = () => setModel(false);
+  const isPhotoLoaded = () => !!PhotoUri;
+  const isModalOpen = () => !!model;
+
+  const openModal = (uri: string) => {
+    setSelectedImage(uri);
+    setModalVisible(true);
   };
 
-  const closeModel = () => {
-    setModel(false);
-  };
-
-  const isPhotoLoaded = (): boolean => {
-    return !!PhotoUri;
-  };
-
-  const isModalOpen = (): boolean => {
-    return !!model;
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedImage(null);
   };
   useFocusEffect(
     useCallback(() => {
@@ -222,23 +217,26 @@ const usePhotoMedia = () => {
     PhotoUri,
     PhotoAsset,
     model,
-
     handleCameraOpen,
     handleSelectPhoto,
     handleClear,
     handleEdit,
-
     handleCompress,
     closeModel,
-
     formatFileSize,
     getFormattedResolution,
     getPhotoFileName,
     getEstimatedCompressedSize,
-
     hasValidPhotoAsset,
     isPhotoLoaded,
     isModalOpen,
+    photos: images,
+    loading,
+    noData,
+    modalVisible,
+    selectedImage,
+    openModal,
+    closeModal,
   };
 };
 
