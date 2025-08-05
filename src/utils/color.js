@@ -21,4 +21,5 @@ export const COLORS = {
   pink: '#FF69B4',
 
   modelbg: '#0000004d',
+  mainone: 'rgba(0,0,0,0.5)'
 };

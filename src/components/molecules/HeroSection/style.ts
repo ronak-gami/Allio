@@ -16,13 +16,13 @@ export default function useStyle() {
     },
     overlay: {
       ...StyleSheet.absoluteFillObject,
-      backgroundColor: 'rgba(0,0,0,0.2)',
+      backgroundColor: colors.heromain,
       paddingHorizontal: 24,
       justifyContent: 'center',
       alignItems: 'center',
     },
-
     title: {
+      marginBottom: scale(10),
       fontSize: scale(38),
       color: colors.white,
       textAlign: 'center',

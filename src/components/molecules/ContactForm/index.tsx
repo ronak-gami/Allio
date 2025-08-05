@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import Input from '@components/atoms/Input';
 import Button from '@components/atoms/Button';
 import BottomModal from '@components/atoms/BottomModal';
-import { contactUsValidationSchema } from '@utils/validationSchema';
+import useValidation from '@utils/validationSchema';
 
 import useStyle from './style';
 
@@ -26,6 +26,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
   onSubmit,
 }) => {
   const styles = useStyle();
+  const { contactUsValidationSchema } = useValidation();
 
   return (
     <Formik
@@ -67,7 +68,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
               style={styles.input}
             />
             <Input
-              placeholder="Email"
+              placeholder="email"
               value={values.email}
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}

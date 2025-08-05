@@ -1,7 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native';
-import { FONTS, width } from '@utils/helper';
+import { FONTS } from '@utils/helper';
+import { height, width } from '@utils/helper';
 const useStyle = () => {
   const { colors } = useTheme();
 
@@ -13,10 +14,10 @@ const useStyle = () => {
     },
     modalContainer: {
       backgroundColor: 'white',
-      borderTopLeftRadius: 16,
-      borderTopRightRadius: 16,
-      padding: 16,
-      minHeight: 300,
+      borderTopLeftRadius: scale(16),
+      borderTopRightRadius: scale(16),
+      padding: scale(16),
+      minHeight: height * 0.6,
     },
     title: {
       fontSize: scale(28),
@@ -30,6 +31,19 @@ const useStyle = () => {
     closeButtonText: {
       fontSize: scale(16),
       fontFamily: FONTS.medium,
+    },
+
+    closeIconContainer: {
+      position: 'absolute',
+      top: scale(12),
+      right: scale(12),
+      zIndex: 2,
+      padding: scale(6),
+    },
+    closeIcon: {
+      width: scale(22),
+      height: scale(22),
+      tintColor: colors.primary || '#007AFF',
     },
   });
 };

@@ -1,11 +1,15 @@
 import { IMAGES } from '@assets/index';
 
+import { width } from '@utils/helper';
 interface OnboardingItem {
   id: string;
   image: any;
   title: string;
   description: string;
 }
+
+export const CARD_WIDTH = width * 0.94;
+export const SPACING = (width - CARD_WIDTH) / 0.6;
 
 export const BASE_URL = 'https://allio-backend.onrender.com/api/user' as const;
 

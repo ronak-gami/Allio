@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   Modal,
   View,
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 
+import { ICONS } from '@assets/index';
 import Text from '@components/atoms/Text';
 
 import useStyle from './style';
@@ -42,13 +44,21 @@ const BottomModal: React.FC<BottomModalProps> = ({
             </Text>
           )}
           {children}
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
+          {onClose && (
+            <TouchableOpacity
+              onPress={onClose}
+              style={styles.closeIconContainer}>
+              <Image
+                source={ICONS.cancel}
+                style={styles.closeIcon}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          )}
         </KeyboardAvoidingView>
       </View>
     </Modal>
   );
 };
 
-export default BottomModal;
+export default memo(BottomModal);

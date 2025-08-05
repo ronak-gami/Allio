@@ -1,53 +1,3 @@
-// import React from 'react';
-// import { View, Image, StyleSheet, Pressable } from 'react-native';
-// import Button from '@components/atoms/Button';
-// import Text from '@components/atoms/Text';
-// import { IMAGES } from '@assets/index';
-// import useStyle from './style';
-
-// interface HeroSectionProps {
-//   onVisionPress: () => void;
-//   onGoalPress: () => void;
-//   description: string;
-// }
-
-// const HeroSection: React.FC<HeroSectionProps> = ({
-//   onVisionPress,
-//   onGoalPress,
-//   description,
-// }) => {
-//   const styles = useStyle();
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.imageWrapper}>
-//         <Image source={IMAGES.Mobile} style={styles.image} />
-//       </View>
-//       <View style={styles.contentWrapper}>
-//         <View style={styles.textWrapper}>
-//           <Text type="bold" style={styles.title}>
-//             About Allio
-//           </Text>
-//           <Text style={styles.description}>{description}</Text>
-//         </View>
-//         <View style={styles.buttonRow}>
-//           <Pressable>
-//             <Button
-//               title="Vision"
-//               onPress={onVisionPress}
-//               style={styles.button}
-//             />
-//           </Pressable>
-//           <Pressable>
-//             <Button title="Goal" onPress={onGoalPress} style={styles.button} />
-//           </Pressable>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-
-// export default HeroSection;
 import React, { useEffect } from 'react';
 import { View, ImageBackground, Pressable, Dimensions } from 'react-native';
 import Animated, {
@@ -57,12 +7,8 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import Text from '@components/atoms/Text';
-import Button from '@components/atoms/Button';
 import { IMAGES } from '@assets/index';
 import useStyle from './style';
-// import LottieView from 'lottie-react-native';
-
-const { width: W, height: H } = Dimensions.get('window');
 
 interface Props {
   description: string;
@@ -70,11 +16,7 @@ interface Props {
   handleGoal: () => void;
 }
 
-export default function HeroSection({
-  description,
-  handleVision,
-  handleGoal,
-}: Props) {
+export default function HeroSection({ description }: Props) {
   const styles = useStyle();
 
   const titleY = useSharedValue(50);
@@ -111,30 +53,15 @@ export default function HeroSection({
       resizeMode="cover"
       style={styles.bg}>
       <View style={styles.overlay} />
-      <Animated.View style={[styles.textBlock, titleStyle]}>
+      <Animated.View style={[titleStyle]}>
         <Text type="bold" style={styles.title}>
           Welcome to ALLIO
         </Text>
       </Animated.View>
-      <Animated.View style={[styles.descBlock, descStyle]}>
+      <Animated.View style={[descStyle]}>
         <Text style={styles.description}>{description}</Text>
       </Animated.View>
-      <Animated.View style={[styles.buttonRow, btnStyle]}>
-        {/* <Button
-          title="Vision"
-          onPress={() => {
-            console.log('Vision pressed from HeroSection');
-            handleVision();
-          }}
-        /> */}
-        {/* <Button
-          title="Goal"
-          onPress={() => {
-            console.log('Goal pressed from HeroSection');
-            handleGoal();
-          }}
-        /> */}
-      </Animated.View>
+      <Animated.View style={[styles.buttonRow, btnStyle]}></Animated.View>
 
       {/* Decorative floating shape using Lottie or static */}
     </ImageBackground>

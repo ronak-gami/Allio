@@ -3,7 +3,6 @@ import { View, ScrollView, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import HomeHeader from '@components/organisms/HomeHeader';
-import More from '@screens/App/More';
 import AboutDetails from '@components/organisms/AboutDetails';
 import ImageSlider from '@components/organisms/ImageSlider';
 import { IMAGES } from '@assets/index';
@@ -11,8 +10,10 @@ import { FeaturesCarousel } from '@components/organisms/FeaturesCorozal';
 import { FeaturesDataItem } from '@utils/constant';
 import ContactUsSection from '@components/organisms/ContactUs';
 import { useTheme } from '@react-navigation/native';
-
+import { HOME } from '@utils/constant';
+import { HomeTabsNavigationProp } from '@types/navigations';
 import useStyle from './style';
+
 const promoImages = [
   IMAGES.OnboardingThree,
   IMAGES.SecondOnboarding,
@@ -29,23 +30,23 @@ const promoImages = [
 const HomeScreen: React.FC = () => {
   const colors = useTheme().colors;
   const styles = useStyle();
-  const navigation = useNavigation();
+  const navigation = useNavigation<HomeTabsNavigationProp>();
   const handleProfilePress = () => {
-    navigation.navigate(More);
+    navigation.navigate(HOME.More);
   };
   const handleFeaturePress = (buttonText: string) => {
     switch (buttonText) {
       case 'ScanQR':
-        navigation.navigate('ScanQR');
+        navigation.navigate(HOME.ScanQR);
         break;
       case 'Video Editing':
-        navigation.navigate('Video');
+        navigation.navigate(HOME.Video);
         break;
       case 'Photo Editing':
-        navigation.navigate('Photo');
+        navigation.navigate(HOME.Photo);
         break;
       case 'Home':
-        navigation.navigate('Home');
+        navigation.navigate(HOME.Home);
         break;
       default:
         break;

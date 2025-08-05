@@ -13,6 +13,7 @@ const useStyle = () => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
+      paddingTop: scale(20),
       paddingHorizontal: scale(10),
       backgroundColor: colors.white,
       height: height * 0.22,
