@@ -8,7 +8,11 @@ import {
   PermissionStatus,
   checkMultiple,
 } from 'react-native-permissions';
-import { showError } from './toast';
+import { showError, showSuccess } from './toast';
+
+import RNFS from 'react-native-fs';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import Share from 'react-native-share';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -120,7 +124,7 @@ const getAndroidPermissions = (
   }
 };
 
-const handleVideoPermissions = async (
+const handlePermissions = async (
   type: AndroidPermissionType = 'all',
   autoRequest: boolean = true,
 ): Promise<AndroidPermissionResult> => {
@@ -243,6 +247,78 @@ const checkIfMPINExists = async (email: string): Promise<boolean> => {
   }
 };
 
+const handleMediaDownload = async (
+  mediaUri: string,
+  mediaType: 'photo' | 'video',
+  albumName = 'MyAppMedia',
+) => {
+  try {
+    if (Platform.OS === 'android') {
+      const hasPermission = await handlePermissions();
+      if (!hasPermission) {
+        showError('Storage permission is required');
+        return;
+      }
+    }
+
+    const extension = mediaType === 'photo' ? 'jpg' : 'mp4';
+    const fileName = `MEDIA_${Date.now()}.${extension}`;
+    const downloadDest = `${RNFS.CachesDirectoryPath}/${fileName}`;
+
+    const downloadResult = await RNFS.downloadFile({
+      fromUrl: mediaUri,
+      toFile: downloadDest,
+    }).promise;
+
+    if (downloadResult.statusCode === 200) {
+      await CameraRoll.saveAsset(downloadDest, {
+        type: mediaType,
+        album: albumName,
+      });
+      showSuccess(
+        `${mediaType === 'photo' ? 'Image' : 'Video'} saved to gallery!`,
+      );
+    } else {
+      showError(`Could not save ${mediaType}.`);
+    }
+  } catch (error) {
+    console.error('Download error:', error);
+    showError('Something went wrong while downloading.');
+  }
+};
+
+const handleMediaShare = async (
+  mediaUri: string,
+  mediaType: 'photo' | 'video',
+) => {
+  try {
+    const extension = mediaType === 'photo' ? 'jpg' : 'mp4';
+    const fileName = `MEDIA_${Date.now()}.${extension}`;
+    const tempPath = `${RNFS.CachesDirectoryPath}/${fileName}`;
+
+    const downloadResult = await RNFS.downloadFile({
+      fromUrl: mediaUri,
+      toFile: tempPath,
+    }).promise;
+
+    if (downloadResult.statusCode === 200) {
+      const shareOptions = {
+        title: `Share ${mediaType}`,
+        url: `file://${tempPath}`,
+        type: mediaType === 'photo' ? 'image/jpeg' : 'video/mp4',
+        failOnCancel: false,
+      };
+
+      await Share.open(shareOptions);
+    } else {
+      showError(`Could not download ${mediaType} for sharing.`);
+    }
+  } catch (error: any) {
+    console.error('Share error:', error);
+    showError(`Something went wrong while sharing the ${mediaType}.`);
+  }
+};
+
 export {
   height,
   width,
@@ -250,8 +326,10 @@ export {
   checkUserExistsByEmail,
   requestUserPermission,
   updateUserInFirestore,
-  handleVideoPermissions,
+  handlePermissions,
   languages,
   FONTS,
   checkIfMPINExists,
+  handleMediaDownload,
+  handleMediaShare,
 };

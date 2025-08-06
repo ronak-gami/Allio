@@ -5,7 +5,7 @@ import {
   ImagePickerResponse,
 } from 'react-native-image-picker';
 import { useEffect, useState } from 'react';
-import { handleVideoPermissions } from '@utils/helper';
+import { handlePermissions } from '@utils/helper';
 import IMGLYEditor, {
   EditorPreset,
   EditorSettingsModel,
@@ -39,11 +39,11 @@ const useVideoMedia = () => {
   const Videos_data = useSelector((state: any) => state.media.videos);
 
   useEffect(() => {
-    handleVideoPermissions('all');
+    handlePermissions('all');
     if (email) {
       dispatch(fetchVideos(email));
     }
-  }, [dispatch, email]);
+  }, [email]);
 
   const states = {
     videoUri,
@@ -154,7 +154,8 @@ const useVideoMedia = () => {
 
   const handleRecordVideo = async () => {
     try {
-      const permissionResult = await handleVideoPermissions('all');
+      const permissionResult = await handlePermissions('all');
+
       if (!permissionResult.canRecordVideo) {
         console.error('Permission denied.');
         return;
@@ -185,7 +186,8 @@ const useVideoMedia = () => {
 
   const handleSelectVideo = async () => {
     try {
-      const permissionResult = await handleVideoPermissions('storage');
+      const permissionResult = await handlePermissions('storage');
+
       if (!permissionResult.canAccessGallery) {
         console.error('Permission denied.');
         return;

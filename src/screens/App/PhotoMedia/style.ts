@@ -93,7 +93,9 @@ const useStyle = () => {
     },
 
     actionButtonContainer: {
-      padding: width * 0.04,
+      paddingRight: height * 0.02,
+      paddingBottom: height * 0.02,
+      paddingLeft: height * 0.02,
       gap: height * 0.015,
     },
     primaryActionText: {
