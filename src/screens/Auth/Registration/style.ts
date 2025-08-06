@@ -5,10 +5,6 @@ const useStyle = () => {
   const { colors } = useTheme();
 
   return StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
     ScrollingStyle: {
       justifyContent: 'center',
     },

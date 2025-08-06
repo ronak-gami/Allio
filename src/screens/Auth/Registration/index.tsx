@@ -1,26 +1,21 @@
 import React from 'react';
-import { ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import RegistrationForm from '@components/organisms/RegistrationForm';
 import { AuthStackParamList } from '@types/navigations';
 import { useAnalytics } from '@hooks/index';
-
-import useStyle from './style';
+import Container from '@components/molecules/Container';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
 const Registration: React.FC<Props> = () => {
-  const styles = useStyle();
   useAnalytics({ screenName: 'Register' });
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
-      <ScrollView contentContainerStyle={styles.ScrollingStyle}>
-        <RegistrationForm />
-      </ScrollView>
-    </KeyboardAvoidingView>
+    <Container showHeader={false} useScrollView keyboardAvoiding>
+      <RegistrationForm />
+    </Container>
   );
 };
+
 export default Registration;

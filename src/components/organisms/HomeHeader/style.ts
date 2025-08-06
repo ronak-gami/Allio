@@ -1,17 +1,17 @@
-import { useTheme } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
+
+import { useTheme } from '@react-navigation/native';
 import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-
-      backgroundColor: colors.primary,
-      elevation: 4,
+    logoStyle: {
+      width: scale(100),
+      height: scale(40),
+    },
+    logoContainer: {
+      marginLeft: scale(10),
     },
   });
 };

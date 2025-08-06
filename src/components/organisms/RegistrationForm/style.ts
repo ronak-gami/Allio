@@ -8,11 +8,9 @@ const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
     formContainer: {
-      flex: 1,
       justifyContent: 'center',
       paddingHorizontal: scale(10),
       paddingVertical: width * 0.11,
-      
     },
     title: {
       fontSize: scale(34),

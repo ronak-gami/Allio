@@ -8,8 +8,6 @@ const useStyle = () => {
   return StyleSheet.create({
     logoContainer: {
       flex: 1,
-      height: height * 0.07,
-      width: width * 0.3,
       flexDirection: 'row',
       alignItems: 'center',
     },

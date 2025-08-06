@@ -2,7 +2,6 @@ import React from 'react';
 import { View, ScrollView, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import HomeHeader from '@components/organisms/HomeHeader';
 import AboutDetails from '@components/organisms/AboutDetails';
 import ImageSlider from '@components/organisms/ImageSlider';
 import { IMAGES } from '@assets/index';
@@ -12,6 +11,7 @@ import ContactUsSection from '@components/organisms/ContactUs';
 import { useTheme } from '@react-navigation/native';
 import { HOME } from '@utils/constant';
 import { HomeTabsNavigationProp } from '@types/navigations';
+import Container from '@components/molecules/Container';
 import useStyle from './style';
 
 const promoImages = [
@@ -59,18 +59,21 @@ const HomeScreen: React.FC = () => {
         backgroundColor={colors.primary}
         translucent={false}
       />
-      <View style={styles.container}>
-        <HomeHeader onProfilePress={handleProfilePress} />
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <AboutDetails />
-          <ImageSlider images={promoImages} />
-          <FeaturesCarousel
-            data={FeaturesDataItem}
-            onPress={handleFeaturePress}
-          />
-          <ContactUsSection />
-        </ScrollView>
-      </View>
+
+      {/* if user do not need header so pass only showHeader={false} */}
+      <Container
+        showHeader
+        onProfilePress={handleProfilePress}
+        useScrollView
+        keyboardAvoiding>
+        <AboutDetails />
+        <ImageSlider images={promoImages} />
+        <FeaturesCarousel
+          data={FeaturesDataItem}
+          onPress={handleFeaturePress}
+        />
+        <ContactUsSection />
+      </Container>
     </>
   );
 };
