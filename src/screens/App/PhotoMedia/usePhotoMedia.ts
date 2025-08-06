@@ -31,12 +31,16 @@ interface PhotoAsset {
 }
 
 const usePhotoMedia = () => {
-  const [PhotoUri, setPhotoUri] = useState<string | null>(null);
-  const [PhotoAsset, setPhotoAsset] = useState<PhotoAsset | null>(null);
+  const [PhotoUri, setPhotoUri] = useState<string | undefined>(undefined);
+  const [PhotoAsset, setPhotoAsset] = useState<PhotoAsset | undefined>(
+    undefined,
+  );
   const [model, setModel] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(
+    undefined,
+  );
 
   const userData = useSelector((state: RootState) => state?.auth?.userData);
   const dispatch = useDispatch();
