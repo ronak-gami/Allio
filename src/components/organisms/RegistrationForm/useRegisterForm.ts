@@ -119,7 +119,7 @@ const useRegister = (options?: UseRegisterOptions) => {
     if (options?.onNavigateToLogin) {
       options.onNavigateToLogin();
     }
-    navigation.replace(AUTH.Login);
+    navigation.popToTop();
   };
 
   return {

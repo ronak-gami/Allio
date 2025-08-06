@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Image, ScrollView } from 'react-native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { useTheme } from '@react-navigation/native';
 import Video from 'react-native-video';
@@ -10,6 +10,7 @@ import {
   CustomFlatList,
   CustomLoader,
   Text,
+  VideoCard,
   VideoPreviewModal,
 } from '@components/index';
 import { ICONS } from '@assets/index';
@@ -34,35 +35,17 @@ const VideoMedia: React.FC<Props> = () => {
     getVideoFileName,
     hasValidVideoAsset,
     handleSaveMedia,
-    handleSelectStoredVideo,
     isPreviewModalOpen,
   } = useVideoMedia();
 
   const styles = useStyle();
   const { colors } = useTheme();
 
-  const renderVideoGridItem = ({ item }: { item: any }) => (
-    <TouchableOpacity
-      style={styles.gridItem}
-      onPress={() => handleSelectStoredVideo(item)}>
-      <Image
-        source={{ uri: item.thumbnail }}
-        style={styles.gridItem}
-        resizeMode="cover"
-      />
-      <Image
-        source={ICONS.VideoPlay}
-        style={styles.VideoPlayIcon}
-        resizeMode="contain"
-      />
-    </TouchableOpacity>
-  );
-
   const renderVideoGrid = () => (
     <View style={styles.gridContainer}>
       <CustomFlatList
         data={Videos_data || []}
-        renderItem={renderVideoGridItem}
+        renderItem={({ item }) => <VideoCard item={item} />}
         numColumns={2}
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={styles.gridRow}

@@ -28,12 +28,16 @@ interface VideoAsset {
 
 const useVideoMedia = () => {
   const dispatch = useDispatch();
-  const [videoUri, setVideoUri] = useState<string | null>(null);
-  const [videoAsset, setVideoAsset] = useState<VideoAsset | null>(null);
+  const [videoUri, setVideoUri] = useState<string | undefined>(undefined);
+  const [videoAsset, setVideoAsset] = useState<VideoAsset | undefined>(
+    undefined,
+  );
   const [saveVisible, setSaveVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [previewModal, setPreviewModal] = useState<boolean>(false);
-  const [previewVideoUri, setPreviewVideoUri] = useState<string | null>(null);
+  const [previewVideoUri, setPreviewVideoUri] = useState<string | undefined>(
+    undefined,
+  );
   const [previewVideoTitle, setPreviewVideoTitle] = useState<string>('');
   const { email } = useSelector((state: any) => state.auth.userData);
   const Videos_data = useSelector((state: any) => state.media.videos);
@@ -220,14 +224,14 @@ const useVideoMedia = () => {
   };
 
   const handleClear = () => {
-    setVideoUri(null);
-    setVideoAsset(null);
+    setVideoUri(undefined);
+    setVideoAsset(undefined);
     setSaveVisible(false);
   };
 
   const closePreviewModal = () => {
     setPreviewModal(false);
-    setPreviewVideoUri(null);
+    setPreviewVideoUri(undefined);
     setPreviewVideoTitle('');
   };
 

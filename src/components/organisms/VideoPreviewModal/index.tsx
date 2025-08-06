@@ -8,7 +8,7 @@ import useStyle from './style';
 
 interface VideoPreviewModalProps {
   visible: boolean;
-  videoUri?: string | null;
+  videoUri?: string | undefined;
   videoTitle?: string;
   onClose?: () => void;
 }

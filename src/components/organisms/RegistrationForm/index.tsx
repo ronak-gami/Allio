@@ -12,7 +12,7 @@ import useStyle from './style';
 const RegistrationForm = () => {
   const styles = useStyle();
   const { track } = useAnalytics({ screenName: 'RegistrationForm' });
-  const formikRef = useRef<FormikProps<any>>(null);
+  const formikRef = useRef<FormikProps<any>>(undefined);
   const {
     initialValues,
     registrationValidationSchema,

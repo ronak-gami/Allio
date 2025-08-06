@@ -20,7 +20,7 @@ const ForgotPasswordForm: React.FC = () => {
   const { forgotPasswordSchema } = useValidation();
   const style = useStyle();
 
-  const formikRef = useRef<FormikProps<{ email: string }>>(null);
+  const formikRef = useRef<FormikProps<{ email: string }>>(undefined);
 
   const { handleForgotPassword, navigateToLogin } = useForgotPassword({
     onNavigateToLogin: () => {
@@ -36,7 +36,7 @@ const ForgotPasswordForm: React.FC = () => {
         contentContainerStyle={style.scrollView}
         keyboardShouldPersistTaps="handled">
         <Formik
-          innerRef={formikRef} // 👈 attach ref to Formik
+          innerRef={formikRef}
           initialValues={{ email: '' }}
           validationSchema={forgotPasswordSchema}
           onSubmit={handleForgotPassword}>

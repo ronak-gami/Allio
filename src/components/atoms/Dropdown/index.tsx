@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Modal, FlatList, Image } from 'react-native';
+import { View, TouchableOpacity, Modal, Image } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-
+import Text from '../Text';
 import { ICONS } from '@assets/index';
 import useStyle from './style';
-import Text from '../Text';
+import { CustomFlatList } from '@components/index';
 
 interface DropdownProps {
   label: string;
@@ -56,9 +56,8 @@ const CustomDropdown: React.FC<DropdownProps> = ({
           style={styles.modalOverlay}
           onPress={() => setVisible(false)}>
           <View style={styles.modalContainer}>
-            <FlatList
+            <CustomFlatList
               data={data}
-              keyExtractor={item => item}
               removeClippedSubviews={false}
               renderItem={({ item, index }) => (
                 <TouchableOpacity

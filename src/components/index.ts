@@ -12,3 +12,6 @@ export { default as CustomLoader } from './atoms/CustomLoader';
 export { default as ImagePreviewModal } from './organisms/ImagePreviewModal';
 export { default as MediaCard } from './organisms/MediaCard';
 export { default as VideoPreviewModal } from './organisms/VideoPreviewModal';
+
+// cards
+export { default as VideoCard } from './cards/VideoCard';

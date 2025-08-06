@@ -17,7 +17,7 @@ export const useForgotPassword = (options?: UseForgotPasswordOptions) => {
     if (options?.onNavigateToLogin) {
       options.onNavigateToLogin();
     }
-    navigation.replace(AUTH.Login);
+    navigation.popToTop();
   };
 
   const handleForgotPassword = async (values: { email: string }) => {

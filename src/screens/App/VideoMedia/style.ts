@@ -28,23 +28,6 @@ const useStyle = () => {
       justifyContent: 'space-between',
       marginBottom: height * 0.02,
     },
-    gridItem: {
-      width: (width - width * 0.12) / 2,
-      height: (width - width * 0.12) / 2,
-      backgroundColor: 'red',
-      borderRadius: width * 0.03,
-    },
-    VideoPlayIcon: {
-      position: 'absolute',
-      width: width * 0.1,
-      height: width * 0.1,
-      top: '50%',
-      left: '50%',
-      transform: [{ translateX: -width * 0.05 }, { translateY: -width * 0.05 }],
-      tintColor: colors.background,
-    },
-
-    // Empty Grid State
     emptyGridContainer: {
       flex: 1,
       justifyContent: 'center',
