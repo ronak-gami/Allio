@@ -1,8 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { View, Dimensions } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import type { ICarouselInstance } from 'react-native-reanimated-carousel';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import FeatureCard from '@components/molecules/FeatureCard';
 import type { FeatureDataItem } from './style';
 import useStyle from './style';
@@ -10,13 +9,15 @@ import Text from '@components/atoms/Text';
 
 const windowWidth = Dimensions.get('window').width;
 
-export function FeaturesCarousel({
-  data,
-  onPress,
-}: {
+interface FeaturesCarouselProps {
   data: FeatureDataItem[];
   onPress: (label: string) => void;
-}) {
+}
+
+export const FeaturesCarousel: React.FC<FeaturesCarouselProps> = ({
+  data,
+  onPress,
+}) => {
   const { CARD_WIDTH, styles } = useStyle();
   const carouselRef = useRef<ICarouselInstance>(null);
 
@@ -55,4 +56,4 @@ export function FeaturesCarousel({
       />
     </>
   );
-}
+};

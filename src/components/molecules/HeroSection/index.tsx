@@ -12,8 +12,6 @@ import useStyle from './style';
 
 interface Props {
   description: string;
-  handleVision: () => void;
-  handleGoal: () => void;
 }
 
 export default function HeroSection({ description }: Props) {

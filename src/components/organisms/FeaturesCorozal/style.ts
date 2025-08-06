@@ -1,16 +1,3 @@
-// import { StyleSheet } from 'react-native';
-// import { scale } from 'react-native-size-matters';
-// import { useTheme } from '@react-navigation/native';
-// import { FONTS } from '@utils/helper';
-
-// const useStyle = () => {
-//   const { colors } = useTheme();
-//   return StyleSheet.create({
-//     row: { flexDirection: 'row', paddingHorizontal: SP, paddingVertical: 16 },
-//   });
-// };
-
-// export default useStyle;
 // style.ts
 import { Dimensions, StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
@@ -23,9 +10,6 @@ export interface FeatureDataItem {
   description: string;
   buttonText: string;
 }
-
-// const CARD_WIDTH = width * 0.94;
-// const SPACING = (width - CARD_WIDTH) / 0.6;
 
 const styles = StyleSheet.create({
   textone: {

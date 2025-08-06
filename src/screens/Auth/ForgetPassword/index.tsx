@@ -5,7 +5,7 @@ import ForgotPasswordForm from '@components/organisms/ForgetpasswordForm';
 import { AuthStackParamList } from '@types/navigations';
 
 import useStyle from './style';
-import PageLayout from '@components/molecules/Container';
+import Container from '@components/molecules/Container';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'ForgotPassword'>;
 
@@ -13,9 +13,9 @@ const ForgetPassword: React.FC<Props> = () => {
   const styles = useStyle();
 
   return (
-    <PageLayout showHeader={false} useScrollView keyboardAvoiding>
+    <Container showHeader={false} useScrollView keyboardAvoiding>
       <ForgotPasswordForm />
-    </PageLayout>
+    </Container>
   );
 };
 

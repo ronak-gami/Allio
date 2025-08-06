@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, FlatList, Image, TouchableOpacity } from 'react-native';
 import { ICONS } from '@assets/index';
 import useStyle from './style';
@@ -56,4 +56,4 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
   );
 };
 
-export default ImageSlider;
+export default memo(ImageSlider);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import { Formik } from 'formik';
 
@@ -26,12 +26,12 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
   onSubmit,
 }) => {
   const styles = useStyle();
-  const { contactUsValidationSchema } = useValidation();
+  const { contetUsValidationSchema } = useValidation();
 
   return (
     <Formik
       initialValues={{ name: '', mobile: '', email: '', message: '' }}
-      validationSchema={contactUsValidationSchema}
+      validationSchema={contetUsValidationSchema}
       onSubmit={(values, { resetForm }) => {
         onSubmit(values);
         resetForm();
@@ -98,4 +98,4 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
   );
 };
 
-export default ContactFormModal;
+export default memo(ContactFormModal);

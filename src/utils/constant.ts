@@ -8,8 +8,8 @@ interface OnboardingItem {
   description: string;
 }
 
-export const CARD_WIDTH = width * 0.94;
-export const SPACING = (width - CARD_WIDTH) / 0.6;
+const CARD_WIDTH = width * 0.94;
+const SPACING = (width - CARD_WIDTH) / 0.6;
 
 export const BASE_URL = 'https://allio-backend.onrender.com/api/user' as const;
 
@@ -73,9 +73,7 @@ const HOME = {
 const LICENSE_KEY =
   'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
 
-export { onboardingData, AUTH, HOME, LICENSE_KEY };
-
-export const FeaturesDataItem = [
+const FeaturesDataItem = [
   {
     image: IMAGES.Notification,
     title: ' ScanQR',
@@ -102,3 +100,12 @@ export const FeaturesDataItem = [
     buttonText: 'Home',
   },
 ];
+export {
+  onboardingData,
+  AUTH,
+  HOME,
+  LICENSE_KEY,
+  CARD_WIDTH,
+  SPACING,
+  FeaturesDataItem,
+};

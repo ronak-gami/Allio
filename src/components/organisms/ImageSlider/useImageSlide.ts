@@ -6,9 +6,9 @@ import { width } from '@utils/helper';
 export const IMAGE_WIDTH = width * 0.7;
 export const IMAGE_MARGIN = scale(10);
 
-export function useImageSlider(images: any[]) {
+export const useImageSlider = (images: any[]) => {
   const flatListRef = useRef<FlatList<any>>(null);
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState<number>(0);
   const [direction, setDirection] = useState<'forward' | 'backward'>('forward');
 
   const scrollTo = (index: number, animated = true) => {
@@ -70,4 +70,4 @@ export function useImageSlider(images: any[]) {
     IMAGE_WIDTH,
     IMAGE_MARGIN,
   };
-}
+};

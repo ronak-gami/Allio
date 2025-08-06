@@ -10,7 +10,7 @@ const useStyle = () => {
     overlay: {
       flex: 1,
       justifyContent: 'flex-end',
-      backgroundColor: colors.modabg || 'rgba(0,0,0,0.5)',
+      backgroundColor: colors.heromain,
     },
     modalContainer: {
       backgroundColor: 'white',
@@ -43,7 +43,7 @@ const useStyle = () => {
     closeIcon: {
       width: scale(22),
       height: scale(22),
-      tintColor: colors.primary || '#007AFF',
+      tintColor: colors.primary,
     },
   });
 };
