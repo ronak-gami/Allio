@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Image, Pressable } from 'react-native';
 import useStyle from './style';
 
-interface Props {
+interface MediaCard {
   uri: string;
   onLongPress: () => void;
 }
 
-const MediaCard: React.FC<Props> = ({ uri, onLongPress }) => {
+const MediaCard = ({ uri, onLongPress }: MediaCard) => {
   const styles = useStyle();
 
   return (
@@ -17,4 +17,4 @@ const MediaCard: React.FC<Props> = ({ uri, onLongPress }) => {
   );
 };
 
-export default MediaCard;
+export default memo(MediaCard);

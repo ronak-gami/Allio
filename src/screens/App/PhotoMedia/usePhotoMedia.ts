@@ -33,41 +33,44 @@ interface PhotoAsset {
 const usePhotoMedia = () => {
   const [PhotoUri, setPhotoUri] = useState<string | null>(null);
   const [PhotoAsset, setPhotoAsset] = useState<PhotoAsset | null>(null);
-  const [model, setModel] = useState<Boolean>(false);
-  const [loading, setLoading] = useState(false);
-  const [noData, setNoData] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [model, setModel] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const userData = useSelector((state: RootState) => state.auth.userData);
+  const userData = useSelector((state: RootState) => state?.auth?.userData);
   const dispatch = useDispatch();
-  const images = useSelector((state: RootState) => state.media.images);
+  const images = useSelector((state: RootState) => state?.media?.images);
 
   useEffect(() => {
     handlePermissions('all');
   }, []);
 
+  const states = {
+    PhotoUri,
+    PhotoAsset,
+    model,
+    loading,
+    modalVisible,
+    selectedImage,
+    images,
+  };
+
   useEffect(() => {
     if (userData?.email) {
       dispatch(fetchImages(userData?.email));
     }
-  }, [userData?.email, dispatch]);
-
-  useEffect(() => {
-    if (images && Array.isArray(images)) {
-      setNoData(images.length === 0);
-    }
-  }, [images]);
+  }, [userData?.email]);
 
   const formatFileSize = (bytes?: number): string => {
     if (!bytes) return 'Unknown';
     const mb = bytes / 1024 / 1024;
-    return mb < 1 ? `${(bytes / 1024).toFixed(1)} KB` : `${mb.toFixed(1)} MB`;
+    return mb < 1 ? `${(bytes / 1024)?.toFixed(1)} KB` : `${mb?.toFixed(1)} MB`;
   };
 
   const getFormattedResolution = (asset?: PhotoAsset | null): string => {
     if (!asset?.width || !asset?.height) return 'Unknown';
-    return `${asset.width}×${asset.height}`;
+    return `${asset?.width}×${asset?.height}`;
   };
 
   const getPhotoFileName = (asset?: PhotoAsset | null): string => {
@@ -75,7 +78,7 @@ const usePhotoMedia = () => {
   };
 
   const getEstimatedCompressedSize = (asset?: PhotoAsset | null): string => {
-    return asset?.fileSize ? formatFileSize(asset.fileSize * 0.6) : 'Unknown';
+    return asset?.fileSize ? formatFileSize(asset?.fileSize * 0.6) : 'Unknown';
   };
 
   const hasValidPhotoAsset = (): boolean => !!PhotoAsset?.uri;
@@ -87,18 +90,18 @@ const usePhotoMedia = () => {
     };
 
     launchCamera(cameraOptions, (response: ImagePickerResponse) => {
-      if (response.didCancel || response.errorMessage) return;
+      if (response?.didCancel || response?.errorMessage) return;
 
-      const asset = response.assets?.[0];
+      const asset = response?.assets?.[0];
       if (asset?.uri) {
-        setPhotoUri(asset.uri);
+        setPhotoUri(asset?.uri);
         setPhotoAsset({
-          uri: asset.uri,
-          fileName: asset.fileName,
-          fileSize: asset.fileSize,
-          type: asset.type,
-          width: asset.width,
-          height: asset.height,
+          uri: asset?.uri,
+          fileName: asset?.fileName,
+          fileSize: asset?.fileSize,
+          type: asset?.type,
+          width: asset?.width,
+          height: asset?.height,
         });
       }
     });
@@ -106,7 +109,7 @@ const usePhotoMedia = () => {
 
   const handleSelectPhoto = async () => {
     const permissionResult = await handlePermissions('storage');
-    if (!permissionResult.canAccessGallery) return;
+    if (!permissionResult?.canAccessGallery) return;
 
     const galleryOptions = {
       mediaType: 'photo' as MediaType,
@@ -115,18 +118,18 @@ const usePhotoMedia = () => {
     };
 
     launchImageLibrary(galleryOptions, (response: ImagePickerResponse) => {
-      if (response.didCancel || response.errorMessage) return;
+      if (response?.didCancel || response?.errorMessage) return;
 
-      const asset = response.assets?.[0];
+      const asset = response?.assets?.[0];
       if (asset?.uri) {
-        setPhotoUri(asset.uri);
+        setPhotoUri(asset?.uri);
         setPhotoAsset({
-          uri: asset.uri,
-          fileName: asset.fileName,
-          fileSize: asset.fileSize,
-          type: asset.type,
-          width: asset.width,
-          height: asset.height,
+          uri: asset?.uri,
+          fileName: asset?.fileName,
+          fileSize: asset?.fileSize,
+          type: asset?.type,
+          width: asset?.width,
+          height: asset?.height,
         });
       }
     });
@@ -156,9 +159,9 @@ const usePhotoMedia = () => {
         return;
       }
 
-      const compressedUri = result.artifact.startsWith('file://')
-        ? result.artifact
-        : `file://${result.artifact}`;
+      const compressedUri = result?.artifact?.startsWith('file://')
+        ? result?.artifact
+        : `file://${result?.artifact}`;
 
       const formData = new FormData();
       formData.append('email', userData?.email);
@@ -169,10 +172,10 @@ const usePhotoMedia = () => {
         name: `image_${Date.now()}.jpg`,
       });
 
-      const response = await api.MEDIA.upload({ data: formData });
+      const response = await api?.MEDIA?.upload?.({ data: formData });
 
       if (response?.data?.success) {
-        showSuccess(response.data.message || 'Upload successful!');
+        showSuccess(response?.data?.message || 'Upload successful!');
         dispatch(fetchImages(userData?.email));
       }
     } catch (error: any) {
@@ -207,6 +210,7 @@ const usePhotoMedia = () => {
     setModalVisible(false);
     setSelectedImage(null);
   };
+
   useFocusEffect(
     useCallback(() => {
       handleClear();
@@ -214,9 +218,6 @@ const usePhotoMedia = () => {
   );
 
   return {
-    PhotoUri,
-    PhotoAsset,
-    model,
     handleCameraOpen,
     handleSelectPhoto,
     handleClear,
@@ -230,13 +231,10 @@ const usePhotoMedia = () => {
     hasValidPhotoAsset,
     isPhotoLoaded,
     isModalOpen,
-    photos: images,
-    loading,
-    noData,
     modalVisible,
-    selectedImage,
     openModal,
     closeModal,
+    states,
   };
 };
 

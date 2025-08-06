@@ -33,6 +33,7 @@ const useStyle = () => {
       width: '100%',
       height: height * 0.4,
       borderRadius: scale(10),
+      resizeMode: 'contain',
     },
     iconRow: {
       flexDirection: 'row',

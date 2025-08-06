@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, memo } from 'react';
 import { FlatList } from 'react-native';
 import useStyle from './style';
 import Text from '../Text';
@@ -20,17 +20,21 @@ const CustomFlatList = forwardRef<FlatList<any>, CustomFlatListProps>(
       columnWrapperStyle,
       contentContainerStyle,
       ListEmptyComponent,
+      renderItem,
+      data,
       ...props
     },
     ref,
   ) => {
     const styles = useStyle();
-    const { data = [] } = props;
 
     return (
       <FlatList
         ref={ref}
+        data={data}
+        renderItem={renderItem}
         numColumns={numColumns}
+        keyExtractor={(_, i) => i?.toString()}
         columnWrapperStyle={numColumns > 1 ? columnWrapperStyle : undefined}
         contentContainerStyle={[
           contentContainerStyle,
@@ -48,4 +52,4 @@ const CustomFlatList = forwardRef<FlatList<any>, CustomFlatListProps>(
   },
 );
 
-export default CustomFlatList;
+export default memo(CustomFlatList);

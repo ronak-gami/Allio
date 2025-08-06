@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
 import analytics from '@react-native-firebase/analytics';
-import CustomOnboarding from '@components/atoms/CustomOnboarding';
-import { onboardingData } from '@utils/constant';
-import { setStateKey } from '@redux/slices/AuthSlice';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
 import { AuthStackParamList } from '@types/navigations';
+import { CustomFlatList, CustomOnboarding } from '@components/index';
+import { onboardingData } from '@utils/constant';
 import { width } from '@utils/helper';
 
+import { setStateKey } from '@redux/slices/AuthSlice';
+
 import useStyle from './style';
-import { CustomFlatList } from '@components/index';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Onboarding'>;
 
@@ -69,16 +70,15 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        keyExtractor={item => item.id}
         getItemLayout={getItemLayout}
         snapToInterval={width}
         snapToAlignment="start"
         decelerationRate="fast"
         renderItem={({ item }) => (
           <CustomOnboarding
-            image={item.image}
-            title={item.title}
-            description={item.description}
+            image={item?.image}
+            title={item?.title}
+            description={item?.description}
             width={width}
           />
         )}

@@ -4,11 +4,15 @@ import { useTheme } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '@types/navigations';
 
-import { Button, MediaCard, MediaPreview } from '@components/index';
+import {
+  Button,
+  CustomFlatList,
+  MediaCard,
+  MediaPreview,
+} from '@components/index';
 import Text from '@components/atoms/Text';
 import CustomChip from '@components/atoms/CustomChip';
 import CustomLoader from '@components/atoms/CustomLoader';
-import CustomFlatList from '@components/atoms/FlatList';
 
 import { ICONS } from '@assets/index';
 
@@ -19,8 +23,6 @@ type Props = BottomTabScreenProps<TabParamList, 'Video'>;
 
 const PhotoMedia: React.FC<Props> = () => {
   const {
-    PhotoUri,
-    PhotoAsset,
     handleCameraOpen,
     handleSelectPhoto,
     handleClear,
@@ -30,23 +32,37 @@ const PhotoMedia: React.FC<Props> = () => {
     getFormattedResolution,
     getPhotoFileName,
     hasValidPhotoAsset,
-    photos,
-    loading,
-    noData,
-    modalVisible,
-    selectedImage,
     openModal,
     closeModal,
+    states,
   } = usePhotoMedia();
 
   const styles = useStyle();
   const { colors } = useTheme();
 
+  const renderEmptyState = () => (
+    <View style={styles.emptyStateContainer}>
+      <Image
+        source={ICONS.gallery}
+        style={styles.noGalleryIcon}
+        resizeMode="contain"
+      />
+      <Text type="BOLD" style={styles.emptyStateTitle}>
+        No Image Selected
+      </Text>
+      <Text
+        type="REGULAR"
+        style={[styles.emptyStateSubtitle, { color: colors.text }]}>
+        Choose an image from your gallery or take a new one
+      </Text>
+    </View>
+  );
+
   return (
     <>
-      <CustomLoader visible={loading} />
+      <CustomLoader visible={states?.loading} />
 
-      {!loading && (
+      {!states.loading && (
         <View style={styles.scrollcontainer}>
           <View style={styles.container}>
             <View style={isPhotoLoaded() ? styles.content : styles.contentNone}>
@@ -68,7 +84,7 @@ const PhotoMedia: React.FC<Props> = () => {
 
                   <View style={styles.imageWrapper}>
                     <Image
-                      source={{ uri: PhotoUri }}
+                      source={{ uri: states.PhotoUri }}
                       style={styles.image}
                       resizeMode="cover"
                     />
@@ -78,14 +94,14 @@ const PhotoMedia: React.FC<Props> = () => {
                     <View style={styles.videoInfoCard}>
                       <View style={styles.videoInfoHeader}>
                         <Text type="SEMIBOLD" style={styles.videoTitle}>
-                          {getPhotoFileName(PhotoAsset)}
+                          {getPhotoFileName(states?.PhotoAsset)}
                         </Text>
                       </View>
                       <View style={styles.videoStatsContainer}>
                         <View style={styles.statItem}>
                           <Text style={styles.statLabel}>Size</Text>
                           <Text type="SEMIBOLD" style={styles.statValue}>
-                            {formatFileSize(PhotoAsset?.fileSize)}
+                            {formatFileSize(states?.PhotoAsset?.fileSize)}
                           </Text>
                         </View>
 
@@ -96,48 +112,32 @@ const PhotoMedia: React.FC<Props> = () => {
                             Resolution
                           </Text>
                           <Text type="SEMIBOLD" style={styles.statValue}>
-                            {getFormattedResolution(PhotoAsset)}
+                            {getFormattedResolution(states?.PhotoAsset)}
                           </Text>
                         </View>
                       </View>
                     </View>
                   )}
                 </>
-              ) : noData ? (
-                <View style={styles.emptyStateContainer}>
-                  <Image
-                    source={ICONS.gallery}
-                    style={styles.noGalleryIcon}
-                    resizeMode="contain"
-                  />
-                  <Text type="BOLD" style={styles.emptyStateTitle}>
-                    No Image Selected
-                  </Text>
-                  <Text
-                    type="REGULAR"
-                    style={[styles.emptyStateSubtitle, { color: colors.text }]}>
-                    Choose an image from your gallery or take a new one
-                  </Text>
-                </View>
               ) : (
                 <>
                   <CustomFlatList
-                    data={photos}
+                    data={states?.images}
                     renderItem={({ item }) => (
                       <MediaCard
                         uri={item}
                         onLongPress={() => openModal(item)}
                       />
                     )}
-                    keyExtractor={(item, index) => `${item}-${index}`}
                     numColumns={2}
                     showsVerticalScrollIndicator={false}
                     removeClippedSubviews={false}
+                    ListEmptyComponent={renderEmptyState}
                   />
                   <MediaPreview
-                    visible={modalVisible}
+                    visible={states?.modalVisible}
                     onClose={closeModal}
-                    imageUri={selectedImage}
+                    imageUri={states?.selectedImage}
                     mediaType="photo"
                   />
                 </>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 
 import { ICONS } from '@assets/index';
@@ -6,19 +6,19 @@ import CustomModal from '@components/atoms/CustomModel';
 import { handleMediaDownload, handleMediaShare } from '@utils/helper';
 import useStyle from './style';
 
-interface Props {
+interface MediaPreviewProps {
   visible: boolean;
   imageUri: string;
   onClose: () => void;
   mediaType?: 'photo' | 'video';
 }
 
-const MediaPreview: React.FC<Props> = ({
+const MediaPreview = ({
   visible,
   imageUri,
   onClose,
   mediaType = 'photo',
-}) => {
+}: MediaPreviewProps) => {
   const styles = useStyle();
 
   const handleDownload = () => {
@@ -29,7 +29,10 @@ const MediaPreview: React.FC<Props> = ({
     handleMediaShare(imageUri, mediaType);
   };
 
-  const handleSend = () => {};
+  const handleSend = () => {
+    if (__DEV__) {
+    }
+  };
 
   return (
     <CustomModal visible={visible} onClose={onClose} title="Image Preview">
@@ -40,9 +43,12 @@ const MediaPreview: React.FC<Props> = ({
           <Image source={ICONS.Download} style={styles.iconImage} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleSend}>
-          <Image source={ICONS.Send} style={styles.iconImage} />
-        </TouchableOpacity>
+        {__DEV__ && (
+          <TouchableOpacity onPress={handleSend}>
+            <Image source={ICONS.Send} style={styles.iconImage} />
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity onPress={handleShare}>
           <Image source={ICONS.Share} style={styles.iconImage} />
         </TouchableOpacity>
@@ -51,4 +57,4 @@ const MediaPreview: React.FC<Props> = ({
   );
 };
 
-export default MediaPreview;
+export default memo(MediaPreview);
