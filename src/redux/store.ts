@@ -1,17 +1,19 @@
-import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import {persistReducer, persistStore, PersistConfig} from 'redux-persist';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistReducer, persistStore, PersistConfig } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import authReducer from './slices/AuthSlice';
 import languageReducer from './slices/languageSlice';
 import themeReducer from './slices/ThemeSlice';
-import biometricReducer from './slices/BiometricSlice'
+import biometricReducer from './slices/BiometricSlice';
+import mediaReducer from './slices/MediaSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   language: languageReducer,
   theme: themeReducer,
-  biometric:biometricReducer
+  biometric: biometricReducer,
+  media: mediaReducer,
 });
 
 type RootReducerType = ReturnType<typeof rootReducer>;

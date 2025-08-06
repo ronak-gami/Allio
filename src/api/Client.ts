@@ -1,5 +1,6 @@
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { BASE_URL } from '@utils/constant';
+import { showError } from '@utils/toast';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -9,13 +10,29 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => config,
+  (config: InternalAxiosRequestConfig) => {
+    return config;
+  },
   error => Promise.reject(error),
 );
 
 api.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  error => Promise.reject(error),
+  (response: AxiosResponse) => {
+    return response;
+  },
+
+  error => {
+    const status = error?.response?.status;
+    const errorData = error?.response?.data;
+
+    if (status >= 400 && status < 410) {
+      showError(errorData?.error);
+    } else {
+      showError('Something went wrong');
+    }
+
+    return error;
+  },
 );
 
 interface ClientParams {

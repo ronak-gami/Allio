@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, FlatList, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
 import analytics from '@react-native-firebase/analytics';
 
-import CustomOnboarding from '@components/atoms/CustomOnboarding';
-import { onboardingData } from '@utils/constant';
-import { setStateKey } from '@redux/slices/AuthSlice';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@types/navigations';
+import { CustomFlatList, CustomOnboarding } from '@components/index';
+import { onboardingData } from '@utils/constant';
 import { width } from '@utils/helper';
+
+import { setStateKey } from '@redux/slices/AuthSlice';
 
 import useStyle from './style';
 
@@ -20,7 +21,7 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const flatListRef = useRef<FlatList<any>>(null);
+  const flatListRef = useRef<any>(undefined); // Can use FlatList or CustomFlatList
 
   useEffect(() => {
     crashlytics().log('OnboardingScreen mounted');
@@ -29,7 +30,7 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
     return () => {
       trace.stop();
     };
-  }, [navigation]);
+  }, []);
 
   const handleNext = async () => {
     if (currentIndex < onboardingData.length - 1) {
@@ -51,7 +52,7 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
     navigation.replace('Login');
   };
 
-  const getItemLayout = (data: any, index: number) => ({
+  const getItemLayout = (_: any, index: number) => ({
     length: width,
     offset: width * index,
     index,
@@ -63,23 +64,21 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
 
-      <FlatList
+      <CustomFlatList
         ref={flatListRef}
         data={onboardingData}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        keyExtractor={item => item.id}
-        removeClippedSubviews={false}
         getItemLayout={getItemLayout}
         snapToInterval={width}
         snapToAlignment="start"
         decelerationRate="fast"
         renderItem={({ item }) => (
           <CustomOnboarding
-            image={item.image}
-            title={item.title}
-            description={item.description}
+            image={item?.image}
+            title={item?.title}
+            description={item?.description}
             width={width}
           />
         )}

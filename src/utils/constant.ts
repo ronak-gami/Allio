@@ -8,7 +8,7 @@ interface OnboardingItem {
 }
 
 // export const BASE_URL = 'https://allio-backend.onrender.com/api/user' as const;
-export const BASE_URL = 'https://444ffa730d03.ngrok-free.app' as const;
+export const BASE_URL = 'https://1b5ed4873b75.ngrok-free.app/api' as const;
 
 const onboardingData: OnboardingItem[] = [
   {

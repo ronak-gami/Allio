@@ -27,4 +27,7 @@ export const ICONS = {
   gallery: require('./icons/gallery.png'),
   compressed: require('./icons/compressed.png'),
   NoVideo: require('./icons/video.png'),
+  Share: require('./icons/share.png'),
+  Send: require('./icons/send.png'),
+  Download: require('./icons/download.png'),
 };
