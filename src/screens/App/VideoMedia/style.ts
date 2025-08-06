@@ -10,13 +10,9 @@ const useStyle = () => {
       flex: 1,
       backgroundColor: colors.background,
     },
-
-    // Main Grid Container
     mainContainer: {
       flex: 1,
     },
-
-    // Video Grid Styles
     gridContainer: {
       flex: 1,
       padding: width * 0.04,
@@ -53,22 +49,12 @@ const useStyle = () => {
       color: colors.text,
       opacity: 0.7,
     },
-
-    // Bottom Buttons
     bottomButtonsContainer: {
       padding: width * 0.04,
       gap: width * 0.03,
       borderTopWidth: 1,
       borderTopColor: colors.border,
       backgroundColor: colors.background,
-    },
-
-    // Video Preview Mode Styles
-    scrollContainer: {
-      flex: 1,
-    },
-    scrollContent: {
-      flexGrow: 1,
     },
     content: {
       flex: 1,
@@ -82,16 +68,12 @@ const useStyle = () => {
       marginBottom: height * 0.02,
       paddingHorizontal: width * 0.01,
     },
-
-    // Video Player Styles
     videoPlayer: {
       width: '100%',
       height: height * 0.55,
       borderRadius: width * 0.03,
       backgroundColor: colors.text,
     },
-
-    // Video Info Card Styles
     videoInfoCard: {
       backgroundColor: colors.text,
       marginTop: height * 0.02,

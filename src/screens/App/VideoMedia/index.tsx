@@ -85,8 +85,8 @@ const VideoMedia: React.FC<Props> = () => {
       <View style={styles.container}>
         {isVideoLoaded() ? (
           <ScrollView
-            style={styles.scrollContainer}
-            contentContainerStyle={styles.scrollContent}>
+            style={styles.mainContainer}
+            contentContainerStyle={styles.gridContent}>
             <View style={styles.content}>
               <View style={styles.headerView}>
                 {/* `states` is used only for local state variables */}
