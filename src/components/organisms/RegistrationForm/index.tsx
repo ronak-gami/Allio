@@ -1,24 +1,29 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
-
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
 import Input from '@components/atoms/Input';
 import useRegister from './useRegisterForm';
 import useAnalytics from '@hooks/useAnalytics';
-
+import { FormikProps } from 'formik';
 import useStyle from './style';
+
 const RegistrationForm = () => {
   const styles = useStyle();
   const { track } = useAnalytics({ screenName: 'RegistrationForm' });
+  const formikRef = useRef<FormikProps<any>>(undefined);
   const {
     initialValues,
     registrationValidationSchema,
     handleRegister,
     loading,
     navigateToLogin,
-  } = useRegister();
+  } = useRegister({
+    onNavigateToLogin: () => {
+      formikRef.current?.resetForm();
+    },
+  });
 
   const onLoginSubmit = async (
     values: any,

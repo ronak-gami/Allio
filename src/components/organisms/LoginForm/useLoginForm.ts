@@ -18,7 +18,6 @@ import useValidation from '@utils/validationSchema';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
 
-
 export const useLoginForm = () => {
   const [remember, setRemember] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,31 +30,12 @@ export const useLoginForm = () => {
     password: '',
   };
 
-  const removeDeviceToken = async (userId: string, token: string) => {
-    if (!userId || !token) {
-      console.warn('Cannot remove device token: userId or token is missing.');
-      return;
-    }
-    try {
-      await firestore()
-        .collection('users')
-        .doc(userId)
-        .collection('deviceTokens')
-        .doc(token)
-        .delete();
-    } catch (error) {
-      console.error('Error removing FCM token:', error);
-      crashlytics().recordError(error as Error);
-    }
-  };
-
   const handleLogin = async (values: typeof initialValues) => {
     setLoading(true);
     const trace = perf().newTrace('login_flow');
     await trace.start();
 
     try {
-      // Normalize email and password
       const email = values.email.trim().toLowerCase();
       const password = values.password.trim();
 
@@ -199,7 +179,7 @@ export const useLoginForm = () => {
   };
 
   const navigateToRegister = () => {
-    navigation.navigate(AUTH.Register);
+    navigation.push(AUTH.Register);
   };
 
   return {

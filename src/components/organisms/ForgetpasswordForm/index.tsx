@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Formik } from 'formik';
+import { Formik, FormikProps } from 'formik';
 
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
@@ -16,10 +16,17 @@ import useValidation from '@utils/validationSchema';
 import { useForgotPassword } from './useForgetpassForm';
 import useStyle from './style';
 
-const ForgotPasswordScreen: React.FC = () => {
+const ForgotPasswordForm: React.FC = () => {
   const { forgotPasswordSchema } = useValidation();
   const style = useStyle();
-  const { handleForgotPassword, navigateToLogin } = useForgotPassword();
+
+  const formikRef = useRef<FormikProps<{ email: string }>>(undefined);
+
+  const { handleForgotPassword, navigateToLogin } = useForgotPassword({
+    onNavigateToLogin: () => {
+      formikRef.current?.resetForm();
+    },
+  });
 
   return (
     <KeyboardAvoidingView
@@ -29,6 +36,7 @@ const ForgotPasswordScreen: React.FC = () => {
         contentContainerStyle={style.scrollView}
         keyboardShouldPersistTaps="handled">
         <Formik
+          innerRef={formikRef}
           initialValues={{ email: '' }}
           validationSchema={forgotPasswordSchema}
           onSubmit={handleForgotPassword}>
@@ -55,6 +63,7 @@ const ForgotPasswordScreen: React.FC = () => {
             </View>
           )}
         </Formik>
+
         <View style={style.dividerContainer}>
           <Text label="no_account" style={style.orText} />
           <TouchableOpacity onPress={navigateToLogin}>
@@ -68,4 +77,4 @@ const ForgotPasswordScreen: React.FC = () => {
   );
 };
 
-export default ForgotPasswordScreen;
+export default ForgotPasswordForm;

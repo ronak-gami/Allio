@@ -47,4 +47,8 @@ export const FONTS = {
   extraLight: 'Montserrat-ExtraLight',
   black: 'Montserrat-Black',
   italic: 'Montserrat-Italic',
+  VideoPlay: require('./icons/videoPlay.png'),
+  Share: require('./icons/share.png'),
+  Send: require('./icons/send.png'),
+  Download: require('./icons/download.png'),
 };

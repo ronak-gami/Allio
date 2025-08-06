@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import { useTheme } from '@react-navigation/native';
-import { scale } from 'react-native-size-matters';
 
 import Text from '../Text';
 import useStyle from './style';
@@ -81,7 +80,7 @@ const Button: React.FC<ButtonProps> = ({
           <View style={styles.content}>
             {prefixLogo && <View style={styles.icon}>{prefixLogo}</View>}
             <Text
-              type="semibold"
+              type="SEMIBOLD"
               style={[styles.text, { color: currentTextColor }]}>
               {title}
             </Text>
