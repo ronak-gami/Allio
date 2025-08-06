@@ -6,10 +6,18 @@ import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
 import { showError, showSuccess } from '@utils/toast';
 
-export const useForgotPassword = () => {
+type UseForgotPasswordOptions = {
+  onNavigateToLogin?: () => void;
+};
+
+export const useForgotPassword = (options?: UseForgotPasswordOptions) => {
   const navigation = useNavigation<AuthNavigationProp>();
+
   const navigateToLogin = () => {
-    navigation.navigate(AUTH.Login);
+    if (options?.onNavigateToLogin) {
+      options.onNavigateToLogin();
+    }
+    navigation.popToTop();
   };
 
   const handleForgotPassword = async (values: { email: string }) => {
@@ -20,11 +28,13 @@ export const useForgotPassword = () => {
         showError('Email is required');
         return;
       }
+
       const userExists = await checkUserExistsByEmail(email);
       if (!userExists) {
         showError('Email Does Not Exist!');
         return;
       }
+
       await auth().sendPasswordResetEmail(email);
       showSuccess('Password reset email sent successfully!');
       navigation.navigate(AUTH.Login);

@@ -8,11 +8,10 @@ import {
   PermissionStatus,
   checkMultiple,
 } from 'react-native-permissions';
-import { showError, showSuccess } from './toast';
-
 import RNFS from 'react-native-fs';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import Share from 'react-native-share';
+import { showError, showSuccess } from './toast';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -129,7 +128,6 @@ const handlePermissions = async (
   autoRequest: boolean = true,
 ): Promise<AndroidPermissionResult> => {
   if (Platform.OS !== 'android') {
-    // For non-Android platforms, assume permissions are handled differently or granted.
     return {
       granted: true,
       results: {},
@@ -251,7 +249,7 @@ const checkIfMPINExists = async (email: string): Promise<boolean> => {
 const handleMediaDownload = async (
   mediaUri: string,
   mediaType: 'photo' | 'video',
-  albumName = 'MyAppMedia',
+  albumName = 'Allio Media',
 ) => {
   try {
     if (Platform.OS === 'android') {

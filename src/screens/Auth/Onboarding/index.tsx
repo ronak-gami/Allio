@@ -21,7 +21,7 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const flatListRef = useRef<any>(undefined); // Can use FlatList or CustomFlatList
+  const flatListRef = useRef<any>(undefined);
 
   useEffect(() => {
     crashlytics().log('OnboardingScreen mounted');

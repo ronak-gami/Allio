@@ -10,14 +10,54 @@ const useStyle = () => {
       flex: 1,
       backgroundColor: colors.background,
     },
-    content: {
+    mainContainer: {
+      flex: 1,
+    },
+    gridContainer: {
       flex: 1,
       padding: width * 0.04,
     },
-    contentNone: {
+    gridContent: {
+      flexGrow: 1,
+    },
+    gridRow: {
+      justifyContent: 'space-between',
+      marginBottom: height * 0.02,
+    },
+    emptyGridContainer: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      paddingVertical: height * 0.1,
+    },
+    emptyGridIcon: {
+      width: width * 0.2,
+      height: width * 0.2,
+      marginBottom: height * 0.02,
+      tintColor: colors.primary,
+    },
+    emptyGridTitle: {
+      fontSize: scale(22),
+      marginBottom: height * 0.01,
+      color: colors.text,
+    },
+    emptyGridSubtitle: {
+      fontSize: scale(16),
+      textAlign: 'center',
+      lineHeight: scale(22),
+      paddingHorizontal: width * 0.08,
+      color: colors.text,
+      opacity: 0.7,
+    },
+    bottomButtonsContainer: {
+      padding: width * 0.04,
+      gap: width * 0.03,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      backgroundColor: colors.background,
+    },
+    content: {
+      flex: 1,
       padding: width * 0.04,
     },
 
@@ -28,25 +68,12 @@ const useStyle = () => {
       marginBottom: height * 0.02,
       paddingHorizontal: width * 0.01,
     },
-    headerButton: {
-      paddingHorizontal: width * 0.04,
-      paddingVertical: height * 0.005,
-      borderRadius: width * 0.05,
-      minWidth: width * 0.2,
-    },
-    headerText: {
-      fontSize: scale(16),
-    },
-
-    // Video Player Styles
     videoPlayer: {
       width: '100%',
       height: height * 0.55,
       borderRadius: width * 0.03,
       backgroundColor: colors.text,
     },
-
-    // Video Info Card Styles
     videoInfoCard: {
       backgroundColor: colors.text,
       marginTop: height * 0.02,
@@ -83,33 +110,6 @@ const useStyle = () => {
       height: height * 0.05,
       marginHorizontal: width * 0.04,
       backgroundColor: colors.primary,
-    },
-
-    // Empty State Styles
-    emptyStateContainer: {
-      alignItems: 'center',
-      paddingVertical: height * 0.08,
-    },
-    NoVideoIcon: {
-      width: width * 0.22,
-      height: width * 0.22,
-      marginBottom: height * 0.02,
-      tintColor: colors.primary,
-    },
-    emptyStateTitle: {
-      fontSize: scale(24),
-      marginBottom: height * 0.01,
-      color: colors.text,
-    },
-    emptyStateSubtitle: {
-      fontSize: scale(16),
-      textAlign: 'center',
-      lineHeight: scale(24),
-      paddingHorizontal: width * 0.08,
-    },
-    actionButtonContainer: {
-      padding: width * 0.04,
-      gap: height * 0.015,
     },
   });
 };

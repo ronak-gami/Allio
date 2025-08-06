@@ -1,4 +1,4 @@
-import client from './Client.ts';
+import client from './Client';
 
 const api = {
   MEDIA: {

@@ -1,4 +1,4 @@
-import api from '../../api';
+import api from '@api/index';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface MediaState {
@@ -45,21 +45,6 @@ export const fetchVideos = createAsyncThunk<string[], string>(
   },
 );
 
-export const uploadMedia = createAsyncThunk<
-  { fileType: 'image' | 'video'; url: string },
-  { formData: FormData; fileType: 'image' | 'video' }
->('media/uploadMedia', async ({ formData, fileType }, { rejectWithValue }) => {
-  try {
-    const response = await api.MEDIA.upload({ data: formData });
-    if (response.data?.success) {
-      return { fileType, url: response.data.url };
-    }
-    return rejectWithValue('Upload failed');
-  } catch (error: any) {
-    return rejectWithValue(error.message || 'An unknown error occurred');
-  }
-});
-
 const mediaSlice = createSlice({
   name: 'media',
   initialState,
@@ -71,14 +56,6 @@ const mediaSlice = createSlice({
       })
       .addCase(fetchVideos.fulfilled, (state, action) => {
         state.videos = action.payload;
-      })
-      .addCase(uploadMedia.fulfilled, (state, action) => {
-        const { fileType, url } = action.payload;
-        if (fileType === 'image') {
-          state.images.push(url);
-        } else {
-          state.videos.push(url);
-        }
       });
   },
 });
