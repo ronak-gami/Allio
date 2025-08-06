@@ -42,7 +42,9 @@ const CustomFlatList = forwardRef<FlatList<any>, CustomFlatListProps>(
         ]}
         ListEmptyComponent={
           ListEmptyComponent || (
-            <Text style={styles.emptyText}>No items found.</Text>
+            <Text type="BOLD" style={styles.emptyText}>
+              No items found.
+            </Text>
           )
         }
         removeClippedSubviews={false}

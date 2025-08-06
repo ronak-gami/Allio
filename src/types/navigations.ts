@@ -30,6 +30,7 @@ export type TabParamList = {
   ScanQR: undefined;
   Video: undefined;
   More: undefined;
+  Profile: undefined;
 };
 
 // Navigation prop types for different navigators

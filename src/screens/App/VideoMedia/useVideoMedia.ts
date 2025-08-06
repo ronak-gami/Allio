@@ -41,7 +41,6 @@ const useVideoMedia = () => {
   const [previewVideoTitle, setPreviewVideoTitle] = useState<string>('');
   const { email } = useSelector((state: any) => state.auth.userData);
   const Videos_data = useSelector((state: any) => state.media.videos);
-  console.log('Videos_data: ', Videos_data);
 
   useEffect(() => {
     handlePermissions('all');

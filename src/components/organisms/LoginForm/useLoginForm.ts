@@ -166,7 +166,6 @@ export const useLoginForm = () => {
           fcmToken: null,
           fcmUpdatedAt: null,
         });
-        console.log('remove token');
         await auth.signOut();
         dispatch(reduxLogout());
       }

@@ -188,7 +188,7 @@ const usePhotoMedia = () => {
         error?.message ||
         'Something went wrong during upload.';
       showError(apiError);
-      console.log('Caught error:', error);
+      console.error('Caught error:', error);
     } finally {
       setLoading(false);
       handleClear();

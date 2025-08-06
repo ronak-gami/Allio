@@ -1,11 +1,11 @@
 import React from 'react';
-import { Platform, Image, Text, ImageSourcePropType, View } from 'react-native';
+import { Platform, Image, ImageSourcePropType } from 'react-native';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { IMAGES } from '@assets/index';
-import { height } from '@utils/helper';
+import { height, width } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import HomeScreen from '@screens/App/Home';
 import PhotoMedia from '@screens/App/PhotoMedia';
@@ -15,6 +15,7 @@ import More from '@screens/App/More';
 import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
 import { TabParamList } from '@types/navigations';
+import Profile from '@screens/App/Profile';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -27,6 +28,7 @@ const TabNavigator: React.FC = () => {
     ScanQR: IMAGES.ScanQR,
     Video: IMAGES.VideoMedia,
     More: IMAGES.More,
+    Profile: IMAGES.Profile,
   };
 
   const getIconByRouteName = (name: keyof TabParamList): ImageSourcePropType =>
@@ -39,14 +41,14 @@ const TabNavigator: React.FC = () => {
   }): BottomTabNavigationOptions => ({
     headerShown: false,
     tabBarHideOnKeyboard: true,
+    tabBarShowLabel: false,
     tabBarStyle: {
-      height: Platform.OS === 'ios' ? height * 0.1 : height * 0.075,
+      height: Platform.OS === 'ios' ? height * 0.09 : height * 0.07,
       backgroundColor: colors.primary,
     },
     tabBarItemStyle: {
-      justifyContent: 'center',
       alignItems: 'center',
-      flex: 1,
+      paddingVertical: width * 0.013,
     },
     tabBarIcon: ({ focused }) => (
       <Image
@@ -61,26 +63,6 @@ const TabNavigator: React.FC = () => {
         resizeMode="contain"
       />
     ),
-    tabBarLabel: ({ focused }) => (
-      <Text
-        style={[
-          styles.tabLabel,
-          {
-            color: focused ? colors.white : colors.black,
-            textAlign: 'center',
-            alignSelf: 'center',
-          },
-        ]}>
-        {route.name}
-      </Text>
-    ),
-    tabBarLabelStyle: {
-      textAlign: 'center',
-      alignSelf: 'center',
-    },
-    tabBarIconStyle: {
-      alignSelf: 'center',
-    },
   });
 
   return (
@@ -90,6 +72,7 @@ const TabNavigator: React.FC = () => {
       <Tab.Screen name={HOME.ScanQR} component={ScanQR} />
       <Tab.Screen name={HOME.Video} component={VideoMedia} />
       <Tab.Screen name={HOME.More} component={More} />
+      <Tab.Screen name={HOME.Profile} component={Profile} />
     </Tab.Navigator>
   );
 };

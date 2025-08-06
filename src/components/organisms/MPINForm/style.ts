@@ -36,7 +36,7 @@ const useStyle = () => {
       fontSize: scale(18),
     },
     errorText: {
-      color: 'red',
+      color: colors.error,
       alignSelf: 'flex-end',
       fontSize: scale(14),
     },
