@@ -1,20 +1,20 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import api from '@api/index';
 import {
   launchImageLibrary,
   launchCamera,
   MediaType,
   ImagePickerResponse,
 } from 'react-native-image-picker';
-import { useEffect, useState } from 'react';
-import { handlePermissions } from '@utils/helper';
 import IMGLYEditor, {
   EditorPreset,
   EditorSettingsModel,
   SourceType,
 } from '@imgly/editor-react-native';
-import { LICENSE_KEY } from '@utils/constant';
-import api from '@api/index';
-import { useDispatch, useSelector } from 'react-redux';
 import { fetchVideos } from '@redux/slices/MediaSlice';
+import { handlePermissions } from '@utils/helper';
+import { LICENSE_KEY } from '@utils/constant';
 
 interface VideoAsset {
   uri: string;
@@ -37,13 +37,14 @@ const useVideoMedia = () => {
   const [previewVideoTitle, setPreviewVideoTitle] = useState<string>('');
   const { email } = useSelector((state: any) => state.auth.userData);
   const Videos_data = useSelector((state: any) => state.media.videos);
+  console.log('Videos_data: ', Videos_data);
 
   useEffect(() => {
     handlePermissions('all');
     if (email) {
       dispatch(fetchVideos(email));
     }
-  }, [email]);
+  }, [dispatch, email]);
 
   const states = {
     videoUri,
@@ -235,21 +236,21 @@ const useVideoMedia = () => {
 
   return {
     Videos_data,
+    states,
     handleRecordVideo,
     handleSelectVideo,
     handleClear,
     handleEdit,
-    handleSaveMedia,
     closePreviewModal,
+    isVideoLoaded,
     formatFileSize,
     formatDuration,
     getFormattedResolution,
     getVideoFileName,
     hasValidVideoAsset,
-    isVideoLoaded,
-    isPreviewModalOpen,
+    handleSaveMedia,
     handleSelectStoredVideo,
-    states,
+    isPreviewModalOpen,
   };
 };
 

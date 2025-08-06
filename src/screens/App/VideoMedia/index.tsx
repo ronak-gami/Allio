@@ -1,23 +1,20 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  ScrollView,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
-import useStyle from './style';
+import { View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { TabParamList } from '@types/navigations';
-import { Button } from '@components/index';
-import useVideoMedia from './useVideoMedia';
-import Video from 'react-native-video';
-import Text from '@components/atoms/Text';
 import { useTheme } from '@react-navigation/native';
+import Video from 'react-native-video';
+import { TabParamList } from '@types/navigations';
+import {
+  Button,
+  CustomChip,
+  CustomFlatList,
+  CustomLoader,
+  Text,
+  VideoPreviewModal,
+} from '@components/index';
 import { ICONS } from '@assets/index';
-import CustomChip from '@components/atoms/CustomChip';
-import CustomLoader from '@components/atoms/CustomLoader';
-import VideoPreviewModal from '@components/organisms/VideoPreviewModal';
+import useStyle from './style';
+import useVideoMedia from './useVideoMedia';
 
 type Props = BottomTabScreenProps<TabParamList, 'Video'>;
 
@@ -63,35 +60,29 @@ const VideoMedia: React.FC<Props> = () => {
 
   const renderVideoGrid = () => (
     <View style={styles.gridContainer}>
-      {/* CORRECTED: Using `Videos_data` directly */}
-      {Videos_data && Videos_data.length > 0 ? (
-        <FlatList
-          data={Videos_data}
-          renderItem={renderVideoGridItem}
-          removeClippedSubviews={false}
-          keyExtractor={(item, index) =>
-            item.id?.toString() || index.toString()
-          }
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={styles.gridRow}
-          contentContainerStyle={styles.gridContent}
-        />
-      ) : (
-        <View style={styles.emptyGridContainer}>
-          <Image
-            source={ICONS.NoVideo}
-            style={styles.emptyGridIcon}
-            resizeMode="contain"
-          />
-          <Text type="BOLD" style={styles.emptyGridTitle}>
-            No Videos Yet
-          </Text>
-          <Text type="REGULAR" style={styles.emptyGridSubtitle}>
-            Start by recording a new video or choosing from gallery
-          </Text>
-        </View>
-      )}
+      <CustomFlatList
+        data={Videos_data || []}
+        renderItem={renderVideoGridItem}
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+        columnWrapperStyle={styles.gridRow}
+        contentContainerStyle={styles.gridContent}
+        ListEmptyComponent={
+          <View style={styles.emptyGridContainer}>
+            <Image
+              source={ICONS.NoVideo}
+              style={styles.emptyGridIcon}
+              resizeMode="contain"
+            />
+            <Text type="BOLD" style={styles.emptyGridTitle}>
+              No Videos Yet
+            </Text>
+            <Text type="REGULAR" style={styles.emptyGridSubtitle}>
+              Start by recording a new video or choosing from gallery
+            </Text>
+          </View>
+        }
+      />
     </View>
   );
 

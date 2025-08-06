@@ -1,10 +1,10 @@
 import React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import CustomModal from '@components/atoms/CustomModel';
-import useStyle from './style';
 import Video from 'react-native-video';
 import { ICONS } from '@assets/index';
-import useVideoPreviewModal from './useVideoPreviewModal';
+import { handleMediaDownload, handleMediaShare } from '@utils/helper';
+import useStyle from './style';
 
 interface VideoPreviewModalProps {
   visible: boolean;
@@ -20,15 +20,9 @@ const VideoPreviewModal: React.FC<VideoPreviewModalProps> = ({
   onClose,
 }) => {
   const styles = useStyle();
-  const { handleMediaSaveToGallery, loading, handleVideoShare } =
-    useVideoPreviewModal();
 
   return (
-    <CustomModal
-      visible={visible}
-      title={videoTitle}
-      onClose={onClose}
-      loading={loading}>
+    <CustomModal visible={visible} title={videoTitle} onClose={onClose}>
       <View style={styles.videoModalContent}>
         {videoUri && (
           <Video
@@ -41,13 +35,14 @@ const VideoPreviewModal: React.FC<VideoPreviewModalProps> = ({
         )}
       </View>
       <View style={styles.iconsView}>
-        <TouchableOpacity onPress={() => handleMediaSaveToGallery(videoUri)}>
+        <TouchableOpacity
+          onPress={() => handleMediaDownload(videoUri, 'video')}>
           <Image source={ICONS.Download} style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity>
           <Image source={ICONS.Send} style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleVideoShare(videoUri)}>
+        <TouchableOpacity onPress={() => handleMediaShare(videoUri, 'video')}>
           <Image source={ICONS.Share} style={styles.icon} />
         </TouchableOpacity>
       </View>

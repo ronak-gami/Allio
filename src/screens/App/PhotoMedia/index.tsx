@@ -8,7 +8,7 @@ import {
   Button,
   CustomFlatList,
   MediaCard,
-  MediaPreview,
+  ImagePreviewModal,
 } from '@components/index';
 import Text from '@components/atoms/Text';
 import CustomChip from '@components/atoms/CustomChip';
@@ -134,7 +134,7 @@ const PhotoMedia: React.FC<Props> = () => {
                     removeClippedSubviews={false}
                     ListEmptyComponent={renderEmptyState}
                   />
-                  <MediaPreview
+                  <ImagePreviewModal
                     visible={states?.modalVisible}
                     onClose={closeModal}
                     imageUri={states?.selectedImage}
