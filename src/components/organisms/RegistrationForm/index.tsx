@@ -36,10 +36,8 @@ const RegistrationForm = () => {
   };
   return (
     <View style={styles.formContainer}>
-      <Text style={styles.title} type="bold">
-        Register
-      </Text>
-      <Text style={styles.subtitle}>Create your account to get started</Text>
+      <Text label="register" style={styles.title} type="bold" />
+      <Text label="register_subtitle" style={styles.subtitle} />
       <View style={styles.inputContainer}>
         <Formik
           initialValues={initialValues}
@@ -106,9 +104,7 @@ const RegistrationForm = () => {
       <View style={styles.dividerContainer}>
         <Text label="no_account" style={styles.orText} />
         <TouchableOpacity onPress={navigateToLogin}>
-          <Text style={styles.loginText} type="semibold">
-            Login{' '}
-          </Text>
+          <Text style={styles.loginText} label="login" type="semibold" />
         </TouchableOpacity>
       </View>
     </View>

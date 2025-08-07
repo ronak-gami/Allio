@@ -36,6 +36,7 @@ const VideoMedia: React.FC<Props> = () => {
     hasValidVideoAsset,
     handleSaveMedia,
     isPreviewModalOpen,
+    handleSelectStoredVideo,
   } = useVideoMedia();
 
   const styles = useStyle();
@@ -45,7 +46,12 @@ const VideoMedia: React.FC<Props> = () => {
     <View style={styles.gridContainer}>
       <CustomFlatList
         data={Videos_data || []}
-        renderItem={({ item }) => <VideoCard item={item} />}
+        renderItem={({ item }) => (
+          <VideoCard
+            item={item}
+            handleSelectStoredVideo={() => handleSelectStoredVideo(item)}
+          />
+        )}
         numColumns={2}
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={styles.gridRow}

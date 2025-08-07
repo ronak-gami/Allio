@@ -1,5 +1,7 @@
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+import StatusBar from '@components/atoms/StatusBar';
 import RegistrationForm from '@components/organisms/RegistrationForm';
 import { AuthStackParamList } from '@types/navigations';
 import { useAnalytics } from '@hooks/index';

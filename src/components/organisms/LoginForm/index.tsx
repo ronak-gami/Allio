@@ -82,7 +82,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
       </View>
       <View style={styles.dividerContainer}>
         <View style={styles.line} />
-        <Text style={styles.socialSignInText}>Social Sign-In</Text>
+        <Text style={styles.socialSignInText} label="social_sign_in">
+          Social Sign-In
+        </Text>
         <View style={styles.line} />
       </View>
 
@@ -94,9 +96,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
       <View style={styles.dividerContainer}>
         <Text label="no_account" style={styles.orText} />
         <TouchableOpacity onPress={navigateToRegister}>
-          <Text style={styles.signUpText} type="semibold">
-            Register
-          </Text>
+          <Text style={styles.signUpText} label="register" type="semibold" />
         </TouchableOpacity>
       </View>
     </View>

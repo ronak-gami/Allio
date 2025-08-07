@@ -1,50 +1,22 @@
-import React, { useEffect } from 'react';
-import { View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
-import perf from '@react-native-firebase/perf';
-import { useTranslation } from 'react-i18next';
-import { RootState } from '@redux/store';
-
-import Text from '@components/atoms/Text';
-import CustomDropdown from '@components/atoms/Dropdown';
-import Button from '@components/atoms/Button';
-import { setLanguage } from '@redux/slices/languageSlice';
-import { toggleTheme } from '@redux/slices/ThemeSlice';
-import { languages } from '@utils/helper';
-import { useTheme } from '@react-navigation/native';
-import useStyle from './style';
-import { getAuth } from '@react-native-firebase/auth';
+import React from 'react';
+import { View, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import firestore from '@react-native-firebase/firestore';
-import { logout } from '@redux/slices/AuthSlice';
+import crashlytics from '@react-native-firebase/crashlytics';
+import { getAuth } from '@react-native-firebase/auth';
 
-const More: React.FC = () => {
+import { CustomFlatList, Text } from '@components/index';
+import { TabParamList } from '@types/navigations';
+import { logout } from '@redux/slices/AuthSlice';
+import useStyle from './style';
+import { HOME } from '@utils/constant';
+
+type Props = BottomTabScreenProps<TabParamList, 'More'>;
+
+const More: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
-  const { colors } = useTheme();
-  const { t } = useTranslation();
-
-  const currentLanguage = useSelector(
-    (state: RootState) => state.language.language,
-  );
-  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
-
-  useEffect(() => {
-    crashlytics().log('MoreScreen mounted');
-    const trace = perf().newTrace('more_screen_load');
-    trace.start();
-    return () => {
-      trace.stop();
-    };
-  }, []);
-
-  const handleLanguageChange = (value: string) => {
-    dispatch(setLanguage(value));
-  };
-
-  const handleThemeToggle = () => {
-    dispatch(toggleTheme());
-  };
 
   const handleLogout = async () => {
     try {
@@ -66,27 +38,56 @@ const More: React.FC = () => {
     }
   };
 
+  const handleItemPress = (key: string) => {
+    switch (key) {
+      case 'profile':
+        // navigation.navigate('Profile');
+        break;
+      case 'friends':
+        navigation.navigate(HOME.MyFriends);
+        break;
+      case 'theme':
+        // navigation.navigate('Theme');
+        break;
+      case 'language':
+        // navigation.navigate('Language');
+        break;
+      case 'delete':
+        // navigation.navigate('DeleteAccount');
+        break;
+      case 'logout':
+        handleLogout();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const settingsData = [
+    { key: 'profile', title: 'Profile' },
+    { key: 'friends', title: 'My Friends' },
+    { key: 'theme', title: 'Theme' },
+    { key: 'language', title: 'Language' },
+    { key: 'delete', title: 'Delete Account' },
+    { key: 'logout', title: 'Logout' },
+  ];
+
+  const renderItem = ({ item }: { item: { key: string; title: string } }) => (
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => handleItemPress(item.key)}>
+      <Text style={styles.itemText} type="semibold">
+        {item.title}
+      </Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: colors.text }]}>More Screens</Text>
-      <CustomDropdown
-        label={t('select_language')}
-        data={languages.map(lang => lang.label)}
-        selectedValue={
-          languages.find(lang => lang.value === currentLanguage)?.label || ''
-        }
-        onSelect={label => {
-          const selected = languages.find(lang => lang.label === label);
-          if (selected) {
-            handleLanguageChange(selected.value);
-          }
-        }}
-      />
-      <Button
-        title={isDarkMode ? ' Switch to Light Mode' : ' Switch to Dark Mode'}
-        onPress={handleThemeToggle}
-      />
-      <Button title="Logout" onPress={handleLogout} />
+      <Text style={styles.title} type="BOLD">
+        More
+      </Text>
+      <CustomFlatList data={settingsData} renderItem={renderItem} />
     </View>
   );
 };

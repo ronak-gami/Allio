@@ -16,6 +16,7 @@
   "no_account": "શું તમારું એકાઉન્ટ નથી?",
   "register": "રજિસ્ટ્રેશન કરો",
   "register_subtitle": "નવું એકાઉન્ટ બનાવવા માટે શરૂ કરો",
+  "forgot_password_subtitle": "પાસવર્ડ રીસેટ લિંક મેળવવા માટે તમારું ઇમેઇલ દાખલ કરો",
   "field_required": "{{field}} જરૂરી છે",
   "field_min": "{{field}} ઓછામાં ઓછા {{min}} અક્ષરોનો હોવો જોઈએ",
   "email_valid": "કૃપા કરીને માન્ય {{field}} એડ્રેસ દાખલ કરો",
@@ -25,6 +26,8 @@
   "mpin_reset_title": "4-અંકનું MPIN રીસેટ કરો",
   "mpin_enter_title": "4-અંકનું MPIN દાખલ કરો",
   "mpin_set_title": "4-અંકનું MPIN સેટ કરો",
+  "social_sign_in": "સોશિયલ મીડિયા સાથે લૉગિન કરો",
+  "mpin_forgot_title": "તમારું MPIN ભૂલી ગયા છો?",
 
   "mpin_reset_subtitle": "તમારું ખાતું સુરક્ષિત કરવા માટે નવું MPIN દાખલ કરો",
   "mpin_enter_subtitle": "આગળ વધવા માટે તમારું MPIN દાખલ કરો",
@@ -42,7 +45,38 @@
   "mpin": "MPIN",
   "enter_mpin": "એમપિન દાખલ કરો",
   "confirm_mpin": "એમપિનની પુષ્ટિ કરો",
-  "forgot_mpin": "એમપિન ભૂલી ગયા છો?"
+  "forgot_mpin": "એમપિન ભૂલી ગયા છો?",
+  "choose_from_gallery": "ગેલેરીમાંથી પસંદ કરો",
+  "save": "સંગ્રહ કરો",
+  "edit": "સંપાદન કરો",
+  "cancel": "રદ કરો",
+  "size": "કદ",
+  "photoMedia": {
+    "no_image_selected": "કોઈ છબી પસંદ કરવામાં આવી નથી",
+    "choose_image_prompt": "તમારી ગેલેરીમાંથી છબી પસંદ કરો અથવા નવી લો",
+    "choose_from_gallery": "ગેલેરીમાંથી પસંદ કરો",
+    "take_photo": "ફોટો લો"
+  },
+  "videoMedia": {
+    "no_video_selected": "કોઈ વિડિયો પસંદ કરેલ નથી",
+    "choose_video_prompt": "તમારી ગેલેરીમાંથી વિડિયો પસંદ કરો અથવા નવો રેકોર્ડ કરો",
+    "record_video": "વિડિયો રેકોર્ડ કરો",
+    "choose_from_gallery": "ગેલેરીમાંથી પસંદ કરો",
+    "duration": "અવધિ",
+    "resolution": "રિઝોલ્યુશન"
+  },
+  "scanQr": {
+    "title": "ક્યુઆર સ્કેન કરો",
+    "enter_email": "ઈમેઈલ દાખલ કરો",
+    "submit": "સબમિટ કરો",
+    "view_my_qr": "મારો ક્યુઆર જુઓ",
+    "or": "અથવા"
+  },
+  "myQr": {
+    "title": "મારો ક્યુઆર",
+    "download_qr": "ક્યુઆર ડાઉનલોડ કરો",
+    "share_qr": "ક્યુઆર શેર કરો"
+  }
 }
 
 

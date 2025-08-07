@@ -42,6 +42,15 @@ const api = {
         data,
       }),
   },
+
+  QRCODE: {
+    generate: ({ data }: { data: { email: string } }) =>
+      client({
+        method: 'post',
+        url: 'qrcode/generate',
+        data,
+      }),
+  },
 };
 
 export default api;

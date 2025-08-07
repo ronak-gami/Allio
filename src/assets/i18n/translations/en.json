@@ -14,6 +14,7 @@
   "continue_github": "Continue with GitHub",
   "continue_linkedin": "Continue with LinkedIn",
   "no_account": "Don't have an account?",
+  "forgot_password_subtitle": "Enter your email to receive a password reset link",
   "register": "Register",
   "register_subtitle": "Create a new account to get started",
   "field_required": "{{field}} is required",
@@ -26,6 +27,7 @@
   "mpin_enter_title": "Enter 4-Digit MPIN",
   "mpin_set_title": "Set 4-Digit MPIN",
   "forgot_mpin": "Forgot MPIN?",
+  "social_sign_in": "Social Media Sign In",
 
   "mpin_reset_subtitle": "Enter your new MPIN to reset your account security",
   "mpin_enter_subtitle": "Enter your MPIN to proceed to the next step",
@@ -46,8 +48,36 @@
   "otp_sent_to": "Enter the OTP sent to",
   "resend_otp": "Resend OTP",
   "resend_otp_in": "Resend in",
-  "verify_otp": "Verify OTP"
+  "verify_otp": "Verify OTP",
+  "choose_from_gallery": "Choose from Gallery",
+  "save": "Save",
+  "edit": "Edit",
+  "cancel": "Cancel",
+  "size": "Size",
 
+  "photoMedia": {
+    "no_image_selected": "No Image Selected",
+    "choose_image_prompt": "Choose an image from your gallery or take a new one",
+    "take_photo": "Take Photo"
+  },
 
-  
+  "videoMedia": {
+    "no_video_selected": "No Video Selected",
+    "choose_video_prompt": "Choose a video from your gallery or record a new one",
+    "record_video": "Record Video",
+    "duration": "Duration",
+    "resolution": "Resolution"
+  },
+  "scanQr": {
+    "title": "Scan QR",
+    "enter_email": "Enter Email",
+    "submit": "Submit",
+    "view_my_qr": "View Personal QR",
+    "or": "OR"
+  },
+  "myQr": {
+    "title": "My QR",
+    "download_qr": "Download QR",
+    "share_qr": "Share QR"
+  }
 }

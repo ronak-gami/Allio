@@ -10,6 +10,9 @@ const useStyle = () => {
       alignItems: 'center',
       backgroundColor: colors.primary,
     },
+    statusBar: {
+      backgroundColor: colors.white,
+    },
   });
 };
 export default useStyle;

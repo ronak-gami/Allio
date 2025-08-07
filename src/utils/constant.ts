@@ -69,6 +69,8 @@ const HOME = {
   More: 'More',
   MPIN: 'MPIN',
   ForgetMPIN: 'ForgetMPIN',
+  MyQR: 'MyQR',
+  MyFriends: 'MyFriends',
 } as const;
 
 const LICENSE_KEY =

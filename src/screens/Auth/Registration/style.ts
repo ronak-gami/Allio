@@ -8,6 +8,9 @@ const useStyle = () => {
     ScrollingStyle: {
       justifyContent: 'center',
     },
+    statusBar: {
+      backgroundColor: colors.white,
+    },
   });
 };
 export default useStyle;
