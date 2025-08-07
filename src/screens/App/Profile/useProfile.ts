@@ -1,16 +1,42 @@
-import { RootState } from '@redux/store';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { fetchImages, fetchVideos } from '@redux/slices/MediaSlice';
+import { RootState, AppDispatch } from '@redux/store';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-const useProfile = () => {
+interface UseProfileProps {
+  userEmail?: string;
+}
+
+const useProfile = ({ userEmail }: UseProfileProps = {}) => {
   const [activeTab, setActiveTab] = useState<string>('images');
-  const { email } = useSelector((state: RootState) => state.auth.userData);
+  const { email: authEmail } = useSelector(
+    (state: RootState) => state.auth.userData,
+  );
   const { images, videos } = useSelector((state: RootState) => state.media);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const states = {
-    activeTab,
-    setActiveTab,
+  const email = userEmail || authEmail;
+
+  useEffect(() => {
+    if (email) {
+      dispatch(fetchImages(email));
+      dispatch(fetchVideos(email));
+    }
+  }, [dispatch, email]);
+
+  const handleTabChange = (tab: string) => setActiveTab(tab);
+
+  return {
+    states: {
+      activeTab,
+      setActiveTab: handleTabChange,
+    },
+    data: {
+      email,
+      images,
+      videos,
+    },
   };
-  return { states, email, images, videos };
 };
+
 export default useProfile;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import { HomeStackParamList } from '@types/navigations';
 import MPINSetupScreen from '@screens/App/MPIN';
 import ForgetMPIN from '@screens/App/ForgetMPIN';

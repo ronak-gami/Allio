@@ -10,16 +10,16 @@ const useStyle = () => {
       flex: 1,
     },
     pictureContainer: {
-      height: height * 0.3,
+      height: height * 0.22,
       justifyContent: 'center',
-      gap: width * 0.045,
+      gap: width * 0.04,
       borderBottomWidth: scale(1),
       borderBottomColor: colors.text,
     },
     image: {
       alignSelf: 'center',
-      width: width * 0.28,
-      height: width * 0.28,
+      width: width * 0.25,
+      height: width * 0.25,
       borderColor: colors.text,
       borderWidth: scale(2),
       borderRadius: width * 0.14,
@@ -31,9 +31,10 @@ const useStyle = () => {
     },
     contentHeader: {
       flexDirection: 'row',
+      justifyContent: 'space-around',
     },
     tab: {
-      flex: 1,
+      width: width * 0.35,
       paddingVertical: scale(10),
       alignItems: 'center',
     },
