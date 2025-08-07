@@ -17,6 +17,7 @@ import { showError, showSuccess } from '@utils/toast';
 import useValidation from '@utils/validationSchema';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
+import { requestUserPermission } from '@utils/helper';
 
 export const useLoginForm = () => {
   const [remember, setRemember] = useState<boolean>(false);
@@ -79,6 +80,7 @@ export const useLoginForm = () => {
         crashlytics().setAttribute('email', email);
 
         showSuccess('Login Successful!');
+        await requestUserPermission();
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);
@@ -94,89 +96,6 @@ export const useLoginForm = () => {
       await trace.stop();
     }
   };
-  // const handleLogin = async (values: typeof initialValues) => {
-  //   setLoading(true);
-  //   const trace = perf().newTrace('login_flow');
-  //   await trace.start();
-
-  //   try {
-  //     const exists = await checkUserExistsByEmail(values.email);
-  //     if (!exists) {
-  //       showError('User does not exist!');
-  //       return;
-  //     }
-  //     const userCredential = await signInWithEmailAndPassword(
-  //       getAuth(),
-  //       values.email,
-  //       values.password,
-  //     );
-  //     console.log('Sign in result', userCredential);
-
-  //     dispatch(setStateKey({ key: 'userData', value: values }));
-  //     const user = userCredential.user;
-  //     if (user) {
-  //       const token = await user.getIdToken();
-  //       dispatch(setStateKey({ key: 'token', value: token }));
-
-  //       const fcmToken = await messaging().getToken();
-  //       if (fcmToken) {
-  //         await firestore().collection('users').doc(user.uid).set(
-  //           {
-  //             fcmToken,
-  //             fcmUpdatedAt: firestore.FieldValue.serverTimestamp(),
-  //           },
-  //           { merge: true },
-  //         );
-  //       } else {
-  //         console.warn('FCM token not available after login.');
-  //       }
-
-  //       await analytics().logEvent('login', {
-  //         method: 'email',
-  //         email: values.email,
-  //       });
-
-  //       crashlytics().log('User login successful');
-  //       crashlytics().setAttribute('email', values.email);
-  //       showSuccess('Login Successful!');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error into handleLogin :- ', error);
-  //     crashlytics().recordError(error as Error);
-
-  //     crashlytics().log('Error during login');
-  //     showError(
-  //       (error as any)?.response?.data?.message ||
-  //         'Login failed. Please try again.',
-  //     );
-  //   } finally {
-  //     setLoading(false);
-  //     await trace.stop();
-  //   }
-  // };
-
-  const handleLogout = async () => {
-    setLoading(true);
-    try {
-      const auth = getAuth();
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        // await messaging().deleteToken();
-        await firestore().collection('users').doc(currentUser.uid).update({
-          fcmToken: null,
-          fcmUpdatedAt: null,
-        });
-        console.log('remove token');
-        await auth.signOut();
-        dispatch(reduxLogout());
-      }
-    } catch (error) {
-      console.error('Error during logout:', error);
-      crashlytics().recordError(error as Error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const navigateToRegister = () => {
     navigation.push(AUTH.Register);
@@ -187,7 +106,6 @@ export const useLoginForm = () => {
     setRemember: () => setRemember(prev => !prev),
     loading,
     handleLogin,
-    handleLogout,
     initialValues,
     loginValidationSchema,
     navigateToRegister,

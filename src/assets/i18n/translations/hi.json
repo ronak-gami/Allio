@@ -18,6 +18,7 @@
   "register_subtitle": "नया खाता बनाने के लिए शुरू करें",
   "field_required": "{{field}} आवश्यक है",
   "field_min": "{{field}} कम से कम {{min}} अक्षरों का होना चाहिए",
+  "forgot_password_subtitle": "पासवर्ड रीसेट लिंक प्राप्त करने के लिए अपना ईमेल दर्ज करें",
   "email_valid": "कृपया मान्य {{field}} पता दर्ज करें",
   "mobile_pattern": "{{field}} 10 अंकों का होना चाहिए",
   "password_pattern": "{{field}} में कम से कम एक बड़ा अक्षर, एक छोटा अक्षर और एक संख्या होनी चाहिए",
@@ -27,6 +28,8 @@
   "mpin_reset_title": "4-अंकीय MPIN रीसेट करें",
   "mpin_enter_title": "4-अंकीय MPIN दर्ज करें",
   "mpin_set_title": "4-अंकीय MPIN सेट करें",
+  "forgot_mpin": "MPIN भूल गए?",
+  "social_sign_in": "सोशल मीडिया के साथ साइन इन करें",
 
   "mpin_reset_subtitle": "अपने खाते की सुरक्षा के लिए नया MPIN दर्ज करें",
   "mpin_enter_subtitle": "अगले चरण पर जाने के लिए MPIN दर्ज करें",
@@ -44,5 +47,26 @@
   "mpin": "MPIN",
   "enter_mpin": "एमपिन दर्ज करें",
   "confirm_mpin": "एमपिन की पुष्टि करें",
-  "forgot_mpin": "एमपिन भूल गए?"
+  "forgot_mpin": "एमपिन भूल गए?",
+  "choose_from_gallery": "गैलरी से चुनें",
+
+  "photoMedia": {
+    "no_image_selected": "कोई चित्र चयनित नहीं",
+    "choose_image_prompt": "अपनी गैलरी से एक चित्र चुनें या एक नया लें",
+    "choose_from_gallery": "गैलरी से चुनें",
+    "take_photo": "फ़ोटो लें"
+  },
+
+  "videoMedia": {
+    "no_video_selected": "कोई वीडियो चयनित नहीं",
+    "choose_video_prompt": "अपनी गैलरी से वीडियो चुनें या नया रिकॉर्ड करें",
+    "record_video": "वीडियो रिकॉर्ड करें",
+    "choose_from_gallery": "गैलरी से चुनें",
+    "save": "सहेजें",
+    "edit": "संपादित करें",
+    "cancel": "रद्द करें",
+    "size": "आकार",
+    "duration": "अवधि",
+    "resolution": "रिज़ॉल्यूशन"
+  }
 }
