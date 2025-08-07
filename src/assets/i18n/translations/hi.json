@@ -49,6 +49,10 @@
   "confirm_mpin": "एमपिन की पुष्टि करें",
   "forgot_mpin": "एमपिन भूल गए?",
   "choose_from_gallery": "गैलरी से चुनें",
+  "save": "सहेजें",
+  "edit": "संपादित करें",
+  "cancel": "रद्द करें",
+  "size": "आकार",
 
   "photoMedia": {
     "no_image_selected": "कोई चित्र चयनित नहीं",
@@ -56,17 +60,24 @@
     "choose_from_gallery": "गैलरी से चुनें",
     "take_photo": "फ़ोटो लें"
   },
-
   "videoMedia": {
     "no_video_selected": "कोई वीडियो चयनित नहीं",
     "choose_video_prompt": "अपनी गैलरी से वीडियो चुनें या नया रिकॉर्ड करें",
     "record_video": "वीडियो रिकॉर्ड करें",
     "choose_from_gallery": "गैलरी से चुनें",
-    "save": "सहेजें",
-    "edit": "संपादित करें",
-    "cancel": "रद्द करें",
-    "size": "आकार",
     "duration": "अवधि",
     "resolution": "रिज़ॉल्यूशन"
+  },
+  "scanQr": {
+    "title": "क्यूआर स्कैन करें",
+    "enter_email": "ईमेल दर्ज करें",
+    "submit": "जमा करें",
+    "view_my_qr": "अपना क्यूआर देखें",
+    "or": "या"
+  },
+  "myQr": {
+    "title": "मेरा क्यूआर",
+    "download_qr": "क्यूआर डाउनलोड करें",
+    "share_qr": "क्यूआर साझा करें"
   }
 }
