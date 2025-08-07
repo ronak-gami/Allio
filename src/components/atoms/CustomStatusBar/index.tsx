@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   StatusBar as RNStatusBar,
   StatusBarStyle,
@@ -33,4 +33,4 @@ const StatusBar = ({
   );
 };
 
-export default StatusBar;
+export default memo(StatusBar);

@@ -16,9 +16,11 @@ export { default as ImagePreviewModal } from './organisms/ImagePreviewModal';
 export { default as MediaCard } from './organisms/MediaCard';
 export { default as VideoPreviewModal } from './organisms/VideoPreviewModal';
 export { default as ContactUsSection } from './organisms/ContactUs';
-export { default as HomeHeader } from './organisms/HomeHeader';
 export { default as ImageSlider } from './organisms/ImageSlider';
 export { default as AboutDetails } from './organisms/AboutDetails';
+
+//molecules
+export { default as Container } from './molecules/Container';
 
 // cards
 export { default as VideoCard } from './cards/VideoCard';

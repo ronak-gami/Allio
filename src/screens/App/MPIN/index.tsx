@@ -1,25 +1,23 @@
-import React, { useCallback, useEffect } from 'react';
-import {
-  View,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from 'react-native';
-import useStyle from './style';
-import MPINForm from '@components/organisms/MPINForm';
-import { ICONS } from '@assets/index';
-import { promptAppLock } from '@utils/auth';
+import React from 'react';
+import { View, Image } from 'react-native';
 import {
   RouteProp,
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { HOME } from '@utils/constant';
 import { useSelector } from 'react-redux';
+
+import { Container } from '@components/index';
+import MPINForm from '@components/organisms/MPINForm';
+import { ICONS } from '@assets/index';
 import { RootState } from '@redux/store';
+
+import { promptAppLock } from '@utils/auth';
+import { HOME } from '@utils/constant';
 import { checkIfMPINExists } from '@utils/helper';
+
+import useStyle from './style';
 
 type MPINScreenRouteParams = {
   MPIN: {
@@ -65,24 +63,17 @@ const MPINSetupScreen = () => {
   );
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainer}
-        keyboardShouldPersistTaps="handled">
-        <View style={styles.iconWrapper}>
-          <Image
-            source={ICONS.mpinSecure}
-            style={styles.icon}
-            resizeMode="contain"
-          />
-        </View>
+    <Container showHeader={false} auth keyboardAvoiding>
+      <View style={styles.iconWrapper}>
+        <Image
+          source={ICONS.mpinSecure}
+          style={styles.icon}
+          resizeMode="contain"
+        />
+      </View>
 
-        <MPINForm resetMpin={resetMpin} email={email} />
-      </ScrollView>
-    </KeyboardAvoidingView>
+      <MPINForm resetMpin={resetMpin} email={email} />
+    </Container>
   );
 };
 

@@ -13,7 +13,7 @@ const Login: React.FC<Props> = () => {
   const [loading, setLoading] = useState(false);
 
   return (
-    <Container showHeader={false} useScrollView keyboardAvoiding>
+    <Container showHeader={false} auth keyboardAvoiding showLoader={loading}>
       <LoginForm setLoading={setLoading} />
     </Container>
   );
