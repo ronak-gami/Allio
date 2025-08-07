@@ -19,10 +19,7 @@ const AuthNavigator: React.FC = () => {
   );
   return (
     <>
-      <CustomStatusBar
-        backgroundColor={COLORS.primary}
-        barStyle="dark-content"
-      />
+      <CustomStatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
 
       <Stack.Navigator
         screenOptions={{ headerShown: false }}

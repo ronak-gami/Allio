@@ -7,7 +7,7 @@ import Button from '@components/atoms/Button';
 import useValidation from '@utils/validationSchema';
 
 import useStyle from './style';
-import { BottomModal } from '@components/index.tsx';
+import BottomModal from '@components/atoms/BottomModal';
 
 interface ContactFormModalProps {
   visible: boolean;

@@ -17,7 +17,10 @@ const Stack = createNativeStackNavigator<HomeStackParamList>();
 const HomeNavigator: React.FC = () => {
   return (
     <>
-      <CustomStatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
+      <CustomStatusBar
+        backgroundColor={COLORS.primary}
+        barStyle="dark-content"
+      />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name={HOME.MPIN} component={MPINSetupScreen} />
         <Stack.Screen name={HOME.ForgetMPIN} component={ForgetMPIN} />
