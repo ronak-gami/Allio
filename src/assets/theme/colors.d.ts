@@ -30,6 +30,7 @@ export type Theme = {
     modelbg: Color;
     background: Color;
     text: Color;
+    heromain: Color;
   };
 };
 
