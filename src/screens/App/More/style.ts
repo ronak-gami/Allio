@@ -16,15 +16,17 @@ const useStyle = () => {
       fontWeight: 'bold',
       marginBottom: height * 0.02,
       textAlign: 'center',
+      color: colors.text,
     },
     item: {
       paddingVertical: height * 0.025,
       // paddingHorizontal: height * 0.02,
       borderBottomWidth: 1,
-      borderColor: colors.lightGrey,
+      borderColor: colors.text,
     },
     itemText: {
       fontSize: scale(16),
+      color: colors.text,
     },
     emptyText: {
       textAlign: 'center',
