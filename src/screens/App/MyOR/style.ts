@@ -9,30 +9,24 @@ const useStyle = () => {
     container: {
       flex: 1,
       padding: height * 0.02,
-      backgroundColor: colors.white,
+      backgroundColor: colors.background,
     },
     scrollcontainer: {
       alignItems: 'center',
     },
     title: {
       fontSize: scale(20),
+      color: colors.text,
     },
 
     inputContainer: {
       gap: height * 0.025,
       width: '100%',
     },
-    input: {
-      borderWidth: 1,
-      borderColor: colors.grey,
-      borderRadius: 8,
-      paddingHorizontal: height * 0.025,
-      paddingVertical: height * 0.025,
-      marginBottom: height * 0.025,
-    },
 
     orText: {
       fontSize: scale(14),
+      color: colors.text,
     },
 
     buttonText: {
@@ -94,12 +88,12 @@ const useStyle = () => {
       width: height * 0.2,
       height: height * 0.2,
       borderRadius: 10,
-      backgroundColor: 'white',
+      backgroundColor: colors.white,
     },
     cameraContainer: {
       width: height * 0.3 - 90,
       height: height * 0.3 - 90,
-      backgroundColor: colors.background,
+      backgroundColor: colors.text,
       borderRadius: height * 0.02,
       alignItems: 'center',
       justifyContent: 'center',

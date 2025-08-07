@@ -11,6 +11,7 @@ import {
   ImagePreviewModal,
   CustomChip,
   CustomLoader,
+  CustomHeader,
 } from '@components/index';
 import Text from '@components/atoms/Text';
 
@@ -60,6 +61,7 @@ const PhotoMedia: React.FC<Props> = () => {
 
   return (
     <>
+      <CustomHeader title="Image" showProfile={false} showLogo={false} />
       <CustomLoader visible={states?.loading} />
 
       {!states.loading && (

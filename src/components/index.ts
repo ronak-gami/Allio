@@ -1,5 +1,3 @@
-import HomeHeader from './organisms/HomeHeader';
-
 //atoms
 export { default as Button } from './atoms/Button';
 export { default as Input } from './atoms/Input';
@@ -10,6 +8,7 @@ export { default as CustomOnboarding } from './atoms/CustomOnboarding';
 export { default as CustomChip } from './atoms/CustomChip';
 export { default as CustomLoader } from './atoms/CustomLoader';
 export { default as CustomStatusBar } from './atoms/CustomStatusBar';
+export { default as CustomHeader } from './atoms/CustomHeader';
 export { default as BottomModal } from './atoms/BottomModal';
 
 //oraganims

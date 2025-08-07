@@ -1,11 +1,11 @@
 import React from 'react';
-import { Platform, Image, Text, ImageSourcePropType, View } from 'react-native';
+import { Platform, Image, ImageSourcePropType } from 'react-native';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { IMAGES } from '@assets/index';
-import { height } from '@utils/helper';
+import { height, width } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import HomeScreen from '@screens/App/Home';
 import PhotoMedia from '@screens/App/PhotoMedia';
@@ -26,7 +26,7 @@ const TabNavigator: React.FC = () => {
     Photo: IMAGES.ImageMedia,
     ScanQR: IMAGES.ScanQR,
     Video: IMAGES.VideoMedia,
-    More: IMAGES.More,
+    More: IMAGES.Setting,
   };
 
   const getIconByRouteName = (name: keyof TabParamList): ImageSourcePropType =>
@@ -39,14 +39,14 @@ const TabNavigator: React.FC = () => {
   }): BottomTabNavigationOptions => ({
     headerShown: false,
     tabBarHideOnKeyboard: true,
+    tabBarShowLabel: false,
     tabBarStyle: {
-      height: Platform.OS === 'ios' ? height * 0.1 : height * 0.075,
+      height: Platform.OS === 'ios' ? height * 0.09 : height * 0.07,
       backgroundColor: colors.primary,
     },
     tabBarItemStyle: {
-      justifyContent: 'center',
       alignItems: 'center',
-      flex: 1,
+      paddingVertical: width * 0.013,
     },
     tabBarIcon: ({ focused }) => (
       <Image
@@ -61,26 +61,6 @@ const TabNavigator: React.FC = () => {
         resizeMode="contain"
       />
     ),
-    tabBarLabel: ({ focused }) => (
-      <Text
-        style={[
-          styles.tabLabel,
-          {
-            color: focused ? colors.white : colors.black,
-            textAlign: 'center',
-            alignSelf: 'center',
-          },
-        ]}>
-        {route.name}
-      </Text>
-    ),
-    tabBarLabelStyle: {
-      textAlign: 'center',
-      alignSelf: 'center',
-    },
-    tabBarIconStyle: {
-      alignSelf: 'center',
-    },
   });
 
   return (

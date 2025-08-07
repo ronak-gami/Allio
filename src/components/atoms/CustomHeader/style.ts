@@ -8,7 +8,7 @@ const useStyle = () => {
     headerContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      height: scale(56),
+      height: scale(50),
       paddingHorizontal: scale(12),
       backgroundColor: colors.primary,
       elevation: 4,
@@ -32,12 +32,11 @@ const useStyle = () => {
       padding: scale(8),
     },
     backIcon: {
-      width: scale(24),
-      height: scale(24),
+      width: scale(18),
+      height: scale(18),
     },
     title: {
-      fontSize: scale(18),
-      fontWeight: 'bold',
+      fontSize: scale(22),
       color: colors.black,
     },
     placeholder: {

@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, ScrollView, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import AboutDetails from '@components/organisms/AboutDetails';
@@ -7,11 +6,9 @@ import ImageSlider from '@components/organisms/ImageSlider';
 import { IMAGES } from '@assets/index';
 import { FeaturesCarousel } from '@components/organisms/FeaturesCorozal';
 import { FeaturesDataItem } from '@utils/constant';
-import { useTheme } from '@react-navigation/native';
 import { HOME } from '@utils/constant';
 import { HomeTabsNavigationProp } from '@types/navigations';
 import Container from '@components/molecules/Container';
-import useStyle from './style';
 import { ContactUsSection } from '@components/index';
 
 const promoImages = [
@@ -28,8 +25,6 @@ const promoImages = [
 ];
 
 const HomeScreen: React.FC = () => {
-  const colors = useTheme().colors;
-  const styles = useStyle();
   const navigation = useNavigation<HomeTabsNavigationProp>();
   const handleProfilePress = () => {
     navigation.navigate(HOME.More);
@@ -53,28 +48,16 @@ const HomeScreen: React.FC = () => {
     }
   };
   return (
-    <>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={colors.primary}
-        translucent={false}
-      />
-
-      {/* if user do not need header so pass only showHeader={false} */}
-      <Container
-        showHeader
-        onProfilePress={handleProfilePress}
-        useScrollView
-        keyboardAvoiding>
-        <AboutDetails />
-        <ImageSlider images={promoImages} />
-        <FeaturesCarousel
-          data={FeaturesDataItem}
-          onPress={handleFeaturePress}
-        />
-        <ContactUsSection />
-      </Container>
-    </>
+    <Container
+      showHeader
+      onProfilePress={handleProfilePress}
+      useScrollView
+      keyboardAvoiding>
+      <AboutDetails />
+      <ImageSlider images={promoImages} />
+      <FeaturesCarousel data={FeaturesDataItem} onPress={handleFeaturePress} />
+      <ContactUsSection />
+    </Container>
   );
 };
 

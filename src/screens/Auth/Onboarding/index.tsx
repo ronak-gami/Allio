@@ -6,7 +6,6 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
 import analytics from '@react-native-firebase/analytics';
 
-import StatusBar from '@components/atoms/StatusBar';
 import { onboardingData } from '@utils/constant';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { AuthStackParamList } from '@types/navigations';
@@ -60,11 +59,6 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor={styles.statusBar.backgroundColor}
-      />
-
       <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>

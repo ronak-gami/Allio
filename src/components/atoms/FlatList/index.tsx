@@ -34,6 +34,7 @@ const CustomFlatList = forwardRef<FlatList<any>, CustomFlatListProps>(
         data={data}
         renderItem={renderItem}
         numColumns={numColumns}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(_, i) => i?.toString()}
         columnWrapperStyle={numColumns > 1 ? columnWrapperStyle : undefined}
         contentContainerStyle={[
@@ -42,7 +43,9 @@ const CustomFlatList = forwardRef<FlatList<any>, CustomFlatListProps>(
         ]}
         ListEmptyComponent={
           ListEmptyComponent || (
-            <Text style={styles.emptyText}>No items found.</Text>
+            <Text type="BOLD" style={styles.emptyText}>
+              No items found.
+            </Text>
           )
         }
         removeClippedSubviews={false}

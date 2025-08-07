@@ -4,7 +4,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet,
   ViewStyle,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
@@ -34,7 +33,6 @@ const Container: React.FC<PageLayoutProps> = ({
   loaderText = 'Loading...',
   useScrollView = false,
   keyboardAvoiding = false,
-  // Default offset for iOS header height
   style,
 }) => {
   const { colors } = useTheme();

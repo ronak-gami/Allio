@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import CustomHeader from '@components/atoms/CustomHeader';
-import { ICONS, IMAGES } from '@assets/index';
+import { IMAGES } from '@assets/index';
 import useStyle from './style';
 
 interface Props {
@@ -23,13 +23,6 @@ const HomeHeader: React.FC<Props> = ({ onProfilePress }) => {
         onProfilePress={onProfilePress}
       />
     </View>
-
-    /*
-Example usage of CustomHeader with back arrow and title:
-<View>
-  <CustomHeader showBackArrow={true} onBackPress={() => {}} title="Your Title" />
-</View>
-*/
   );
 };
 

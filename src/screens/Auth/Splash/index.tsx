@@ -1,17 +1,19 @@
 import React from 'react';
 import { View, Image } from 'react-native';
 
-import StatusBar from '@components/atoms/StatusBar';
+import { useTheme } from '@react-navigation/native';
 import { IMAGES } from '@assets/index';
+import { CustomStatusBar } from '@components/index';
 import useStyle from './style';
 
 const Splash: React.FC = () => {
   const styles = useStyle();
+  const { colors } = useTheme();
   return (
     <>
-      <StatusBar
+      <CustomStatusBar
         barStyle="dark-content"
-        backgroundColor={styles.statusBar.backgroundColor}
+        backgroundColor={colors.primary}
       />
       <View style={styles.container}>
         <Image source={IMAGES.Allio_Logo} resizeMode="contain" />
