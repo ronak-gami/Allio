@@ -26,7 +26,7 @@ const RememberForgot: React.FC<RememberForgotProps> = ({
       />
 
       <Pressable
-        onPress={() => navigation.navigate(AUTH.ForgotPassword)}
+        onPress={() => navigation.push(AUTH.ForgotPassword)}
         style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}>
         <Text style={styles.forgotpassText} type="semibold">
           Forgot Password?

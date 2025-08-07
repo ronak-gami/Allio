@@ -17,7 +17,6 @@ const useStyle = () => {
     },
     text: {
       fontSize: scale(16),
-      fontFamily: FONTS.medium,
     },
     icon: {
       marginHorizontal: scale(8),
