@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   View,
   ScrollView,
@@ -75,4 +75,4 @@ const Container: React.FC<PageLayoutProps> = ({
   );
 };
 
-export default Container;
+export default memo(Container);

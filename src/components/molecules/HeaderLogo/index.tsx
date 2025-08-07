@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   View,
   Image,
@@ -30,4 +30,4 @@ const CustomLogo: React.FC<Props> = ({ logo, logoStyle, containerStyle }) => {
   );
 };
 
-export default CustomLogo;
+export default memo(CustomLogo);

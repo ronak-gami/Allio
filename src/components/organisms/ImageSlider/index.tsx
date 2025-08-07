@@ -1,8 +1,10 @@
-import React, { memo } from 'react';
-import { View, FlatList, Image, TouchableOpacity } from 'react-native';
+// import React, { memo } from 'react';
+import { View, Image, TouchableOpacity } from 'react-native';
 import { ICONS } from '@assets/index';
 import useStyle from './style';
 import { useImageSlider } from './useImageSlide';
+import { CustomFlatList } from '@components/index';
+import { memo } from 'react';
 
 interface ImageSliderProps {
   images: any[];
@@ -26,8 +28,8 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
         <Image source={ICONS.Left} style={styles.arrowIcon} />
       </TouchableOpacity>
 
-      <FlatList
-        ref={flatListRef}
+      <CustomFlatList
+        ref={flatListRef as React.RefObject<any>}
         data={images}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -35,18 +37,19 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
         snapToAlignment="center"
         decelerationRate="fast"
         contentContainerStyle={styles.contentContainer}
-        keyExtractor={(_, idx) => idx.toString()}
-        renderItem={({ item }) => (
+        keyExtractor={(_, idx: number) => idx.toString()}
+        renderItem={({ item }: { item: any }) => (
           <Image source={item} style={styles.image} resizeMode="cover" />
         )}
-        onMomentumScrollEnd={onMomentumScrollEnd}
-        getItemLayout={(_, index) => ({
+        onMomentumScrollEnd={onMomentumScrollEnd as (event: any) => void}
+        getItemLayout={(_: any, index: number) => ({
           length: IMAGE_WIDTH + IMAGE_MARGIN * 2,
           offset: (IMAGE_WIDTH + IMAGE_MARGIN * 2) * index,
           index,
         })}
         initialScrollIndex={current}
         extraData={current}
+        ListEmptyComponent={null as React.ReactElement | null}
       />
 
       <TouchableOpacity style={styles.arrowRight} onPress={goNext}>

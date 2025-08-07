@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   TouchableOpacity,
   Image,
@@ -38,4 +38,4 @@ const CustomProfileButton: React.FC<Props> = ({
   );
 };
 
-export default CustomProfileButton;
+export default memo(CustomProfileButton);

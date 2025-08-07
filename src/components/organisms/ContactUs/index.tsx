@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { View } from 'react-native';
 import Button from '@components/atoms/Button';
 import ContactFormModal from '@components/molecules/ContactForm';
@@ -42,4 +42,4 @@ const ContactUsSection: React.FC = () => {
   );
 };
 
-export default ContactUsSection;
+export default memo(ContactUsSection);

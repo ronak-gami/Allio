@@ -26,12 +26,12 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
   onSubmit,
 }) => {
   const styles = useStyle();
-  const { contetUsValidationSchema } = useValidation();
+  const { contactUsValidationSchema } = useValidation();
 
   return (
     <Formik
       initialValues={{ name: '', mobile: '', email: '', message: '' }}
-      validationSchema={contetUsValidationSchema}
+      validationSchema={contactUsValidationSchema}
       onSubmit={(values, { resetForm }) => {
         onSubmit(values);
         resetForm();
