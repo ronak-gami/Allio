@@ -79,5 +79,8 @@
     "title": "My QR",
     "download_qr": "Download QR",
     "share_qr": "Share QR"
+  },
+  "More": {
+    "More": "More"
   }
 }

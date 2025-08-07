@@ -57,7 +57,7 @@ const useStyle = () => {
       width: '100%',
       marginTop: scale(8),
       borderRadius: scale(8),
-      backgroundColor: colors.primary || '#007AFF',
+      backgroundColor: colors.primary,
     },
     closeButton: {
       marginTop: scale(10),
@@ -65,7 +65,7 @@ const useStyle = () => {
       alignSelf: 'center',
     },
     closeButtonText: {
-      color: colors.primary || '#007AFF',
+      color: colors.primary,
       fontWeight: 'bold',
       fontSize: scale(16),
     },
@@ -79,7 +79,7 @@ const useStyle = () => {
     closeIcon: {
       width: scale(22),
       height: scale(22),
-      tintColor: colors.primary || '#007AFF',
+      tintColor: colors.primary,
     },
   });
 };

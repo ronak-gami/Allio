@@ -76,7 +76,16 @@
     "title": "મારો ક્યુઆર",
     "download_qr": "ક્યુઆર ડાઉનલોડ કરો",
     "share_qr": "ક્યુઆર શેર કરો"
+  },
+  "More": {
+    "More": "વધુ",
+    "settings": "સેટિંગ્સ",
+    "language": "ભાષા",
+    "theme": "થિમ",
+    "privacy_policy": "ગોપનીયતા નીતિ",
+    "terms_conditions": "શરતો અને નિયમો",
+    "logout": "લૉગઆઉટ",
+    "about_us": "અમારા વિશે",
+    "contact_us": "અમારો સંપર્ક કરો"
   }
 }
-
-

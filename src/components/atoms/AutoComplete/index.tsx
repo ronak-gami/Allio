@@ -19,7 +19,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({
   error,
   touched,
 }) => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState<string>('');
   const [filteredData, setFilteredData] = useState<string[]>([]);
   const styles = useStyle();
 
