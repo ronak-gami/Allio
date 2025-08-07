@@ -8,9 +8,9 @@ import {
   ViewStyle,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import HomeHeader from '@components/organisms/HomeHeader';
 import CustomLoader from '@components/atoms/CustomLoader';
 import useStyle from './style';
+import HomeHeader from '@components/organisms/HomeHeader';
 
 interface PageLayoutProps {
   children: React.ReactNode;

@@ -7,12 +7,12 @@ import ImageSlider from '@components/organisms/ImageSlider';
 import { IMAGES } from '@assets/index';
 import { FeaturesCarousel } from '@components/organisms/FeaturesCorozal';
 import { FeaturesDataItem } from '@utils/constant';
-import ContactUsSection from '@components/organisms/ContactUs';
 import { useTheme } from '@react-navigation/native';
 import { HOME } from '@utils/constant';
 import { HomeTabsNavigationProp } from '@types/navigations';
 import Container from '@components/molecules/Container';
 import useStyle from './style';
+import { ContactUsSection } from '@components/index';
 
 const promoImages = [
   IMAGES.OnboardingThree,

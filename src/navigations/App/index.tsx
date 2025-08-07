@@ -5,18 +5,19 @@ import { HomeStackParamList } from '@types/navigations';
 import MPINSetupScreen from '@screens/App/MPIN';
 import ForgetMPIN from '@screens/App/ForgetMPIN';
 import { HOME } from '@utils/constant';
-import StatusBar from '@components/atoms/CustomStatusBar';
 
 import TabNavigator from './TabNavigator';
 import { COLORS } from '@utils/color';
 import MyQR from '@screens/App/MyOR';
 import MyFriends from '@screens/App/MyFriends';
+import { CustomStatusBar } from '@components/index';
+
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeNavigator: React.FC = () => {
   return (
     <>
-      <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
+      <CustomStatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name={HOME.MPIN} component={MPINSetupScreen} />
         <Stack.Screen name={HOME.ForgetMPIN} component={ForgetMPIN} />

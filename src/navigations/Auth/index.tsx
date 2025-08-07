@@ -9,8 +9,8 @@ import ForgotPassword from '@screens/Auth/ForgetPassword';
 import { AuthStackParamList } from '@types/navigations';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
-import StatusBar from '@components/atoms/CustomStatusBar';
 import { COLORS } from '@utils/color';
+import { CustomStatusBar } from '@components/index';
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthNavigator: React.FC = () => {
@@ -19,7 +19,10 @@ const AuthNavigator: React.FC = () => {
   );
   return (
     <>
-      <StatusBar backgroundColor={COLORS.primary} barStyle="dark-content" />
+      <CustomStatusBar
+        backgroundColor={COLORS.primary}
+        barStyle="dark-content"
+      />
 
       <Stack.Navigator
         screenOptions={{ headerShown: false }}

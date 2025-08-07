@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Image } from 'react-native';
 import Text from '@components/atoms/Text';
-import useStyle from './style';
 import Button from '@components/atoms/Button';
-
+import useStyle from './style';
 interface FeatureCardProps {
   image: any;
   title: string;

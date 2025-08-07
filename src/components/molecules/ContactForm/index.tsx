@@ -4,10 +4,10 @@ import { Formik } from 'formik';
 
 import Input from '@components/atoms/Input';
 import Button from '@components/atoms/Button';
-import BottomModal from '@components/atoms/BottomModal';
 import useValidation from '@utils/validationSchema';
 
 import useStyle from './style';
+import { BottomModal } from '@components/index.tsx';
 
 interface ContactFormModalProps {
   visible: boolean;

@@ -4,9 +4,8 @@ import Carousel from 'react-native-reanimated-carousel';
 import type { ICarouselInstance } from 'react-native-reanimated-carousel';
 import FeatureCard from '@components/molecules/FeatureCard';
 import type { FeatureDataItem } from './style';
-import useStyle from './style';
 import Text from '@components/atoms/Text';
-
+import useStyle from './style';
 const windowWidth = Dimensions.get('window').width;
 
 interface FeaturesCarouselProps {
