@@ -7,6 +7,8 @@ interface OnboardingItem {
   title: string;
   description: string;
 }
+export const WEB_CLIENT_ID =
+  '299086233123-40u7rfe1tdb4q5m7341rtdqo5qabf7eu.apps.googleusercontent.com';
 
 // export const BASE_URL = 'https://allio-backend.onrender.com/api' as const;
 export const BASE_URL = 'https://953703e96ce8.ngrok-free.app/api' as const;
