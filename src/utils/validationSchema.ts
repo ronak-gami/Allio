@@ -51,11 +51,17 @@ const useValidation = () => {
       .oneOf([Yup.ref('password'), null], t('confirm_password_match'))
       .required(t('field_required', { field: t('confirm_password') })),
   });
+  const emailOnlyValidationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('Please enter a valid email')
+      .required('Email is required'),
+  });
 
   return {
     loginValidationSchema,
     forgotPasswordSchema,
     registrationValidationSchema,
+    emailOnlyValidationSchema,
   };
 };
 

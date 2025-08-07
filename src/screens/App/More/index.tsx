@@ -1,19 +1,20 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { View, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
-import useStyle from './style';
-import Button from '@components/atoms/Button';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { TabParamList } from '@types/navigations';
 import firestore from '@react-native-firebase/firestore';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { getAuth } from '@react-native-firebase/auth';
+
+import { TabParamList } from '@types/navigations';
 import { logout } from '@redux/slices/AuthSlice';
+import useStyle from './style';
+import { CustomFlatList } from '@components/index';
+import Text from '@components/atoms/Text';
 
 type Props = BottomTabScreenProps<TabParamList, 'More'>;
 
-const More: React.FC<Props> = () => {
+const More: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
 
@@ -37,11 +38,58 @@ const More: React.FC<Props> = () => {
     }
   };
 
+  const handleItemPress = (key: string) => {
+    switch (key) {
+      case 'profile':
+        // navigation.navigate('Profile');
+        break;
+      case 'friends':
+        navigation.navigate('MyFriends');
+        break;
+      case 'theme':
+        // navigation.navigate('Theme');
+        break;
+      case 'language':
+        // navigation.navigate('Language');
+        break;
+      case 'delete':
+        // navigation.navigate('DeleteAccount');
+        break;
+      case 'logout':
+        handleLogout();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const settingsData = [
+    { key: 'profile', title: 'Profile' },
+    { key: 'friends', title: 'My Friends' },
+    { key: 'theme', title: 'Theme' },
+    { key: 'language', title: 'Language' },
+    { key: 'delete', title: 'Delete Account' },
+    { key: 'logout', title: 'Logout' },
+  ];
+
+  const renderItem = ({ item }: { item: { key: string; title: string } }) => (
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => handleItemPress(item.key)}>
+      <Text style={styles.itemText} type="semibold">
+        {item.title}
+      </Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>More Screens</Text>
-      <Button title="Logout" onPress={handleLogout} />
+      <Text style={styles.title} type="BOLD">
+        More
+      </Text>
+      <CustomFlatList data={settingsData} renderItem={renderItem} />
     </View>
   );
 };
+
 export default More;

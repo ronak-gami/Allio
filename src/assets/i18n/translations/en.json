@@ -65,8 +65,19 @@
     "no_video_selected": "No Video Selected",
     "choose_video_prompt": "Choose a video from your gallery or record a new one",
     "record_video": "Record Video",
-
     "duration": "Duration",
     "resolution": "Resolution"
+  },
+  "scanQr": {
+    "title": "Scan QR",
+    "enter_email": "Enter Email",
+    "submit": "Submit",
+    "view_my_qr": "View Personal QR",
+    "or": "OR"
+  },
+  "myQr": {
+    "title": "My QR",
+    "download_qr": "Download QR",
+    "share_qr": "Share QR"
   }
 }
