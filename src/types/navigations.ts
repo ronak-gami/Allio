@@ -23,6 +23,7 @@ export type HomeStackParamList = {
   ForgetMPIN: undefined;
   MyQR: undefined;
   HomeTabs: NavigatorScreenParams<TabParamList> | undefined;
+  Profile: { email?: string };
 };
 
 export type TabParamList = {
@@ -31,7 +32,6 @@ export type TabParamList = {
   ScanQR: undefined;
   Video: undefined;
   More: undefined;
-  Profile: undefined;
 };
 
 // Navigation prop types for different navigators

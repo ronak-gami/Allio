@@ -41,7 +41,7 @@ const More: React.FC<Props> = ({ navigation }) => {
   const handleItemPress = (key: string) => {
     switch (key) {
       case 'profile':
-        // navigation.navigate('Profile');
+        navigation.navigate(HOME.Profile);
         break;
       case 'friends':
         navigation.navigate(HOME.MyFriends);

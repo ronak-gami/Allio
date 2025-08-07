@@ -4,10 +4,10 @@ import { Text, VideoCard, CustomFlatList } from '@components/index';
 import useStyle from './style';
 import { IMAGES } from '@assets/index';
 import useProfile from './useProfile';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { HomeStackParamList } from '@types/navigations';
 
-interface ProfileProps {
-  email?: string;
-}
+type ProfileProps = NativeStackScreenProps<HomeStackParamList, 'Profile'>;
 
 const ProfileHeader: React.FC<{
   email: string;
@@ -65,7 +65,6 @@ const MediaContent: React.FC<{
         data={videos || []}
         renderItem={({ item }) => <VideoCard item={item} />}
         numColumns={2}
-        showsVerticalScrollIndicator={false}
         columnWrapperStyle={styles.gridRow}
         contentContainerStyle={styles.gridContent}
         ListEmptyComponent={
@@ -90,9 +89,8 @@ const MediaContent: React.FC<{
           resizeMode="cover"
         />
       )}
-      numColumns={3}
-      showsVerticalScrollIndicator={false}
-      columnWrapperStyle={styles.imageGridRow}
+      numColumns={2}
+      columnWrapperStyle={styles.gridRow}
       contentContainerStyle={styles.gridContent}
       ListEmptyComponent={
         <View style={styles.emptyContainer}>
@@ -105,9 +103,9 @@ const MediaContent: React.FC<{
   );
 };
 
-const Profile: React.FC<ProfileProps> = ({ email: propEmail }) => {
+const Profile: React.FC<ProfileProps> = ({ route }) => {
   const styles = useStyle();
-  const { states, data } = useProfile({ userEmail: propEmail });
+  const { states, data } = useProfile({ userEmail: route.params?.email });
 
   return (
     <View style={styles.container}>

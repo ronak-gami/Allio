@@ -15,7 +15,6 @@ import More from '@screens/App/More';
 import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
 import { TabParamList } from '@types/navigations';
-import Profile from '@screens/App/Profile';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -28,7 +27,6 @@ const TabNavigator: React.FC = () => {
     ScanQR: IMAGES.ScanQR,
     Video: IMAGES.VideoMedia,
     More: IMAGES.More,
-    Profile: IMAGES.Profile,
   };
 
   const getIconByRouteName = (name: keyof TabParamList): ImageSourcePropType =>
@@ -72,7 +70,6 @@ const TabNavigator: React.FC = () => {
       <Tab.Screen name={HOME.ScanQR} component={ScanQR} />
       <Tab.Screen name={HOME.Video} component={VideoMedia} />
       <Tab.Screen name={HOME.More} component={More} />
-      <Tab.Screen name={HOME.Profile} component={Profile} />
     </Tab.Navigator>
   );
 };

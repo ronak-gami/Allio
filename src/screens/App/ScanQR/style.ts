@@ -9,13 +9,14 @@ const useStyle = () => {
     container: {
       flex: 1,
       padding: height * 0.02,
-      backgroundColor: colors.white,
+      backgroundColor: colors.background,
     },
     scrollcontainer: {
       alignItems: 'center',
     },
     title: {
       fontSize: scale(20),
+      color: colors.text,
     },
 
     inputContainer: {
@@ -28,6 +29,7 @@ const useStyle = () => {
 
     orText: {
       fontSize: scale(14),
+      color: colors.text,
     },
 
     buttonText: {

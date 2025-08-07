@@ -8,6 +8,7 @@ import { HOME } from '@utils/constant';
 import TabNavigator from './TabNavigator';
 import MyQR from '@screens/App/MyOR';
 import MyFriends from '@screens/App/MyFriends';
+import Profile from '@screens/App/Profile';
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeNavigator: React.FC = () => {
@@ -17,6 +18,7 @@ const HomeNavigator: React.FC = () => {
       <Stack.Screen name={HOME.ForgetMPIN} component={ForgetMPIN} />
       <Stack.Screen name={HOME.MyQR} component={MyQR} />
       <Stack.Screen name={HOME.MyFriends} component={MyFriends} />
+      <Stack.Screen name={HOME.Profile} component={Profile} />
       <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />
     </Stack.Navigator>
   );
