@@ -24,21 +24,34 @@ const api = {
     sendOtp: ({ data }: { data: { email: string } }) =>
       client({
         method: 'post',
-        url: '/send-otp',
+        url: '/user/send-otp',
         data,
       }),
 
     validateOtp: ({ data }: { data: { email: string; otp: string } }) =>
       client({
         method: 'post',
-        url: '/validate-otp',
+        url: '/user/validate-otp',
         data,
       }),
 
     setNewMpin: ({ data }: { data: { email: string; newMpin: string } }) =>
       client({
         method: 'post',
-        url: '/set-new-mpin',
+        url: '/user/set-new-mpin',
+        data,
+      }),
+  },
+
+  NOTIFICATION: {
+    sendNotificatoin: ({
+      data,
+    }: {
+      data: { email: string; title: string; body: string };
+    }) =>
+      client({
+        method: 'post',
+        url: '/user/send-notification',
         data,
       }),
   },
@@ -47,7 +60,7 @@ const api = {
     generate: ({ data }: { data: { email: string } }) =>
       client({
         method: 'post',
-        url: 'qrcode/generate',
+        url: '/qrcode/generate',
         data,
       }),
   },
