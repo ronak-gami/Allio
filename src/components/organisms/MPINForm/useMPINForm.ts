@@ -121,7 +121,7 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
       if (response?.data?.status === true) {
         showSuccess('MPIN reset successfully');
         await AsyncStorage.setItem('@mpin_setup_done', 'true');
-        navigation.navigate(HOME.HomeTabs);
+        navigation.replace(HOME.HomeTabs);
       }
     } catch (error: any) {
       console.error('Reset MPIN error:', error);
@@ -150,7 +150,7 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
         const encryptedInput = encryptMPIN(mpin);
         if (encryptedInput === storedEncryptedMPIN) {
           await AsyncStorage.setItem('@user_mpin', encryptedInput);
-          navigation.navigate(HOME.HomeTabs, { screen: HOME.Home });
+          navigation.replace(HOME.HomeTabs, { screen: HOME.Home });
         } else {
           setErrorMessage('Incorrect MPIN');
         }
@@ -162,7 +162,7 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
           createdAt: firestore.FieldValue.serverTimestamp(),
         });
         await AsyncStorage.setItem('@mpin_setup_done', 'true');
-        navigation.navigate(HOME.HomeTabs, { screen: HOME.Home });
+        navigation.replace(HOME.HomeTabs, { screen: HOME.Home });
       }
     } catch (error: any) {
       console.error('Error during MPIN setup:', error);
