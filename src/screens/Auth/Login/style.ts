@@ -13,6 +13,9 @@ const useStyle = () => {
     contentContainer: {
       justifyContent: 'center',
     },
+    statusBar: {
+      backgroundColor: colors.white,
+    },
   });
 };
 

@@ -21,6 +21,7 @@ export type AuthStackParamList = {
 export type HomeStackParamList = {
   MPIN: undefined;
   ForgetMPIN: undefined;
+  MyQR: undefined;
   HomeTabs: NavigatorScreenParams<TabParamList> | undefined;
 };
 

@@ -35,6 +35,9 @@ const useStyle = () => {
       color: colors.primary,
       fontSize: scale(16),
     },
+    statusBar: {
+      backgroundColor: colors.lightyellow,
+    },
   });
 };
 

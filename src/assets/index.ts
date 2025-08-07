@@ -33,4 +33,5 @@ export const ICONS = {
   Share: require('./icons/share.png'),
   Send: require('./icons/send.png'),
   Download: require('./icons/download.png'),
+  light: require('./icons/light.png'),
 };

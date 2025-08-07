@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
+
 import { Provider } from 'react-redux';
 import { PaperProvider } from 'react-native-paper';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -8,6 +9,8 @@ import ToastManager from 'toastify-react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import perf from '@react-native-firebase/perf';
+
+
 import CustomNotification, {
   CustomToastRef,
 } from '@components/atoms/CustomNotification';
@@ -19,6 +22,9 @@ import StackNavigator from './src/navigations';
 const App = () => {
   const customToastRef = useRef<CustomToastRef>(null);
   useNotification(customToastRef);
+
+
+
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
