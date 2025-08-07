@@ -8,25 +8,11 @@ const useStyle = () => {
     headerContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      height: scale(50),
+      height: scale(40),
       paddingHorizontal: scale(12),
       backgroundColor: colors.primary,
       elevation: 4,
-    },
-    leftContainer: {
-      width: scale(48),
-      alignItems: 'flex-start',
-      justifyContent: 'center',
-    },
-    centerContainer: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    rightContainer: {
-      width: scale(48),
-      alignItems: 'flex-end',
-      justifyContent: 'center',
+      justifyContent: 'space-between',
     },
     backButton: {
       padding: scale(8),
@@ -36,12 +22,18 @@ const useStyle = () => {
       height: scale(18),
     },
     title: {
-      fontSize: scale(22),
+      fontSize: scale(20),
       color: colors.black,
     },
     placeholder: {
       width: scale(24),
       height: scale(24),
+    },
+    logoStyle: {
+      marginBottom: scale(-8),
+    },
+    rightContainer: {
+      minWidth: scale(40),
     },
   });
 };

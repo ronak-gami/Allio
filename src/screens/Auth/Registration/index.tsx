@@ -12,7 +12,7 @@ const Registration: React.FC<Props> = () => {
   useAnalytics({ screenName: 'Register' });
 
   return (
-    <Container showHeader={false} useScrollView keyboardAvoiding>
+    <Container showHeader={false} auth keyboardAvoiding>
       <RegistrationForm />
     </Container>
   );

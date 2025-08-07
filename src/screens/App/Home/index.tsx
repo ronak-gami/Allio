@@ -49,9 +49,8 @@ const HomeScreen: React.FC = () => {
   };
   return (
     <Container
-      showHeader
       onProfilePress={handleProfilePress}
-      useScrollView
+      title="Home"
       keyboardAvoiding>
       <AboutDetails />
       <ImageSlider images={promoImages} />

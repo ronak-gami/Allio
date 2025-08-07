@@ -6,7 +6,7 @@ const useStyle = () => {
     flex: {
       flex: 1,
     },
-    scrollContent: {
+    scrollContainer: {
       flexGrow: 1,
     },
   });

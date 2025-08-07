@@ -13,7 +13,7 @@ const ForgetPassword: React.FC<Props> = () => {
   const styles = useStyle();
 
   return (
-    <Container showHeader={false} useScrollView keyboardAvoiding>
+    <Container showHeader={false} auth keyboardAvoiding>
       <ForgotPasswordForm />
     </Container>
   );
