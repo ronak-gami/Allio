@@ -39,9 +39,11 @@ const VideoPreviewModal: React.FC<VideoPreviewModalProps> = ({
           onPress={() => handleMediaDownload(videoUri, 'video')}>
           <Image source={ICONS.Download} style={styles.icon} />
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Image source={ICONS.Send} style={styles.icon} />
-        </TouchableOpacity>
+        {__DEV__ && (
+          <TouchableOpacity>
+            <Image source={ICONS.Send} style={styles.icon} />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity onPress={() => handleMediaShare(videoUri, 'video')}>
           <Image source={ICONS.Share} style={styles.icon} />
         </TouchableOpacity>
