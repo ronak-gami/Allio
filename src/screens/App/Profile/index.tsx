@@ -1,6 +1,11 @@
 import React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
-import { Text, VideoCard, CustomFlatList } from '@components/index';
+import {
+  Text,
+  VideoCard,
+  CustomFlatList,
+  CustomHeader,
+} from '@components/index';
 import useStyle from './style';
 import { IMAGES } from '@assets/index';
 import useProfile from './useProfile';
@@ -105,25 +110,30 @@ const MediaContent: React.FC<{
 
 const Profile: React.FC<ProfileProps> = ({ route }) => {
   const styles = useStyle();
-  const { states, data } = useProfile({ userEmail: route.params?.email });
+  const { states, data } = useProfile({
+    userEmail: route.params?.email,
+  });
 
   return (
-    <View style={styles.container}>
-      <ProfileHeader email={data.email} styles={styles} />
-      <TabBar
-        activeTab={states.activeTab}
-        onTabChange={states.setActiveTab}
-        styles={styles}
-      />
-      <View style={styles.contentContainer}>
-        <MediaContent
+    <>
+      <CustomHeader title="Profile" showBackArrow showProfile={false} />
+      <View style={styles.container}>
+        <ProfileHeader email={data.email} styles={styles} />
+        <TabBar
           activeTab={states.activeTab}
-          images={data.images}
-          videos={data.videos}
+          onTabChange={states.setActiveTab}
           styles={styles}
         />
+        <View style={styles.contentContainer}>
+          <MediaContent
+            activeTab={states.activeTab}
+            images={data.images}
+            videos={data.videos}
+            styles={styles}
+          />
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 

@@ -16,7 +16,13 @@ import useStyle from './style';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { useTheme } from '@react-navigation/native';
 
-import { Button, CustomLoader, Input, Text } from '@components/index';
+import {
+  Button,
+  CustomHeader,
+  CustomLoader,
+  Input,
+  Text,
+} from '@components/index';
 import { TabParamList } from '@types/navigations';
 import { ICONS } from '@assets/index';
 import useScanQR from './useScanQR';
@@ -51,6 +57,7 @@ const ScanQR: React.FC<Props> = () => {
 
   return (
     <>
+      <CustomHeader title="Scan QR" showProfile={false} showLogo={false} />
       <CustomLoader visible={states?.loading} />
       {!states.loading && (
         <KeyboardAvoidingView
@@ -59,12 +66,6 @@ const ScanQR: React.FC<Props> = () => {
           <ScrollView
             contentContainerStyle={styles.scrollcontainer}
             showsVerticalScrollIndicator={false}>
-            <View style={styles.titleRow}>
-              <Text style={styles.title} type="BOLD">
-                scanQr.title
-              </Text>
-            </View>
-
             <View style={styles.cameraContainer}>
               <View style={styles.camera}>
                 {device && (

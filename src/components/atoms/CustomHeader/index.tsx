@@ -1,9 +1,13 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import React, { memo } from 'react';
+import { View, TouchableOpacity, Image } from 'react-native';
+
 import CustomLogo from '@components/molecules/HeaderLogo';
 import CustomProfileButton from '@components/molecules/ProfileButton';
 import { ICONS, IMAGES } from '@assets/index';
 import useStyle from './style';
+import { useNavigation } from '@react-navigation/native';
+import type { HomeTabsNavigationProp } from '@navigation/types';
+import Text from '../Text';
 
 interface CustomHeaderProps {
   showBackArrow?: boolean;
@@ -24,15 +28,20 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   onProfilePress,
 }) => {
   const styles = useStyle();
+  const navigate = useNavigation<HomeTabsNavigationProp>();
 
   return (
     <View style={styles.headerContainer}>
       {/* Left: Back Arrow or Logo */}
       <View style={styles.leftContainer}>
         {showBackArrow ? (
-          <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
+          <TouchableOpacity
+            onPress={() => {
+              onBackPress ? onBackPress() : navigate.goBack();
+            }}
+            style={styles.backButton}>
             <Image
-              source={ICONS.Left}
+              source={ICONS.BackArrow}
               style={styles.backIcon}
               resizeMode="contain"
             />
@@ -47,7 +56,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       {/* Center: Title */}
       <View style={styles.centerContainer}>
         {title ? (
-          <Text style={styles.title} numberOfLines={1}>
+          <Text type="BOLD" style={styles.title} numberOfLines={1}>
             {title}
           </Text>
         ) : null}
@@ -65,14 +74,4 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   );
 };
 
-export default CustomHeader;
-
-// With back arrow and title:
-// <CustomHeader showBackArrow onBackPress={() => navigation.goBack()} title="Home" showProfile onProfilePress={...} />
-
-// Without back arrow and title:
-// <CustomHeader showLogo logoProps={{ logo: IMAGES.Allio_Logo }} showProfile onProfilePress={...} />
-
-{
-  /* <CustomHeader title="Dashboard" /> */
-}
+export default memo(CustomHeader);

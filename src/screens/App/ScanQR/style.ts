@@ -115,13 +115,6 @@ const useStyle = () => {
       borderTopWidth: 0,
       borderBottomRightRadius: height * 0.01,
     },
-    titleRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: height * 0.025,
-    },
-
     flashIconButton: {
       alignSelf: 'center',
       marginVertical: 5,

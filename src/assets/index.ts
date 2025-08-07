@@ -1,10 +1,9 @@
-import HomeHeader from '@components/atoms/CustomHeader';
-
 export const IMAGES = {
   First: require('./images/firstScreen.png'),
   SecondOnboarding: require('./images/onboardingSecond.png'),
   OnboardingThree: require('./images/onboardingThree.png'),
   Home: require('./images/home.png'),
+  Setting: require('./images/setting.png'),
   ImageMedia: require('./images/image-media.png'),
   More: require('./images/more.png'),
   ScanQR: require('./images/scanQR.png'),
@@ -25,7 +24,7 @@ export const ICONS = {
   down: require('./icons/arrowdown.png'),
   check: require('./icons/check.png'),
   cancel: require('./icons/cancel.png'),
-
+  BackArrow: require('./icons/simple-backArrow.png'),
   Clear: require('./icons/clear.png'),
   FaceBook: require('./icons/facebook.png'),
   Google: require('./icons/googleicon.png'),
@@ -39,6 +38,7 @@ export const ICONS = {
   profile: require('./icons/profile.png'),
   Left: require('./icons/arrow.png'),
 };
+
 export const FONTS = {
   regular: 'Montserrat-Regular',
   medium: 'Montserrat-Medium',

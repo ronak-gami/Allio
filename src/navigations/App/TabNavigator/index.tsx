@@ -26,7 +26,7 @@ const TabNavigator: React.FC = () => {
     Photo: IMAGES.ImageMedia,
     ScanQR: IMAGES.ScanQR,
     Video: IMAGES.VideoMedia,
-    More: IMAGES.More,
+    More: IMAGES.Setting,
   };
 
   const getIconByRouteName = (name: keyof TabParamList): ImageSourcePropType =>
