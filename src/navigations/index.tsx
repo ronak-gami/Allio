@@ -61,30 +61,32 @@ const StackNavigator: React.FC = () => {
   const appTheme = isDarkMode ? darkTheme : lightTheme;
 
   return (
-    <NavigationContainer
-      theme={appTheme}
-      ref={navigationRef}
-      onReady={() => {
-        routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
-      }}
-      onStateChange={async () => {
-        const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
-        if (routeNameRef.current !== currentRoute && currentRoute) {
-          await analytics().logScreenView({
-            screen_name: currentRoute,
-            screen_class: currentRoute,
-          });
-          routeNameRef.current = currentRoute;
-        }
-      }}>
-      {splashVisible ? (
-        <Splash />
-      ) : token ? (
-        <HomeNavigator />
-      ) : (
-        <AuthNavigator />
-      )}
-    </NavigationContainer>
+    <>
+      <NavigationContainer
+        theme={appTheme}
+        ref={navigationRef}
+        onReady={() => {
+          routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+        }}
+        onStateChange={async () => {
+          const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
+          if (routeNameRef.current !== currentRoute && currentRoute) {
+            await analytics().logScreenView({
+              screen_name: currentRoute,
+              screen_class: currentRoute,
+            });
+            routeNameRef.current = currentRoute;
+          }
+        }}>
+        {splashVisible ? (
+          <Splash />
+        ) : token ? (
+          <HomeNavigator />
+        ) : (
+          <AuthNavigator />
+        )}
+      </NavigationContainer>
+    </>
   );
 };
 

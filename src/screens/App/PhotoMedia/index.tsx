@@ -9,10 +9,10 @@ import {
   CustomFlatList,
   MediaCard,
   ImagePreviewModal,
+  CustomChip,
+  CustomLoader,
 } from '@components/index';
 import Text from '@components/atoms/Text';
-import CustomChip from '@components/atoms/CustomChip';
-import CustomLoader from '@components/atoms/CustomLoader';
 
 import { ICONS } from '@assets/index';
 

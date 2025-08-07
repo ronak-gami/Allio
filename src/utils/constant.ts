@@ -1,5 +1,6 @@
 import { IMAGES } from '@assets/index';
 
+import { width } from '@utils/helper';
 interface OnboardingItem {
   id: string;
   image: any;
@@ -9,6 +10,9 @@ interface OnboardingItem {
 
 // export const BASE_URL = 'https://allio-backend.onrender.com/api' as const;
 export const BASE_URL = 'https://953703e96ce8.ngrok-free.app/api' as const;
+
+const CARD_WIDTH = width * 0.94;
+const SPACING = (width - CARD_WIDTH) / 0.6;
 
 const onboardingData: OnboardingItem[] = [
   {
@@ -73,4 +77,39 @@ const HOME = {
 const LICENSE_KEY =
   'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
 
-export { onboardingData, AUTH, HOME, LICENSE_KEY };
+const FeaturesDataItem = [
+  {
+    image: IMAGES.Notification,
+    title: ' ScanQR',
+    description: 'Scan documents quickly and save them securely.',
+    buttonText: 'ScanQR',
+  },
+  {
+    image: IMAGES.Notification,
+    title: 'Video Editing',
+    description: 'Stay updated with instant alerts and reminders.',
+    buttonText: 'Video Editing',
+  },
+  {
+    image: IMAGES.Notification,
+    title: 'Photo Editing',
+    description: 'Scan QR codes and barcodes with ease.',
+    buttonText: 'Photo Editing',
+  },
+
+  {
+    image: IMAGES.Scanner,
+    title: 'Home',
+    description: 'Fast and reliable scanning for all your needs.',
+    buttonText: 'Home',
+  },
+];
+export {
+  onboardingData,
+  AUTH,
+  HOME,
+  LICENSE_KEY,
+  CARD_WIDTH,
+  SPACING,
+  FeaturesDataItem,
+};

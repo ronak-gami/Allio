@@ -7,7 +7,7 @@ const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
     container: {
-      flex: 1,
+      marginTop: scale(50),
     },
     scrollView: {
       flexGrow: 1,

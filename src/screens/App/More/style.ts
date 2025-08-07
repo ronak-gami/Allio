@@ -11,6 +11,7 @@ const useStyle = () => {
       padding: height * 0.02,
       backgroundColor: colors.background,
     },
+
     title: {
       fontSize: scale(22),
       fontWeight: 'bold',

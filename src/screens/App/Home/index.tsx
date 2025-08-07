@@ -1,76 +1,81 @@
-import React, { useEffect } from 'react';
-import { View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import crashlytics from '@react-native-firebase/crashlytics';
-import perf from '@react-native-firebase/perf';
-import { useTranslation } from 'react-i18next';
-import { RootState } from '@redux/store';
+import React from 'react';
+import { View, ScrollView, StatusBar } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-import Text from '@components/atoms/Text';
-import CustomDropdown from '@components/atoms/Dropdown';
-import Button from '@components/atoms/Button';
-import { setLanguage } from '@redux/slices/languageSlice';
-import { toggleTheme } from '@redux/slices/ThemeSlice';
-import { languages } from '@utils/helper';
+import AboutDetails from '@components/organisms/AboutDetails';
+import ImageSlider from '@components/organisms/ImageSlider';
+import { IMAGES } from '@assets/index';
+import { FeaturesCarousel } from '@components/organisms/FeaturesCorozal';
+import { FeaturesDataItem } from '@utils/constant';
 import { useTheme } from '@react-navigation/native';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { TabParamList } from '@types/navigations';
-
+import { HOME } from '@utils/constant';
+import { HomeTabsNavigationProp } from '@types/navigations';
+import Container from '@components/molecules/Container';
 import useStyle from './style';
+import { ContactUsSection } from '@components/index';
 
-type Props = BottomTabScreenProps<TabParamList, 'Home'>;
+const promoImages = [
+  IMAGES.OnboardingThree,
+  IMAGES.SecondOnboarding,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+  IMAGES.OnboardingThree,
+];
 
-const Home: React.FC<Props> = () => {
+const HomeScreen: React.FC = () => {
+  const colors = useTheme().colors;
   const styles = useStyle();
-  const dispatch = useDispatch();
-  const { colors } = useTheme();
-  const { t } = useTranslation();
-
-  const currentLanguage = useSelector(
-    (state: RootState) => state.language.language,
-  );
-  const isDarkMode = useSelector((state: RootState) => state.theme.isDarkMode);
-
-  useEffect(() => {
-    crashlytics().log('HomeScreen mounted');
-    const trace = perf().newTrace('home_screen_load');
-    trace.start();
-    return () => {
-      trace.stop();
-    };
-  }, []);
-
-  const handleLanguageChange = (value: string) => {
-    dispatch(setLanguage(value));
+  const navigation = useNavigation<HomeTabsNavigationProp>();
+  const handleProfilePress = () => {
+    navigation.navigate(HOME.More);
   };
-
-  const handleThemeToggle = () => {
-    dispatch(toggleTheme());
+  const handleFeaturePress = (buttonText: string) => {
+    switch (buttonText) {
+      case 'ScanQR':
+        navigation.navigate(HOME.ScanQR);
+        break;
+      case 'Video Editing':
+        navigation.navigate(HOME.Video);
+        break;
+      case 'Photo Editing':
+        navigation.navigate(HOME.Photo);
+        break;
+      case 'Home':
+        navigation.navigate(HOME.Home);
+        break;
+      default:
+        break;
+    }
   };
-
   return (
-    <View style={styles.container}>
-      <Text style={[styles.title, { color: colors.text }]}>login</Text>
-      <CustomDropdown
-        label={t('select_language')}
-        data={languages.map(lang => lang.label)}
-        selectedValue={
-          languages.find(lang => lang.value === currentLanguage)?.label || ''
-        }
-        onSelect={label => {
-          const selected = languages.find(lang => lang.label === label);
-          if (selected) {
-            handleLanguageChange(selected.value);
-          }
-        }}
+    <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={colors.primary}
+        translucent={false}
       />
 
-      <Button
-        title={isDarkMode ? ' Switch to Light Mode' : ' Switch to Dark Mode'}
-        onPress={handleThemeToggle}
-      />
-    </View>
+      {/* if user do not need header so pass only showHeader={false} */}
+      <Container
+        showHeader
+        onProfilePress={handleProfilePress}
+        useScrollView
+        keyboardAvoiding>
+        <AboutDetails />
+        <ImageSlider images={promoImages} />
+        <FeaturesCarousel
+          data={FeaturesDataItem}
+          onPress={handleFeaturePress}
+        />
+        <ContactUsSection />
+      </Container>
+    </>
   );
 };
 
-export default Home;
+export default HomeScreen;
