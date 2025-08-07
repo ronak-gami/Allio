@@ -9,7 +9,6 @@ import { HOME } from '@utils/constant';
 import TabNavigator from './TabNavigator';
 import MyQR from '@screens/App/MyOR';
 import MyFriends from '@screens/App/MyFriends';
-// import MyQR from '@screens/App/MyQR';
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeNavigator: React.FC = () => {

@@ -6,11 +6,11 @@ import firestore from '@react-native-firebase/firestore';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { getAuth } from '@react-native-firebase/auth';
 
+import { CustomFlatList, Text } from '@components/index';
 import { TabParamList } from '@types/navigations';
 import { logout } from '@redux/slices/AuthSlice';
 import useStyle from './style';
-import { CustomFlatList } from '@components/index';
-import Text from '@components/atoms/Text';
+import { HOME } from '@utils/constant';
 
 type Props = BottomTabScreenProps<TabParamList, 'More'>;
 
@@ -44,7 +44,7 @@ const More: React.FC<Props> = ({ navigation }) => {
         // navigation.navigate('Profile');
         break;
       case 'friends':
-        navigation.navigate('MyFriends');
+        navigation.navigate(HOME.MyFriends);
         break;
       case 'theme':
         // navigation.navigate('Theme');

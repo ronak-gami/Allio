@@ -16,13 +16,11 @@ import useStyle from './style';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { useTheme } from '@react-navigation/native';
 
+import { Button, CustomLoader, Text } from '@components/index';
 import { TabParamList } from '@types/navigations';
 import Input from '@components/atoms/Input';
 import { ICONS } from '@assets/index';
-import Text from '@components/atoms/Text';
-import Button from '@components/atoms/Button';
 import useScanQR from './useScanQR';
-import CustomLoader from '@components/atoms/CustomLoader';
 
 type Props = BottomTabScreenProps<TabParamList, 'ScanQR'>;
 

@@ -101,8 +101,6 @@ const useScanQR = () => {
   };
 
   const onQRCodeScanned = (value: string) => {
-    console.log('Scanned QR Code:', value);
-
     setEmail(value);
   };
 
