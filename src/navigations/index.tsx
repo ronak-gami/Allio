@@ -13,7 +13,6 @@ import analytics from '@react-native-firebase/analytics';
 import AuthNavigator from './Auth';
 import HomeNavigator from './App';
 import { RootState } from '../redux/store';
-import StatusBar from '@components/atoms/CustomStatusBar';
 
 const lightTheme = {
   ...DefaultTheme,
@@ -79,10 +78,6 @@ const StackNavigator: React.FC = () => {
             routeNameRef.current = currentRoute;
           }
         }}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={appTheme.colors.primary}
-        />
         {splashVisible ? (
           <Splash />
         ) : token ? (
