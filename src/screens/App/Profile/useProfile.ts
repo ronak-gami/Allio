@@ -2,16 +2,30 @@ import { fetchImages, fetchVideos } from '@redux/slices/MediaSlice';
 import { RootState, AppDispatch } from '@redux/store';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { HomeNavigationProp } from '@types/navigations';
+import { getUserData } from '@utils/helper';
 
 interface UseProfileProps {
   userEmail?: string;
 }
 
+interface UserData {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  mobileNo?: string;
+  profileImage?: string;
+}
+
 const useProfile = ({ userEmail }: UseProfileProps = {}) => {
-  const navigation = useNavigation<HomeNavigationProp>();
   const [activeTab, setActiveTab] = useState<string>('images');
+  const [userData, setUserData] = useState<UserData>({
+    email: '',
+    firstName: undefined,
+    lastName: undefined,
+    mobileNo: undefined,
+    profileImage: undefined,
+  });
+
   const { email: authEmail } = useSelector(
     (state: RootState) => state.auth.userData,
   );
@@ -19,6 +33,38 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const email = userEmail || authEmail;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (email) {
+        try {
+          const data = await getUserData(email);
+          console.log('**LOG ** Fetched User Data:', data);
+
+          // Set userData with the fetched data
+          setUserData({
+            email: data.email || email,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            mobileNo: data.mobileNo,
+            profileImage: data.profileImage,
+          });
+        } catch (error) {
+          console.log('Error fetching user data:', error);
+          // Set default userData with just email
+          setUserData({
+            email: email,
+            firstName: undefined,
+            lastName: undefined,
+            mobileNo: undefined,
+            profileImage: undefined,
+          });
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [email]);
 
   useEffect(() => {
     if (email) {
@@ -29,21 +75,20 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
 
   const handleTabChange = (tab: string) => setActiveTab(tab);
 
-  const Goback = () => {
-    navigation.goBack();
-  };
-
   return {
     states: {
       activeTab,
       setActiveTab: handleTabChange,
     },
     data: {
-      email,
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      mobileNo: userData.mobileNo,
+      profileImage: userData.profileImage,
       images,
       videos,
     },
-    Goback,
   };
 };
 

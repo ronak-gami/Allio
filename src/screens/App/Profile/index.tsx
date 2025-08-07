@@ -16,15 +16,83 @@ type ProfileProps = NativeStackScreenProps<HomeStackParamList, 'Profile'>;
 
 const ProfileHeader: React.FC<{
   email: string;
+  firstName?: string;
+  lastName?: string;
+  profileImage?: string;
+  mobileNo?: string;
+  images: any[];
+  videos: any[];
   styles: ReturnType<typeof useStyle>;
-}> = ({ email, styles }) => (
-  <View style={styles.pictureContainer}>
-    <Image source={IMAGES.Dummy_Profile} style={styles.image} />
-    <Text type="SEMIBOLD" style={styles.email}>
-      {email}
-    </Text>
-  </View>
-);
+}> = ({
+  email,
+  firstName,
+  lastName,
+  profileImage,
+  mobileNo,
+  images,
+  videos,
+  styles,
+}) => {
+  const displayName =
+    firstName && lastName
+      ? `${firstName} ${lastName}`
+      : firstName || lastName || '';
+
+  const imageSource = profileImage
+    ? { uri: profileImage }
+    : IMAGES.Dummy_Profile;
+
+  // Calculate total media count
+
+  return (
+    <View style={styles.profileHeaderContainer}>
+      <View style={styles.profileImageContainer}>
+        <Image
+          source={imageSource}
+          style={styles.profileImage}
+          defaultSource={IMAGES.Dummy_Profile}
+        />
+        <View style={styles.onlineIndicator} />
+      </View>
+
+      <View style={styles.profileInfoContainer}>
+        {displayName && (
+          <Text type="BOLD" style={styles.displayName}>
+            {displayName}
+          </Text>
+        )}
+        <Text type="SEMIBOLD" style={styles.email}>
+          {email}
+        </Text>
+        {mobileNo && (
+          <Text type="REGULAR" style={styles.mobileNo}>
+            {mobileNo}
+          </Text>
+        )}
+      </View>
+
+      <View style={styles.profileStats}>
+        <View style={styles.statItem}>
+          <Text type="BOLD" style={styles.statNumber}>
+            {images?.length || 0}
+          </Text>
+          <Text type="REGULAR" style={styles.statLabel}>
+            Images
+          </Text>
+        </View>
+        <View style={styles.statDivider} />
+        <View style={styles.statItem}>
+          <Text type="BOLD" style={styles.statNumber}>
+            {videos?.length || 0}
+          </Text>
+          <Text type="REGULAR" style={styles.statLabel}>
+            Videos
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+};
 
 const TabBar: React.FC<{
   activeTab: string;
@@ -118,7 +186,16 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
     <>
       <CustomHeader title="Profile" showBackArrow showProfile={false} />
       <View style={styles.container}>
-        <ProfileHeader email={data.email} styles={styles} />
+        <ProfileHeader
+          email={data.email}
+          firstName={data.firstName}
+          lastName={data.lastName}
+          profileImage={data.profileImage}
+          mobileNo={data.mobileNo}
+          images={data.images}
+          videos={data.videos}
+          styles={styles}
+        />
         <TabBar
           activeTab={states.activeTab}
           onTabChange={states.setActiveTab}
