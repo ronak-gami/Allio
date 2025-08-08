@@ -51,6 +51,14 @@ const api = {
         data,
       }),
   },
+  NOTIFICATION: {
+    sendNotification: ({ data }: { data: any }) =>
+      client({
+        method: 'post',
+        url: '/send-notification',
+        data,
+      }),
+  },
 };
 
 export default api;

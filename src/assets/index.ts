@@ -6,10 +6,13 @@ export const IMAGES = {
   SecondOnboarding: require('./images/onboardingSecond.png'),
   OnboardingThree: require('./images/onboardingThree.png'),
   Home: require('./images/home.png'),
+  Setting: require('./images/setting.png'),
   ImageMedia: require('./images/image-media.png'),
   More: require('./images/more.png'),
   ScanQR: require('./images/scanQR.png'),
   VideoMedia: require('./images/video-media.png'),
+  Profile: require('./images/Profile.png'),
+  Dummy_Profile: require('./images/Dummy_Profile.png'),
   Allio_Logo: require('./images/Allio_logo.png'),
   Mobile: require('./images/mobile.png'),
   Notification: require('./images/notification.jpg'),
@@ -18,6 +21,7 @@ export const IMAGES = {
   Two: require('./images/two.png'),
   Deleteimage: require('./images/icondelete.png'),
   Logout: require('./images/logoutimag.png'),
+  Nodata: require('./images/Nodata.png'),
 };
 
 export const ICONS = {
@@ -26,7 +30,7 @@ export const ICONS = {
   down: require('./icons/arrowdown.png'),
   check: require('./icons/check.png'),
   cancel: require('./icons/cancel.png'),
-  logout: require('./icons/logout.png'),
+  logout: require('./icons/logout.png'),  BackArrow: require('./icons/simple-backArrow.png'),
   Clear: require('./icons/clear.png'),
   FaceBook: require('./icons/facebook.png'),
   Google: require('./icons/googleicon.png'),
@@ -39,7 +43,15 @@ export const ICONS = {
   NoVideo: require('./icons/video.png'),
   profile: require('./icons/profile.png'),
   Left: require('./icons/arrow.png'),
+  VideoPlay: require('./icons/videoPlay.png'),
+  Share: require('./icons/share.png'),
+  Send: require('./icons/send.png'),
+  Download: require('./icons/download.png'),
+  light: require('./icons/light.png'),
+  true: require('./icons/true.png'),
+  false: require('./icons/false.png'),
 };
+
 export const FONTS = {
   regular: 'Montserrat-Regular',
   medium: 'Montserrat-Medium',
@@ -50,9 +62,4 @@ export const FONTS = {
   extraLight: 'Montserrat-ExtraLight',
   black: 'Montserrat-Black',
   italic: 'Montserrat-Italic',
-  VideoPlay: require('./icons/videoPlay.png'),
-  Share: require('./icons/share.png'),
-  Send: require('./icons/send.png'),
-  Download: require('./icons/download.png'),
-  light: require('./icons/light.png'),
 };

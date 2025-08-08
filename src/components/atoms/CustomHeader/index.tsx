@@ -1,18 +1,20 @@
 import React, { memo } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
 
+import { View, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+import Text from '../Text';
 import CustomLogo from '@components/molecules/HeaderLogo';
 import CustomProfileButton from '@components/molecules/ProfileButton';
-import { ICONS, IMAGES } from '@assets/index';
-import useStyle from './style';
-import { useNavigation } from '@react-navigation/native';
+import { ICONS } from '@assets/index';
+
 import type { HomeTabsNavigationProp } from '@navigation/types';
+import useStyle from './style';
 
 interface CustomHeaderProps {
   showBackArrow?: boolean;
   onBackPress?: () => void;
   showLogo?: boolean;
-  logoProps?: any;
   title?: string;
   showProfile?: boolean;
   onProfilePress?: () => void;
@@ -35,7 +37,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   return (
     <View style={styles.headerContainer}>
       {/* Left: Back Arrow or Logo */}
-      <View style={styles.leftContainer}>
+      <View>
         {showBackArrow ? (
           <TouchableOpacity
             onPress={() => {
@@ -43,33 +45,31 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
             }}
             style={styles.backButton}>
             <Image
-              source={ICONS.Left}
+              source={ICONS.BackArrow}
               style={styles.backIcon}
               resizeMode="contain"
             />
           </TouchableOpacity>
         ) : showLogo ? (
-          <CustomLogo logo={IMAGES.Allio_Logo} />
+          <CustomLogo logoStyle={styles.logoStyle} />
         ) : (
-          <View style={styles.placeholder} />
+          <></>
         )}
       </View>
 
       {/* Center: Title */}
-      <View style={styles.centerContainer}>
-        {title ? (
-          <Text style={styles.title} numberOfLines={1}>
+      <View>
+        {title && (
+          <Text type="BOLD" style={styles.title} numberOfLines={1}>
             {title}
           </Text>
-        ) : null}
+        )}
       </View>
 
       {/* Right: Profile Icon */}
       <View style={styles.rightContainer}>
-        {showProfile ? (
+        {showProfile && (
           <CustomProfileButton onPress={onProfilePress ?? (() => {})} />
-        ) : (
-          <View style={styles.placeholder} />
         )}
       </View>
     </View>
@@ -77,13 +77,3 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 };
 
 export default memo(CustomHeader);
-
-// With back arrow and title:
-// <CustomHeader showBackArrow onBackPress={() => navigation.goBack()} title="Home" showProfile onProfilePress={...} />
-
-// Without back arrow and title:
-// <CustomHeader showLogo logoProps={{ logo: IMAGES.Allio_Logo }} showProfile onProfilePress={...} />
-
-{
-  /* <CustomHeader title="Dashboard" /> */
-}

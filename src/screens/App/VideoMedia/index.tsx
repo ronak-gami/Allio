@@ -8,6 +8,7 @@ import {
   Button,
   CustomChip,
   CustomFlatList,
+  CustomHeader,
   CustomLoader,
   Text,
   VideoCard,
@@ -88,6 +89,7 @@ const VideoMedia: React.FC<Props> = () => {
 
   return (
     <>
+      <CustomHeader title="Video" showProfile={false} showLogo={false} />
       <View style={styles.container}>
         {isVideoLoaded() ? (
           <ScrollView

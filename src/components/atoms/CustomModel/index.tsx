@@ -54,16 +54,12 @@ const CustomModal: React.FC<CustomModalProps> = ({
               </TouchableOpacity>
             )}
 
-            <Text
-              type="BOLD"
-              style={[styles.title, { color: colors.background }]}>
-              {title}
+            <Text type="BOLD" style={styles.title}> 
+            {title}
             </Text>
 
             {description && (
-              <Text style={[styles.description, { color: colors.background }]}>
-                {description}
-              </Text>
+              <Text style={styles.description}>{description}</Text>
             )}
 
             <View style={styles.children}>{children}</View>

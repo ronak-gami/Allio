@@ -9,10 +9,8 @@ const useStyle = () => {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'rgba(0,0,0,0.35)',
     },
     card: {
-      backgroundColor: colors.card || '#fff',
       borderRadius: scale(20),
       padding: scale(24),
       width: '90%',
@@ -27,47 +25,19 @@ const useStyle = () => {
       fontSize: scale(20),
       fontWeight: 'bold',
       marginBottom: scale(16),
-      color: colors.primary || '#222',
+      color: colors.primary,
       textAlign: 'center',
+      marginTop: -10,
     },
     description: {
       fontSize: scale(14),
-      color: colors.text || '#444',
+      color: colors.text,
       marginBottom: scale(12),
       textAlign: 'center',
     },
     children: {
       width: '100%',
       marginTop: scale(8),
-    },
-    modalContainer: {
-      width: '100%',
-      alignItems: 'center',
-    },
-    input: {
-      width: '100%',
-      marginBottom: scale(12),
-      borderRadius: scale(8),
-    },
-    messageInput: {
-      minHeight: scale(60),
-      textAlignVertical: 'top',
-    },
-    button: {
-      width: '100%',
-      marginTop: scale(8),
-      borderRadius: scale(8),
-      backgroundColor: colors.primary,
-    },
-    closeButton: {
-      marginTop: scale(10),
-      padding: scale(8),
-      alignSelf: 'center',
-    },
-    closeButtonText: {
-      color: colors.primary,
-      fontWeight: 'bold',
-      fontSize: scale(16),
     },
     closeIconContainer: {
       position: 'absolute',
