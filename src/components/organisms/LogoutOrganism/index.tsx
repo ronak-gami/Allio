@@ -1,6 +1,6 @@
 import React from 'react';
 import Customlogout from '@components/molecules/Customlogout';
-import { ICONS } from '@assets/index';
+import { ICONS, IMAGES } from '@assets/index';
 interface LogoutOrganismProps {
   onConfirm: () => void;
 }
@@ -8,7 +8,7 @@ interface LogoutOrganismProps {
 const LogoutOrganism: React.FC<LogoutOrganismProps> = ({ onConfirm }) => {
   return (
     <Customlogout
-      image={ICONS.logout}
+      image={IMAGES.Logout}
       description="Are you sure you want to logout?"
       buttonTitle=""
       onButtonPress={onConfirm}

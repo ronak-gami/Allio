@@ -16,6 +16,8 @@ export const IMAGES = {
   Scanner: require('./images/scanner.jpg'),
   Homeimage: require('./images/homeimage.png'),
   Two: require('./images/two.png'),
+  Deleteimage: require('./images/icondelete.png'),
+  Logout: require('./images/logoutimag.png'),
 };
 
 export const ICONS = {

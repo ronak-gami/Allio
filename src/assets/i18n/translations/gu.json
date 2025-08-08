@@ -87,5 +87,12 @@
     "logout": "લૉગઆઉટ",
     "about_us": "અમારા વિશે",
     "contact_us": "અમારો સંપર્ક કરો"
+  },
+  "Settings": {
+    "select_theme": "થિમ પસંદ કરો",
+    "select_language": "ભાષા પસંદ કરો",
+    "confirm_logout": "લૉગઆઉટની પુષ્ટિ કરો",
+    "apply": "લાગુ કરો",
+    "logout": "લૉગઆઉટ"
   }
 }

@@ -88,5 +88,13 @@
     "dark_mode": "डार्क मोड",
     "light_mode": "लाइट मोड",
     "logout": "लॉग आउट"
+  },
+
+  "Settings": {
+    "select_theme": "थीम चुनें",
+    "select_language": "भाषा चुनें",
+    "confirm_logout": "लॉगआउट की पुष्टि करें",
+    "apply": "लागू करें",
+    "logout": "लॉगआउट"
   }
 }

@@ -21,7 +21,6 @@ const useStyle = () => {
     },
     item: {
       paddingVertical: height * 0.025,
-      // paddingHorizontal: height * 0.02,
       borderBottomWidth: 1,
       borderColor: colors.text,
     },

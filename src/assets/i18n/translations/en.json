@@ -82,5 +82,12 @@
   },
   "More": {
     "More": "More"
+  },
+  "Settings": {
+    "select_theme": "Select Theme",
+    "select_language": "Select Language",
+    "confirm_logout": "Confirm Logout",
+    "apply": "Apply",
+    "logout": "Logout"
   }
 }

@@ -1,465 +1,8 @@
-// import React from 'react';
-// import { View, TouchableOpacity } from 'react-native';
-// import { useDispatch } from 'react-redux';
-// import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-// import firestore from '@react-native-firebase/firestore';
-// import crashlytics from '@react-native-firebase/crashlytics';
-// import { getAuth } from '@react-native-firebase/auth';
-
-// import { CustomFlatList, Text } from '@components/index';
-// import { TabParamList } from '@types/navigations';
-// import { logout } from '@redux/slices/AuthSlice';
-// import useStyle from './style';
-// import { HOME } from '@utils/constant';
-
-// type Props = BottomTabScreenProps<TabParamList, 'More'>;
-
-// const More: React.FC<Props> = ({ navigation }) => {
-//   const styles = useStyle();
-//   const dispatch = useDispatch();
-
-//   const handleLogout = async () => {
-//     try {
-//       const authInstance = getAuth();
-//       const currentUser = authInstance.currentUser;
-
-//       if (currentUser) {
-//         await firestore().collection('users').doc(currentUser.uid).update({
-//           fcmToken: firestore.FieldValue.delete(),
-//           fcmUpdatedAt: firestore.FieldValue.delete(),
-//         });
-
-//         await authInstance.signOut();
-//         dispatch(logout());
-//       }
-//     } catch (error) {
-//       console.error('Logout Error:', error);
-//       crashlytics().recordError(error as Error);
-//     }
-//   };
-
-//   const handleItemPress = (key: string) => {
-//     switch (key) {
-//       case 'profile':
-//         // navigation.navigate('Profile');
-//         break;
-//       case 'friends':
-//         navigation.navigate(HOME.MyFriends);
-//         break;
-//       case 'theme':
-//         // navigation.navigate('Theme');
-//         break;
-//       case 'language':
-//         // navigation.navigate('Language');
-//         break;
-//       case 'delete':
-//         // navigation.navigate('DeleteAccount');
-//         break;
-//       case 'logout':
-//         handleLogout();
-//         break;
-//       default:
-//         break;
-//     }
-//   };
-
-//   const settingsData = [
-//     { key: 'profile', title: 'Profile' },
-//     { key: 'friends', title: 'My Friends' },
-//     { key: 'theme', title: 'Theme' },
-//     { key: 'language', title: 'Language' },
-//     { key: 'delete', title: 'Delete Account' },
-//     { key: 'logout', title: 'Logout' },
-//   ];
-
-//   const renderItem = ({ item }: { item: { key: string; title: string } }) => (
-//     <TouchableOpacity
-//       style={styles.item}
-//       onPress={() => handleItemPress(item.key)}>
-//       <Text style={styles.itemText} type="semibold">
-//         {item.title}
-//       </Text>
-//     </TouchableOpacity>
-//   );
-
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.title} type="BOLD">
-//         More
-//       </Text>
-//       <CustomFlatList data={settingsData} renderItem={renderItem} />
-//     </View>
-//   );
-// };
-
-// export default More;
-// import React, { useRef, useState } from 'react';
-// import { View, TouchableOpacity } from 'react-native';
-// import { useDispatch } from 'react-redux';
-// import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-// import { CustomFlatList, Text } from '@components/index';
-// import useStyle from './style';
-// import { TabParamList } from '@types/navigations';
-// import { HOME } from '@utils/constant';
-
-// // Import your components
-// import CustomBottomSheet from '@components/molecules/CustomBottomSheet';
-// import RadioGroup from '@components/molecules/RadioGroups';
-
-// type Props = BottomTabScreenProps<TabParamList, 'More'>;
-
-// const More: React.FC<Props> = ({ navigation }) => {
-//   const styles = useStyle();
-//   const dispatch = useDispatch();
-
-//   // BottomSheet state
-//   const sheetRef = useRef<any>(null);
-//   const [selectedTheme, setSelectedTheme] = useState('light');
-
-//   const themeOptions = [
-//     { label: 'Light', value: 'light' },
-//     { label: 'Dark', value: 'dark' },
-//   ];
-
-//   const handleItemPress = (key: string) => {
-//     switch (key) {
-//       case 'theme':
-//         sheetRef.current?.expand();
-//         break;
-//       // ...other cases
-//     }
-//   };
-
-//   const handleThemeConfirm = () => {
-//     // dispatch(setDarkMode(selectedTheme === 'dark'));
-//     sheetRef.current?.close();
-//   };
-
-//   const settingsData = [
-//     { key: 'theme', title: 'Theme' },
-//     // ...other items
-//   ];
-
-//   const renderItem = ({ item }: { item: { key: string; title: string } }) => (
-//     <TouchableOpacity
-//       style={styles.item}
-//       onPress={() => handleItemPress(item.key)}>
-//       <Text style={styles.itemText} type="semibold">
-//         {item.title}
-//       </Text>
-//     </TouchableOpacity>
-//   );
-
-//   return (
-//     <View style={styles.container}>
-//       <CustomFlatList data={settingsData} renderItem={renderItem} />
-
-//       <CustomBottomSheet
-//         ref={sheetRef}
-//         title="Select Theme"
-//         buttonTitle="Apply"
-//         onButtonPress={handleThemeConfirm}
-//         onClose={() => sheetRef.current?.close()}>
-//         <RadioGroup
-//           options={themeOptions}
-//           selectedValue={selectedTheme}
-//           onSelect={setSelectedTheme}
-//         />
-//       </CustomBottomSheet>
-//     </View>
-//   );
-// };
-
-// export default More;
-
-// import React, { useCallback, useRef } from 'react';
-// import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-// import { BottomSheetModal } from '@gorhom/bottom-sheet';
-// import {
-//   BottomSheetWrapper,
-//   CustomBottomSheetModal,
-// } from '@components/molecules/CustomBottomSheetModal';
-
-// const More = () => {
-//   const sheetRef = useRef<BottomSheetModal>(null);
-
-//   const handlePresentModalPress = useCallback(() => {
-//     sheetRef.current?.present();
-//   }, []);
-
-//   return (
-//     <BottomSheetWrapper>
-//       <View style={styles.container}>
-//         <TouchableOpacity
-//           style={styles.button}
-//           onPress={handlePresentModalPress}>
-//           <Text style={styles.buttonText}>Open Bottom Sheet</Text>
-//         </TouchableOpacity>
-
-//         <CustomBottomSheetModal
-//           ref={sheetRef}
-//           content={<Text>Hello, this is your static content!</Text>}
-//         />
-//       </View>
-//     </BottomSheetWrapper>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     backgroundColor: 'beige',
-//   },
-//   button: {
-//     backgroundColor: '#2196F3',
-//     paddingVertical: 12,
-//     paddingHorizontal: 24,
-//     borderRadius: 4,
-//   },
-//   buttonText: { color: 'white', fontSize: 16 },
-// });
-
-// export default More;
-// import React, { useCallback, useRef } from 'react';
-// import { View, StyleSheet, TouchableOpacity } from 'react-native';
-// import { BottomSheetModal } from '@gorhom/bottom-sheet';
-// import {
-//   BottomSheetWrapper,
-//   CustomBottomSheetModal,
-// } from '@components/molecules/CustomBottomSheetModal';
-// import Text from '@components/atoms/Text';
-
-// const settingsData = [
-//   { key: 'theme', title: 'Theme' },
-//   // Add other items as needed
-// ];
-
-// const More = () => {
-//   const sheetRef = useRef<BottomSheetModal>(null);
-
-//   const handleItemPress = useCallback((key: string) => {
-//     if (key === 'theme') {
-//       sheetRef.current?.present();
-//     }
-//     // handle other keys as needed
-//   }, []);
-
-//   const renderItem = ({ item }: { item: { key: string; title: string } }) => (
-//     <TouchableOpacity
-//       style={styles.button}
-//       onPress={() => handleItemPress(item.key)}>
-//       <Text style={styles.buttonText}>{item.title}</Text>
-//     </TouchableOpacity>
-//   );
-
-//   return (
-//     <BottomSheetWrapper>
-//       <View style={styles.container}>
-//         {settingsData.map(item => renderItem({ item }))}
-//         <CustomBottomSheetModal
-//           ref={sheetRef}
-//           title="Select Theme"
-//           buttonTitle="Apply"
-//           onButtonPress={() => sheetRef.current?.dismiss()}
-//           onClose={() => sheetRef.current?.dismiss()}>
-//           <Text>Hello, this is your static content!</Text>
-//         </CustomBottomSheetModal>
-//       </View>
-//     </BottomSheetWrapper>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     backgroundColor: 'beige',
-//   },
-//   button: {
-//     backgroundColor: '#2196F3',
-//     paddingVertical: 12,
-//     paddingHorizontal: 24,
-//     borderRadius: 4,
-//     marginBottom: 12,
-//   },
-//   buttonText: { color: 'white', fontSize: 16 },
-// });
-
-// export default More;
-// import React, { useCallback, useRef, useState } from 'react';
-// import { View, StyleSheet, TouchableOpacity } from 'react-native';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { BottomSheetModal } from '@gorhom/bottom-sheet';
-// import {
-//   BottomSheetWrapper,
-//   CustomBottomSheetModal,
-// } from '@components/molecules/CustomBottomSheetModal';
-// import Text from '@components/atoms/Text';
-// import RadioGroup from '@components/molecules/RadioGroups';
-// import { setDarkMode } from '@redux/slices/ThemeSlice'; // adjust path as needed
-
-// const settingsData = [
-//   { key: 'theme', title: 'Theme' },
-//   // Add other items as needed
-// ];
-
-// const themeOptions = [
-//   { label: 'Light', value: 'light' },
-//   { label: 'Dark', value: 'dark' },
-// ];
-
-// const More = () => {
-//   const sheetRef = useRef<BottomSheetModal>(null);
-//   const dispatch = useDispatch();
-//   const isDarkMode = useSelector((state: any) => state.theme.isDarkMode); // adjust selector as needed
-//   const [selectedTheme, setSelectedTheme] = useState(
-//     isDarkMode ? 'dark' : 'light',
-//   );
-
-//   const handleItemPress = useCallback((key: string) => {
-//     if (key === 'theme') {
-//       sheetRef.current?.present();
-//     }
-//     // handle other keys as needed
-//   }, []);
-
-//   const handleThemeConfirm = () => {
-//     dispatch(setDarkMode(selectedTheme === 'dark'));
-//     sheetRef.current?.dismiss();
-//   };
-
-//   const renderItem = ({ item }: { item: { key: string; title: string } }) => (
-//     <TouchableOpacity
-//       style={styles.button}
-//       onPress={() => handleItemPress(item.key)}>
-//       <Text style={styles.buttonText}>{item.title}</Text>
-//     </TouchableOpacity>
-//   );
-
-//   return (
-//     <BottomSheetWrapper>
-//       <View style={styles.container}>
-//         {settingsData.map(item => renderItem({ item }))}
-//         <CustomBottomSheetModal
-//           ref={sheetRef}
-//           title="Select Theme"
-//           buttonTitle="Apply"
-//           onButtonPress={handleThemeConfirm}
-//           onClose={() => sheetRef.current?.dismiss()}>
-//           <RadioGroup
-//             options={themeOptions}
-//             selectedValue={selectedTheme}
-//             onSelect={setSelectedTheme}
-//           />
-//         </CustomBottomSheetModal>
-//       </View>
-//     </BottomSheetWrapper>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     backgroundColor: 'beige',
-//   },
-//   button: {
-//     backgroundColor: '#2196F3',
-//     paddingVertical: 12,
-//     paddingHorizontal: 24,
-//     borderRadius: 4,
-//     marginBottom: 12,
-//   },
-//   buttonText: { color: 'white', fontSize: 16 },
-// });
-
-// export default More;
-
-//this is latest for screens
-// import React, { useRef, useState } from 'react';
-// import { View, TouchableOpacity } from 'react-native';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { CustomFlatList, Text } from '@components/index';
-// import useStyle from './style';
-// import { HOME } from '@utils/constant';
-// import {
-//   CustomBottomSheetModal,
-//   BottomSheetWrapper,
-// } from '@components/molecules/CustomBottomSheetModal';
-// import ThemeOrganism from '@components/organisms/TheamBottomSheet';
-// import { setDarkMode } from '@redux/slices/ThemeSlice'; // adjust path if needed
-
-// const settingsData = [
-//   { key: 'profile', title: 'Profile' },
-//   { key: 'friends', title: 'My Friends' },
-//   { key: 'theme', title: 'Theme' },
-//   { key: 'language', title: 'Language' },
-//   { key: 'delete', title: 'Delete Account' },
-//   { key: 'logout', title: 'Logout' },
-// ];
-
-// const More: React.FC = () => {
-//   const styles = useStyle();
-//   const dispatch = useDispatch();
-//   const isDarkMode = useSelector((state: any) => state.theme.isDarkMode);
-//   const [selectedTheme, setSelectedTheme] = useState(
-//     isDarkMode ? 'dark' : 'light',
-//   );
-//   const sheetRef = useRef<any>(null);
-
-//   const handleItemPress = (key: string) => {
-//     if (key === 'theme') {
-//       sheetRef.current?.present();
-//     }
-//     // handle other keys as needed
-//   };
-
-//   const handleThemeConfirm = () => {
-//     dispatch(setDarkMode(selectedTheme === 'dark'));
-//     sheetRef.current?.dismiss();
-//   };
-
-//   const renderItem = ({ item }: { item: { key: string; title: string } }) => (
-//     <TouchableOpacity
-//       style={styles.item}
-//       onPress={() => handleItemPress(item.key)}>
-//       <Text style={styles.itemText} type="semibold">
-//         {item.title}
-//       </Text>
-//     </TouchableOpacity>
-//   );
-
-//   return (
-//     <BottomSheetWrapper>
-//       <View style={styles.container}>
-//         <Text style={styles.title} type="BOLD">
-//           More
-//         </Text>
-//         <CustomFlatList data={settingsData} renderItem={renderItem} />
-//         <CustomBottomSheetModal
-//           ref={sheetRef}
-//           title="Select Theme"
-//           buttonTitle="Apply"
-//           onButtonPress={handleThemeConfirm}
-//           onClose={() => sheetRef.current?.dismiss()}>
-//           <ThemeOrganism
-//             selectedTheme={selectedTheme}
-//             onSelect={setSelectedTheme}
-//           />
-//         </CustomBottomSheetModal>
-//       </View>
-//     </BottomSheetWrapper>
-//   );
-// };
-
-// export default More;
-import React, { useRef, useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { View, TouchableOpacity, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { useFocusEffect, useTheme } from '@react-navigation/native';
 import {
   CustomFlatList,
   LanguageOrganism,
@@ -478,6 +21,12 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import { getAuth } from '@react-native-firebase/auth';
 import { setDarkMode } from '@redux/slices/ThemeSlice';
 import i18n from '@assets/i18n';
+import { TabParamList } from '@types/navigations';
+import { height } from '@utils/helper';
+import DeleteProfileOrganism from '@components/organisms/Deleteorganism';
+
+type Props = BottomTabScreenProps<TabParamList, 'More'>;
+
 const settingsData = [
   { key: 'profile', title: 'Profile' },
   { key: 'friends', title: 'My Friends' },
@@ -487,20 +36,70 @@ const settingsData = [
   { key: 'logout', title: 'Logout' },
 ];
 
-const More: React.FC = () => {
+const More: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
+  const { colors } = useTheme();
   const isDarkMode = useSelector((state: any) => state.theme.isDarkMode);
+
   const [selectedTheme, setSelectedTheme] = useState<'dark' | 'light'>(
     isDarkMode ? 'dark' : 'light',
   );
   const [selectedLanguage, setSelectedLanguage] = useState<string>(
-    i18n.language || 'en',
+    i18n.language || 'en' || 'hi' || 'gu',
   );
   const [sheetType, setSheetType] = useState<
-    'theme' | 'language' | 'logout' | null
+    'theme' | 'language' | 'logout' | 'delete' | null
   >(null);
+
   const sheetRef = useRef<any>(null);
+
+  const originalTabBarStyle = {
+    height: Platform.OS === 'ios' ? height * 0.1 : height * 0.07,
+    backgroundColor: colors.primary,
+  };
+
+  const handleTabBarVisibility = (visible: boolean) => {
+    navigation.setOptions({
+      tabBarStyle: visible ? originalTabBarStyle : { display: 'none' },
+    });
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.setOptions({
+        tabBarStyle: originalTabBarStyle,
+      });
+
+      return () => {
+        navigation.setOptions({
+          tabBarStyle: originalTabBarStyle,
+        });
+      };
+    }, [navigation, colors.primary]),
+  );
+  const handleDeleteProfile = async () => {
+    try {
+      const authInstance = getAuth();
+      const user = authInstance.currentUser;
+
+      if (user) {
+        // Remove from Firestore
+        await firestore().collection('users').doc(user.uid).delete();
+
+        // Optional: delete other user-specific data e.g. subcollections
+
+        // Delete the user account in Firebase Auth (user must have signed in recently)
+        await user.delete();
+
+        dispatch(logout());
+        sheetRef.current?.dismiss();
+      }
+    } catch (error) {
+      console.error('Delete account error:', error);
+      crashlytics().recordError(error as Error);
+    }
+  };
 
   const handleItemPress = (key: string) => {
     if (key === 'theme') {
@@ -512,9 +111,13 @@ const More: React.FC = () => {
     } else if (key === 'logout') {
       setSheetType('logout');
       sheetRef.current?.present();
+    } else if (key === 'delete') {
+      setSheetType('delete');
+      sheetRef.current?.present();
     }
     // handle other keys as needed
   };
+
   const handleLogout = async () => {
     try {
       const authInstance = getAuth();
@@ -545,6 +148,54 @@ const More: React.FC = () => {
     sheetRef.current?.dismiss();
   };
 
+  const handleSheetClose = () => {
+    sheetRef.current?.dismiss();
+    // Small delay to ensure smooth animation
+    setTimeout(() => {
+      navigation.setOptions({
+        tabBarStyle: originalTabBarStyle,
+      });
+    }, 10);
+  };
+
+  const getSheetTitle = () => {
+    switch (sheetType) {
+      case 'theme':
+        return 'Select Theme';
+      case 'language':
+        return 'Select Language';
+      case 'logout':
+        return 'Confirm Logout';
+      case 'delete':
+        return 'Delete Account';
+      default:
+        return '';
+    }
+  };
+  const getButtonTitle = () => {
+    switch (sheetType) {
+      case 'theme':
+      case 'language':
+        return 'Apply';
+      case 'logout':
+        return 'Logout';
+      case 'delete':
+        return 'Delete';
+      default:
+        return '';
+    }
+  };
+
+  const handleButtonPress = () => {
+    if (sheetType === 'logout') {
+      return handleLogout;
+    }
+    if (sheetType === 'delete') {
+      return handleDeleteProfile;
+    }
+    return handleApply;
+  };
+
   const renderItem = ({ item }: { item: { key: string; title: string } }) => (
     <TouchableOpacity
       style={styles.item}
@@ -555,6 +206,31 @@ const More: React.FC = () => {
     </TouchableOpacity>
   );
 
+  const renderSheetContent = () => {
+    switch (sheetType) {
+      case 'theme':
+        return (
+          <ThemeOrganism
+            selectedTheme={selectedTheme}
+            onSelect={setSelectedTheme}
+          />
+        );
+      case 'language':
+        return (
+          <LanguageOrganism
+            selectedLanguage={selectedLanguage}
+            onSelect={setSelectedLanguage}
+          />
+        );
+      case 'logout':
+        return <LogoutOrganism onConfirm={handleLogout} />;
+      case 'delete':
+        return <DeleteProfileOrganism onConfirm={handleDeleteProfile} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <BottomSheetWrapper>
       <View style={styles.container}>
@@ -562,36 +238,18 @@ const More: React.FC = () => {
           More
         </Text>
         <CustomFlatList data={settingsData} renderItem={renderItem} />
+
         <CustomBottomSheetModal
           ref={sheetRef}
-          title={sheetType === 'theme' ? 'Select Theme' : 'Select Language'}
-          buttonTitle={
-            sheetType === 'theme' || sheetType === 'language'
-              ? 'Apply'
-              : 'Logout'
-          } // 🔥 Hide button for logout
-          onButtonPress={
-            sheetType === 'theme' || sheetType === 'language'
-              ? handleApply
-              : handleLogout
-          }
-          onClose={() => sheetRef.current?.dismiss()}>
-          {sheetType === 'theme' && (
-            <ThemeOrganism
-              selectedTheme={selectedTheme}
-              onSelect={setSelectedTheme}
-            />
-          )}
-          {sheetType === 'language' && (
-            <LanguageOrganism
-              selectedLanguage={selectedLanguage}
-              onSelect={setSelectedLanguage}
-            />
-          )}
-
-          {sheetType === 'logout' && (
-            <LogoutOrganism onConfirm={handleLogout} />
-          )}
+          title={getSheetTitle()}
+          buttonTitle={getButtonTitle()}
+          onButtonPress={handleButtonPress()}
+          onClose={handleSheetClose}
+          onTabBarVisibilityChange={handleTabBarVisibility}
+          enableBackdrop={true}
+          enableHandle={true}
+          backdropOpacity={0.7}>
+          {renderSheetContent()}
         </CustomBottomSheetModal>
       </View>
     </BottomSheetWrapper>

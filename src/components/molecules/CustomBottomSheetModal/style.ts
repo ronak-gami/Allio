@@ -54,7 +54,7 @@
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native';
-
+import { useSelector } from 'react-redux';
 const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
@@ -62,11 +62,21 @@ const useStyle = () => {
       padding: scale(16),
       flex: 1,
       justifyContent: 'space-between',
-      backgroundColor: colors.lightyellow,
+      backgroundColor: colors.white,
       borderTopLeftRadius: scale(20),
       borderTopRightRadius: scale(20),
     },
- 
+    handle: {
+      backgroundColor: 'transparent',
+      paddingTop: 6,
+      paddingBottom: 3,
+    },
+    handleIndicator: {
+      width: 40,
+      height: 4,
+      borderRadius: 2,
+    },
+
     header: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -74,7 +84,7 @@ const useStyle = () => {
       marginBottom: scale(12),
     },
     title: {
-      fontSize: scale(18),
+      fontSize: scale(20),
       flex: 1,
       color: colors.black,
     },
@@ -83,8 +93,8 @@ const useStyle = () => {
       marginLeft: scale(8),
     },
     closeIcon: {
-      width: scale(16),
-      height: scale(16),
+      width: scale(10),
+      height: scale(10),
       tintColor: colors.black,
     },
     content: {
@@ -92,8 +102,7 @@ const useStyle = () => {
       marginBottom: scale(16),
     },
     bottomButton: {
-      marginTop: scale(8),
-      borderRadius: scale(8),
+      marginTop: scale(20),
     },
   });
 };
