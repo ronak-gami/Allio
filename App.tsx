@@ -45,7 +45,6 @@ const App = () => {
       style={{
         flex: 1,
       }}>
-        
       <Provider store={store}>
         <PaperProvider>
           <PersistGate loading={null} persistor={persistor}>
@@ -63,7 +62,9 @@ const App = () => {
               iconFamily="MaterialIcons"
               iconSize={24}
             />
-            <StackNavigator />
+            <BottomSheetModalProvider>
+              <StackNavigator />
+            </BottomSheetModalProvider>
           </PersistGate>
         </PaperProvider>
       </Provider>

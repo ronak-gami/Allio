@@ -79,7 +79,7 @@ const StackNavigator: React.FC = () => {
             routeNameRef.current = currentRoute;
           }
         }}>
-        <BottomSheetModalProvider>
+      
           {splashVisible ? (
             <Splash />
           ) : token ? (
@@ -87,7 +87,7 @@ const StackNavigator: React.FC = () => {
           ) : (
             <AuthNavigator />
           )}
-        </BottomSheetModalProvider>
+      
       </NavigationContainer>
     </>
   );

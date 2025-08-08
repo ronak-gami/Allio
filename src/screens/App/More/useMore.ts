@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from '@react-navigation/native';
@@ -42,9 +42,9 @@ const useMore = (navigation: any) => {
   };
 
   const handleTabBarVisibility = (visible: boolean) => {
-    navigation.setOptions({
-      tabBarStyle: visible ? originalTabBarStyle : { display: 'none' },
-    });
+    // navigation.setOptions({
+    //   tabBarStyle: visible ? originalTabBarStyle : { display: 'none' },
+    // });
   };
 
   const handleDeleteProfile = async () => {

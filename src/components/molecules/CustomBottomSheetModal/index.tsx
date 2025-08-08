@@ -98,6 +98,7 @@ export const CustomBottomSheetModal = forwardRef<BottomSheetModal, Props>(
         ref={ref}
         index={0}
         snapPoints={snapPoints}
+        style={{ zIndex: 1000 }}
         // onDismiss={closeSheet}
         onChange={handleSheetChanges}
         backdropComponent={renderBackdrop}
