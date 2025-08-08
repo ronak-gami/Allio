@@ -21,7 +21,6 @@ const useStyle = () => {
     contentNone: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
       padding: width * 0.04,
     },
 
