@@ -24,7 +24,6 @@ api.interceptors.response.use(
   error => {
     const status = error?.response?.status;
     const errorData = error?.response?.data;
-    console.log('the eeor data is-->', errorData);
 
     if (status >= 400 && status < 410) {
       showError(errorData?.error);
