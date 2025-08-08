@@ -32,6 +32,7 @@ export type Theme = {
     text: Color;
     heromain: Color;
     green: Color;
+    accepted: Color;
   };
 };
 
