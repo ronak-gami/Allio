@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Customlogout from '@components/molecules/Customlogout';
 import { IMAGES } from '@assets/index';
 
@@ -19,4 +19,4 @@ const DeleteProfileOrganism: React.FC<DeleteProfileOrganismProps> = ({
   );
 };
 
-export default DeleteProfileOrganism;
+export default memo(DeleteProfileOrganism);

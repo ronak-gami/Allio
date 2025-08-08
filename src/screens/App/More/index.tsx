@@ -4,25 +4,24 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import {
   CustomFlatList,
   LanguageOrganism,
-  LogoutOrganism,
   Text,
   ThemeOrganism,
-} from '@components/index';
-
-import useStyle from './style';
-import {
+  DeleteProfileOrganism,
+  LogoutOrganism,
   CustomBottomSheetModal,
-  BottomSheetWrapper,
-} from '@components/molecules/CustomBottomSheetModal';
-import DeleteProfileOrganism from '@components/organisms/Deleteorganism';
-import useMore, { settingsData } from './useMore';
+} from '@components/index';
+import useStyle from './style';
+import { BottomSheetWrapper } from '@components/molecules/CustomBottomSheetModal';
+import useMore from './useMore';
 import { TabParamList } from '@types/navigations';
+import { settingsData } from '@utils/constant';
 
 type Props = BottomTabScreenProps<TabParamList, 'More'>;
 
 const More: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const more = useMore(navigation);
+  const { states } = more;
 
   const renderItem = ({ item }: { item: { key: string; title: string } }) => (
     <TouchableOpacity
@@ -35,19 +34,19 @@ const More: React.FC<Props> = ({ navigation }) => {
   );
 
   const renderSheetContent = () => {
-    switch (more.sheetType) {
+    switch (states.sheetType) {
       case 'theme':
         return (
           <ThemeOrganism
-            selectedTheme={more.selectedTheme}
-            onSelect={more.setSelectedTheme}
+            selectedTheme={states.selectedTheme}
+            onSelect={states.setSelectedTheme}
           />
         );
       case 'language':
         return (
           <LanguageOrganism
-            selectedLanguage={more.selectedLanguage}
-            onSelect={more.setSelectedLanguage}
+            selectedLanguage={states.selectedLanguage}
+            onSelect={states.setSelectedLanguage}
           />
         );
       case 'logout':
@@ -68,7 +67,7 @@ const More: React.FC<Props> = ({ navigation }) => {
         <CustomFlatList data={settingsData} renderItem={renderItem} />
 
         <CustomBottomSheetModal
-          ref={more.sheetRef}
+          ref={states.sheetRef}
           title={more.getSheetTitle()}
           buttonTitle={more.getButtonTitle()}
           onButtonPress={more.handleButtonPress()}

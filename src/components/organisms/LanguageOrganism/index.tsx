@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import RadioGroup from '@components/molecules/RadioGroups';
 
@@ -28,4 +28,4 @@ const LanguageOrganism: React.FC<LanguageOrganismProps> = ({
   );
 };
 
-export default LanguageOrganism;
+export default memo(LanguageOrganism);

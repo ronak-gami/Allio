@@ -10,15 +10,6 @@ import { getAuth } from '@react-native-firebase/auth';
 import i18n from '@assets/i18n';
 import { height } from '@utils/helper';
 
-export const settingsData = [
-  { key: 'profile', title: 'Profile' },
-  { key: 'friends', title: 'My Friends' },
-  { key: 'theme', title: 'Theme' },
-  { key: 'language', title: 'Language' },
-  { key: 'delete', title: 'Delete Account' },
-  { key: 'logout', title: 'Logout' },
-];
-
 const useMore = (navigation: any) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
@@ -36,6 +27,15 @@ const useMore = (navigation: any) => {
 
   const sheetRef = useRef<any>(null);
 
+  const states = {
+    selectedTheme,
+    selectedLanguage,
+    sheetType,
+    setSelectedTheme,
+    setSelectedLanguage,
+    setSheetType,
+    sheetRef,
+  };
   const originalTabBarStyle = {
     height: Platform.OS === 'ios' ? height * 0.1 : height * 0.07,
     backgroundColor: colors.primary,
@@ -147,13 +147,7 @@ const useMore = (navigation: any) => {
 
   return {
     styles: { originalTabBarStyle },
-    sheetRef,
-    selectedTheme,
-    setSelectedTheme,
-    selectedLanguage,
-    setSelectedLanguage,
-    sheetType,
-    setSheetType,
+    states,
     handleTabBarVisibility,
     handleDeleteProfile,
     handleLogout,

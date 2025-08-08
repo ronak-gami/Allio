@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CustomCheckBox from '@components/atoms/CheckBox';
@@ -36,4 +36,4 @@ const RememberForgot: React.FC<RememberForgotProps> = ({
   );
 };
 
-export default RememberForgot;
+export default memo(RememberForgot);

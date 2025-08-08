@@ -15,17 +15,20 @@ export { default as BottomModal } from './atoms/BottomModal';
 export { default as Container } from './molecules/Container';
 export { default as Customlogout } from './molecules/Customlogout';
 export { default as RadioGroup } from './molecules/RadioGroups';
-export { default as CustomBottomSheetModal } from './molecules/CustomBottomSheetModal';
+// If CustomBottomSheetModal is a named export, use the following:
+export { CustomBottomSheetModal } from './molecules/CustomBottomSheetModal';
+
 //oraganims
 export { default as ImagePreviewModal } from './organisms/ImagePreviewModal';
 export { default as MediaCard } from './organisms/MediaCard';
 export { default as VideoPreviewModal } from './organisms/VideoPreviewModal';
-export { default as ContactUsSection } from './organisms/ContactUs';
+export { default as ContactUsSection } from './organisms/ContactUsSection';
 export { default as ImageSlider } from './organisms/ImageSlider';
 export { default as AboutDetails } from './organisms/AboutDetails';
 export { default as LogoutOrganism } from './organisms/LogoutOrganism';
 export { default as ThemeOrganism } from './organisms/ThemeOrganism';
 export { default as LanguageOrganism } from './organisms/LanguageOrganism';
+export { default as DeleteProfileOrganism } from './organisms/DeleteProfileOrganism';
 
 //molecules
 export { default as Container } from './molecules/Container';

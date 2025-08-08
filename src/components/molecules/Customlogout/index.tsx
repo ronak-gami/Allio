@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
@@ -38,4 +38,4 @@ const Customlogout: React.FC<BottomSheetContentProps> = ({
   );
 };
 
-export default Customlogout;
+export default memo(Customlogout);

@@ -107,6 +107,15 @@ const FeaturesDataItem = [
     buttonText: 'Home',
   },
 ];
+
+const settingsData = [
+  { key: 'profile', title: 'Profile' },
+  { key: 'friends', title: 'My Friends' },
+  { key: 'theme', title: 'Theme' },
+  { key: 'language', title: 'Language' },
+  { key: 'delete', title: 'Delete Account' },
+  { key: 'logout', title: 'Logout' },
+];
 export {
   onboardingData,
   AUTH,
@@ -115,4 +124,5 @@ export {
   CARD_WIDTH,
   SPACING,
   FeaturesDataItem,
+  settingsData,
 };

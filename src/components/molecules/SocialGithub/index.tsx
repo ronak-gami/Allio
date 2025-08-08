@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Linking } from 'react-native';
 import { useDispatch } from 'react-redux';
 import {
@@ -122,4 +122,4 @@ const SignInWithGitHub = () => {
   );
 };
 
-export default SignInWithGitHub;
+export default memo(SignInWithGitHub);

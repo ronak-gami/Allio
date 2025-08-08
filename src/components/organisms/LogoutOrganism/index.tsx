@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Customlogout from '@components/molecules/Customlogout';
 import { ICONS, IMAGES } from '@assets/index';
 interface LogoutOrganismProps {
@@ -16,4 +16,4 @@ const LogoutOrganism: React.FC<LogoutOrganismProps> = ({ onConfirm }) => {
   );
 };
 
-export default LogoutOrganism;
+export default memo(LogoutOrganism);

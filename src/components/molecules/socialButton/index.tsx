@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   Pressable,
   Image,
@@ -33,4 +33,4 @@ const SocialButton: React.FC<SocialButtonProps> = ({
   );
 };
 
-export default SocialButton;
+export default memo(SocialButton);
