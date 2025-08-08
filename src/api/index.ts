@@ -24,21 +24,21 @@ const api = {
     sendOtp: ({ data }: { data: { email: string } }) =>
       client({
         method: 'post',
-        url: '/send-otp',
+        url: '/user/send-otp',
         data,
       }),
 
     validateOtp: ({ data }: { data: { email: string; otp: string } }) =>
       client({
         method: 'post',
-        url: '/validate-otp',
+        url: '/user/validate-otp',
         data,
       }),
 
     setNewMpin: ({ data }: { data: { email: string; newMpin: string } }) =>
       client({
         method: 'post',
-        url: '/set-new-mpin',
+        url: '/user/set-new-mpin',
         data,
       }),
   },
@@ -55,7 +55,7 @@ const api = {
     sendNotification: ({ data }: { data: any }) =>
       client({
         method: 'post',
-        url: '/send-notification',
+        url: '/user/send-notification',
         data,
       }),
   },

@@ -43,6 +43,7 @@ export const ICONS = {
   Send: require('./icons/send.png'),
   Download: require('./icons/download.png'),
   light: require('./icons/light.png'),
+  MultipleUser: require('./icons/Multiple_User.png'),
   true: require('./icons/true.png'),
   false: require('./icons/false.png'),
 };

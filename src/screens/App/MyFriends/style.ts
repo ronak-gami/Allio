@@ -15,7 +15,7 @@ const useStyle = () => {
       flexDirection: 'row',
       justifyContent: 'space-around',
       borderBottomWidth: 1,
-      borderBottomColor: colors.primary,
+      borderBottomColor: colors.text,
     },
     tabButton: {
       alignItems: 'center',
@@ -56,10 +56,11 @@ const useStyle = () => {
     emptyStateTitle: {
       fontSize: scale(24),
       marginBottom: height * 0.01,
-      color: colors.text,
+      color: colors.primary,
     },
     emptyStateSubtitle: {
       fontSize: scale(16),
+      color: colors.text,
       textAlign: 'center',
       lineHeight: scale(24),
       paddingHorizontal: width * 0.08,

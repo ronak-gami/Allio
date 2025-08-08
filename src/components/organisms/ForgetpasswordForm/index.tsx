@@ -22,7 +22,7 @@ const ForgotPasswordForm: React.FC = () => {
 
   const formikRef = useRef<FormikProps<{ email: string }>>(undefined);
 
-  const { handleForgotPassword, navigateToLogin } = useForgotPassword({
+  const { handleForgotPassword, navigateToLogin, loading } = useForgotPassword({
     onNavigateToLogin: () => {
       formikRef.current?.resetForm();
     },
@@ -53,6 +53,8 @@ const ForgotPasswordForm: React.FC = () => {
                 error={touched.email ? errors.email : ''}
               />
               <Button
+                loading={loading}
+                disabled={loading}
                 title="Send Reset Link"
                 onPress={handleSubmit as () => void}
               />

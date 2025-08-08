@@ -1,4 +1,5 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   StatusBar as RNStatusBar,
   StatusBarStyle,
@@ -11,18 +12,34 @@ type StatusBarProps = {
   backgroundColor?: ColorValue;
   barStyle?: StatusBarStyle;
   hide?: boolean;
+  [key: string]: any;
 };
 const StatusBar = ({
   backgroundColor,
   barStyle,
   hide,
+  absolute,
   ...rest
 }: StatusBarProps) => {
   const { colors } = useTheme();
+
+  const insets = useSafeAreaInsets();
+
+  const height = useMemo(() => {
+    return absolute
+      ? 0
+      : Platform.OS === 'ios'
+      ? insets.top
+      : RNStatusBar.currentHeight;
+  }, [absolute, insets]);
   return (
     <SafeAreaView
       style={
-        !hide && Platform.OS === 'ios' && { backgroundColor: colors.background }
+        !hide &&
+        Platform.OS === 'ios' && {
+          backgroundColor: colors.background,
+          paddingTop: height,
+        }
       }>
       <RNStatusBar
         backgroundColor={backgroundColor}

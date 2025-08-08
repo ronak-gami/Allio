@@ -6,7 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { getAuth } from '@react-native-firebase/auth';
 
-import { CustomFlatList, CustomHeader, Text } from '@components/index';
+import { Container, CustomFlatList, Text } from '@components/index';
 import { TabParamList } from '@types/navigations';
 import { logout } from '@redux/slices/AuthSlice';
 import useStyle from './style';
@@ -73,22 +73,24 @@ const More: React.FC<Props> = ({ navigation }) => {
   ];
 
   const renderItem = ({ item }: { item: { key: string; title: string } }) => (
-    <TouchableOpacity
-      style={styles.item}
-      onPress={() => handleItemPress(item.key)}>
-      <Text style={styles.itemText} type="semibold">
-        {item.title}
-      </Text>
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() => handleItemPress(item.key)}>
+        <Text style={styles.itemText} type="semibold">
+          {item.title}
+        </Text>
+      </TouchableOpacity>
+      <View style={styles.separator} />
+    </>
   );
 
   return (
-    <>
-      <CustomHeader title="Settings" showProfile={false} showLogo={false} />
+    <Container showLoader={false} title="Settings">
       <View style={styles.container}>
         <CustomFlatList data={settingsData} renderItem={renderItem} />
       </View>
-    </>
+    </Container>
   );
 };
 

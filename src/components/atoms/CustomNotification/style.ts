@@ -2,9 +2,10 @@ import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
 import { width } from '@utils/helper';
-import { COLORS } from '@utils/color';
+import { useTheme } from '@react-navigation/native';
 
 const useStyle = () => {
+  const { colors } = useTheme();
   return StyleSheet.create({
     container: {
       position: 'absolute',
@@ -12,18 +13,16 @@ const useStyle = () => {
       left: scale(15),
       marginRight: scale(5),
       width: width * 0.92,
-      padding: scale(10),
-      paddingTop: scale(5),
+      paddingVertical: scale(20),
+      paddingHorizontal: scale(20),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       zIndex: 9999,
-      shadowColor: COLORS.black,
-      shadowOffset: { width: 0, height: 2 },
-      elevation: 5,
+      borderRadius: scale(10),
     },
     messageText: {
-      color: COLORS.black,
+      color: colors.text,
       fontSize: scale(15),
       flexShrink: 1,
     },
@@ -31,9 +30,9 @@ const useStyle = () => {
       padding: 5,
     },
     closeIcon: {
-      width: scale(15),
-      height: scale(15),
-      tintColor: COLORS.white,
+      width: scale(10),
+      height: scale(10),
+      tintColor: colors.text,
     },
   });
 };

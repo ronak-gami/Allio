@@ -25,8 +25,12 @@ const useStyle = () => {
       borderBottomWidth: 1,
       borderColor: colors.text,
     },
+    separator: {
+      height: scale(1),
+      backgroundColor: colors.text,
+    },
     itemText: {
-      fontSize: scale(16),
+      fontSize: scale(18),
       color: colors.text,
     },
     emptyText: {
