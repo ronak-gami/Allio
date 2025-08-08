@@ -77,7 +77,7 @@ const ProfileHeader: React.FC<{
               <Text type="BOLD" style={styles.statNumber}>
                 {videos?.length || 0}
               </Text>
-              <Text type="REGULAR" style={styles.statLabel}>
+              <Text type="SEMIBOLD" style={styles.statLabel}>
                 Videos
               </Text>
             </View>
@@ -88,7 +88,7 @@ const ProfileHeader: React.FC<{
               <Text type="BOLD" style={styles.statNumber}>
                 0
               </Text>
-              <Text type="REGULAR" style={styles.statLabel}>
+              <Text type="SEMIBOLD" style={styles.statLabel}>
                 Reels
               </Text>
             </View>
