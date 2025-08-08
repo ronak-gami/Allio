@@ -51,7 +51,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.modalContainer}>
             <Input
-              placeholder="Name"
+              placeholder="name"
               value={values.name}
               onChangeText={handleChange('name')}
               onBlur={handleBlur('name')}
@@ -59,7 +59,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
               style={styles.input}
             />
             <Input
-              placeholder="Mobile No"
+              placeholder="mobile"
               value={values.mobile}
               onChangeText={handleChange('mobile')}
               onBlur={handleBlur('mobile')}
@@ -77,7 +77,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
               style={styles.input}
             />
             <Input
-              placeholder="Message"
+              placeholder="message"
               value={values.message}
               onChangeText={handleChange('message')}
               onBlur={handleBlur('message')}

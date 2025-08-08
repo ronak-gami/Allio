@@ -17,7 +17,7 @@ const useStyle = () => {
       marginBottom: 20,
     },
     description: {
-      fontSize: 16,
+      fontSize: scale(16),
       textAlign: 'center',
       marginBottom: 24,
       color: colors.text,

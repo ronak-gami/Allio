@@ -55,7 +55,7 @@ const useMore = (navigation: any) => {
         await firestore().collection('users').doc(user.uid).delete();
         await user.delete();
         dispatch(logout());
-        sheetRef.current?.dismiss();
+        sheetRef.current?.close();
       }
     } catch (error) {
       console.error('Delete account error:', error);
@@ -74,7 +74,7 @@ const useMore = (navigation: any) => {
         });
         await authInstance.signOut();
         dispatch(logout());
-        sheetRef.current?.dismiss();
+        sheetRef.current?.close();
       }
     } catch (error) {
       console.error('Logout Error:', error);
@@ -88,21 +88,22 @@ const useMore = (navigation: any) => {
     } else if (sheetType === 'language') {
       i18n.changeLanguage(selectedLanguage);
     }
-    sheetRef.current?.dismiss();
+    sheetRef.current?.close();
   };
 
   const handleSheetClose = () => {
-    sheetRef.current?.dismiss();
-    setTimeout(() => {
-      navigation.setOptions({
-        tabBarStyle: originalTabBarStyle,
-      });
-    }, 10);
+    navigation.setOptions({
+      tabBarStyle: originalTabBarStyle,
+    });
+    sheetRef.current?.close();
   };
 
   const handleItemPress = (key: string) => {
     setSheetType(key as any);
-    sheetRef.current?.present();
+    navigation.setOptions({
+      tabBarStyle: { display: 'none' },
+    });
+    sheetRef.current?.expand();
   };
 
   const getSheetTitle = () => {

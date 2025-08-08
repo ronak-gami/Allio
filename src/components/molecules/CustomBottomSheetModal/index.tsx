@@ -1,5 +1,5 @@
-import React, { forwardRef, useCallback, useState } from 'react';
-import {
+import React, { forwardRef, useCallback, useMemo, useState } from 'react';
+import BottomSheet, {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetView,
@@ -41,13 +41,13 @@ export const CustomBottomSheetModal = forwardRef<BottomSheetModal, Props>(
     },
     ref,
   ) => {
-    const snapPoints = ['50%'];
+    const snapPoints = useMemo(() => ['40%'], []);
     const styles = useStyle();
 
     const closeSheet = useCallback(() => {
       onClose?.();
-      onTabBarVisibilityChange?.(true); // Show tab bar when closing
-      ref && typeof ref !== 'function' && ref.current?.dismiss();
+      onTabBarVisibilityChange?.(true);
+      ref && typeof ref !== 'function' && ref.current?.close();
     }, [onClose, ref, onTabBarVisibilityChange]);
 
     const handleSheetChanges = useCallback(
@@ -68,9 +68,9 @@ export const CustomBottomSheetModal = forwardRef<BottomSheetModal, Props>(
             {...props}
             appearsOnIndex={0}
             disappearsOnIndex={-1}
-            opacity={backdropOpacity}
             enableTouchThrough={false}
-            onPress={closeSheet} // Close sheet when backdrop is pressed
+            opacity={0.6}
+            pressBehavior="close"
           />
         );
       },
@@ -94,16 +94,15 @@ export const CustomBottomSheetModal = forwardRef<BottomSheetModal, Props>(
     );
 
     return (
-      <BottomSheetModal
+      <BottomSheet
         ref={ref}
         index={0}
         snapPoints={snapPoints}
-        onDismiss={closeSheet}
+        // onDismiss={closeSheet}
         onChange={handleSheetChanges}
         backdropComponent={renderBackdrop}
         handleComponent={renderHandle}
-        enablePanDownToClose={true}
-        enableDismissOnClose={true}>
+        enablePanDownToClose={true}>
         <BottomSheetView style={styles.sheetContent}>
           {/* Header */}
           <View style={styles.header}>
@@ -126,7 +125,7 @@ export const CustomBottomSheetModal = forwardRef<BottomSheetModal, Props>(
             />
           )}
         </BottomSheetView>
-      </BottomSheetModal>
+      </BottomSheet>
     );
   },
 );

@@ -14,7 +14,6 @@ import CustomNotification, {
   CustomToastRef,
 } from '@components/atoms/CustomNotification';
 import { useNotification } from '@hooks/index';
-import BottomSheet from '@gorhom/bottom-sheet';
 
 import { store, persistor } from './src/redux/store';
 import StackNavigator from './src/navigations';
@@ -46,29 +45,28 @@ const App = () => {
       style={{
         flex: 1,
       }}>
-      <BottomSheetModalProvider>
-        <Provider store={store}>
-          <PaperProvider>
-            <PersistGate loading={null} persistor={persistor}>
-              <CustomNotification ref={customToastRef} />
-              <ToastManager
-                position="bottom"
-                theme="light"
-                icons={{
-                  success: 'check-circle',
-                  error: 'error',
-                  info: 'info',
-                  warn: 'warning',
-                  default: 'notifications',
-                }}
-                iconFamily="MaterialIcons"
-                iconSize={24}
-              />
-              <StackNavigator />
-            </PersistGate>
-          </PaperProvider>
-        </Provider>
-      </BottomSheetModalProvider>
+        
+      <Provider store={store}>
+        <PaperProvider>
+          <PersistGate loading={null} persistor={persistor}>
+            <CustomNotification ref={customToastRef} />
+            <ToastManager
+              position="bottom"
+              theme="light"
+              icons={{
+                success: 'check-circle',
+                error: 'error',
+                info: 'info',
+                warn: 'warning',
+                default: 'notifications',
+              }}
+              iconFamily="MaterialIcons"
+              iconSize={24}
+            />
+            <StackNavigator />
+          </PersistGate>
+        </PaperProvider>
+      </Provider>
     </GestureHandlerRootView>
   );
 };
