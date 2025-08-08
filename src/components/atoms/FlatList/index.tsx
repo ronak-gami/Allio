@@ -33,6 +33,7 @@ const CustomFlatList = forwardRef<FlatList<any>, CustomFlatListProps>(
         ref={ref}
         data={data}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
         numColumns={numColumns}
         keyExtractor={(_, i) => i?.toString()}
         columnWrapperStyle={numColumns > 1 ? columnWrapperStyle : undefined}

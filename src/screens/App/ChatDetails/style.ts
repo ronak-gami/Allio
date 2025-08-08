@@ -1,0 +1,245 @@
+import { StyleSheet } from 'react-native';
+import { useTheme } from '@react-navigation/native';
+import { width, height } from '@utils/helper';
+import { scale } from 'react-native-size-matters';
+
+const useStyle = () => {
+  const { colors } = useTheme();
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    scrollContainer: {
+      flexGrow: 1,
+      paddingHorizontal: height * 0.02,
+      paddingTop: height * 0.01,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: height * 0.025,
+      paddingHorizontal: width * 0.04,
+      borderBottomWidth: 1,
+      borderColor: colors.gray,
+      backgroundColor: colors.primary,
+    },
+    backIcon: {
+      width: height * 0.03,
+      height: height * 0.03,
+      marginRight: width * 0.04,
+    },
+    headerImage: {
+      width: width * 0.12,
+      height: width * 0.12,
+      borderRadius: width * 0.06,
+      marginRight: width * 0.04,
+    },
+    headerPlaceholder: {
+      width: width * 0.12,
+      height: width * 0.12,
+      borderRadius: 50,
+      backgroundColor: colors.background,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: width * 0.04,
+    },
+    headerPlaceholderText: {
+      fontSize: scale(18),
+      color: colors.primary,
+    },
+    headerName: {
+      fontSize: scale(16),
+      fontWeight: 'bold',
+    },
+    headerEmail: {
+      fontSize: scale(12),
+      color: colors.grayText,
+    },
+
+    button: {
+      backgroundColor: colors.primary,
+      paddingVertical: height * 0.015,
+      paddingHorizontal: width * 0.06,
+      borderRadius: height * 0.03,
+    },
+    buttonText: {
+      color: colors.white,
+      fontSize: scale(14),
+    },
+    buttonOutline: {
+      borderColor: colors.primary,
+      borderWidth: 1,
+      paddingVertical: height * 0.015,
+      paddingHorizontal: width * 0.06,
+      borderRadius: height * 0.03,
+    },
+    buttonOutlineText: {
+      color: colors.primary,
+      fontSize: scale(14),
+    },
+    chatArea: {
+      marginTop: height * 0.02,
+    },
+    messageBubble: {
+      padding: height * 0.015,
+      borderRadius: height * 0.02,
+      marginVertical: height * 0.01,
+      backgroundColor: 'red',
+    },
+    myMessage: {
+      alignSelf: 'flex-end',
+      backgroundColor: colors.primary,
+    },
+    theirMessage: {
+      alignSelf: 'flex-start',
+      backgroundColor: colors.lightBlue,
+    },
+    messageText: {
+      color: colors.white,
+      fontSize: scale(14),
+    },
+    inputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: width * 0.05,
+      paddingVertical: height * 0.015,
+      borderTopWidth: 1,
+      borderColor: colors.gray,
+      backgroundColor: colors.background,
+    },
+
+    sendIcon: {
+      width: height * 0.03,
+      height: height * 0.03,
+    },
+
+    sendButton: {
+      marginLeft: width * 0.02,
+      backgroundColor: colors.primary,
+      padding: width * 0.03,
+      borderRadius: height * 0.015,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+
+    textInput: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: colors.gray,
+      borderRadius: height * 0.015,
+      paddingHorizontal: width * 0.04,
+      fontSize: scale(14),
+      color: colors.text,
+      backgroundColor: colors.white,
+      paddingVertical: height * 0.015,
+      //   maxHeight: height * 0.15,
+    },
+
+    card: {
+      backgroundColor: colors.background,
+      borderRadius: height * 0.02,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: height * 0.025,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+      height: height * 0.4,
+      width: width * 0.8,
+      alignSelf: 'center',
+      borderWidth: 1,
+      borderColor: colors.lightyellow,
+    },
+
+    profileContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: height * 0.015,
+    },
+
+    cardImage: {
+      width: width * 0.15,
+      height: width * 0.15,
+      borderRadius: width * 0.075,
+      marginRight: width * 0.04,
+    },
+
+    cardPlaceholder: {
+      width: width * 0.15,
+      height: width * 0.15,
+      borderRadius: width * 0.075,
+      backgroundColor: '#ccc',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: width * 0.04,
+    },
+
+    cardPlaceholderText: {
+      fontSize: scale(22),
+      color: '#fff',
+    },
+
+    cardTextContainer: {
+      flex: 1,
+    },
+
+    cardTitle: {
+      fontSize: scale(26),
+      marginBottom: height * 0.005,
+      color: colors.text,
+    },
+
+    cardDescription: {
+      fontSize: scale(36),
+      color: '#777',
+    },
+
+    actionRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: height * 0.02,
+      gap: width * 0.04,
+    },
+
+    cardImageCentered: {
+      width: width * 0.2,
+      height: width * 0.2,
+      borderRadius: width * 0.1,
+      marginBottom: height * 0.02,
+      alignSelf: 'center',
+    },
+
+    cardPlaceholderCentered: {
+      width: width * 0.2,
+      height: width * 0.2,
+      borderRadius: width * 0.1,
+      backgroundColor: '#ccc',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: height * 0.02,
+      alignSelf: 'center',
+    },
+
+    cardDescriptionCentered: {
+      fontSize: scale(13),
+      color: '#777',
+      textAlign: 'center',
+      marginTop: height * 0.005,
+    },
+
+    actionRowCentered: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: height * 0.02,
+      gap: width * 0.04,
+      flexWrap: 'wrap',
+    },
+  });
+};
+
+export default useStyle;

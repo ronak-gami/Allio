@@ -28,12 +28,10 @@ const useStyle = () => {
       alignItems: 'flex-end',
       justifyContent: 'center',
     },
-    backButton: {
-      padding: scale(8),
-    },
+
     backIcon: {
-      width: scale(24),
-      height: scale(24),
+      width: scale(20),
+      height: scale(20),
     },
     title: {
       fontSize: scale(18),

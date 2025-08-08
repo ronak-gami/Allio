@@ -11,7 +11,7 @@ interface OnboardingItem {
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
-export const BASE_URL = 'https://allio-backend.onrender.com/api/user' as const;
+export const BASE_URL = 'https://953703e96ce8.ngrok-free.app/api/user' as const;
 // export const BASE_URL = 'https://allio-backend.onrender.com/api/user' as const;
 
 const onboardingData: OnboardingItem[] = [
@@ -71,6 +71,7 @@ const HOME = {
   ForgetMPIN: 'ForgetMPIN',
   MyQR: 'MyQR',
   MyFriends: 'MyFriends',
+  ChatDetailsScreen: 'ChatDetailsScreen',
 } as const;
 
 const LICENSE_KEY =

@@ -44,14 +44,18 @@ interface FirestoreUser {
   email?: string;
 }
 
-const getAllUsers = async (): Promise<FirestoreUser[]> => {
+const getAllUsers = async (
+  currentUserEmail: string,
+): Promise<FirestoreUser[]> => {
   try {
     const snapshot = await firestore().collection('users').get();
 
-    const users: FirestoreUser[] = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const users: FirestoreUser[] = snapshot.docs
+      .map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      .filter(user => user.email !== currentUserEmail);
 
     return users;
   } catch (error) {
@@ -318,6 +322,11 @@ const handleMediaShare = async (
   }
 };
 
+const getCurrentTimestamp = () => {
+  const now = new Date();
+  return now.toISOString(); // or customize as needed
+};
+
 export {
   height,
   width,
@@ -331,4 +340,5 @@ export {
   checkIfMPINExists,
   handleMediaDownload,
   handleMediaShare,
+  getCurrentTimestamp,
 };

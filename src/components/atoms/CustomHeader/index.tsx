@@ -30,7 +30,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       {/* Left: Back Arrow or Logo */}
       <View style={styles.leftContainer}>
         {showBackArrow ? (
-          <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
+          <TouchableOpacity onPress={onBackPress}>
             <Image
               source={ICONS.Left}
               style={styles.backIcon}
