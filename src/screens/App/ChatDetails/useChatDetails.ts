@@ -1,96 +1,5 @@
-// import { useState } from 'react';
-// import { useSelector } from 'react-redux';
-// import { RootState } from '@redux/store';
-// import { showSuccess, showError } from '@utils/toast';
-// import { useUserCard } from '@components/cards/UserCard/useUserCard';
-// import firestore from '@react-native-firebase/firestore';
-
-// export const useChatDetails = (targetEmail: string) => {
-//   const myEmail = useSelector(
-//     (state: RootState) => state.auth?.userData?.email,
-//   );
-//   const { relationStatus, sendRequest, acceptRequest, rejectRequest } =
-//     useUserCard(myEmail, targetEmail);
-
-//   const [message, setMessage] = useState('');
-//   const [chatHistory, setChatHistory] = useState<
-//     { text: string; fromMe: boolean }[]
-//   >([]);
-
-//   console.log('the targetEmail', targetEmail);
-
-//   const sendMessage = async email2 => {
-//     if (!message.trim()) {
-//       showError('Message cannot be empty');
-//       return;
-//     }
-
-//     try {
-//       const timestamp = firestore.FieldValue.serverTimestamp();
-//       const sortedEmails = [myEmail, targetEmail].sort(); // ensures consistent order
-//       const relationId = `${sortedEmails[0]}_${sortedEmails[1]}`; // unique ID
-
-//       const relationRef = firestore().collection('relation').doc(relationId);
-//       const docSnapshot = await relationRef.get();
-
-//       if (!docSnapshot.exists) {
-//         await relationRef.set({
-//           from: myEmail,
-//           to: targetEmail,
-//           isAccept: false,
-//           timestamp,
-//         });
-//       }
-
-//       await relationRef.collection('messages').add({
-//         text: message.trim(),
-//         from: myEmail,
-//         to: targetEmail,
-//         timestamp: timestamp,
-//       });
-
-//       setChatHistory(prev => [...prev, { text: message.trim(), fromMe: true }]);
-//       setMessage('');
-//     } catch (error) {
-//       console.error('Error sending message:', error);
-//       showError('Failed to send message');
-//     }
-//   };
-
-//   return {
-//     relationStatus,
-//     sendRequest: async () => {
-//       try {
-//         await sendRequest();
-//         showSuccess('Friend request sent');
-//       } catch {
-//         showError('Send request failed');
-//       }
-//     },
-//     acceptRequest: async () => {
-//       try {
-//         await acceptRequest();
-//         showSuccess('Request accepted');
-//       } catch {
-//         showError('Accept failed');
-//       }
-//     },
-//     rejectRequest: async () => {
-//       try {
-//         await rejectRequest();
-//         showSuccess('Request rejected');
-//       } catch {
-//         showError('Reject failed');
-//       }
-//     },
-//     message,
-//     setMessage,
-//     sendMessage,
-//     chatHistory,
-//   };
-// };
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
 import { showSuccess, showError } from '@utils/toast';
@@ -98,23 +7,58 @@ import { useUserCard } from '@components/cards/UserCard/useUserCard';
 import firestore from '@react-native-firebase/firestore';
 import api from '@api/index';
 
-export const useChatDetails = (targetEmail: string) => {
+export const useChatDetails = (targetUser: any) => {
   const myEmail = useSelector(
     (state: RootState) => state.auth?.userData?.email,
   );
   const { relationStatus, sendRequest, acceptRequest, rejectRequest } =
-    useUserCard(myEmail, targetEmail);
+    useUserCard(myEmail, targetUser?.email);
 
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState<
-    { text: string; fromMe: boolean }[]
+    { text?: string; image?: string | null; fromMe: boolean }[]
   >([]);
 
-  useEffect(() => {
-    if (!myEmail || !targetEmail) return;
+  const scrollViewRef = useRef<ScrollView | null>(null);
+  const isAutoScroll = useRef(true);
 
-    const sortedEmails = [myEmail, targetEmail].sort();
+  const scrollToBottom = useCallback((animated = true) => {
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated });
+    }, 50);
+  }, []);
+
+  const handleScroll = (e: any) => {
+    const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
+    const paddingToBottom = 20;
+    const isBottom =
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+
+    isAutoScroll.current = isBottom;
+  };
+
+  const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  const openImageModal = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+    setImageModalVisible(true);
+  };
+
+  const closeImageModal = () => {
+    setImageModalVisible(false);
+    setSelectedImage(null);
+  };
+
+  useEffect(() => {
+    if (!myEmail || !targetUser?.email) {
+      return;
+    }
+
+    const sortedEmails = [myEmail, targetUser.email].sort();
     const relationId = `${sortedEmails[0]}_${sortedEmails[1]}`;
+
     const messagesRef = firestore()
       .collection('relation')
       .doc(relationId)
@@ -125,7 +69,8 @@ export const useChatDetails = (targetEmail: string) => {
       const messages = snapshot.docs.map(doc => {
         const data = doc.data();
         return {
-          text: data.text,
+          text: data.text || '',
+          image: data.image || null,
           fromMe: data.from === myEmail,
         };
       });
@@ -134,46 +79,15 @@ export const useChatDetails = (targetEmail: string) => {
     });
 
     return () => unsubscribe();
-  }, [myEmail, targetEmail]);
+  }, [myEmail, targetUser?.email]);
 
-  // const sendMessage = async () => {
-  //   if (!message.trim()) {
-  //     showError('Message cannot be empty');
-  //     return;
-  //   }
+  useEffect(() => {
+    if (isAutoScroll.current) {
+      scrollToBottom(true);
+    }
+  }, [chatHistory, scrollToBottom]);
 
-  //   try {
-  //     const timestamp = firestore.FieldValue.serverTimestamp();
-  //     const sortedEmails = [myEmail, targetEmail].sort();
-  //     const relationId = `${sortedEmails[0]}_${sortedEmails[1]}`;
-
-  //     const relationRef = firestore().collection('relation').doc(relationId);
-  //     const docSnapshot = await relationRef.get();
-
-  //     if (!docSnapshot.exists) {
-  //       await relationRef.set({
-  //         from: myEmail,
-  //         to: targetEmail,
-  //         isAccept: false,
-  //         timestamp,
-  //       });
-  //     }
-
-  //     await relationRef.collection('messages').add({
-  //       text: message.trim(),
-  //       from: myEmail,
-  //       to: targetEmail,
-  //       timestamp: timestamp,
-  //     });
-
-  //     setMessage('');
-  //   } catch (error) {
-  //     console.error('Error sending message:', error);
-  //     showError('Failed to send message');
-  //   }
-  // };
-
-  const sendMessage = async () => {
+  const handleSendMessage = async () => {
     if (!message.trim()) {
       showError('Message cannot be empty');
       return;
@@ -181,7 +95,7 @@ export const useChatDetails = (targetEmail: string) => {
 
     try {
       const timestamp = firestore.FieldValue.serverTimestamp();
-      const sortedEmails = [myEmail, targetEmail].sort();
+      const sortedEmails = [myEmail, targetUser.email].sort();
       const relationId = `${sortedEmails[0]}_${sortedEmails[1]}`;
 
       const relationRef = firestore().collection('relation').doc(relationId);
@@ -190,39 +104,24 @@ export const useChatDetails = (targetEmail: string) => {
       if (!docSnapshot.exists) {
         await relationRef.set({
           from: myEmail,
-          to: targetEmail,
+          to: targetUser.email,
           isAccept: false,
           timestamp,
         });
       }
 
-      // 🔹 Add message to Firestore
       await relationRef.collection('messages').add({
         text: message.trim(),
         from: myEmail,
-        to: targetEmail,
+        to: targetUser.email,
         timestamp: timestamp,
       });
 
-      // 🔹 Clear message input
       setMessage('');
 
-      // 🔹 Send notification using API
-
-      const title = `${myEmail} has sent you a Message .`;
-
-      const data = {
-        email: targetEmail,
-        title: title,
-        body: message.trim(),
-        // body: 'hi',
-      };
-
-      const response = await api?.NOTIFICATION.sendNotification({ data });
-      console.log('the repon', response);
-
-      if (response?.data?.success) {
-      }
+      const title = `${myEmail} has sent you a Message.`;
+      const data = { email: targetUser.email, title, body: message.trim() };
+      await api?.NOTIFICATION.sendNotification({ data });
     } catch (error) {
       console.error('Error sending message:', error);
       showError('Failed to send message');
@@ -255,10 +154,18 @@ export const useChatDetails = (targetEmail: string) => {
         showError('Reject failed');
       }
     },
+
     message,
     setMessage,
-    sendMessage,
+    sendMessage: handleSendMessage,
     chatHistory,
-    
+
+    scrollViewRef,
+    handleScroll,
+
+    imageModalVisible,
+    selectedImage,
+    openImageModal,
+    closeImageModal,
   };
 };

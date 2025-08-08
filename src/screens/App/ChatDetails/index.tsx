@@ -10,13 +10,13 @@ import {
 } from 'react-native';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { ICONS } from '@assets/index';
-import Text from '@components/atoms/Text';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 
-import { useChatDetails } from './useChatDetails';
+import { Button, CustomModal, Text } from '@components/index';
+
 import useStyle from './style';
-import { Button } from '@components/index';
+import { useChatDetails } from './useChatDetails';
 
 const ChatDetailsScreen = () => {
   const styles = useStyle();
@@ -24,6 +24,7 @@ const ChatDetailsScreen = () => {
   const navigation = useNavigation();
   const { params } = useRoute<RouteProp<any>>();
   const { user } = params || {};
+
   const {
     relationStatus,
     sendRequest,
@@ -33,9 +34,13 @@ const ChatDetailsScreen = () => {
     setMessage,
     sendMessage,
     chatHistory,
-  } = useChatDetails(user?.email);
-
-  console.log('the chat histry', chatHistory);
+    scrollViewRef,
+    handleScroll,
+    imageModalVisible,
+    selectedImage,
+    openImageModal,
+    closeImageModal,
+  } = useChatDetails(user);
 
   const showImage = user?.profile && user?.profile !== '';
   const firstLetter = user?.firstName?.charAt(0)?.toUpperCase() || '?';
@@ -43,21 +48,19 @@ const ChatDetailsScreen = () => {
   if (!user) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={{ color: 'red', fontSize: 20, textAlign: 'center' }}>
-          User data not found.
-        </Text>
+        <Text>User data not found.</Text>
       </SafeAreaView>
     );
   }
 
   const renderFriendStatusCard = () => {
-    if (relationStatus === 'accepted') return null;
+    if (relationStatus === 'accepted') {return null;}
 
     return (
       <View style={styles.card}>
         {showImage ? (
           <Image
-            source={{ uri: user.profile }}
+            source={{ uri: user?.profile }}
             style={styles.cardImageCentered}
           />
         ) : (
@@ -79,7 +82,6 @@ const ChatDetailsScreen = () => {
           {relationStatus === 'notsent' && (
             <Button title="Send Friend Request" onPress={sendRequest} />
           )}
-
           {relationStatus === 'received' && (
             <>
               <Button title="Accept" onPress={acceptRequest} />
@@ -98,7 +100,7 @@ const ChatDetailsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
         {/* Header */}
@@ -107,48 +109,61 @@ const ChatDetailsScreen = () => {
             <Image source={ICONS.Left} style={styles.backIcon} />
           </TouchableOpacity>
           {showImage ? (
-            <Image source={{ uri: user.profile }} style={styles.headerImage} />
+            <Image source={{ uri: user?.profile }} style={styles.headerImage} />
           ) : (
             <View style={styles.headerPlaceholder}>
               <Text style={styles.headerPlaceholderText}>{firstLetter}</Text>
             </View>
           )}
           <View>
-            <Text style={styles.headerName}>{user.firstName}</Text>
-            <Text style={styles.headerEmail}>{user.email}</Text>
+            <Text style={styles.headerName}>{user?.firstName}</Text>
+            <Text style={styles.headerEmail}>{user?.email}</Text>
           </View>
         </View>
 
+        {/* Chat / Request */}
         <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={[styles.scrollContainer]}
+          ref={scrollViewRef}
+          style={styles.container}
+          contentContainerStyle={styles.scrollContainer}
           keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}>
+          showsVerticalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}>
           {relationStatus && (
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexGrow: 1,
-              }}>
+            <View style={styles.renderFriendStatusCard}>
               {renderFriendStatusCard()}
             </View>
           )}
+
           {relationStatus === 'accepted' && (
             <View style={styles.chatArea}>
-              {chatHistory.length === 0 ? (
-                <Text style={{ textAlign: 'center', marginTop: 10 }}>
-                  No messages yet.
-                </Text>
+              {chatHistory?.length === 0 ? (
+                <Text style={styles.nomessages}>No messages yet.</Text>
               ) : (
-                chatHistory.map((chat, index) => (
+                chatHistory?.map((chat, index) => (
                   <View
                     key={index}
                     style={[
                       styles.messageBubble,
                       chat.fromMe ? styles.myMessage : styles.theirMessage,
                     ]}>
-                    <Text style={styles.messageText}>{chat.text}</Text>
+                    {chat?.text ? (
+                      <Text style={styles.messageText}>{chat?.text}</Text>
+                    ) : null}
+                    {chat?.image ? (
+                      <TouchableOpacity
+                        onPress={() => openImageModal(chat?.image)}>
+                        <Image
+                          source={{ uri: chat?.image }}
+                          style={[
+                            styles.chatImage,
+                            { marginTop: chat.text ? 5 : 0 },
+                          ]}
+                          resizeMode="cover"
+                        />
+                      </TouchableOpacity>
+                    ) : null}
                   </View>
                 ))
               )}
@@ -160,7 +175,6 @@ const ChatDetailsScreen = () => {
           <View style={styles.inputContainer}>
             <TextInput
               placeholder="Type your message..."
-              placeholderTextColor="#999"
               value={message}
               onChangeText={setMessage}
               style={styles.textInput}
@@ -171,6 +185,19 @@ const ChatDetailsScreen = () => {
             </TouchableOpacity>
           </View>
         )}
+
+        <CustomModal
+          visible={imageModalVisible}
+          title="Image"
+          onClose={closeImageModal}>
+          {selectedImage && (
+            <Image
+              source={{ uri: selectedImage }}
+              style={styles.modalImage}
+              resizeMode="contain"
+            />
+          )}
+        </CustomModal>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

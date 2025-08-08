@@ -1,14 +1,16 @@
 import React from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
-import { RootState } from '@redux/store';
-import { showSuccess, showError } from '@utils/toast';
-import { ICONS } from '@assets/index';
-import Text from '@components/atoms/Text';
-import useStyle from './style';
-import { useUserCard } from './useUserCard';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+
+import { useUserCard } from './useUserCard';
+
+import { RootState } from '@redux/store';
+import Text from '@components/atoms/Text';
+
+import { ICONS } from '@assets/index';
 import { HOME } from '@utils/constant';
+import useStyle from './style';
 
 const UserCard = ({ user }: { user: any }) => {
   const navigation = useNavigation();
@@ -20,38 +22,8 @@ const UserCard = ({ user }: { user: any }) => {
   const showImage = user?.profile && user?.profile !== '';
   const firstLetter: string = user?.firstName?.charAt(0)?.toUpperCase() || '?';
 
-  const { relationStatus, sendRequest, acceptRequest, rejectRequest } =
+  const { relationStatus, handleAccept, handleReject, handleSend } =
     useUserCard(myEmail, user?.email);
-
-  const handleSend = async () => {
-    try {
-      await sendRequest();
-      showSuccess('Friend request sent');
-    } catch (error) {
-      console.error('Send Error:', error);
-      showError('Failed to send request');
-    }
-  };
-
-  const handleAccept = async () => {
-    try {
-      await acceptRequest();
-      showSuccess('Friend request accepted');
-    } catch (error) {
-      console.error('Accept Error:', error);
-      showError('Failed to accept request');
-    }
-  };
-
-  const handleReject = async () => {
-    try {
-      await rejectRequest();
-      showSuccess('Friend request rejected');
-    } catch (error) {
-      console.error('Reject Error:', error);
-      showError('Failed to reject request');
-    }
-  };
 
   const renderAction = () => {
     if (relationStatus === 'accepted') {
@@ -65,7 +37,9 @@ const UserCard = ({ user }: { user: any }) => {
     if (relationStatus === 'sent') {
       return (
         <View style={styles.pendingChip}>
-          <Text style={styles.pendingText}>Pending</Text>
+          <Text style={styles.pendingText} type="semibold">
+            Pending
+          </Text>
         </View>
       );
     }
@@ -98,15 +72,15 @@ const UserCard = ({ user }: { user: any }) => {
       <View style={styles.card}>
         <View style={styles.row}>
           {showImage ? (
-            <Image source={{ uri: user.profile }} style={styles.profileImage} />
+            <Image source={{ uri: user?.profile }} style={styles.profileImage} />
           ) : (
             <View style={styles.placeholder}>
               <Text style={styles.placeholderText}>{firstLetter}</Text>
             </View>
           )}
           <View style={styles.userInfo}>
-            <Text style={styles.name}>{user.firstName || 'Unknown'}</Text>
-            <Text style={styles.email}>{user.email || 'Unknown'}</Text>
+            <Text style={styles.name}>{user?.firstName || 'Unknown'}</Text>
+            <Text style={styles.email}>{user?.email || 'Unknown'}</Text>
           </View>
           {renderAction()}
         </View>

@@ -21,6 +21,7 @@ const common = Object.freeze({
   pink: '#FF69B4',
   modelbg: 'rgba(251, 192, 45, 0.25)',
   heromain: 'rgba(0,0,0,0.5)',
+  accepted: '#C8E6C9',
 });
 
 const colors = Object.freeze({

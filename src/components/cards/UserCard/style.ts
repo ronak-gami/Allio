@@ -56,41 +56,39 @@ const useStyle = () => {
       tintColor: colors.primary,
     },
     send: {
-      // backgroundColor: colors.primary,
-      borderRadius: 50,
+      borderRadius: height * 0.05,
       padding: 10,
     },
     pendingChip: {
-      backgroundColor: '#E0E0E0',
-      borderRadius: 20,
+      backgroundColor: colors.primary,
+      borderRadius: height * 0.02,
       paddingVertical: 4,
-      paddingHorizontal: 10,
+      paddingHorizontal: height * 0.01,
       justifyContent: 'center',
       alignItems: 'center',
     },
 
     pendingText: {
-      fontSize: 12,
-      color: '#333',
-      fontWeight: '500',
+      fontSize: scale(10),
+      color: colors.text,
     },
     acceptedChip: {
-      paddingHorizontal: 10,
+      paddingHorizontal: height * 0.01,
       paddingVertical: 5,
-      borderRadius: 12,
-      backgroundColor: '#C8E6C9', 
+      borderRadius: height * 0.02,
+      backgroundColor: colors.accepted,
       justifyContent: 'center',
       alignItems: 'center',
-      marginLeft: 10,
+      marginLeft: height * 0.01,
     },
 
     acceptedText: {
-      color: '#2E7D32', 
+      color: colors.text,
       fontWeight: 'bold',
-      fontSize: 10,
+      fontSize: scale(10),
     },
     email: {
-      fontSize: 10,
+      fontSize: scale(9),
     },
   });
 };

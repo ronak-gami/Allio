@@ -40,7 +40,7 @@ const useStyle = () => {
       width: width * 0.12,
       height: width * 0.12,
       borderRadius: 50,
-      backgroundColor: colors.background,
+      backgroundColor: colors.text,
       justifyContent: 'center',
       alignItems: 'center',
       marginRight: width * 0.04,
@@ -86,7 +86,6 @@ const useStyle = () => {
       padding: height * 0.015,
       borderRadius: height * 0.02,
       marginVertical: height * 0.01,
-      backgroundColor: 'red',
     },
     myMessage: {
       alignSelf: 'flex-end',
@@ -134,7 +133,6 @@ const useStyle = () => {
       color: colors.text,
       backgroundColor: colors.white,
       paddingVertical: height * 0.015,
-      //   maxHeight: height * 0.15,
     },
 
     card: {
@@ -143,7 +141,7 @@ const useStyle = () => {
       alignItems: 'center',
       justifyContent: 'center',
       padding: height * 0.025,
-      shadowColor: '#000',
+      shadowColor: colors.text,
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
@@ -172,7 +170,7 @@ const useStyle = () => {
       width: width * 0.15,
       height: width * 0.15,
       borderRadius: width * 0.075,
-      backgroundColor: '#ccc',
+      backgroundColor: colors.gray,
       justifyContent: 'center',
       alignItems: 'center',
       marginRight: width * 0.04,
@@ -180,7 +178,7 @@ const useStyle = () => {
 
     cardPlaceholderText: {
       fontSize: scale(22),
-      color: '#fff',
+      color: colors.background,
     },
 
     cardTextContainer: {
@@ -195,7 +193,7 @@ const useStyle = () => {
 
     cardDescription: {
       fontSize: scale(36),
-      color: '#777',
+      color: colors.gray,
     },
 
     actionRow: {
@@ -217,7 +215,7 @@ const useStyle = () => {
       width: width * 0.2,
       height: width * 0.2,
       borderRadius: width * 0.1,
-      backgroundColor: '#ccc',
+      backgroundColor: colors.text,
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: height * 0.02,
@@ -226,7 +224,7 @@ const useStyle = () => {
 
     cardDescriptionCentered: {
       fontSize: scale(13),
-      color: '#777',
+      color: colors.text,
       textAlign: 'center',
       marginTop: height * 0.005,
     },
@@ -238,6 +236,25 @@ const useStyle = () => {
       marginTop: height * 0.02,
       gap: width * 0.04,
       flexWrap: 'wrap',
+    },
+    usenotfoud: {
+      color: colors.error,
+      fontSize: scale(20),
+      textAlign: 'center',
+    },
+    renderFriendStatusCard: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexGrow: 1,
+    },
+    nomessages: {
+      textAlign: 'center',
+      marginTop: 10,
+    },
+    chatImage: { width: height * 0.2, height: height * 0.2, borderRadius: 10 },
+    modalImage: {
+      width: '100%',
+      height: height * 0.4,
     },
   });
 };

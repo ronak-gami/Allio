@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import firestore from '@react-native-firebase/firestore';
 import { getCurrentTimestamp } from '@utils/helper';
-import { showSuccess } from '@utils/toast';
+import { showError, showSuccess } from '@utils/toast';
 import api from '@api/index';
 
 export type RelationStatus =
@@ -9,7 +9,8 @@ export type RelationStatus =
   | 'pending'
   | 'sent'
   | 'received'
-  | 'accepted';
+  | 'accepted'
+  | 'notsent';
 
 export const useUserCard = (
   myEmail: string | null | undefined,
@@ -33,7 +34,6 @@ export const useUserCard = (
       .onSnapshot(doc => {
         if (doc.exists) {
           const data = doc.data();
-          console.log('the data ', data);
           if (data?.isAccept) {
             setRelationStatus('accepted');
           } else if (data?.from === email1) {
@@ -50,30 +50,6 @@ export const useUserCard = (
 
     return () => unsubscribe();
   }, [myEmail, userEmail]);
-
-  // const sendRequest = async () => {
-  //   if (!myEmail || !userEmail || !documentId) return;
-  //   const email1 = myEmail.trim().toLowerCase();
-  //   const email2 = userEmail.trim().toLowerCase();
-  //   const timestamp = getCurrentTimestamp
-  //     ? getCurrentTimestamp()
-  //     : firestore.FieldValue.serverTimestamp();
-
-  //   await firestore().collection('relation').doc(documentId).set({
-  //     from: email1,
-  //     to: email2,
-  //     isAccept: false,
-  //     timestamp,
-  //   });
-
-  //   const data = { email: email2,ti };
-
-  //   const response = await api?.SENDNOTIFICATION?.({ data: data });
-
-  //   if (response?.data?.success) {
-  //     showSuccess(response?.data?.message || 'Upload successful!');
-  //   }
-  // };
 
   const sendRequest = async () => {
     if (!myEmail || !userEmail || !documentId) return;
@@ -118,11 +94,43 @@ export const useUserCard = (
     if (!documentId) return;
     await firestore().collection('relation').doc(documentId).delete();
   };
+  const handleSend = async () => {
+    try {
+      await sendRequest();
+      showSuccess('Friend request sent');
+    } catch (error) {
+      console.error('Send Error:', error);
+      showError('Failed to send request');
+    }
+  };
+
+  const handleAccept = async () => {
+    try {
+      await acceptRequest();
+      showSuccess('Friend request accepted');
+    } catch (error) {
+      console.error('Accept Error:', error);
+      showError('Failed to accept request');
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      await rejectRequest();
+      showSuccess('Friend request rejected');
+    } catch (error) {
+      console.error('Reject Error:', error);
+      showError('Failed to reject request');
+    }
+  };
 
   return {
     relationStatus,
     sendRequest,
     acceptRequest,
     rejectRequest,
+    handleSend,
+    handleAccept,
+    handleReject,
   };
 };
