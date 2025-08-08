@@ -11,7 +11,7 @@ import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
 
-import { setStateKey, logout as reduxLogout } from '@redux/slices/AuthSlice';
+import { setStateKey } from '@redux/slices/AuthSlice';
 import { checkUserExistsByEmail } from '@utils/helper';
 import { showError, showSuccess } from '@utils/toast';
 import useValidation from '@utils/validationSchema';

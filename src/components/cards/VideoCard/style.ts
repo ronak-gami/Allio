@@ -8,7 +8,6 @@ const useStyle = () => {
     gridItem: {
       width: (width - width * 0.12) / 2,
       height: (width - width * 0.12) / 2,
-      backgroundColor: 'red',
       borderRadius: width * 0.03,
     },
     VideoPlayIcon: {

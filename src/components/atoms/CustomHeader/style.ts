@@ -8,39 +8,30 @@ const useStyle = () => {
     headerContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      height: scale(56),
+      height: scale(40),
       paddingHorizontal: scale(12),
       backgroundColor: colors.primary,
       elevation: 4,
-    },
-    leftContainer: {
-      width: scale(48),
-      alignItems: 'flex-start',
-      justifyContent: 'center',
-    },
-    centerContainer: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    rightContainer: {
-      width: scale(48),
-      alignItems: 'flex-end',
-      justifyContent: 'center',
+      justifyContent: 'space-between',
     },
 
     backIcon: {
-      width: scale(20),
-      height: scale(20),
+      width: scale(18),
+      height: scale(18),
     },
     title: {
-      fontSize: scale(18),
-      fontWeight: 'bold',
+      fontSize: scale(20),
       color: colors.black,
     },
     placeholder: {
       width: scale(24),
       height: scale(24),
+    },
+    logoStyle: {
+      marginBottom: scale(-8),
+    },
+    rightContainer: {
+      minWidth: scale(40),
     },
   });
 };

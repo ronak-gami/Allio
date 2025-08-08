@@ -4,13 +4,13 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet,
   ViewStyle,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import CustomLoader from '@components/atoms/CustomLoader';
 import useStyle from './style';
-import HomeHeader from '@components/organisms/HomeHeader';
+import StatusBar from '@components/atoms/CustomStatusBar';
+import CustomHeader from '@components/atoms/CustomHeader';
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -18,12 +18,13 @@ interface PageLayoutProps {
   onProfilePress?: () => void;
   showLoader?: boolean;
   loaderText?: string;
-
-  useScrollView?: boolean;
   keyboardAvoiding?: boolean;
-  keyboardOffset?: number;
-  contentContainerStyle?: ViewStyle;
   style?: ViewStyle;
+  auth?: boolean;
+  showProfile?: boolean;
+  showLogo?: boolean;
+  showBackArrow?: boolean;
+  title?: string;
 }
 
 const Container: React.FC<PageLayoutProps> = ({
@@ -32,44 +33,46 @@ const Container: React.FC<PageLayoutProps> = ({
   onProfilePress,
   showLoader = false,
   loaderText = 'Loading...',
-  useScrollView = false,
   keyboardAvoiding = false,
-  // Default offset for iOS header height
   style,
+  auth = false,
+  showProfile = true,
+  showLogo = true,
+  showBackArrow = false,
+  title = '',
 }) => {
-  const { colors } = useTheme();
+  const { colors, dark } = useTheme();
   const styles = useStyle();
-  const Content = () =>
-    useScrollView ? (
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={[style]}>
-        {children}
-      </ScrollView>
-    ) : (
-      <View style={styles.flex}>{children}</View>
-    );
+
   return (
     <View style={[styles.flex, style, { backgroundColor: colors.background }]}>
+      <StatusBar
+        backgroundColor={auth ? colors.background : colors.primary}
+        barStyle={auth && dark ? 'light-content' : 'dark-content'}
+      />
+      {showHeader && (
+        <CustomHeader
+          showProfile={showProfile}
+          showLogo={showLogo}
+          onProfilePress={onProfilePress}
+          showBackArrow={showBackArrow}
+          title={title}
+        />
+      )}
+      <CustomLoader visible={showLoader} text={loaderText} />
       {keyboardAvoiding ? (
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.flex}>
-          {showHeader && (
-            <HomeHeader onProfilePress={onProfilePress ?? (() => {})} />
-          )}
-          <Content />
-          {showLoader && <CustomLoader visible text={loaderText} />}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={styles.scrollContainer}>
+            {children}
+          </ScrollView>
         </KeyboardAvoidingView>
       ) : (
-        <>
-          {showHeader && (
-            <HomeHeader onProfilePress={onProfilePress ?? (() => {})} />
-          )}
-          <Content />
-          {showLoader && <CustomLoader visible text={loaderText} />}
-        </>
+        <>{children}</>
       )}
     </View>
   );

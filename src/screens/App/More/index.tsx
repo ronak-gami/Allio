@@ -6,7 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { getAuth } from '@react-native-firebase/auth';
 
-import { CustomFlatList, Text } from '@components/index';
+import { CustomFlatList, CustomHeader, Text } from '@components/index';
 import { TabParamList } from '@types/navigations';
 import { logout } from '@redux/slices/AuthSlice';
 import useStyle from './style';
@@ -41,7 +41,7 @@ const More: React.FC<Props> = ({ navigation }) => {
   const handleItemPress = (key: string) => {
     switch (key) {
       case 'profile':
-        // navigation.navigate('Profile');
+        navigation.navigate(HOME.Profile);
         break;
       case 'friends':
         navigation.navigate(HOME.MyFriends);
@@ -83,12 +83,12 @@ const More: React.FC<Props> = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title} type="BOLD">
-        More
-      </Text>
-      <CustomFlatList data={settingsData} renderItem={renderItem} />
-    </View>
+    <>
+      <CustomHeader title="Settings" showProfile={false} showLogo={false} />
+      <View style={styles.container}>
+        <CustomFlatList data={settingsData} renderItem={renderItem} />
+      </View>
+    </>
   );
 };
 

@@ -16,7 +16,7 @@ import { handlePermissions } from '@utils/helper';
 import { showError, showSuccess } from '@utils/toast';
 import { LICENSE_KEY } from '@utils/constant';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@redux/store';
+import { AppDispatch, RootState } from '@redux/store';
 import { fetchImages } from '@redux/slices/MediaSlice';
 import api from '@api/index';
 
@@ -43,7 +43,7 @@ const usePhotoMedia = () => {
   );
 
   const userData = useSelector((state: RootState) => state?.auth?.userData);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const images = useSelector((state: RootState) => state?.media?.images);
 
   useEffect(() => {
@@ -188,7 +188,7 @@ const usePhotoMedia = () => {
         error?.message ||
         'Something went wrong during upload.';
       showError(apiError);
-      console.log('Caught error:', error);
+      console.error('Caught error:', error);
     } finally {
       setLoading(false);
       handleClear();

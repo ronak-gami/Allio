@@ -15,6 +15,7 @@ import IMGLYEditor, {
 import { fetchVideos } from '@redux/slices/MediaSlice';
 import { handlePermissions } from '@utils/helper';
 import { LICENSE_KEY } from '@utils/constant';
+import { AppDispatch } from '@redux/store';
 
 interface VideoAsset {
   uri: string;
@@ -27,7 +28,7 @@ interface VideoAsset {
 }
 
 const useVideoMedia = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [videoUri, setVideoUri] = useState<string | undefined>(undefined);
   const [videoAsset, setVideoAsset] = useState<VideoAsset | undefined>(
     undefined,

@@ -18,7 +18,7 @@ const useScanQR = () => {
   const { emailOnlyValidationSchema } = useValidation();
   const userData = useSelector((state: RootState) => state.auth.userData);
 
-  const [email, setEmail] = useState<String>('');
+  const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [emailError, setEmailError] = useState<String>('');
   const [torchOn, setTorchOn] = useState<boolean>(false);
@@ -31,7 +31,9 @@ const useScanQR = () => {
 
   const states = {
     loading,
+    setLoading,
     torchOn,
+    setTorchOn,
     email,
     setEmail,
   };
@@ -90,7 +92,7 @@ const useScanQR = () => {
         return;
       }
 
-      console.log('Submission successful:', email);
+      navigation.navigate(HOME.Profile, { email: email });
     } catch (err: any) {
       if (err.name === 'ValidationError') {
         setEmailError(err.message);
@@ -100,15 +102,29 @@ const useScanQR = () => {
     }
   };
 
-  const onQRCodeScanned = (value: string) => {
+  const onQRCodeScanned = async (value: string) => {
     setEmail(value);
+    try {
+      await emailOnlyValidationSchema.validate({ email: value });
+      const exists = await checkUserExistsByEmail(value);
+      if (!exists) {
+        setEmailError('User with this email does not exist');
+        return;
+      }
+      navigation.navigate('Profile', {
+        email: value,
+      });
+    } catch (err: any) {
+      if (err.name === 'ValidationError') {
+        setEmailError(err.message);
+      } else {
+        console.error('Unexpected error:', err);
+      }
+    }
   };
 
   return {
-    email,
-    setEmail,
     emailError,
-    torchOn,
     toggleTorch,
     handleOpenMyQR,
     externalSubmitHandler,

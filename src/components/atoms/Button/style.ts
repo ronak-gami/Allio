@@ -1,4 +1,4 @@
-import { FONTS, width } from '@utils/helper';
+import { width } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 
@@ -9,7 +9,7 @@ const useStyle = () => {
       paddingHorizontal: width * 0.05,
       alignItems: 'center',
       justifyContent: 'center',
-      paddingVertical: width * 0.028,
+      paddingVertical: width * 0.045,
     },
     content: {
       flexDirection: 'row',

@@ -1,6 +1,5 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import { HomeStackParamList } from '@types/navigations';
 import MPINSetupScreen from '@screens/App/MPIN';
 import ForgetMPIN from '@screens/App/ForgetMPIN';
@@ -10,6 +9,7 @@ import TabNavigator from './TabNavigator';
 import { COLORS } from '@utils/color';
 import MyQR from '@screens/App/MyOR';
 import MyFriends from '@screens/App/MyFriends';
+import Profile from '@screens/App/Profile';
 import { CustomStatusBar } from '@components/index';
 import ChatDetailsScreen from '@screens/App/ChatDetails';
 
@@ -32,6 +32,7 @@ const HomeNavigator: React.FC = () => {
           component={ChatDetailsScreen}
         />
 
+        <Stack.Screen name={HOME.Profile} component={Profile} />
         <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />
       </Stack.Navigator>
     </>

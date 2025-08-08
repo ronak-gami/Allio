@@ -1,7 +1,6 @@
 import React from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import StatusBar from '@components/atoms/StatusBar';
 import RegistrationForm from '@components/organisms/RegistrationForm';
 import { AuthStackParamList } from '@types/navigations';
 import { useAnalytics } from '@hooks/index';
@@ -13,7 +12,7 @@ const Registration: React.FC<Props> = () => {
   useAnalytics({ screenName: 'Register' });
 
   return (
-    <Container showHeader={false} useScrollView keyboardAvoiding>
+    <Container showHeader={false} auth keyboardAvoiding>
       <RegistrationForm />
     </Container>
   );
