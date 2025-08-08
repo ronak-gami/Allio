@@ -43,24 +43,19 @@ const api = {
       }),
   },
 
-  NOTIFICATION: {
-    sendNotificatoin: ({
-      data,
-    }: {
-      data: { email: string; title: string; body: string };
-    }) =>
-      client({
-        method: 'post',
-        url: '/user/send-notification',
-        data,
-      }),
-  },
-
   QRCODE: {
     generate: ({ data }: { data: { email: string } }) =>
       client({
         method: 'post',
-        url: '/qrcode/generate',
+        url: 'qrcode/generate',
+        data,
+      }),
+  },
+  NOTIFICATION: {
+    sendNotification: ({ data }: { data: any }) =>
+      client({
+        method: 'post',
+        url: '/user/send-notification',
         data,
       }),
   },

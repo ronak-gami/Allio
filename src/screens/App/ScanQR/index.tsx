@@ -18,6 +18,7 @@ import { useTheme } from '@react-navigation/native';
 
 import {
   Button,
+  Container,
   CustomHeader,
   CustomLoader,
   Input,
@@ -56,9 +57,7 @@ const ScanQR: React.FC<Props> = () => {
   });
 
   return (
-    <>
-      <CustomHeader title="Scan QR" showProfile={false} showLogo={false} />
-      <CustomLoader visible={states?.loading} />
+    <Container showLoader={states?.loading} title="Scan QR">
       {!states.loading && (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -136,7 +135,7 @@ const ScanQR: React.FC<Props> = () => {
           </ScrollView>
         </KeyboardAvoidingView>
       )}
-    </>
+    </Container>
   );
 };
 

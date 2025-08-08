@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { PaperProvider } from 'react-native-paper';
 import { PersistGate } from 'redux-persist/integration/react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import ToastManager from 'toastify-react-native';
+import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { store, persistor } from './src/redux/store';
@@ -24,20 +24,8 @@ const App = () => {
       <Provider store={store}>
         <PaperProvider>
           <PersistGate loading={null} persistor={persistor}>
-            <ToastManager
-              position="bottom"
-              theme="light"
-              icons={{
-                success: 'check-circle',
-                error: 'error',
-                info: 'info',
-                warn: 'warning',
-                default: 'notifications',
-              }}
-              iconFamily="MaterialIcons"
-              iconSize={24}
-            />
             <StackNavigator />
+            <Toast />
           </PersistGate>
         </PaperProvider>
       </Provider>

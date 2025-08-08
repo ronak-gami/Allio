@@ -347,7 +347,6 @@ const getUserData = async (email: string): Promise<UserProfileData | null> => {
       return userProfile;
     }
 
-    console.log('No user found with email:', normalizedEmail);
     return null;
   } catch (error) {
     console.error('[Firestore] Error fetching user data:', error);

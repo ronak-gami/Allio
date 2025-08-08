@@ -5,12 +5,14 @@ import { checkUserExistsByEmail } from '@utils/helper';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
 import { showError, showSuccess } from '@utils/toast';
+import { useState } from 'react';
 
 type UseForgotPasswordOptions = {
   onNavigateToLogin?: () => void;
 };
 
 export const useForgotPassword = (options?: UseForgotPasswordOptions) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const navigation = useNavigation<AuthNavigationProp>();
 
   const navigateToLogin = () => {
@@ -22,7 +24,7 @@ export const useForgotPassword = (options?: UseForgotPasswordOptions) => {
 
   const handleForgotPassword = async (values: { email: string }) => {
     const email = values.email.trim().toLowerCase();
-
+    setLoading(true);
     try {
       if (!email) {
         showError('Email is required');
@@ -49,8 +51,10 @@ export const useForgotPassword = (options?: UseForgotPasswordOptions) => {
         message = 'Network error, check your internet connection';
       }
       return { success: false, message };
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { handleForgotPassword, navigateToLogin };
+  return { handleForgotPassword, navigateToLogin, loading };
 };

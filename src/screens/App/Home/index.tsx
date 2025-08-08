@@ -51,6 +51,8 @@ const HomeScreen: React.FC = () => {
     <Container
       onProfilePress={handleProfilePress}
       title="Home"
+      showAppLogo
+      showProfileLogo
       keyboardAvoiding>
       <AboutDetails />
       <ImageSlider images={promoImages} />

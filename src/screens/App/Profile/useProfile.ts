@@ -39,9 +39,6 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
       if (email) {
         try {
           const data = await getUserData(email);
-          console.log('**LOG ** Fetched User Data:', data);
-
-          // Set userData with the fetched data
           setUserData({
             email: data.email || email,
             firstName: data.firstName,
@@ -50,8 +47,6 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
             profileImage: data.profileImage,
           });
         } catch (error) {
-          console.log('Error fetching user data:', error);
-          // Set default userData with just email
           setUserData({
             email: email,
             firstName: undefined,

@@ -4,7 +4,8 @@ import {
   Text,
   VideoCard,
   CustomFlatList,
-  CustomHeader,
+  Button,
+  Container,
 } from '@components/index';
 import useStyle from './style';
 import { IMAGES } from '@assets/index';
@@ -42,25 +43,60 @@ const ProfileHeader: React.FC<{
     ? { uri: profileImage }
     : IMAGES.Dummy_Profile;
 
-  // Calculate total media count
-
   return (
     <View style={styles.profileHeaderContainer}>
-      <View style={styles.profileImageContainer}>
-        <Image
-          source={imageSource}
-          style={styles.profileImage}
-          defaultSource={IMAGES.Dummy_Profile}
-        />
-        <View style={styles.onlineIndicator} />
+      <View style={styles.topSectionContainer}>
+        <View style={styles.profileImageContainer}>
+          <Image
+            source={imageSource}
+            style={styles.profileImage}
+            defaultSource={IMAGES.Dummy_Profile}
+          />
+          <View style={styles.onlineIndicator} />
+        </View>
+
+        <View style={styles.nameAndStatsContainer}>
+          {displayName && (
+            <Text type="BOLD" style={styles.displayName}>
+              {displayName}
+            </Text>
+          )}
+          <View style={styles.profileStats}>
+            <View style={styles.statItem}>
+              <Text type="BOLD" style={styles.statNumber}>
+                {images?.length || 0}
+              </Text>
+              <Text type="SEMIBOLD" style={styles.statLabel}>
+                Images
+              </Text>
+            </View>
+
+            <View style={styles.statSeparator} />
+
+            <View style={styles.statItem}>
+              <Text type="BOLD" style={styles.statNumber}>
+                {videos?.length || 0}
+              </Text>
+              <Text type="REGULAR" style={styles.statLabel}>
+                Videos
+              </Text>
+            </View>
+
+            <View style={styles.statSeparator} />
+
+            <View style={styles.statItem}>
+              <Text type="BOLD" style={styles.statNumber}>
+                0
+              </Text>
+              <Text type="REGULAR" style={styles.statLabel}>
+                Reels
+              </Text>
+            </View>
+          </View>
+        </View>
       </View>
 
       <View style={styles.profileInfoContainer}>
-        {displayName && (
-          <Text type="BOLD" style={styles.displayName}>
-            {displayName}
-          </Text>
-        )}
         <Text type="SEMIBOLD" style={styles.email}>
           {email}
         </Text>
@@ -71,25 +107,7 @@ const ProfileHeader: React.FC<{
         )}
       </View>
 
-      <View style={styles.profileStats}>
-        <View style={styles.statItem}>
-          <Text type="BOLD" style={styles.statNumber}>
-            {images?.length || 0}
-          </Text>
-          <Text type="REGULAR" style={styles.statLabel}>
-            Images
-          </Text>
-        </View>
-        <View style={styles.statDivider} />
-        <View style={styles.statItem}>
-          <Text type="BOLD" style={styles.statNumber}>
-            {videos?.length || 0}
-          </Text>
-          <Text type="REGULAR" style={styles.statLabel}>
-            Videos
-          </Text>
-        </View>
-      </View>
+      <Button title="Friend Request" />
     </View>
   );
 };
@@ -183,8 +201,7 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
   });
 
   return (
-    <>
-      <CustomHeader title="Profile" showBackArrow showProfile={false} />
+    <Container showLoader={false} showBackArrow title="Profile">
       <View style={styles.container}>
         <ProfileHeader
           email={data.email}
@@ -210,7 +227,7 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
           />
         </View>
       </View>
-    </>
+    </Container>
   );
 };
 

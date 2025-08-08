@@ -6,10 +6,9 @@ import Video from 'react-native-video';
 import { TabParamList } from '@types/navigations';
 import {
   Button,
+  Container,
   CustomChip,
   CustomFlatList,
-  CustomHeader,
-  CustomLoader,
   Text,
   VideoCard,
   VideoPreviewModal,
@@ -88,8 +87,7 @@ const VideoMedia: React.FC<Props> = () => {
   );
 
   return (
-    <>
-      <CustomHeader title="Video" showProfile={false} showLogo={false} />
+    <Container showLoader={states.loading} title="Video Media">
       <View style={styles.container}>
         {isVideoLoaded() ? (
           <ScrollView
@@ -169,8 +167,7 @@ const VideoMedia: React.FC<Props> = () => {
           onClose={closePreviewModal}
         />
       </View>
-      <CustomLoader visible={states.loading} />
-    </>
+    </Container>
   );
 };
 
