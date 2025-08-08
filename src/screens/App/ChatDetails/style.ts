@@ -254,6 +254,34 @@ const useStyle = () => {
       width: '100%',
       height: height * 0.4,
     },
+    chatVideo: {
+      width: height * 0.2,
+      height: height * 0.2,
+      borderRadius: 8,
+      backgroundColor: colors.background,
+    },
+    modalVideo: {
+      width: '100%',
+      height: height * 0.3,
+      backgroundColor: colors.background,
+      borderRadius: 8,
+    },
+    playIconOverlay: {
+      position: 'absolute',
+      top: '10%',
+      left: '10%',
+      transform: [{ translateX: -20 }, { translateY: -20 }],
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.heromain,
+      width: height * 0.2,
+      height: height * 0.2,
+    },
+    playBtn: {
+      width: height * 0.025,
+      height: height * 0.025,
+      tintColor: colors.primary,
+    },
   });
 };
 

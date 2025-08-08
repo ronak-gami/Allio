@@ -42,6 +42,7 @@ const useStyle = () => {
     closeIcon: {
       width: scale(20),
       height: scale(20),
+      tintColor: colors.background,
     },
   });
 };

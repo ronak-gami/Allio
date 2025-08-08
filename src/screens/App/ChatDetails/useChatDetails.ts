@@ -14,9 +14,19 @@ export const useChatDetails = (targetUser: any) => {
   const { relationStatus, sendRequest, acceptRequest, rejectRequest } =
     useUserCard(myEmail, targetUser?.email);
 
+  const [imageModalVisible, setImageModalVisible] = useState<Boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [message, setMessage] = useState('');
+  const [videoModalVisible, setVideoModalVisible] = useState<boolean>(false);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+
   const [chatHistory, setChatHistory] = useState<
-    { text?: string; image?: string | null; fromMe: boolean }[]
+    {
+      [x: string]: any;
+      text?: string;
+      image?: string | null;
+      fromMe: boolean;
+    }[]
   >([]);
 
   const scrollViewRef = useRef<ScrollView | null>(null);
@@ -38,9 +48,6 @@ export const useChatDetails = (targetUser: any) => {
     isAutoScroll.current = isBottom;
   };
 
-  const [imageModalVisible, setImageModalVisible] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
   const openImageModal = (imageUrl: string) => {
     setSelectedImage(imageUrl);
     setImageModalVisible(true);
@@ -49,6 +56,16 @@ export const useChatDetails = (targetUser: any) => {
   const closeImageModal = () => {
     setImageModalVisible(false);
     setSelectedImage(null);
+  };
+
+  const openVideoModal = (videoUri: string) => {
+    setSelectedVideo(videoUri);
+    setVideoModalVisible(true);
+  };
+
+  const closeVideoModal = () => {
+    setSelectedVideo(null);
+    setVideoModalVisible(false);
   };
 
   useEffect(() => {
@@ -69,9 +86,10 @@ export const useChatDetails = (targetUser: any) => {
       const messages = snapshot.docs.map(doc => {
         const data = doc.data();
         return {
-          text: data.text || '',
-          image: data.image || null,
-          fromMe: data.from === myEmail,
+          text: data?.text || '',
+          image: data?.image || null,
+          video: data?.video || null,
+          fromMe: data?.from === myEmail,
         };
       });
 
@@ -104,7 +122,7 @@ export const useChatDetails = (targetUser: any) => {
       if (!docSnapshot.exists) {
         await relationRef.set({
           from: myEmail,
-          to: targetUser.email,
+          to: targetUser?.email,
           isAccept: false,
           timestamp,
         });
@@ -113,7 +131,7 @@ export const useChatDetails = (targetUser: any) => {
       await relationRef.collection('messages').add({
         text: message.trim(),
         from: myEmail,
-        to: targetUser.email,
+        to: targetUser?.email,
         timestamp: timestamp,
       });
 
@@ -167,5 +185,9 @@ export const useChatDetails = (targetUser: any) => {
     selectedImage,
     openImageModal,
     closeImageModal,
+    videoModalVisible,
+    selectedVideo,
+    openVideoModal,
+    closeVideoModal,
   };
 };

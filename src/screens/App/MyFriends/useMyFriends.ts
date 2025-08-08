@@ -31,9 +31,9 @@ export const useMyFriends = () => {
       > = {};
       snapshot.forEach(doc => {
         const data = doc.data();
-        const from = data.from?.toLowerCase();
-        const to = data.to?.toLowerCase();
-        const isAccept = data.isAccept;
+        const from = data?.from?.toLowerCase();
+        const to = data?.to?.toLowerCase();
+        const isAccept = data?.isAccept;
 
         const key = from < to ? `${from}_${to}` : `${to}_${from}`;
         relationMap[key] = { from, to, isAccept };

@@ -8,21 +8,25 @@ import {
   ScrollView,
 } from 'react-native';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
+import { HomeStackParamList } from '@types/navigations';
 import { ICONS } from '@assets/index';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
+import Video from 'react-native-video';
 
 import { Button, Container, CustomModal, Input, Text } from '@components/index';
 
 import useStyle from './style';
 import { useChatDetails } from './useChatDetails';
 
+type ChatDetailsRouteProp = RouteProp<HomeStackParamList, 'ChatDetails'>;
+
 const ChatDetailsScreen = () => {
   const styles = useStyle();
   const { colors } = useTheme();
   const navigation = useNavigation();
-  const { params } = useRoute<RouteProp<any>>();
-  const { user } = params || {};
+  const route = useRoute<ChatDetailsRouteProp>();
+  const { user } = route.params || {};
 
   const {
     relationStatus,
@@ -39,6 +43,10 @@ const ChatDetailsScreen = () => {
     selectedImage,
     openImageModal,
     closeImageModal,
+    videoModalVisible,
+    selectedVideo,
+    openVideoModal,
+    closeVideoModal,
   } = useChatDetails(user);
 
   const showImage = user?.profile && user?.profile !== '';
@@ -105,7 +113,7 @@ const ChatDetailsScreen = () => {
           style={styles.container}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
-          {/* Header */}
+          {/* Header - Keep only one */}
           <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Image source={ICONS.Left} style={styles.backIcon} />
@@ -126,10 +134,10 @@ const ChatDetailsScreen = () => {
             </View>
           </View>
 
-          {/* Chat / Request */}
+          {/* Main Content ScrollView */}
           <ScrollView
             ref={scrollViewRef}
-            style={styles.container}
+            style={styles.scrollView}
             contentContainerStyle={styles.scrollContainer}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
@@ -153,14 +161,14 @@ const ChatDetailsScreen = () => {
                         styles.messageBubble,
                         chat.fromMe ? styles.myMessage : styles.theirMessage,
                       ]}>
-                      {chat?.text ? (
-                        <Text style={styles.messageText}>{chat?.text}</Text>
-                      ) : null}
-                      {chat?.image ? (
+                      {chat?.text && (
+                        <Text style={styles.messageText}>{chat.text}</Text>
+                      )}
+                      {chat?.image && (
                         <TouchableOpacity
-                          onPress={() => openImageModal(chat?.image)}>
+                          onPress={() => openImageModal(chat.image)}>
                           <Image
-                            source={{ uri: chat?.image }}
+                            source={{ uri: chat.image }}
                             style={[
                               styles.chatImage,
                               { marginTop: chat.text ? 5 : 0 },
@@ -168,7 +176,25 @@ const ChatDetailsScreen = () => {
                             resizeMode="cover"
                           />
                         </TouchableOpacity>
-                      ) : null}
+                      )}
+                      {chat?.video && (
+                        <TouchableOpacity
+                          onPress={() => openVideoModal(chat.video)}>
+                          <Video
+                            source={{ uri: chat.video }}
+                            style={styles.chatVideo}
+                            resizeMode="cover"
+                            paused={true}
+                            pointerEvents="none"
+                          />
+                          <View style={styles.playIconOverlay}>
+                            <Image
+                              source={ICONS.VideoPlay}
+                              style={styles.playBtn}
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      )}
                     </View>
                   ))
                 )}
@@ -176,6 +202,7 @@ const ChatDetailsScreen = () => {
             )}
           </ScrollView>
 
+          {/* Input Container */}
           {relationStatus === 'accepted' && (
             <View style={styles.inputContainer}>
               <Input
@@ -190,6 +217,7 @@ const ChatDetailsScreen = () => {
             </View>
           )}
 
+          {/* Modals */}
           <CustomModal
             visible={imageModalVisible}
             title="Image"
@@ -199,6 +227,21 @@ const ChatDetailsScreen = () => {
                 source={{ uri: selectedImage }}
                 style={styles.modalImage}
                 resizeMode="contain"
+              />
+            )}
+          </CustomModal>
+
+          <CustomModal
+            visible={videoModalVisible}
+            title="Video"
+            onClose={closeVideoModal}>
+            {selectedVideo && (
+              <Video
+                source={{ uri: selectedVideo }}
+                style={styles.modalVideo}
+                controls
+                resizeMode="contain"
+                paused={false}
               />
             )}
           </CustomModal>
