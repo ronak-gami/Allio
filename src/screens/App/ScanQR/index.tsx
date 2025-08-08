@@ -16,14 +16,7 @@ import useStyle from './style';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { useTheme } from '@react-navigation/native';
 
-import {
-  Button,
-  Container,
-  CustomHeader,
-  CustomLoader,
-  Input,
-  Text,
-} from '@components/index';
+import { Button, Container, Input, Text } from '@components/index';
 import { TabParamList } from '@types/navigations';
 import { ICONS } from '@assets/index';
 import useScanQR from './useScanQR';
@@ -122,14 +115,12 @@ const ScanQR: React.FC<Props> = () => {
                 title="scanQr.submit"
                 onPress={externalSubmitHandler}
                 bgColor={colors.primary}
-                textColor={colors.text}
               />
 
               <Button
                 title="scanQr.view_my_qr"
                 onPress={handleOpenMyQR}
                 bgColor={colors.primary}
-                textColor={colors.text}
               />
             </View>
           </ScrollView>

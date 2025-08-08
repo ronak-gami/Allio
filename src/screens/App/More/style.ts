@@ -30,7 +30,7 @@ const useStyle = () => {
       backgroundColor: colors.text,
     },
     itemText: {
-      fontSize: scale(16),
+      fontSize: scale(18),
       color: colors.text,
     },
     emptyText: {

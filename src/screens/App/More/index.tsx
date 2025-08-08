@@ -86,7 +86,7 @@ const More: React.FC<Props> = ({ navigation }) => {
   );
 
   return (
-    <Container showLoader={false} title="More">
+    <Container showLoader={false} title="Settings">
       <View style={styles.container}>
         <CustomFlatList data={settingsData} renderItem={renderItem} />
       </View>

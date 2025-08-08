@@ -84,10 +84,10 @@ const useStyle = () => {
 
     acceptedText: {
       color: colors.text,
-      fontWeight: 'bold',
       fontSize: scale(10),
     },
     email: {
+      color: colors.text,
       fontSize: scale(9),
     },
   });

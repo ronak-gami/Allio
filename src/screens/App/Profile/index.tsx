@@ -24,6 +24,9 @@ const ProfileHeader: React.FC<{
   images: any[];
   videos: any[];
   styles: ReturnType<typeof useStyle>;
+  isExternalProfile: boolean;
+  navigateToMyFriends: () => void;
+  isFriend: boolean;
 }> = ({
   email,
   firstName,
@@ -33,6 +36,9 @@ const ProfileHeader: React.FC<{
   images,
   videos,
   styles,
+  isExternalProfile,
+  navigateToMyFriends,
+  isFriend,
 }) => {
   const displayName =
     firstName && lastName
@@ -106,8 +112,11 @@ const ProfileHeader: React.FC<{
           </Text>
         )}
       </View>
-
-      <Button title="Friend Request" />
+      {isExternalProfile ? (
+        isFriend ? (
+          <Button title="Friend Request" onPress={navigateToMyFriends} />
+        ) : null
+      ) : null}
     </View>
   );
 };
@@ -196,9 +205,10 @@ const MediaContent: React.FC<{
 
 const Profile: React.FC<ProfileProps> = ({ route }) => {
   const styles = useStyle();
-  const { states, data } = useProfile({
-    userEmail: route.params?.email,
-  });
+  const { states, data, isExternalProfile, navigateToMyFriends, isFriend } =
+    useProfile({
+      userEmail: route.params?.email,
+    });
 
   return (
     <Container showLoader={false} showBackArrow title="Profile">
@@ -209,9 +219,12 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
           lastName={data.lastName}
           profileImage={data.profileImage}
           mobileNo={data.mobileNo}
-          images={data.images}
-          videos={data.videos}
+          images={data.allImages}
+          videos={data.allVideos}
           styles={styles}
+          isExternalProfile={isExternalProfile}
+          navigateToMyFriends={navigateToMyFriends}
+          isFriend={isFriend}
         />
         <TabBar
           activeTab={states.activeTab}
