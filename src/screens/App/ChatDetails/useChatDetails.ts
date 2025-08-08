@@ -17,8 +17,16 @@ export const useChatDetails = (targetUser: any) => {
   const [imageModalVisible, setImageModalVisible] = useState<Boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [message, setMessage] = useState('');
+  const [videoModalVisible, setVideoModalVisible] = useState<boolean>(false);
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+
   const [chatHistory, setChatHistory] = useState<
-    { text?: string; image?: string | null; fromMe: boolean }[]
+    {
+      [x: string]: any;
+      text?: string;
+      image?: string | null;
+      fromMe: boolean;
+    }[]
   >([]);
 
   const scrollViewRef = useRef<ScrollView | null>(null);
@@ -50,6 +58,16 @@ export const useChatDetails = (targetUser: any) => {
     setSelectedImage(null);
   };
 
+  const openVideoModal = (videoUri: string) => {
+    setSelectedVideo(videoUri);
+    setVideoModalVisible(true);
+  };
+
+  const closeVideoModal = () => {
+    setSelectedVideo(null);
+    setVideoModalVisible(false);
+  };
+
   useEffect(() => {
     if (!myEmail || !targetUser?.email) {
       return;
@@ -70,6 +88,7 @@ export const useChatDetails = (targetUser: any) => {
         return {
           text: data?.text || '',
           image: data?.image || null,
+          video: data?.video || null,
           fromMe: data?.from === myEmail,
         };
       });
@@ -166,5 +185,9 @@ export const useChatDetails = (targetUser: any) => {
     selectedImage,
     openImageModal,
     closeImageModal,
+    videoModalVisible,
+    selectedVideo,
+    openVideoModal,
+    closeVideoModal,
   };
 };

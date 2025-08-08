@@ -12,6 +12,7 @@ import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { ICONS } from '@assets/index';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
+import Video from 'react-native-video';
 
 import { Button, CustomModal, Text } from '@components/index';
 
@@ -40,6 +41,10 @@ const ChatDetailsScreen = () => {
     selectedImage,
     openImageModal,
     closeImageModal,
+    videoModalVisible,
+    selectedVideo,
+    openVideoModal,
+    closeVideoModal,
   } = useChatDetails(user);
 
   const showImage = user?.profile && user?.profile !== '';
@@ -148,12 +153,16 @@ const ChatDetailsScreen = () => {
                       styles.messageBubble,
                       chat?.fromMe ? styles.myMessage : styles.theirMessage,
                     ]}>
+                    {/* Text message */}
                     {chat?.text ? (
                       <Text style={styles.messageText}>{chat?.text}</Text>
                     ) : null}
+
                     {chat?.image ? (
                       <TouchableOpacity
-                        onPress={() => openImageModal(chat?.image)}>
+                        onPress={() => {
+                          openImageModal(chat?.image);
+                        }}>
                         <Image
                           source={{ uri: chat?.image }}
                           style={[
@@ -162,6 +171,26 @@ const ChatDetailsScreen = () => {
                           ]}
                           resizeMode="cover"
                         />
+                      </TouchableOpacity>
+                    ) : null}
+                    {chat.video ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          openVideoModal(chat?.video);
+                        }}>
+                        <Video
+                          source={{ uri: chat?.video }}
+                          style={[styles.chatVideo]}
+                          resizeMode="cover"
+                          paused={true}
+                          pointerEvents="none"
+                        />
+                        <View style={styles.playIconOverlay}>
+                          <Image
+                            source={ICONS.VideoPlay}
+                            style={styles.playBtn}
+                          />
+                        </View>
                       </TouchableOpacity>
                     ) : null}
                   </View>
@@ -195,6 +224,21 @@ const ChatDetailsScreen = () => {
               source={{ uri: selectedImage }}
               style={styles.modalImage}
               resizeMode="contain"
+            />
+          )}
+        </CustomModal>
+
+        <CustomModal
+          visible={videoModalVisible}
+          title="Video"
+          onClose={closeVideoModal}>
+          {selectedVideo && (
+            <Video
+              source={{ uri: selectedVideo }}
+              style={styles.modalVideo}
+              controls
+              resizeMode="contain"
+              paused={false}
             />
           )}
         </CustomModal>
