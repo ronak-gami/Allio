@@ -14,9 +14,7 @@ const useStyle = () => {
       elevation: 4,
       justifyContent: 'space-between',
     },
-    backButton: {
-      padding: scale(8),
-    },
+
     backIcon: {
       width: scale(18),
       height: scale(18),

@@ -16,6 +16,7 @@ export const IMAGES = {
   Scanner: require('./images/scanner.jpg'),
   Homeimage: require('./images/homeimage.png'),
   Two: require('./images/two.png'),
+  Nodata: require('./images/Nodata.png'),
 };
 
 export const ICONS = {
@@ -37,6 +38,13 @@ export const ICONS = {
   NoVideo: require('./icons/video.png'),
   profile: require('./icons/profile.png'),
   Left: require('./icons/arrow.png'),
+  VideoPlay: require('./icons/videoPlay.png'),
+  Share: require('./icons/share.png'),
+  Send: require('./icons/send.png'),
+  Download: require('./icons/download.png'),
+  light: require('./icons/light.png'),
+  true: require('./icons/true.png'),
+  false: require('./icons/false.png'),
 };
 
 export const FONTS = {
@@ -49,9 +57,4 @@ export const FONTS = {
   extraLight: 'Montserrat-ExtraLight',
   black: 'Montserrat-Black',
   italic: 'Montserrat-Italic',
-  VideoPlay: require('./icons/videoPlay.png'),
-  Share: require('./icons/share.png'),
-  Send: require('./icons/send.png'),
-  Download: require('./icons/download.png'),
-  light: require('./icons/light.png'),
 };
