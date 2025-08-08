@@ -71,7 +71,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
                 onCheckboxPress={setRemember}
               />
               <Button
-                title="Login"
+                title="login"
                 onPress={handleSubmit as () => void}
                 disabled={loading}
                 loading={loading}

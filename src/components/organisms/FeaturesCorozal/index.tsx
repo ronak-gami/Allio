@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { View, Dimensions } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import type { ICarouselInstance } from 'react-native-reanimated-carousel';
-import FeatureCard from '@components/molecules/FeatureCard';
+import FeatureCard from '@components/cards/FeatureCard';
 import type { FeatureDataItem } from './style';
 import Text from '@components/atoms/Text';
 import useStyle from './style';

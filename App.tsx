@@ -10,11 +10,11 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import perf from '@react-native-firebase/perf';
-
 import CustomNotification, {
   CustomToastRef,
 } from '@components/atoms/CustomNotification';
 import { useNotification } from '@hooks/index';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 import { store, persistor } from './src/redux/store';
 import StackNavigator from './src/navigations';
