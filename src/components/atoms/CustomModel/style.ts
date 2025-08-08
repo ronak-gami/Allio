@@ -27,6 +27,7 @@ const useStyle = () => {
       marginBottom: scale(16),
       color: colors.primary,
       textAlign: 'center',
+      marginTop: -10,
     },
     description: {
       fontSize: scale(14),

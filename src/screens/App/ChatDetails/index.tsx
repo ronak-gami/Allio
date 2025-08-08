@@ -54,7 +54,9 @@ const ChatDetailsScreen = () => {
   }
 
   const renderFriendStatusCard = () => {
-    if (relationStatus === 'accepted') {return null;}
+    if (relationStatus === 'accepted') {
+      return null;
+    }
 
     return (
       <View style={styles.card}>
@@ -103,7 +105,6 @@ const ChatDetailsScreen = () => {
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image source={ICONS.Left} style={styles.backIcon} />
@@ -121,7 +122,6 @@ const ChatDetailsScreen = () => {
           </View>
         </View>
 
-        {/* Chat / Request */}
         <ScrollView
           ref={scrollViewRef}
           style={styles.container}
@@ -146,7 +146,7 @@ const ChatDetailsScreen = () => {
                     key={index}
                     style={[
                       styles.messageBubble,
-                      chat.fromMe ? styles.myMessage : styles.theirMessage,
+                      chat?.fromMe ? styles.myMessage : styles.theirMessage,
                     ]}>
                     {chat?.text ? (
                       <Text style={styles.messageText}>{chat?.text}</Text>
@@ -158,7 +158,7 @@ const ChatDetailsScreen = () => {
                           source={{ uri: chat?.image }}
                           style={[
                             styles.chatImage,
-                            { marginTop: chat.text ? 5 : 0 },
+                            { marginTop: chat?.text ? 5 : 0 },
                           ]}
                           resizeMode="cover"
                         />

@@ -14,6 +14,8 @@ export const useChatDetails = (targetUser: any) => {
   const { relationStatus, sendRequest, acceptRequest, rejectRequest } =
     useUserCard(myEmail, targetUser?.email);
 
+  const [imageModalVisible, setImageModalVisible] = useState<Boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState<
     { text?: string; image?: string | null; fromMe: boolean }[]
@@ -37,9 +39,6 @@ export const useChatDetails = (targetUser: any) => {
 
     isAutoScroll.current = isBottom;
   };
-
-  const [imageModalVisible, setImageModalVisible] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const openImageModal = (imageUrl: string) => {
     setSelectedImage(imageUrl);
@@ -69,9 +68,9 @@ export const useChatDetails = (targetUser: any) => {
       const messages = snapshot.docs.map(doc => {
         const data = doc.data();
         return {
-          text: data.text || '',
-          image: data.image || null,
-          fromMe: data.from === myEmail,
+          text: data?.text || '',
+          image: data?.image || null,
+          fromMe: data?.from === myEmail,
         };
       });
 
@@ -104,7 +103,7 @@ export const useChatDetails = (targetUser: any) => {
       if (!docSnapshot.exists) {
         await relationRef.set({
           from: myEmail,
-          to: targetUser.email,
+          to: targetUser?.email,
           isAccept: false,
           timestamp,
         });
@@ -113,7 +112,7 @@ export const useChatDetails = (targetUser: any) => {
       await relationRef.collection('messages').add({
         text: message.trim(),
         from: myEmail,
-        to: targetUser.email,
+        to: targetUser?.email,
         timestamp: timestamp,
       });
 
