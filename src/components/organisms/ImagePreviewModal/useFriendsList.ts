@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import firestore from '@react-native-firebase/firestore';
 import { handleMediaDownload, handleMediaShare } from '@utils/helper';
+import api from '@api/index';
+import { showSuccess } from '@utils/toast';
 
 export const useFriendsList = (
   myEmail?: string | null,
@@ -68,7 +70,23 @@ export const useFriendsList = (
     });
 
     await batch.commit();
-    setSelectedFriends([]);
+    const email1 = myEmail.trim().toLowerCase();
+
+    const title = 'Message Sent';
+    const body = `${email1} has sent message to you.`;
+
+    const data = {
+      emails: selectedFriends,
+      title: title,
+      body: body,
+    };
+
+    const response = await api?.NOTIFICATION.sendNotification({ data });
+
+    if (response?.data?.status) {
+      showSuccess('Notification sent!');
+      setSelectedFriends([]);
+    }
     setMode('preview');
     onClose();
   };

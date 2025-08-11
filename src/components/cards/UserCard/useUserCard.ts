@@ -71,11 +71,10 @@ export const useUserCard = (
     const body = `${email1} has sent you a connection request.`;
 
     const data = {
-      email: email2,
+      emails: [email2],
       title: title,
       body: body,
     };
-
     const response = await api?.NOTIFICATION.sendNotification({ data });
 
     if (response?.data?.success) {
@@ -88,11 +87,44 @@ export const useUserCard = (
     await firestore().collection('relation').doc(documentId).update({
       isAccept: true,
     });
+    const email1 = myEmail.trim().toLowerCase();
+    const email2 = userEmail.trim().toLowerCase();
+
+    const title = 'Friend Request Accepted';
+    const body = `${email1} has Accepted your friend request.`;
+
+    const data = {
+      emails: [email2],
+      title: title,
+      body: body,
+    };
+    const response = await api?.NOTIFICATION.sendNotification({ data });
+    console.log('response', response, 'response---->>>>');
+    if (response?.data?.success) {
+      showSuccess(response?.data?.message || 'Notification sent!');
+    }
   };
 
   const rejectRequest = async () => {
     if (!documentId) return;
     await firestore().collection('relation').doc(documentId).delete();
+    const email1 = myEmail.trim().toLowerCase();
+    const email2 = userEmail.trim().toLowerCase();
+
+    const title = 'Friend Request Rejected';
+    const body = `${email1} has Rejected your friend request.`;
+
+    const data = {
+      emails: [email2],
+      title: title,
+      body: body,
+    };
+    const response = await api?.NOTIFICATION.sendNotification({ data });
+    console.log('response', response, 'reject request---->>>>');
+
+    if (response?.data?.success) {
+      showSuccess(response?.data?.message || 'Notification sent!');
+    }
   };
   const handleSend = async () => {
     try {

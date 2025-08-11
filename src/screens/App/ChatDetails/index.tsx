@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TextInput,
 } from 'react-native';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '@types/navigations';
@@ -205,12 +206,18 @@ const ChatDetailsScreen = () => {
           {/* Input Container */}
           {relationStatus === 'accepted' && (
             <View style={styles.inputContainer}>
-              <Input
+              <TextInput
                 placeholder="Type your message..."
                 value={message}
                 onChangeText={setMessage}
                 style={styles.textInput}
               />
+              {/* <Input
+                placeholder="Type your message..."
+                value={message}
+                onChangeText={setMessage}
+                style={styles.textInput}
+              /> */}
               <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
                 <Image source={ICONS.Send} style={styles.sendIcon} />
               </TouchableOpacity>

@@ -104,14 +104,11 @@ export const useChatDetails = (targetUser: any) => {
       scrollToBottom(true);
     }
   }, [chatHistory, scrollToBottom]);
-
   const handleSendMessage = async () => {
-    if (!message.trim()) {
-      showError('Message cannot be empty');
-      return;
-    }
+    if (!message.trim()) return;
 
     try {
+      const messageToSend = message.trim(); // ✅ store before clearing
       const timestamp = firestore.FieldValue.serverTimestamp();
       const sortedEmails = [myEmail, targetUser.email].sort();
       const relationId = `${sortedEmails[0]}_${sortedEmails[1]}`;
@@ -129,17 +126,32 @@ export const useChatDetails = (targetUser: any) => {
       }
 
       await relationRef.collection('messages').add({
-        text: message.trim(),
+        text: messageToSend, // ✅ use stored value
         from: myEmail,
         to: targetUser?.email,
-        timestamp: timestamp,
+        timestamp,
       });
+      const email1 = myEmail.trim().toLowerCase();
+      const email2 = targetUser?.email.trim().toLowerCase();
 
-      setMessage('');
+      const title = 'Message Sent';
+      const body = `${email1} has sent message to you.`;
 
-      const title = `${myEmail} has sent you a Message.`;
-      const data = { email: targetUser.email, title, body: message.trim() };
-      await api?.NOTIFICATION.sendNotification({ data });
+      const data = {
+        emails: [email2],
+        title: title,
+        body: body,
+      };
+
+      console.log('shyam patel', data, 'data---->>>>');
+      const response = await api?.NOTIFICATION.sendNotification({ data });
+
+      console.log(response, 'response---->>>>');
+
+      if (response?.data?.success) {
+        showSuccess(response?.data?.message || 'Notification sent!');
+      }
+      setMessage(''); // ✅ clear AFTER send
     } catch (error) {
       console.error('Error sending message:', error);
       showError('Failed to send message');
