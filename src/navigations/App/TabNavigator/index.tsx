@@ -15,6 +15,7 @@ import More from '@screens/App/More';
 import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
 import { TabParamList } from '@types/navigations';
+import { GlobalBottomSheet } from '@components/atoms/GlobalBottomSheet';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -64,6 +65,7 @@ const TabNavigator: React.FC = () => {
   });
 
   return (
+    // <GlobalBottomSheet>
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen name={HOME.Home} component={HomeScreen} />
       <Tab.Screen name={HOME.Photo} component={PhotoMedia} />
@@ -71,6 +73,7 @@ const TabNavigator: React.FC = () => {
       <Tab.Screen name={HOME.Video} component={VideoMedia} />
       <Tab.Screen name={HOME.More} component={More} />
     </Tab.Navigator>
+    // </GlobalBottomSheet>
   );
 };
 

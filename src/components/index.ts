@@ -16,7 +16,6 @@ export { default as Container } from './molecules/Container';
 export { default as Customlogout } from './molecules/Customlogout';
 export { default as RadioGroup } from './molecules/RadioGroups';
 // If CustomBottomSheetModal is a named export, use the following:
-export { CustomBottomSheetModal } from './molecules/CustomBottomSheetModal';
 
 //oraganims
 export { default as ImagePreviewModal } from './organisms/ImagePreviewModal';
@@ -35,3 +34,6 @@ export { default as Container } from './molecules/Container';
 
 // cards
 export { default as VideoCard } from './cards/VideoCard';
+
+//contex
+// export { default as BottomSheetProvider } from './context/BottomSheetContext';

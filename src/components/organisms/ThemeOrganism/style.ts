@@ -1,17 +1,15 @@
 import { StyleSheet } from 'react-native';
+
+import { height, width } from '@utils/helper';
 import { scale } from 'react-native-size-matters';
+import { COLORS } from '@utils/color';
 
 const useStyle = () => {
   return StyleSheet.create({
-    container: {
-      position: 'absolute',
-      top: scale(18),
-      left: scale(18),
-      zIndex: 999,
-    },
-    icon: {
-      width: scale(22),
-      height: scale(22),
+    buttonnew: {
+      backgroundColor: COLORS.primary,
+
+      marginVertical: scale(6),
     },
   });
 };

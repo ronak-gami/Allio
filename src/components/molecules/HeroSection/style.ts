@@ -30,7 +30,7 @@ export default function useStyle() {
 
     description: {
       fontSize: scale(20),
-      color: colors.white,
+      color: colors.text,
       textAlign: 'center',
       lineHeight: scale(22),
     },

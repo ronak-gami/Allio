@@ -6,7 +6,6 @@ interface Option {
   label: string;
   value: string;
 }
-
 interface RadioGroupProps {
   options: Option[];
   selectedValue: string;
@@ -20,12 +19,14 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
 }) => {
   return (
     <View>
-      {options.map(option => (
+      {options?.map(option => (
         <CustomRadioButton
           key={option.value}
           label={option.label}
           selected={selectedValue === option.value}
-          onPress={() => onSelect(option.value)}
+          onPress={() => {
+            onSelect(option.value);
+          }}
         />
       ))}
     </View>

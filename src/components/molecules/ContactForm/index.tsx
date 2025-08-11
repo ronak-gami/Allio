@@ -26,12 +26,12 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
   onSubmit,
 }) => {
   const styles = useStyle();
-  const { contactUsValidationSchema } = useValidation();
+  const { contetUsValidationSchema } = useValidation();
 
   return (
     <Formik
       initialValues={{ name: '', mobile: '', email: '', message: '' }}
-      validationSchema={contactUsValidationSchema}
+      validationSchema={contetUsValidationSchema}
       onSubmit={(values, { resetForm }) => {
         onSubmit(values);
         resetForm();
@@ -48,8 +48,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
       }) => (
         <BottomModal visible={visible} onClose={onClose} title="Contact Us">
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.modalContainer}>
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <Input
               placeholder="name"
               value={values.name}

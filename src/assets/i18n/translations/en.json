@@ -91,5 +91,10 @@
     "confirm_logout": "Confirm Logout",
     "apply": "Apply",
     "logout": "Logout"
+  },
+  "HeroSection": {
+    "title": "Welcome to Allio",
+    "description": "Your one-stop solution for all your needs. Explore our features and get started today!"
   }
 }
+

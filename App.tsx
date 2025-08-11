@@ -14,10 +14,9 @@ import CustomNotification, {
   CustomToastRef,
 } from '@components/atoms/CustomNotification';
 import { useNotification } from '@hooks/index';
-
 import { store, persistor } from './src/redux/store';
 import StackNavigator from './src/navigations';
-
+import { BottomSheetProvider } from './src/context/BottomSheetContext';
 const App = () => {
   const customToastRef = useRef<CustomToastRef>(null);
   useNotification(customToastRef);
@@ -62,9 +61,9 @@ const App = () => {
               iconFamily="MaterialIcons"
               iconSize={24}
             />
-            <BottomSheetModalProvider>
+            <BottomSheetProvider>
               <StackNavigator />
-            </BottomSheetModalProvider>
+            </BottomSheetProvider>
           </PersistGate>
         </PaperProvider>
       </Provider>

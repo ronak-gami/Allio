@@ -57,7 +57,9 @@ export default function HeroSection({ description }: Props) {
         </Text>
       </Animated.View>
       <Animated.View style={[descStyle]}>
-        <Text style={styles.description}>{description}</Text>
+        <Text type="regular" label={description} style={styles.description}>
+          {description}
+        </Text>
       </Animated.View>
       <Animated.View style={[styles.buttonRow, btnStyle]}></Animated.View>
 
