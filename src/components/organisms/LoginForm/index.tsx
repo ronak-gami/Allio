@@ -12,7 +12,7 @@ import SignInWithGitHub from '@components/molecules/SocialGithub';
 
 import useStyle from './style';
 import Button from '@components/atoms/Button';
-import CustomInput from '@components/atoms/Input';
+import Input from '@components/atoms/Input';
 interface LoginFormProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -57,9 +57,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
             touched,
           }) => (
             <>
-              <CustomInput
+              <Input
                 label="Email"
-                placeholder="Enter your email"
+                placeholder="e.g., Ronak.Gami@example.com"
                 value={values.email}
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
@@ -69,7 +69,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
                 autoCapitalize="none"
               />
 
-              <CustomInput
+              <Input
                 label="Password"
                 placeholder="Enter your password"
                 value={values.password}
@@ -77,7 +77,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
                 onBlur={handleBlur('password')}
                 error={errors.password}
                 touched={touched.password}
-                secureTextEntry={true}
+                secureTextEntry
               />
 
               <RememberForgot

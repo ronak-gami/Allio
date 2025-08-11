@@ -1,49 +1,4 @@
-// import { StyleSheet } from 'react-native';
-
-// import { useTheme } from '@react-navigation/native';
-// import { scale } from 'react-native-size-matters';
-
-// const useStyle = () => {
-//   const { colors } = useTheme();
-//   return StyleSheet.create({
-//     inputContainer: {
-//       width: '100%',
-//     },
-//     inputField: {
-//       fontFamily: '',
-//       fontSize: scale(14),
-//       backgroundColor: colors.white,
-//     },
-//     textInput: {
-//       fontFamily: 'WinkyRough-Regular',
-//       fontSize: scale(14),
-//       color: colors.black,
-//     },
-//     multiline: {
-//       minHeight: 100,
-//       textAlignVertical: 'top',
-//     },
-//     errorText: {
-//       color: colors.error,
-//       fontSize: scale(12),
-//     },
-//     icon: {
-//       width: scale(20),
-//       height: scale(20),
-//       tintColor: colors.black,
-//     },
-//     prefixIcon: {
-//       width: scale(18),
-//       height: scale(18),
-//       tintColor: colors.gray,
-//     },
-//   });
-// };
-
-// export default useStyle;
-
 import { StyleSheet } from 'react-native';
-
 import { useTheme } from '@react-navigation/native';
 import { scale } from 'react-native-size-matters';
 import { FONTS } from '@utils/helper';
@@ -64,7 +19,7 @@ const useStyle = () => {
       borderColor: colors.text,
       borderRadius: scale(10),
       backgroundColor: colors.background,
-      minHeight: 48,
+      minHeight: scale(45),
     },
     inputContainerFocused: {
       borderColor: colors.primary,
@@ -74,8 +29,8 @@ const useStyle = () => {
       borderColor: colors.error,
     },
     inputContainerDisabled: {
-      backgroundColor: '#f5f5f5',
-      borderColor: '#e0e0e0',
+      backgroundColor: colors.lightgray,
+      borderColor: colors.gray,
     },
     textInput: {
       flex: 1,
@@ -98,18 +53,18 @@ const useStyle = () => {
       tintColor: colors.primary,
     },
     passwordToggleText: {
-      fontSize: 18,
+      fontSize: scale(18),
     },
     errorText: {
-      fontSize: 12,
-      color: '#FF3B30',
+      fontSize: scale(12),
+      color: colors.error,
       marginTop: 4,
     },
     counterText: {
-      fontSize: 12,
-      color: '#666',
+      fontSize: scale(12),
+      color: colors.gray,
       textAlign: 'right',
-      marginTop: 4,
+      marginTop: scale(4),
     },
     placeHolderColor: {
       color: colors.gray,
