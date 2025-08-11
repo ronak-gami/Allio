@@ -3,9 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 
 import Text from '@components/atoms/Text';
-import Input from '@components/atoms/Input';
 import RememberForgot from '@components/molecules/RememberForget';
-import Button from '@components/atoms/Button';
 import { useLoginForm } from './useLoginForm';
 import SignInWithFacebook from '@components/molecules/SocialSignInFacebook';
 import SignInWithGoogle from '@components/molecules/SocialSignInGoogle';
@@ -13,6 +11,8 @@ import { useAnalytics } from '@hooks/index';
 import SignInWithGitHub from '@components/molecules/SocialGithub';
 
 import useStyle from './style';
+import Button from '@components/atoms/Button';
+import CustomInput from '@components/atoms/Input';
 interface LoginFormProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -48,24 +48,38 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
           initialValues={initialValues}
           validationSchema={loginValidationSchema}
           onSubmit={values => onLoginSubmit(values, track, handleLogin)}>
-          {({ handleChange, handleSubmit, values, errors, touched }) => (
+          {({
+            handleChange,
+            handleSubmit,
+            handleBlur,
+            values,
+            errors,
+            touched,
+          }) => (
             <>
-              <Input
-                placeholder="email"
-                keyboardType="email-address"
-                autoCapitalize="none"
+              <CustomInput
+                label="Email"
+                placeholder="Enter your email"
                 value={values.email}
                 onChangeText={handleChange('email')}
-                error={touched.email ? errors.email : ''}
+                onBlur={handleBlur('email')}
+                error={errors.email}
+                touched={touched.email}
+                keyboardType="email-address"
+                autoCapitalize="none"
               />
-              <Input
-                placeholder="Password"
-                maxlength={12}
+
+              <CustomInput
+                label="Password"
+                placeholder="Enter your password"
                 value={values.password}
                 onChangeText={handleChange('password')}
-                error={touched.password ? errors.password : ''}
-                isPassword
+                onBlur={handleBlur('password')}
+                error={errors.password}
+                touched={touched.password}
+                secureTextEntry={true}
               />
+
               <RememberForgot
                 remember={remember}
                 onCheckboxPress={setRemember}
