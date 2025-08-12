@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { useDispatch } from 'react-redux';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import {
+  CustomFlatList,
+  LanguageOrganism,
+  Text,
+  ThemeOrganism,
+  DeleteProfileOrganism,
+  LogoutOrganism,
+} from '@components/index';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '@redux/slices/AuthSlice';
+import { getAuth } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import crashlytics from '@react-native-firebase/crashlytics';
-import { getAuth } from '@react-native-firebase/auth';
-
-import { Container, CustomFlatList, Text } from '@components/index';
 import { TabParamList } from '@types/navigations';
-import { logout } from '@redux/slices/AuthSlice';
+
+import { useBottomSheet } from '../../../context/BottomSheetContext';
 import useStyle from './style';
 import { HOME } from '@utils/constant';
 
@@ -18,79 +27,184 @@ const More: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
 
-  const handleLogout = async () => {
+  const { openBottomSheet, closeBottomSheet } = useBottomSheet();
+  const isDarkMode = useSelector((state: any) => state.theme.isDarkMode);
+
+  const handleLogout = useCallback(async () => {
     try {
       const authInstance = getAuth();
       const currentUser = authInstance.currentUser;
-
       if (currentUser) {
         await firestore().collection('users').doc(currentUser.uid).update({
           fcmToken: firestore.FieldValue.delete(),
           fcmUpdatedAt: firestore.FieldValue.delete(),
         });
-
         await authInstance.signOut();
         dispatch(logout());
+        closeBottomSheet();
       }
     } catch (error) {
       console.error('Logout Error:', error);
       crashlytics().recordError(error as Error);
     }
-  };
+  }, [dispatch, closeBottomSheet]);
 
-  const handleItemPress = (key: string) => {
-    switch (key) {
-      case 'profile':
-        navigation.navigate(HOME.Profile);
-        break;
-      case 'friends':
-        navigation.navigate(HOME.MyFriends);
-        break;
-      case 'theme':
-        // navigation.navigate('Theme');
-        break;
-      case 'language':
-        // navigation.navigate('Language');
-        break;
-      case 'delete':
-        // navigation.navigate('DeleteAccount');
-        break;
-      case 'logout':
-        handleLogout();
-        break;
-      default:
-        break;
+  const handleDeleteProfile = useCallback(async () => {
+    try {
+      const authInstance = getAuth();
+      const user = authInstance.currentUser;
+      if (user) {
+        await firestore().collection('users').doc(user.uid).delete();
+        await user.delete();
+        dispatch(logout());
+        closeBottomSheet();
+      }
+    } catch (error) {
+      console.error('Delete account error:', error);
+      crashlytics().recordError(error as Error);
     }
-  };
+  }, [dispatch, closeBottomSheet]);
 
-  const settingsData = [
-    { key: 'profile', title: 'Profile' },
-    { key: 'friends', title: 'My Friends' },
-    { key: 'theme', title: 'Theme' },
-    { key: 'language', title: 'Language' },
-    { key: 'delete', title: 'Delete Account' },
-    { key: 'logout', title: 'Logout' },
+  const settingsConfig = [
+    {
+      key: 'profile',
+      title: 'Profile',
+      type: 'navigation' as const,
+      screenName: HOME.Profile,
+    },
+    {
+      key: 'friends',
+      title: 'My Friends',
+      type: 'navigation' as const,
+      screenName: HOME.MyFriends,
+    },
+    {
+      key: 'theme',
+      title: 'Theme',
+      type: 'bottomSheet' as const,
+    },
+    {
+      key: 'language',
+      title: 'Language',
+      type: 'bottomSheet' as const,
+    },
+    {
+      key: 'delete',
+      title: 'Delete Account',
+      type: 'bottomSheet' as const,
+    },
+    {
+      key: 'logout',
+      title: 'Logout',
+      type: 'bottomSheet' as const,
+    },
   ];
 
-  const renderItem = ({ item }: { item: { key: string; title: string } }) => (
-    <>
-      <TouchableOpacity
-        style={styles.item}
-        onPress={() => handleItemPress(item.key)}>
-        <Text style={styles.itemText} type="semibold">
-          {item.title}
-        </Text>
-      </TouchableOpacity>
-      <View style={styles.separator} />
-    </>
+  // Single handler for all items
+  const handleItemPress = useCallback(
+    (key: string) => {
+      const config = settingsConfig.find(item => item.key === key);
+
+      if (!config) {
+        console.warn(`Configuration not found for key: ${key}`);
+        return;
+      }
+
+      if (config.type === 'navigation') {
+        navigation.navigate(config.screenName as keyof TabParamList);
+      } else if (config.type === 'bottomSheet') {
+        // Handle different bottom sheet content based on key
+        switch (key) {
+          case 'theme':
+            openBottomSheet({
+              title: 'Select Theme',
+              content: <ThemeOrganism />,
+              snapPoints: ['40%'],
+              showCloseButton: true,
+            });
+            break;
+
+          case 'language':
+            openBottomSheet({
+              title: 'Select Language',
+              snapPoints: ['50%'],
+              content: <LanguageOrganism />,
+              showCloseButton: true,
+            });
+            break;
+
+          case 'delete':
+            openBottomSheet({
+              title: 'Delete Account',
+              content: (
+                <DeleteProfileOrganism onConfirm={handleDeleteProfile} />
+              ),
+
+              showCloseButton: true,
+              snapPoints: ['50%'],
+              buttons: [
+                {
+                  title: 'Delete Account',
+                  onPress: handleDeleteProfile,
+                  variant: 'primary',
+                },
+              ],
+            });
+            break;
+
+          case 'logout':
+            openBottomSheet({
+              title: 'Confirm Logout',
+              content: <LogoutOrganism onConfirm={handleLogout} />,
+              showCloseButton: true,
+              snapPoints: ['40%'],
+              buttons: [
+                {
+                  title: 'Logout',
+                  onPress: handleLogout,
+                  variant: 'primary',
+                },
+              ],
+            });
+            break;
+
+          default:
+            openBottomSheet({
+              title: 'Coming Soon',
+              content: <Text>This feature is coming soon!</Text>,
+
+              showCloseButton: true,
+            });
+        }
+      }
+    },
+    [
+      settingsConfig,
+      navigation,
+      openBottomSheet,
+      closeBottomSheet,
+      handleLogout,
+      handleDeleteProfile,
+    ],
+  );
+
+  const renderItem = ({ item }: { item: (typeof settingsConfig)[0] }) => (
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => handleItemPress(item.key)}>
+      <Text style={styles.itemText} type="semibold">
+        {item.title}
+      </Text>
+    </TouchableOpacity>
   );
 
   return (
-    <Container showLoader={false} title="Settings">
-      <View style={styles.container}>
-        <CustomFlatList data={settingsData} renderItem={renderItem} />
-      </View>
-    </Container>
+    <View style={styles.container}>
+      <Text style={styles.title} type="BOLD">
+        More.More
+      </Text>
+      <CustomFlatList data={settingsConfig} renderItem={renderItem} />
+    </View>
   );
 };
 

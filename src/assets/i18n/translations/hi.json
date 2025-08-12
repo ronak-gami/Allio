@@ -4,7 +4,10 @@
   "email": "ईमेल",
   "password": "पासवर्ड",
   "first_name": "पहला नाम",
+  "name": "नाम",
+  "message": "संदेश",
   "last_name": "अंतिम नाम",
+  "send": "भेजें",
   "mobile": "मोबाइल नंबर",
   "confirm_password": "कन्फर्म पासवर्ड",
   "remember_me": "मुझे याद रखें",
@@ -79,5 +82,30 @@
     "title": "मेरा क्यूआर",
     "download_qr": "क्यूआर डाउनलोड करें",
     "share_qr": "क्यूआर साझा करें"
+  },
+  "More": {
+    "More": "और",
+    "settings": "सेटिंग्स",
+    "language": "भाषा",
+    "theme": "थीम",
+    "dark_mode": "डार्क मोड",
+    "light_mode": "लाइट मोड",
+    "logout": "लॉग आउट"
+  },
+
+  "Settings": {
+    "select_theme": "थीम चुनें",
+    "select_language": "भाषा चुनें",
+    "confirm_logout": "लॉगआउट की पुष्टि करें",
+    "apply": "लागू करें",
+    "logout": "लॉगआउट"
+  },
+  "HeroSection": {
+    "titleone": "Allio में आपका स्वागत है",
+    "description": "आपकी सभी जरूरतों के लिए एक-स्टॉप समाधान। हमारी सुविधाओं का अन्वेषण करें और आज ही शुरू करें!"
+  },
+  "customlogout": {
+    "description": "अपने खाते से लॉग आउट करने के लिए नीचे दिए गए बटन पर क्लिक करें।",
+    "logout_button": "लॉगआउट करें"
   }
 }

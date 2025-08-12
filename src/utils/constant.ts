@@ -13,7 +13,6 @@ export const WEB_CLIENT_ID =
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
-// export const BASE_URL = 'https://allio-backend.onrender.com/api/user' as const;
 export const BASE_URL = 'https://c5def1ec0c7d.ngrok-free.app/api' as const;
 
 const onboardingData: OnboardingItem[] = [
@@ -107,6 +106,15 @@ const FeaturesDataItem = [
     buttonText: 'Home',
   },
 ];
+
+const settingsData = [
+  { key: 'profile', title: 'Profile' },
+  { key: 'friends', title: 'My Friends' },
+  { key: 'theme', title: 'Theme' },
+  { key: 'language', title: 'Language' },
+  { key: 'delete', title: 'Delete Account' },
+  { key: 'logout', title: 'Logout' },
+];
 export {
   onboardingData,
   AUTH,
@@ -115,4 +123,5 @@ export {
   CARD_WIDTH,
   SPACING,
   FeaturesDataItem,
+  settingsData,
 };

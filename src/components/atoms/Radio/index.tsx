@@ -27,8 +27,8 @@ const CustomRadioButton: React.FC<RadioButtonProps> = ({
   error,
   containerStyle,
 }) => {
+  const styles = useStyle();
 
-    const styles = useStyle();
   return (
     <View style={containerStyle}>
       <TouchableOpacity

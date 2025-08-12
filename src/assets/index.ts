@@ -1,3 +1,6 @@
+import HomeHeader from '@components/atoms/CustomHeader';
+import { logout } from '@redux/slices/AuthSlice';
+
 export const IMAGES = {
   First: require('./images/firstScreen.png'),
   SecondOnboarding: require('./images/onboardingSecond.png'),
@@ -16,6 +19,8 @@ export const IMAGES = {
   Scanner: require('./images/scanner.jpg'),
   Homeimage: require('./images/homeimage.png'),
   Two: require('./images/two.png'),
+  Deleteimage: require('./images/icondelete.png'),
+  Logout: require('./images/logoutimag.png'),
   Nodata: require('./images/Nodata.png'),
 };
 
@@ -25,7 +30,7 @@ export const ICONS = {
   down: require('./icons/arrowdown.png'),
   check: require('./icons/check.png'),
   cancel: require('./icons/cancel.png'),
-  BackArrow: require('./icons/simple-backArrow.png'),
+  logout: require('./icons/logout.png'),  BackArrow: require('./icons/simple-backArrow.png'),
   Clear: require('./icons/clear.png'),
   FaceBook: require('./icons/facebook.png'),
   Google: require('./icons/googleicon.png'),

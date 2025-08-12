@@ -14,6 +14,7 @@ export const COLORS = {
   seconary: '#00BFFF',
   third: '#0076DF ',
   lightgray: '#B5B5B5',
+  lightGray: '#D3D3D3',
   gray: '#909090',
   darkGray: '#323232',
   error: '#F44336',

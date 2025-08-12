@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import {
@@ -125,4 +125,4 @@ const SignInWithGoogle: React.FC<SignInWithGoogleProps> = ({ setLoading }) => {
   );
 };
 
-export default SignInWithGoogle;
+export default memo(SignInWithGoogle);

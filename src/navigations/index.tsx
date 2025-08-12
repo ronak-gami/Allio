@@ -17,6 +17,7 @@ import analytics from '@react-native-firebase/analytics';
 import AuthNavigator from './Auth';
 import HomeNavigator from './App';
 import { RootState } from '../redux/store';
+import { BottomSheetProvider } from '../context/BottomSheetContext';
 
 const lightTheme = {
   ...DefaultTheme,
@@ -87,13 +88,16 @@ const StackNavigator: React.FC = () => {
           }
         }}>
         <CustomNotification ref={customToastRef} />
-        {splashVisible ? (
-          <Splash />
-        ) : token ? (
-          <HomeNavigator />
-        ) : (
-          <AuthNavigator />
-        )}
+        <BottomSheetProvider>
+          {splashVisible ? (
+            <Splash />
+          ) : token ? (
+            <HomeNavigator />
+          ) : (
+            <AuthNavigator />
+          )}
+        </BottomSheetProvider>
+        {/* <CustomNotification ref={customToastRef} /> */}
       </NavigationContainer>
     </>
   );
