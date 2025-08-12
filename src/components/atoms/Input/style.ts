@@ -6,7 +6,6 @@ import { FONTS } from '@utils/helper';
 const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
-    container: {},
     label: {
       fontSize: scale(14),
       color: colors.text,

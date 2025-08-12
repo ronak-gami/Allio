@@ -206,18 +206,12 @@ const ChatDetailsScreen = () => {
           {/* Input Container */}
           {relationStatus === 'accepted' && (
             <View style={styles.inputContainer}>
-              <TextInput
+              <Input
                 placeholder="Type your message..."
                 value={message}
                 onChangeText={setMessage}
                 style={styles.textInput}
               />
-              {/* <Input
-                placeholder="Type your message..."
-                value={message}
-                onChangeText={setMessage}
-                style={styles.textInput}
-              /> */}
               <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
                 <Image source={ICONS.Send} style={styles.sendIcon} />
               </TouchableOpacity>

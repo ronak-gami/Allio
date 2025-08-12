@@ -128,15 +128,9 @@ const useStyle = () => {
     },
 
     textInput: {
-      flex: 1,
-      borderWidth: 1,
-      borderColor: colors.gray,
-      borderRadius: height * 0.015,
-      paddingHorizontal: width * 0.04,
       fontSize: scale(14),
       color: colors.text,
-      backgroundColor: colors.white,
-      paddingVertical: height * 0.015,
+      width: '80%',
     },
 
     card: {
