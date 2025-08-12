@@ -10,6 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { store, persistor } from './src/redux/store';
 import StackNavigator from './src/navigations';
 import { WEB_CLIENT_ID } from '@utils/constant';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 const App = () => {
   useEffect(() => {
@@ -20,16 +21,18 @@ const App = () => {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Provider store={store}>
-        <PaperProvider>
-          <PersistGate loading={null} persistor={persistor}>
-            <StackNavigator />
+    <Provider store={store}>
+      <PaperProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheetModalProvider>
+              <StackNavigator />
+            </BottomSheetModalProvider>
             <Toast />
-          </PersistGate>
-        </PaperProvider>
-      </Provider>
-    </GestureHandlerRootView>
+          </GestureHandlerRootView>
+        </PersistGate>
+      </PaperProvider>
+    </Provider>
   );
 };
 

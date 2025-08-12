@@ -44,6 +44,9 @@ const useStyle = () => {
       justifyContent: 'center',
       alignItems: 'center',
     },
+    searchContainer: {
+      backgroundColor: colors.white,
+    },
   });
 };
 export default useStyle;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
@@ -11,6 +11,8 @@ import { TabParamList } from '@types/navigations';
 import { logout } from '@redux/slices/AuthSlice';
 import useStyle from './style';
 import { HOME } from '@utils/constant';
+import AppBottomSheet from '@components/atoms/appBottomSheet';
+import { BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
 type Props = BottomTabScreenProps<TabParamList, 'More'>;
 
@@ -76,7 +78,9 @@ const More: React.FC<Props> = ({ navigation }) => {
     <>
       <TouchableOpacity
         style={styles.item}
-        onPress={() => handleItemPress(item.key)}>
+        onPress={() => {
+          bottomSheetRef?.current?.present();
+        }}>
         <Text style={styles.itemText} type="semibold">
           {item.title}
         </Text>
@@ -85,11 +89,18 @@ const More: React.FC<Props> = ({ navigation }) => {
     </>
   );
 
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+
   return (
     <Container showLoader={false} title="Settings">
       <View style={styles.container}>
         <CustomFlatList data={settingsData} renderItem={renderItem} />
       </View>
+      <AppBottomSheet ref={bottomSheetRef} height={['50%', '80%']}>
+        <View style={styles.searchContainer}>
+          <BottomSheetTextInput placeholder="Search..." />
+        </View>
+      </AppBottomSheet>
     </Container>
   );
 };
