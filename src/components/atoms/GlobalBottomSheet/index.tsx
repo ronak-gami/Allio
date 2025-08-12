@@ -47,7 +47,6 @@ const GlobalBottomSheet: React.FC<GlobalBottomSheetProps> = ({ children }) => {
 
   const handleSheetChanges = useCallback(
     (index: number) => {
-      // If bottom sheet is closed (index -1), ensure cleanup
       if (index === -1) {
         closeBottomSheet();
       }

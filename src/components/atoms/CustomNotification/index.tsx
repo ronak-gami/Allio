@@ -26,9 +26,7 @@ const CustomNotification = forwardRef<CustomToastRef, {}>(({}, ref) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
   const animatedValue = useRef(new Animated.Value(-100)).current;
-  // const [type, setType] = useState<NotificationState>({
 
-  // });
   const [type, setType] = useState<NotificationType>('info');
   const styles = useStyle();
 

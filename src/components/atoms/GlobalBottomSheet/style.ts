@@ -127,7 +127,6 @@ const useStyle = () => {
       lineHeight: scale(20),
     },
     buttonContainer: {
-      // paddingHorizontal: scale(16),
       paddingVertical: scale(12),
     },
   });
