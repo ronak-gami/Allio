@@ -20,23 +20,49 @@ const useStyle = () => {
       marginLeft: scale(25),
       alignSelf: 'flex-start',
     },
-    buttonText: {
-      color: colors.white,
-      fontSize: scale(16),
-    },
+
     skipButton: {
       position: 'absolute',
-      bottom: scale(40),
-      right: scale(40),
+      top: scale(10),
+      right: scale(10),
       zIndex: 1,
       padding: 10,
     },
     skipText: {
       color: colors.primary,
-      fontSize: scale(16),
+      fontSize: scale(22),
     },
     statusBar: {
       backgroundColor: colors.lightyellow,
+    },
+
+    buttonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+      paddingHorizontal: scale(20),
+      position: 'absolute',
+      bottom: scale(20),
+    },
+    navButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.primary,
+      paddingHorizontal: scale(20),
+      paddingVertical: scale(10),
+      borderRadius: 8,
+    },
+
+    icon: {
+      width: scale(18),
+      height: scale(18),
+      tintColor: colors.white,
+      marginHorizontal: 5,
+    },
+    buttonText: {
+      fontSize: scale(14),
+      color: colors.white,
     },
   });
 };

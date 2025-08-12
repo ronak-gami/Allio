@@ -1,4 +1,4 @@
-import { Dimensions, PermissionsAndroid, Platform } from 'react-native';
+import { Dimensions, PermissionsAndroid, Platform, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {
   PERMISSIONS,
@@ -8,6 +8,7 @@ import {
   PermissionStatus,
   checkMultiple,
 } from 'react-native-permissions';
+import messaging from '@react-native-firebase/messaging';
 import RNFS from 'react-native-fs';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import Share from 'react-native-share';
@@ -301,6 +302,7 @@ const handleMediaDownload = async (
 const handleMediaShare = async (
   mediaUri: string,
   mediaType: 'photo' | 'video',
+  userEmail?: string, // name from props (optional)
 ) => {
   try {
     const extension = mediaType === 'photo' ? 'jpg' : 'mp4';
@@ -317,6 +319,10 @@ const handleMediaShare = async (
         title: `Share ${mediaType}`,
         url: `file://${tempPath}`,
         type: mediaType === 'photo' ? 'image/jpeg' : 'video/mp4',
+        message:
+          mediaType === 'photo' && userEmail
+            ? `QR code for friend request: ${userEmail}`
+            : undefined,
         failOnCancel: false,
       };
 
@@ -362,6 +368,32 @@ const getCurrentTimestamp = () => {
   const now = new Date();
   return now.toISOString();
 };
+const requestNotificationPermission = async (): Promise<boolean> => {
+  try {
+    if (Platform.OS === 'ios') {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      return enabled;
+    } else if (Platform.OS === 'android') {
+      if (Platform.Version >= 33) {
+        const result = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+        const granted = result === PermissionsAndroid.RESULTS.GRANTED;
+
+        return granted;
+      }
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error requesting notification permission:', error);
+    return false;
+  }
+};
 
 export {
   height,
@@ -378,4 +410,5 @@ export {
   handleMediaShare,
   getUserData,
   getCurrentTimestamp,
+  requestNotificationPermission,
 };

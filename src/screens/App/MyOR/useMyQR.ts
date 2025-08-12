@@ -11,9 +11,12 @@ const useMyQR = () => {
   const [qrImageUri, setQrImageUri] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const userEmail = useSelector(
-    (state: RootState) => state.auth.userData?.email,
-  );
+  
+
+  const userData = useSelector((state: RootState) => state.auth.userData);
+
+  const userEmail = userData?.email;
+  
   const states = {
     loading,
   };
@@ -62,7 +65,7 @@ const useMyQR = () => {
   const handleShare = async () => {
     if (!qrImageUri) return;
     try {
-      await handleMediaShare(qrImageUri, 'photo');
+      await handleMediaShare(qrImageUri, 'photo', userEmail);
     } catch (error) {
       console.error('Share QR error:', error);
     }

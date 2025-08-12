@@ -40,6 +40,7 @@ const useVideoMedia = () => {
     undefined,
   );
   const [previewVideoTitle, setPreviewVideoTitle] = useState<string>('');
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const { email } = useSelector((state: any) => state.auth.userData);
   const Videos_data = useSelector((state: any) => state.media.videos);
 
@@ -62,6 +63,7 @@ const useVideoMedia = () => {
     saveVisible,
     setSaveVisible,
     previewVideoTitle,
+    refreshing,
   };
 
   const formatFileSize = (bytes?: number): string => {
@@ -238,6 +240,19 @@ const useVideoMedia = () => {
   const isVideoLoaded = (): boolean => !!videoUri;
   const isPreviewModalOpen = (): boolean => !!previewModal;
 
+  const onRefresh = async () => {
+    if (!email) return;
+    try {
+      setRefreshing(true);
+      await dispatch(fetchVideos(email));
+    } catch (error) {
+      console.error('Error refreshing videos:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+
   return {
     Videos_data,
     states,
@@ -255,6 +270,7 @@ const useVideoMedia = () => {
     handleSaveMedia,
     handleSelectStoredVideo,
     isPreviewModalOpen,
+    onRefresh,
   };
 };
 

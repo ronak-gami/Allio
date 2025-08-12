@@ -104,11 +104,11 @@ const ScanQR: React.FC<Props> = () => {
             <View style={styles.inputContainer}>
               <Input
                 placeholder="scanQr.enter_email"
+                label="Email"
                 value={states?.email}
                 onChangeText={states?.setEmail}
                 keyboardType="email-address"
                 error={emailError}
-                style={styles.input}
               />
 
               <Button

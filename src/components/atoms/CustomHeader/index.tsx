@@ -40,11 +40,10 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 
   return (
     <View style={styles.headerContainer}>
-      {/* Left: Back Arrow or App Logo (Absolute Position) */}
       {showBackArrow && (
         <TouchableOpacity onPress={handleBackPress} style={styles.leftButton}>
           <Image
-            source={ICONS.BackArrow}
+            source={ICONS.Left}
             style={styles.backIcon}
             resizeMode="contain"
           />

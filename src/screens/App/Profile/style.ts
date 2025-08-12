@@ -153,6 +153,13 @@ const useStyle = () => {
       color: colors.text,
       opacity: 0.7,
     },
+    buttonRow: {
+      flexDirection: 'row',
+      columnGap: scale(10),
+    },
+    buttonbg: {
+      backgroundColor: colors.error,
+    },
   });
 };
 

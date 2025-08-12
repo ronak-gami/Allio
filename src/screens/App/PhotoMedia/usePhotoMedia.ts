@@ -41,6 +41,7 @@ const usePhotoMedia = () => {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined,
   );
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const userData = useSelector((state: RootState) => state?.auth?.userData);
   const dispatch = useDispatch<AppDispatch>();
@@ -58,6 +59,7 @@ const usePhotoMedia = () => {
     modalVisible,
     selectedImage,
     images,
+    refreshing,
   };
 
   useEffect(() => {
@@ -221,6 +223,20 @@ const usePhotoMedia = () => {
     }, []),
   );
 
+  const onRefresh = useCallback(async () => {
+    if (!userData?.email) return;
+
+    setRefreshing(true);
+
+    try {
+      await dispatch(fetchImages(userData.email));
+    } catch (error) {
+      showError('Failed to refresh images.');
+    } finally {
+      setRefreshing(false);
+    }
+  }, [dispatch, userData?.email]);
+
   return {
     handleCameraOpen,
     handleSelectPhoto,
@@ -239,6 +255,7 @@ const usePhotoMedia = () => {
     openModal,
     closeModal,
     states,
+    onRefresh,
   };
 };
 

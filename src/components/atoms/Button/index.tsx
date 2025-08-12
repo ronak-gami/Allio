@@ -26,6 +26,7 @@ interface ButtonProps extends GestureResponderHandlers {
   bgColor?: Color;
   outlineColor?: Color;
   outlineWidth?: number;
+  container?: StyleProp<ViewStyle>;
   [key: string]: any;
 }
 
@@ -40,6 +41,7 @@ const Button: React.FC<ButtonProps> = ({
   bgColor,
   outlineColor,
   outlineWidth = 1,
+  container,
   ...props
 }) => {
   const { colors } = useTheme();
@@ -71,7 +73,8 @@ const Button: React.FC<ButtonProps> = ({
     <TouchableOpacity
       activeOpacity={0.5}
       disabled={loading || disabled}
-      {...props}>
+      {...props}
+    style={container}>
       <View style={wrapperStyles}>
         {loading ? (
           <ActivityIndicator color={currentTextColor} />
