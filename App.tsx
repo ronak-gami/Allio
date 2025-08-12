@@ -30,21 +30,6 @@ const App = () => {
       <Provider store={store}>
         <PaperProvider>
           <PersistGate loading={null} persistor={persistor}>
-            <CustomNotification ref={customToastRef} />
-            <ToastManager
-              position="bottom"
-              theme="light"
-              icons={{
-                success: 'check-circle',
-                error: 'error',
-                info: 'info',
-                warn: 'warning',
-                default: 'notifications',
-              }}
-              iconFamily="MaterialIcons"
-              iconSize={24}
-            />
-
             <StackNavigator />
             <Toast />
           </PersistGate>

@@ -19,6 +19,7 @@ import { TabParamList } from '@types/navigations';
 
 import { useBottomSheet } from '../../../context/BottomSheetContext';
 import useStyle from './style';
+import { HOME } from '@utils/constant';
 
 type Props = BottomTabScreenProps<TabParamList, 'More'>;
 
@@ -69,13 +70,13 @@ const More: React.FC<Props> = ({ navigation }) => {
       key: 'profile',
       title: 'Profile',
       type: 'navigation' as const,
-      screenName: 'Profile',
+      screenName: HOME.Profile,
     },
     {
       key: 'friends',
       title: 'My Friends',
       type: 'navigation' as const,
-      screenName: 'Friends',
+      screenName: HOME.MyFriends,
     },
     {
       key: 'theme',
