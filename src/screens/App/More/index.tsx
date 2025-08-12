@@ -157,7 +157,7 @@ const More: React.FC<Props> = ({ navigation }) => {
               title: 'Confirm Logout',
               content: <LogoutOrganism onConfirm={handleLogout} />,
               showCloseButton: true,
-              snapPoints: ['50%'],
+              snapPoints: ['40%'],
               buttons: [
                 {
                   title: 'Logout',
