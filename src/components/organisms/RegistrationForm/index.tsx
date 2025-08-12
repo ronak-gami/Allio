@@ -3,11 +3,11 @@ import { View, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
-import Input from '@components/atoms/Input';
 import useRegister from './useRegisterForm';
 import useAnalytics from '@hooks/useAnalytics';
 import { FormikProps } from 'formik';
 import useStyle from './style';
+import Input from '@components/atoms/Input';
 
 const RegistrationForm = () => {
   const styles = useStyle();
@@ -46,51 +46,69 @@ const RegistrationForm = () => {
           {({ handleChange, handleSubmit, values, errors, touched }) => (
             <>
               <Input
-                placeholder="First Name"
+                label="First Name"
+                placeholder="e.g., Ronak"
                 value={values.firstName}
                 onChangeText={handleChange('firstName')}
-                error={touched.firstName ? errors.firstName : ''}
+                error={touched.firstName ? errors.firstName : undefined}
+                touched={touched.firstName}
                 autoCapitalize="words"
               />
+
               <Input
-                placeholder="Last Name"
+                label="Last Name"
+                placeholder="e.g., Gami"
                 value={values.lastName}
                 onChangeText={handleChange('lastName')}
-                error={touched.lastName ? errors.lastName : ''}
+                error={touched.lastName ? errors.lastName : undefined}
+                touched={touched.lastName}
                 autoCapitalize="words"
               />
+
               <Input
-                placeholder="Mobile Number"
-                value={values.mobileNo}
-                onChangeText={handleChange('mobileNo')}
-                error={touched.mobileNo ? errors.mobileNo : ''}
-                keyboardType="phone-pad"
-                maxlength={10}
-              />
-              <Input
-                placeholder="Email"
+                label="Email"
+                placeholder="e.g., Ronak.Gami@example.com"
                 value={values.email}
                 onChangeText={handleChange('email')}
-                error={touched.email ? errors.email : ''}
+                error={touched.email ? errors.email : undefined}
+                touched={touched.email}
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
+
               <Input
-                placeholder="Password"
+                label="Mobile Number"
+                placeholder="e.g., 9876543210"
+                value={values.mobileNo}
+                onChangeText={handleChange('mobileNo')}
+                error={touched.mobileNo ? errors.mobileNo : undefined}
+                touched={touched.mobileNo}
+                keyboardType="phone-pad"
+                maxLength={10}
+              />
+
+              <Input
+                label="Password"
+                placeholder="Password@123"
                 value={values.password}
                 onChangeText={handleChange('password')}
-                error={touched.password ? errors.password : ''}
-                isPassword
-                maxlength={12}
+                error={touched.password ? errors.password : undefined}
+                touched={touched.password}
+                secureTextEntry
               />
+
               <Input
-                placeholder="Confirm Password"
+                label="Confirm Password"
+                placeholder="Re-enter your password"
                 value={values.confirmPassword}
                 onChangeText={handleChange('confirmPassword')}
-                error={touched.confirmPassword ? errors.confirmPassword : ''}
-                isPassword
-                maxlength={12}
+                error={
+                  touched.confirmPassword ? errors.confirmPassword : undefined
+                }
+                touched={touched.confirmPassword}
+                secureTextEntry
               />
+
               <Button
                 title="Register"
                 onPress={handleSubmit as () => void}
