@@ -24,6 +24,14 @@ interface AndroidPermissionResult {
   canSaveVideos: boolean;
 }
 
+interface UserProfileData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  profileImage?: string;
+  mobileNo: string;
+}
+
 const height = Dimensions.get('screen').height;
 const width = Dimensions.get('screen').width;
 
@@ -322,9 +330,37 @@ const handleMediaShare = async (
   }
 };
 
+const getUserData = async (email: string): Promise<UserProfileData | null> => {
+  try {
+    const normalizedEmail = email.trim().toLowerCase();
+    const querySnapshot = await firestore()
+      .collection('users')
+      .where('email', '==', normalizedEmail)
+      .limit(1)
+      .get();
+
+    if (!querySnapshot.empty) {
+      const userData = querySnapshot.docs[0].data();
+      const userProfile: UserProfileData = {
+        email: userData.email || '',
+        firstName: userData.firstName || '',
+        lastName: userData.lastName || '',
+        profileImage: userData.profileImage,
+        mobileNo: userData.mobileNo || '',
+      };
+      return userProfile;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('[Firestore] Error fetching user data:', error);
+    return null;
+  }
+};
+
 const getCurrentTimestamp = () => {
   const now = new Date();
-  return now.toISOString(); // or customize as needed
+  return now.toISOString();
 };
 
 export {
@@ -340,5 +376,6 @@ export {
   checkIfMPINExists,
   handleMediaDownload,
   handleMediaShare,
+  getUserData,
   getCurrentTimestamp,
 };

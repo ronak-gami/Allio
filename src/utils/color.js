@@ -20,7 +20,7 @@ export const COLORS = {
   error: '#F44336',
   google: '#FF4433',
   pink: '#FF69B4',
-
+  green: '#4CAF50',
   modelbg: '#0000004d',
-  mainone: 'rgba(0,0,0,0.5)'
+  mainone: 'rgba(0,0,0,0.5)',
 };

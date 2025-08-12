@@ -13,6 +13,7 @@ import CustomModal from '@components/atoms/CustomModel';
 import { ICONS } from '@assets/index';
 import useStyle from './style';
 import { useFriendsList } from './useFriendsList';
+import { useTheme } from '@react-navigation/native';
 interface MediaPreviewProps {
   visible: boolean;
   imageUri: string;
@@ -43,7 +44,7 @@ const MediaPreview = ({
     handleSendToFriends,
     toggleSelect,
   } = useFriendsList(myEmail, imageUri, mediaType, onClose);
-
+  const { colors } = useTheme();
   return (
     <CustomModal visible={visible} onClose={onClose} title="Image Preview">
       <Image source={{ uri: imageUri }} style={styles.modalImage} />
@@ -58,7 +59,7 @@ const MediaPreview = ({
             <FlatList
               numColumns={3}
               data={friends}
-              keyExtractor={(item: { email: any; }) => item?.email}
+              keyExtractor={(item: { email: any }) => item?.email}
               renderItem={({ item }: any) => {
                 const showImage = item?.profile && item?.profile !== '';
                 const firstLetter: string =
@@ -88,7 +89,7 @@ const MediaPreview = ({
                             borderWidth: selectedFriends.includes(item.email)
                               ? 2
                               : 0,
-                            borderColor: 'white',
+                            borderColor: colors.background,
                           },
                         ]}>
                         <Text style={styles.placeholderText}>

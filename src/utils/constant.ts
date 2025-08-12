@@ -7,7 +7,8 @@ interface OnboardingItem {
   title: string;
   description: string;
 }
-
+export const WEB_CLIENT_ID =
+  '299086233123-40u7rfe1tdb4q5m7341rtdqo5qabf7eu.apps.googleusercontent.com';
 
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;

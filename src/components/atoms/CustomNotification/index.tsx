@@ -7,9 +7,10 @@ import React, {
 import { Text, Animated, TouchableOpacity, Image } from 'react-native';
 
 import { ICONS } from '@assets/index';
-import { COLORS } from '@utils/color';
+import { colors } from '@utils/color';
 
 import useStyle from './style';
+import { useTheme } from '@react-navigation/native';
 
 export interface CustomToastRef {
   show: (message: string, type?: 'success' | 'info' | 'error') => void;
@@ -17,17 +18,13 @@ export interface CustomToastRef {
 }
 type NotificationType = 'success' | 'info' | 'error';
 
-interface NotificationState {
-  isVisible: boolean;
-  message: string;
-  type: NotificationType;
-}
 const CustomNotification = forwardRef<CustomToastRef, {}>(({}, ref) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
   const animatedValue = useRef(new Animated.Value(-100)).current;
 
   const [type, setType] = useState<NotificationType>('info');
+  const { colors } = useTheme();
   const styles = useStyle();
 
   useImperativeHandle(ref, () => ({
@@ -57,12 +54,12 @@ const CustomNotification = forwardRef<CustomToastRef, {}>(({}, ref) => {
   const getBackgroundColor = () => {
     switch (type) {
       case 'success':
-        return COLORS.primary;
+        return colors.background;
       case 'error':
-        return COLORS.error;
+        return colors.error;
       case 'info':
       default:
-        return COLORS.lightgray;
+        return colors.lightgray;
     }
   };
 

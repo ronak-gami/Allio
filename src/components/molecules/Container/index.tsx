@@ -21,8 +21,8 @@ interface PageLayoutProps {
   keyboardAvoiding?: boolean;
   style?: ViewStyle;
   auth?: boolean;
-  showProfile?: boolean;
-  showLogo?: boolean;
+  showProfileLogo?: boolean;
+  showAppLogo?: boolean;
   showBackArrow?: boolean;
   title?: string;
 }
@@ -36,8 +36,8 @@ const Container: React.FC<PageLayoutProps> = ({
   keyboardAvoiding = false,
   style,
   auth = false,
-  showProfile = true,
-  showLogo = true,
+  showProfileLogo = false,
+  showAppLogo = false,
   showBackArrow = false,
   title = '',
 }) => {
@@ -52,8 +52,8 @@ const Container: React.FC<PageLayoutProps> = ({
       />
       {showHeader && (
         <CustomHeader
-          showProfile={showProfile}
-          showLogo={showLogo}
+          showProfileLogo={showProfileLogo}
+          showAppLogo={showAppLogo}
           onProfilePress={onProfilePress}
           showBackArrow={showBackArrow}
           title={title}

@@ -102,7 +102,8 @@ const useStyle = () => {
     inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal: width * 0.05,
+      justifyContent: 'space-between',
+      paddingHorizontal: width * 0.02,
       paddingVertical: height * 0.015,
       borderTopWidth: 1,
       borderColor: colors.gray,
@@ -110,29 +111,26 @@ const useStyle = () => {
     },
 
     sendIcon: {
-      width: height * 0.03,
-      height: height * 0.03,
+      width: height * 0.025,
+      height: height * 0.025,
+      resizeMode: 'contain',
     },
 
     sendButton: {
       marginLeft: width * 0.02,
       backgroundColor: colors.primary,
-      padding: width * 0.03,
+      paddingHorizontal: width * 0.04,
+      paddingVertical: width * 0.045,
       borderRadius: height * 0.015,
       justifyContent: 'center',
       alignItems: 'center',
+      alignSelf: 'center',
     },
 
     textInput: {
-      flex: 1,
-      borderWidth: 1,
-      borderColor: colors.gray,
-      borderRadius: height * 0.015,
-      paddingHorizontal: width * 0.04,
       fontSize: scale(14),
       color: colors.text,
-      backgroundColor: colors.white,
-      paddingVertical: height * 0.015,
+      width: '80%',
     },
 
     card: {

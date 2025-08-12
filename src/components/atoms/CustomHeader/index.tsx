@@ -14,9 +14,9 @@ import useStyle from './style';
 interface CustomHeaderProps {
   showBackArrow?: boolean;
   onBackPress?: () => void;
-  showLogo?: boolean;
+  showAppLogo?: boolean;
   title?: string;
-  showProfile?: boolean;
+  showProfileLogo?: boolean;
   onProfilePress?: () => void;
 }
 // Import the correct navigation prop type from your navigation types file
@@ -25,53 +25,57 @@ interface CustomHeaderProps {
 const CustomHeader: React.FC<CustomHeaderProps> = ({
   showBackArrow = false,
   onBackPress,
-  showLogo = true,
+  showAppLogo = false,
   title,
-  showProfile = true,
+  showProfileLogo = false,
   onProfilePress,
 }) => {
   const styles = useStyle();
   const navigate = useNavigation<HomeTabsNavigationProp>();
   //i click on back arrow i want to nevigate go back screen when back arrow is pressed
 
+  const handleBackPress = () => {
+    onBackPress ? onBackPress() : navigate.goBack();
+  };
+
+  const handleProfilePress = () => {
+    onProfilePress ? onProfilePress() : () => {};
+  };
+
   return (
     <View style={styles.headerContainer}>
-      {/* Left: Back Arrow or Logo */}
-      <View>
-        {showBackArrow ? (
-          <TouchableOpacity
-            onPress={() => {
-              onBackPress ? onBackPress() : navigate.goBack();
-            }}
-            style={styles.backButton}>
-            <Image
-              source={ICONS.BackArrow}
-              style={styles.backIcon}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        ) : showLogo ? (
-          <CustomLogo logoStyle={styles.logoStyle} />
-        ) : (
-          <></>
-        )}
-      </View>
+      {/* Left: Back Arrow or App Logo (Absolute Position) */}
+      {showBackArrow && (
+        <TouchableOpacity onPress={handleBackPress} style={styles.leftButton}>
+          <Image
+            source={ICONS.BackArrow}
+            style={styles.backIcon}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      )}
 
-      {/* Center: Title */}
-      <View>
+      {showAppLogo && (
+        <View style={styles.leftLogo}>
+          <CustomLogo logoStyle={styles.logoStyle} />
+        </View>
+      )}
+
+      {/* Center: Title (Flex 1 with Center Alignment) */}
+      <View style={styles.centerContainer}>
         {title && (
-          <Text type="BOLD" style={styles.title} numberOfLines={1}>
+          <Text type="BOLD" style={styles.title}>
             {title}
           </Text>
         )}
       </View>
 
-      {/* Right: Profile Icon */}
-      <View style={styles.rightContainer}>
-        {showProfile && (
-          <CustomProfileButton onPress={onProfilePress ?? (() => {})} />
-        )}
-      </View>
+      {/* Right: Profile Logo (Absolute Position) */}
+      {showProfileLogo && (
+        <View style={styles.rightButton}>
+          <CustomProfileButton onPress={handleProfilePress} />
+        </View>
+      )}
     </View>
   );
 };

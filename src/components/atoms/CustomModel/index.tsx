@@ -54,8 +54,8 @@ const CustomModal: React.FC<CustomModalProps> = ({
               </TouchableOpacity>
             )}
 
-            <Text type="BOLD" style={styles.title}> 
-            {title}
+            <Text type="BOLD" style={styles.title}>
+              {title}
             </Text>
 
             {description && (
