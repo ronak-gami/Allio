@@ -52,14 +52,10 @@ export default function HeroSection({ description }: Props) {
       style={styles.bg}>
       <View style={styles.overlay} />
       <Animated.View style={[titleStyle]}>
-        <Text type="bold" style={styles.title}>
-          Welcome to ALLIO
-        </Text>
+        <Text type="bold" label="Welcome to ALLIO" style={styles.title} />
       </Animated.View>
       <Animated.View style={[descStyle]}>
-        <Text type="regular" label={description} style={styles.description}>
-          {description}
-        </Text>
+        <Text type="regular" label={description} style={styles.description} />
       </Animated.View>
       <Animated.View style={[styles.buttonRow, btnStyle]}></Animated.View>
 

@@ -1,164 +1,132 @@
-// components/GlobalBottomSheet.tsx
-import React, { forwardRef, useCallback, useMemo } from 'react';
-//i want to use
+import React, { useMemo, useCallback, ReactNode } from 'react';
+import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import BottomSheet, {
   BottomSheetView,
   BottomSheetBackdrop,
-  BottomSheetHandle,
-  BottomSheetBackdropProps,
-  BottomSheetHandleProps,
 } from '@gorhom/bottom-sheet';
-
-import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { BottomSheetConfig } from 'src/context/BottomSheetContext';
-import useStyle from './style';
-import { COLORS } from '@utils/color';
+import { useBottomSheet } from '../../../context/BottomSheetContext';
 import { ICONS } from '@assets/index';
+import Button from '@components/atoms/Button';
 
+import useStyle from './style';
+import Text from '../Text';
 interface GlobalBottomSheetProps {
-  config: BottomSheetConfig | null;
-  onSheetChange: (index: number) => void;
+  children: ReactNode;
 }
 
-export const GlobalBottomSheet = forwardRef<
-  BottomSheet,
-  GlobalBottomSheetProps
->(({ config, onSheetChange }, ref) => {
+const GlobalBottomSheet: React.FC<GlobalBottomSheetProps> = ({ children }) => {
+  const {
+    bottomSheetRef,
+    snapPoints,
+    content,
+    title,
+    showCloseButton,
+    buttons,
+    closeBottomSheet,
+  } = useBottomSheet();
   const styles = useStyle();
-  const snapPoints = useMemo(() => {
-    if (!config) return ['25%'];
-    return config.snapPoints || ['25%', '50%'];
-  }, [config?.snapPoints]);
 
-  interface RenderBackdropProps extends BottomSheetBackdropProps {}
+  const memoizedSnapPoints = useMemo(() => {
+    console.log('Memoized snap points:', snapPoints);
+    return snapPoints;
+  }, [snapPoints]);
 
   const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => {
-      if (!config?.enableBackdrop) return null;
-
-      return (
-        <BottomSheetBackdrop
-          {...props}
-          appearsOnIndex={0}
-          disappearsOnIndex={-1}
-          opacity={config.backdropOpacity || 0.5}
-          enableTouchThrough={false}
-        />
-      );
-    },
-    [config?.enableBackdrop, config?.backdropOpacity],
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        enableTouchThrough={false}
+        onPress={() => {
+          console.log('Backdrop pressed - closing bottom sheet');
+          closeBottomSheet();
+        }}
+      />
+    ),
+    [closeBottomSheet],
   );
 
-  const renderHandle = useCallback(
-    (props: BottomSheetHandleProps) => {
-      if (config?.enableHandle === false) return null;
+  const handleSheetChanges = useCallback(
+    (index: number) => {
+      console.log('Bottom sheet index changed:', index);
 
-      return (
-        <BottomSheetHandle
-          {...props}
-          style={[styles.handle]}
-          indicatorStyle={[styles.handleIndicator]}
-        />
-      );
+      // If bottom sheet is closed (index -1), ensure cleanup
+      if (index === -1) {
+        closeBottomSheet();
+      }
     },
-    [config?.enableHandle],
+    [closeBottomSheet],
   );
-
-  const renderButton = (
-    button: NonNullable<BottomSheetConfig['buttons']>[0],
-    index: number,
-  ) => {
-    const getButtonStyle = () => {
-      switch (button.variant) {
-        case 'danger':
-          return [styles.button, styles.dangerButton];
-        case 'secondary':
-          return [styles.button, styles.secondaryButton];
-        default:
-          return [styles.button, styles.primaryButton];
-      }
-    };
-
-    const getTextStyle = () => {
-      switch (button.variant) {
-        case 'danger':
-          return [styles.buttonText, styles.dangerButtonText];
-        case 'secondary':
-          return [styles.buttonText];
-        default:
-          return [styles.buttonText, styles.primaryButtonText];
-      }
-    };
-
-    return (
-      <TouchableOpacity
-        key={index}
-        style={getButtonStyle()}
-        onPress={button.onPress}
-        activeOpacity={0.7}>
-        <Text style={getTextStyle()}>{button.title}</Text>
-      </TouchableOpacity>
-    );
-  };
-
-  // Don't render if no config
-  if (!config) {
-    return (
-      <BottomSheet
-        ref={ref}
-        index={-1}
-        snapPoints={['1%']}
-        onChange={onSheetChange}
-        enablePanDownToClose={false}
-        style={{ display: 'none' }}>
-        {/* Empty children to satisfy required prop */}
-        <></>
-      </BottomSheet>
-    );
-  }
 
   return (
-    <BottomSheet
-      ref={ref}
-      index={-1} // Start closed
-      snapPoints={snapPoints}
-      onChange={onSheetChange}
-      backdropComponent={renderBackdrop}
-      handleComponent={renderHandle}
-      enablePanDownToClose={true}
-      keyboardBehavior="extend"
-      android_keyboardInputMode="adjustResize"
-      backgroundStyle={[styles.background]}>
-      <BottomSheetView style={styles.container}>
-        {/* Header */}
-        {(config.title || config.showCloseButton) && (
-          <View style={[styles.header, { borderBottomColor: COLORS.gray }]}>
-            {config.title && <Text style={[styles.title]}>{config.title}</Text>}
-            {config.showCloseButton && (
-              <TouchableOpacity
-                style={[styles.closeButton]}
-                onPress={() => onSheetChange(-1)}
-                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-                <Image
-                  source={ICONS.Clear}
-                  style={styles.closeButtonText}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
+    <>
+      {children}
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1} // Start closed
+        snapPoints={memoizedSnapPoints}
+        enablePanDownToClose={true}
+        backdropComponent={renderBackdrop}
+        onChange={handleSheetChanges}
+        handleIndicatorStyle={styles.handleIndicator}
+        backgroundStyle={styles.background}
+        style={styles.bottomSheet}>
+        <BottomSheetView style={styles.contentContainer}>
+          {/* Header with title and close button */}
+          {(title || showCloseButton) && (
+            <View style={styles.header}>
+              <View style={styles.titleContainer}>
+                {title && (
+                  <Text type="semibold" style={styles.headerTitle}>
+                    {title}
+                  </Text>
+                )}
+              </View>
+              {showCloseButton && (
+                <TouchableOpacity onPress={closeBottomSheet}>
+                  <Image source={ICONS.cancel} style={styles.closeButton} />
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+
+          {/* Content Area */}
+          <View style={styles.contentArea}>
+            {content ? (
+              <>{content}</>
+            ) : (
+              <>
+                <Text style={styles.defaultTitle}>Bottom Sheet Content</Text>
+                <Text style={styles.defaultSubtitle}>
+                  This is the default content. Pass custom content through the
+                  context.
+                </Text>
+              </>
             )}
           </View>
-        )}
 
-        {/* Content */}
-        <View style={styles.content}>{config.content}</View>
-
-        {/* Buttons */}
-        {config.buttons && config.buttons.length > 0 && (
-          <View style={styles.buttonsContainer}>
-            {config.buttons.map(renderButton)}
-          </View>
-        )}
-      </BottomSheetView>
-    </BottomSheet>
+          {/* Buttons at the bottom */}
+          {buttons.length > 0 && (
+            <View style={styles.buttonContainer}>
+              {buttons.map((button, index) => {
+                return (
+                  <Button
+                    key={index}
+                    title={button.title}
+                    onPress={button.onPress}
+                    disabled={button.disabled}
+                  />
+                );
+              })}
+            </View>
+          )}
+        </BottomSheetView>
+      </BottomSheet>
+    </>
   );
-});
+};
+
+const styles = StyleSheet.create({});
+
+export default GlobalBottomSheet;

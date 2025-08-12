@@ -6,6 +6,7 @@ import FeatureCard from '@components/cards/FeatureCard';
 import type { FeatureDataItem } from './style';
 import Text from '@components/atoms/Text';
 import useStyle from './style';
+import { CARD_WIDTH } from '@utils/constant';
 const windowWidth = Dimensions.get('window').width;
 
 interface FeaturesCarouselProps {
@@ -17,7 +18,8 @@ export const FeaturesCarousel: React.FC<FeaturesCarouselProps> = ({
   data,
   onPress,
 }) => {
-  const { CARD_WIDTH, styles } = useStyle();
+  const styles = useStyle();
+  // Adjust card width as needed
   const carouselRef = useRef<ICarouselInstance>(null);
 
   return (

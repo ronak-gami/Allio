@@ -23,13 +23,13 @@ export default function useStyle() {
     },
     title: {
       marginBottom: scale(10),
-      fontSize: scale(38),
+      fontSize: scale(28),
       color: colors.white,
       textAlign: 'center',
     },
 
     description: {
-      fontSize: scale(20),
+      fontSize: scale(18),
       color: colors.text,
       textAlign: 'center',
       lineHeight: scale(22),

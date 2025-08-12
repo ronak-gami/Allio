@@ -27,13 +27,7 @@ const Customlogout: React.FC<BottomSheetContentProps> = ({
       </Text>
 
       {/* Button */}
-      {buttonTitle && (
-        <Button
-          title={buttonTitle}
-          onPress={onButtonPress}
-          style={styles.button}
-        />
-      )}
+      {buttonTitle && <Button title={buttonTitle} onPress={onButtonPress} />}
     </View>
   );
 };

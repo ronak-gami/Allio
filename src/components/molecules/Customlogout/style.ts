@@ -1,30 +1,28 @@
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-// import { useTheme } from '@react-navigation/native';
-import { COLORS } from '@utils/color';
+import { useTheme } from '@react-navigation/native';
 
 const useStyle = () => {
-  // const { colors } = useTheme();
+  const { colors } = useTheme();
 
   return StyleSheet.create({
     container: {
-      padding: 24,
+      flex: 1,
+      // padding: 24,
       alignItems: 'center',
       justifyContent: 'center',
     },
     image: {
       width: scale(50),
       height: scale(50),
-      marginBottom: 20,
     },
     description: {
       fontSize: scale(16),
       textAlign: 'center',
-      marginBottom: 24,
-      color: COLORS.black,
+      color: colors.black,
     },
     button: {
-      alignSelf: 'stretch',
+      // alignSelf: 'stretch',
     },
   });
 };

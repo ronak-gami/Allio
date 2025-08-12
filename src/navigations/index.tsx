@@ -13,7 +13,7 @@ import analytics from '@react-native-firebase/analytics';
 import AuthNavigator from './Auth';
 import HomeNavigator from './App';
 import { RootState } from '../redux/store';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { BottomSheetProvider } from '../context/BottomSheetContext';
 
 const lightTheme = {
   ...DefaultTheme,
@@ -79,7 +79,7 @@ const StackNavigator: React.FC = () => {
             routeNameRef.current = currentRoute;
           }
         }}>
-      
+        <BottomSheetProvider>
           {splashVisible ? (
             <Splash />
           ) : token ? (
@@ -87,7 +87,7 @@ const StackNavigator: React.FC = () => {
           ) : (
             <AuthNavigator />
           )}
-      
+        </BottomSheetProvider>
       </NavigationContainer>
     </>
   );

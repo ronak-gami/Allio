@@ -2,7 +2,7 @@
   "login": "Login",
   "login_subtitle": "Welcome back! Please login to your account",
   "email": "Email",
-  "messahege": "Message",
+  "message": "Message",
   "password": "Password",
   "remember_me": "Remember me",
   "first_name": "First Name",
@@ -93,8 +93,7 @@
     "logout": "Logout"
   },
   "HeroSection": {
-    "title": "Welcome to Allio",
+    "titleone": "Welcome to Allio",
     "description": "Your one-stop solution for all your needs. Explore our features and get started today!"
   }
 }
-
