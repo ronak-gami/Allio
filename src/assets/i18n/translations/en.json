@@ -94,10 +94,14 @@
   },
   "HeroSection": {
     "titleone": "Welcome to Allio",
-    "description": "Your one-stop solution for all your needs. Explore our features and get started today!"
+    "description": "Allio is your all-in-one productivity app. Edit videos and photos, scan documents, and manage files with ease. Powered by Firebase for secure and reliable features. Our goal: bring every essential tool into one seamless app experience."
   },
   "CustomLogout": {
     "description": "Are you sure you want to logout? You can always log back in later.",
     "button_title": "Logout"
+  },
+  "CustomDelete": {
+    "description": "Are you sure you want to delete your account? This action cannot be undone.",
+    "button_title": "Delete Account"
   }
 }
