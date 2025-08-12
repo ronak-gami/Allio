@@ -95,5 +95,9 @@
   "HeroSection": {
     "titleone": "Welcome to Allio",
     "description": "Your one-stop solution for all your needs. Explore our features and get started today!"
+  },
+  "CustomLogout": {
+    "description": "Are you sure you want to logout? You can always log back in later.",
+    "button_title": "Logout"
   }
 }

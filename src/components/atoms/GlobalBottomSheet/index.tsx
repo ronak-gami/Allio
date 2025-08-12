@@ -27,7 +27,6 @@ const GlobalBottomSheet: React.FC<GlobalBottomSheetProps> = ({ children }) => {
   const styles = useStyle();
 
   const memoizedSnapPoints = useMemo(() => {
-    console.log('Memoized snap points:', snapPoints);
     return snapPoints;
   }, [snapPoints]);
 
@@ -39,7 +38,6 @@ const GlobalBottomSheet: React.FC<GlobalBottomSheetProps> = ({ children }) => {
         appearsOnIndex={0}
         enableTouchThrough={false}
         onPress={() => {
-          console.log('Backdrop pressed - closing bottom sheet');
           closeBottomSheet();
         }}
       />
@@ -49,8 +47,6 @@ const GlobalBottomSheet: React.FC<GlobalBottomSheetProps> = ({ children }) => {
 
   const handleSheetChanges = useCallback(
     (index: number) => {
-      console.log('Bottom sheet index changed:', index);
-
       // If bottom sheet is closed (index -1), ensure cleanup
       if (index === -1) {
         closeBottomSheet();

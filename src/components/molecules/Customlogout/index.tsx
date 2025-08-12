@@ -21,7 +21,7 @@ const Customlogout: React.FC<BottomSheetContentProps> = ({
   return (
     <View style={styles.container}>
       <Image source={image} style={styles.image} resizeMode="contain" />
-
+      {/* <Text type="SEMIBOLD" style={styles.description} lable="description" /> */}
       <Text type="SEMIBOLD" style={styles.description}>
         {description}
       </Text>

@@ -23,34 +23,6 @@ const Tab = createBottomTabNavigator<TabParamList>();
 const TabNavigator: React.FC = () => {
   const styles = useStyle();
   const { colors } = useTheme();
-  // const { tabBarRef } = useBottomSheet();
-  // const tabBarOpacity = useRef(new Animated.Value(1)).current;
-  // const tabBarTranslateY = useRef(new Animated.Value(0)).current;
-
-  // useImperativeHandle(ref, () => ({
-  //   setTabBarVisible: visible => {
-  //     Animated.parallel([
-  //       Animated.timing(tabBarOpacity, {
-  //         toValue: visible ? 1 : 0,
-  //         duration: 300,
-  //         useNativeDriver: true,
-  //       }),
-  //       Animated.timing(tabBarTranslateY, {
-  //         toValue: visible ? 0 : 100,
-  //         duration: 300,
-  //         useNativeDriver: true,
-  //       }),
-  //     ]).start();
-  //   },
-  // }));
-
-  // React.useEffect(() => {
-  //   if (tabBarRef) {
-  //     tabBarRef.current = ref?.current || {
-  //       setTabBarVisible: () => {},
-  //     };
-  //   }
-  // }, [tabBarRef, ref]);
 
   const icons: Record<keyof TabParamList, ImageSourcePropType> = {
     Home: IMAGES.Home,

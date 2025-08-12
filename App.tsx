@@ -16,6 +16,7 @@ import CustomNotification, {
 import { useNotification } from '@hooks/index';
 import { store, persistor } from './src/redux/store';
 import StackNavigator from './src/navigations';
+import { StyleSheet } from 'react-native';
 const App = () => {
   const customToastRef = useRef<CustomToastRef>(null);
   useNotification(customToastRef);
@@ -39,10 +40,7 @@ const App = () => {
   }, []);
 
   return (
-    <GestureHandlerRootView
-      style={{
-        flex: 1,
-      }}>
+    <GestureHandlerRootView style={styles.container}>
       <Provider store={store}>
         <PaperProvider>
           <PersistGate loading={null} persistor={persistor}>
@@ -70,3 +68,9 @@ const App = () => {
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

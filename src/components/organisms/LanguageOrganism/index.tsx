@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View } from 'react-native';
-import RadioGroup from '@components/molecules/RadioGroups';
 import i18n from '@assets/i18n';
+import RadioGroup from '@components/molecules/RadioGroups';
 import Button from '@components/atoms/Button';
 import { useBottomSheet } from '../../../context/BottomSheetContext';
 
@@ -19,7 +19,6 @@ const LanguageOrganism: React.FC = () => {
 
   const handleLanguageApply = useCallback(() => {
     i18n.changeLanguage(selectedLanguage);
-    console.log('Language applied:', selectedLanguage);
     closeBottomSheet();
   }, [selectedLanguage, closeBottomSheet]);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import CustomRadioButton from '@components/atoms/Radio';
 
@@ -33,4 +33,4 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   );
 };
 
-export default RadioGroup;
+export default React.memo(RadioGroup);

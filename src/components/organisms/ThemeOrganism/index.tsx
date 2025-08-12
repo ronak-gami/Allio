@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import RadioGroup from '@components/molecules/RadioGroups';
-import { setDarkMode } from '@redux/slices/ThemeSlice';
-import { useBottomSheet } from '../../../context/BottomSheetContext';
 import { useDispatch, useSelector } from 'react-redux';
+import { setDarkMode } from '@redux/slices/ThemeSlice';
+import RadioGroup from '@components/molecules/RadioGroups';
 import Button from '@components/atoms/Button';
-import useStyle from './style';
+import { useBottomSheet } from '../../../context/BottomSheetContext';
+
 interface ThemeOrganismProps {
   selectedTheme: string;
   onSelect: (value: string) => void;
@@ -13,7 +13,6 @@ interface ThemeOrganismProps {
 }
 
 const ThemeOrganism: React.FC<ThemeOrganismProps> = () => {
-  const styles = useStyle();
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state: any) => state.theme.isDarkMode);
   const [selectedTheme, setSelectedTheme] = useState<'dark' | 'light'>(
@@ -28,7 +27,6 @@ const ThemeOrganism: React.FC<ThemeOrganismProps> = () => {
 
   const handleThemeApply = useCallback(() => {
     dispatch(setDarkMode(selectedTheme === 'dark'));
-    console.log('Theme applied:', selectedTheme);
     closeBottomSheet();
   }, [dispatch, selectedTheme, closeBottomSheet]);
   return (

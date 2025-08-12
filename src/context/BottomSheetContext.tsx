@@ -55,8 +55,6 @@ export const BottomSheetProvider: React.FC<BottomSheetProviderProps> = ({
   const [buttons, setButtons] = useState<BottomSheetButton[]>([]);
 
   const openBottomSheet = (config: BottomSheetConfig) => {
-    console.log('Opening bottom sheet with config:', config);
-
     if (bottomSheetRef.current) {
       // Set all configuration
       setSnapPoints(config.snapPoints || ['50%']);
@@ -78,8 +76,6 @@ export const BottomSheetProvider: React.FC<BottomSheetProviderProps> = ({
   };
 
   const closeBottomSheet = () => {
-    console.log('Closing bottom sheet');
-
     if (bottomSheetRef.current) {
       bottomSheetRef.current.close();
 
