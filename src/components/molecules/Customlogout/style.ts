@@ -8,7 +8,6 @@ const useStyle = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      // padding: 24,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -20,9 +19,6 @@ const useStyle = () => {
       fontSize: scale(16),
       textAlign: 'center',
       color: colors.black,
-    },
-    button: {
-      // alignSelf: 'stretch',
     },
   });
 };
