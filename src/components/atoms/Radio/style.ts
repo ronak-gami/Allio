@@ -1,6 +1,6 @@
-import { useTheme } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
+import { useTheme } from '@react-navigation/native';
 
 const useStyle = () => {
   const { colors } = useTheme();
@@ -8,20 +8,20 @@ const useStyle = () => {
     container: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginVertical: scale(6),
+      marginVertical: scale(10),
     },
     circle: {
       height: scale(20),
       width: scale(20),
       borderRadius: scale(10),
       borderWidth: 2,
-      borderColor: colors.primary,
+      borderColor: colors.black,
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: scale(10),
     },
     selectedCircle: {
-      borderColor: colors.seconary,
+      borderColor: colors.black,
     },
     innerCircle: {
       height: scale(10),
@@ -30,8 +30,8 @@ const useStyle = () => {
       backgroundColor: colors.primary,
     },
     label: {
-      fontSize: scale(14),
-      color: colors.darkGray,
+      fontSize: scale(20),
+      color: colors.black,
     },
     errorText: {
       marginTop: scale(4),

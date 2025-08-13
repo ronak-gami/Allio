@@ -1,8 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { height } from '@utils/helper';
 import { scale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native';
-
+import { height } from '@utils/helper';
 const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
@@ -21,7 +20,6 @@ const useStyle = () => {
     },
     item: {
       paddingVertical: height * 0.025,
-      // paddingHorizontal: height * 0.02,
       borderBottomWidth: 1,
       borderColor: colors.text,
     },

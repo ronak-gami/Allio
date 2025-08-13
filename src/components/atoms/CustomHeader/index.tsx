@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+
 import { View, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -18,6 +19,8 @@ interface CustomHeaderProps {
   showProfileLogo?: boolean;
   onProfilePress?: () => void;
 }
+// Import the correct navigation prop type from your navigation types file
+// Adjust the path as needed
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({
   showBackArrow = false,
@@ -29,6 +32,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 }) => {
   const styles = useStyle();
   const navigate = useNavigation<HomeTabsNavigationProp>();
+  //i click on back arrow i want to nevigate go back screen when back arrow is pressed
 
   const handleBackPress = () => {
     onBackPress ? onBackPress() : navigate.goBack();
