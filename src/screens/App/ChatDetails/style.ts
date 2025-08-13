@@ -80,7 +80,8 @@ const useStyle = () => {
       fontSize: scale(14),
     },
     chatArea: {
-      marginTop: height * 0.02,
+      flex: 1,
+      borderWidth: 1,
     },
     messageBubble: {
       padding: height * 0.015,
@@ -188,7 +189,9 @@ const useStyle = () => {
       marginBottom: height * 0.005,
       color: colors.text,
     },
-
+    actionButton: {
+      marginTop: height * 0.01,
+    },
     cardDescription: {
       fontSize: scale(36),
       color: colors.gray,
@@ -281,6 +284,78 @@ const useStyle = () => {
       width: height * 0.025,
       height: height * 0.025,
       tintColor: colors.primary,
+    },
+    menuIcon: {
+      width: height * 0.025,
+      height: height * 0.025,
+    },
+    menuContainer: {
+      position: 'absolute',
+      top: 70,
+
+      right: 20,
+      backgroundColor: colors.background,
+      borderRadius: 6,
+      shadowColor: '#000',
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 5,
+      paddingVertical: height * 0.01,
+
+      width: height * 0.12,
+    },
+
+    themeModalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+
+    themeModalContainer: {
+      backgroundColor: colors.background,
+      borderRadius: height * 0.02,
+      padding: height * 0.02,
+      width: '85%',
+      alignItems: 'center',
+      shadowColor: colors.modelbg,
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
+      elevation: 5,
+    },
+
+    themeGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      padding: 10,
+    },
+
+    themeOption: {
+      width: '48%',
+      aspectRatio: 2 / 3,
+      marginBottom: height * 0.02,
+      borderRadius: 8,
+      overflow: 'hidden',
+      backgroundColor:colors.background,
+    },
+
+    themeImage: {
+      width: '100%',
+      height: '100%',
+    },
+    padding: {
+      padding: 10,
+    },
+    flex: {
+      flex: 1,
+    },
+    flexGrow: {
+      flexGrow: 1,
+    },
+    applyButton: {
+      marginTop: height * 0.02,
+      padding: height * 0.015,
     },
   });
 };

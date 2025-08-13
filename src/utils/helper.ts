@@ -10,6 +10,7 @@ import {
 } from 'react-native-permissions';
 import messaging from '@react-native-firebase/messaging';
 import RNFS from 'react-native-fs';
+import axios from 'axios';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import Share from 'react-native-share';
 import { showError, showSuccess } from './toast';
@@ -395,6 +396,29 @@ const requestNotificationPermission = async (): Promise<boolean> => {
   }
 };
 
+const uploadToCloudinary = async file => {
+  const formData = new FormData();
+  formData.append('file', {
+    uri: file.uri,
+    type: file.type,
+    name: file.fileName || 'upload.jpg',
+  });
+  formData.append('upload_preset', 'chat_app_upload');
+
+  try {
+    const res = await axios.post(
+      'https://api.cloudinary.com/v1_1/dmoajpxcj/image/upload',
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } },
+    );
+
+    return res.data.secure_url; // Cloudinary URL
+  } catch (error) {
+    console.error('Cloudinary Upload Error:', error);
+    throw error;
+  }
+};
+
 export {
   height,
   width,
@@ -411,4 +435,5 @@ export {
   getUserData,
   getCurrentTimestamp,
   requestNotificationPermission,
+  uploadToCloudinary,
 };

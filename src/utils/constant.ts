@@ -14,7 +14,7 @@ const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
 // export const BASE_URL = 'https://allio-backend.onrender.com/api/user' as const;
-export const BASE_URL = 'https://b5b1928bd171.ngrok-free.app/api' as const;
+export const BASE_URL = 'https://907af2bcad5e.ngrok-free.app/api' as const;
 
 const onboardingData: OnboardingItem[] = [
   {
