@@ -1,5 +1,8 @@
 import React, { useCallback } from 'react';
 import { View, TouchableOpacity } from 'react-native';
+
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import {
   CustomFlatList,
@@ -11,23 +14,24 @@ import {
   Container,
 } from '@components/index';
 
-import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@redux/slices/AuthSlice';
 import { getAuth } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { TabParamList } from '@types/navigations';
+import { HOME } from '@utils/constant';
 
 import { useBottomSheet } from '../../../context/BottomSheetContext';
 import useStyle from './style';
-import { HOME } from '@utils/constant';
+
+import { capitalizeFirst } from '@utils/helper';
 
 type Props = BottomTabScreenProps<TabParamList, 'More'>;
 
 const More: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
-
+  const { t } = useTranslation();
   const { openBottomSheet, closeBottomSheet } = useBottomSheet();
   const isDarkMode = useSelector((state: any) => state.theme.isDarkMode);
 
@@ -68,35 +72,34 @@ const More: React.FC<Props> = ({ navigation }) => {
 
   const settingsConfig = [
     {
-      key: 'profile',
-      title: 'Profile',
+      title: 'settings.profile',
       type: 'navigation' as const,
       screenName: HOME.Profile,
     },
     {
       key: 'friends',
-      title: 'My Friends',
+      title: 'settings.My Friends',
       type: 'navigation' as const,
       screenName: HOME.MyFriends,
     },
     {
       key: 'theme',
-      title: 'Theme',
+      title: 'settings.Theme',
       type: 'bottomSheet' as const,
     },
     {
       key: 'language',
-      title: 'Language',
+      title: 'settings.Language',
       type: 'bottomSheet' as const,
     },
     {
       key: 'delete',
-      title: 'Delete Account',
+      title: 'settings.Delete Account',
       type: 'bottomSheet' as const,
     },
     {
       key: 'logout',
-      title: 'Logout',
+      title: 'settings.Logout',
       type: 'bottomSheet' as const,
     },
   ];
@@ -118,7 +121,7 @@ const More: React.FC<Props> = ({ navigation }) => {
         switch (key) {
           case 'theme':
             openBottomSheet({
-              title: 'Select Theme',
+              title: capitalizeFirst(t('bottomSheet.selectTheme')),
               content: <ThemeOrganism />,
               snapPoints: ['40%'],
               showCloseButton: true,
@@ -127,7 +130,7 @@ const More: React.FC<Props> = ({ navigation }) => {
 
           case 'language':
             openBottomSheet({
-              title: 'Select Language',
+              title: capitalizeFirst(t('bottomSheet.selectTheme')),
               snapPoints: ['50%'],
               content: <LanguageOrganism />,
               showCloseButton: true,
@@ -136,7 +139,7 @@ const More: React.FC<Props> = ({ navigation }) => {
 
           case 'delete':
             openBottomSheet({
-              title: 'Delete Account',
+              title: capitalizeFirst(t('bottomSheet.deleteAccount')),
               content: (
                 <DeleteProfileOrganism onConfirm={handleDeleteProfile} />
               ),
@@ -145,7 +148,7 @@ const More: React.FC<Props> = ({ navigation }) => {
               snapPoints: ['50%'],
               buttons: [
                 {
-                  title: 'Delete Account',
+                  title: capitalizeFirst(t('bottomSheet.deleteAccount')),
                   onPress: handleDeleteProfile,
                   variant: 'primary',
                 },
@@ -155,13 +158,13 @@ const More: React.FC<Props> = ({ navigation }) => {
 
           case 'logout':
             openBottomSheet({
-              title: 'Confirm Logout',
+              title: capitalizeFirst(t('bottomSheet.confirmLogout')),
               content: <LogoutOrganism onConfirm={handleLogout} />,
               showCloseButton: true,
               snapPoints: ['40%'],
               buttons: [
                 {
-                  title: 'Logout',
+                  title: capitalizeFirst(t('bottomSheet.confirmLogout')),
                   onPress: handleLogout,
                   variant: 'primary',
                 },
@@ -189,16 +192,24 @@ const More: React.FC<Props> = ({ navigation }) => {
     ],
   );
 
+  // const renderItem = ({ item }: { item: (typeof settingsConfig)[0] }) => (
+  //   <TouchableOpacity
+  //     style={styles.item}
+  //     onPress={() => handleItemPress(item.key)}>
+  //     <Text style={styles.itemText} type="semibold" >
+  //      {t{item.title}}
+  //     </Text>
+  //   </TouchableOpacity>
+  // );
   const renderItem = ({ item }: { item: (typeof settingsConfig)[0] }) => (
     <TouchableOpacity
       style={styles.item}
       onPress={() => handleItemPress(item.key)}>
       <Text style={styles.itemText} type="semibold">
-        {item.title}
+        {t(item.title)}
       </Text>
     </TouchableOpacity>
   );
-
   return (
     // <View style={styles.container}>
     <Container title="More.More">

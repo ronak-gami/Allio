@@ -90,12 +90,19 @@
     "about_us": "અમારા વિશે",
     "contact_us": "અમારો સંપર્ક કરો"
   },
-  "Settings": {
-    "select_theme": "થિમ પસંદ કરો",
-    "select_language": "ભાષા પસંદ કરો",
-    "confirm_logout": "લૉગઆઉટની પુષ્ટિ કરો",
-    "apply": "લાગુ કરો",
-    "logout": "લૉગઆઉટ"
+  "settings": {
+    "profile": "પ્રોફાઇલ",
+    "My Friends": "મારા મિત્રો",
+    "Theme": "થીમ",
+    "Language": "ભાષા",
+    "Delete Account": "એકાઉન્ટ કાઢી નાખો",
+    "Logout": "લોગઆઉટ"
+  },
+  "bottomSheet": {
+    "selectTheme": "થીમ પસંદ કરો",
+    "selectLanguage": "ભાષા પસંદ કરો",
+    "deleteAccount": "એકાઉન્ટ કાઢી નાખો",
+    "confirmLogout": "લોગઆઉટની પુષ્ટિ કરો"
   },
   "HeroSection": {
     "titleone": "Allio માં આપનું સ્વાગત છે",
@@ -120,6 +127,17 @@
   "Home": {
     "Home": "હોમ"
   },
+  "ApplyLanguage": {
+    "apply_language": "ભાષા લાગુ કરો",
+    "apply_theme": "થીમ લાગુ કરો"
+  },
+
+  "languages": {
+    "English": "અંગ્રેજી",
+    "Hindi": "હિન્દી",
+    "Gujarati": "ગુજરાતી"
+  },
+
   "features": {
     "scanQR": {
       "title": "ક્યુઆર સ્કેન કરો",

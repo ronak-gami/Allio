@@ -4,11 +4,14 @@ import i18n from '@assets/i18n';
 import RadioGroup from '@components/molecules/RadioGroups';
 import Button from '@components/atoms/Button';
 import { useBottomSheet } from '../../../context/BottomSheetContext';
-
+import { useTranslation } from 'react-i18next';
+import { capitalizeFirst } from '@utils/helper';
+import BottomSheet from '@gorhom/bottom-sheet';
+const { t } = useTranslation();
 const languageOptions = [
-  { label: 'English', value: 'en' },
-  { label: 'Hindi', value: 'hi' },
-  { label: 'Gujarati', value: 'gu' },
+  { label: t('languages.English'), value: 'en' },
+  { label: t('languages.Hindi'), value: 'hi' },
+  { label: t('languages.Gujarati'), value: 'gu' },
 ];
 
 const LanguageOrganism: React.FC = () => {
@@ -30,10 +33,13 @@ const LanguageOrganism: React.FC = () => {
         onSelect={setSelectedLanguage}
       />
       <View style={{ marginTop: 20 }}>
-        <Button title="Apply Language" onPress={handleLanguageApply} />
+        <Button
+          title={'ApplyLanguage.apply_language'}
+          onPress={handleLanguageApply}
+        />
       </View>
     </View>
   );
 };
-
+//  title={'ContactUsSection.contact_button'}
 export default LanguageOrganism;

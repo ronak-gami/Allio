@@ -37,7 +37,7 @@ const ThemeOrganism: React.FC<ThemeOrganismProps> = () => {
         onSelect={setSelectedTheme}
       />
       <View style={[{ marginTop: 20 }]}>
-        <Button title="Apply Theme" onPress={handleThemeApply} />
+        <Button title="ApplyLanguage.apply_theme" onPress={handleThemeApply} />
       </View>
     </View>
   );

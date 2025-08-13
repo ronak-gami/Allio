@@ -86,13 +86,22 @@
     "More": "More"
   },
 
-  "Settings": {
-    "select_theme": "Select Theme",
-    "select_language": "Select Language",
-    "confirm_logout": "Confirm Logout",
-    "apply": "Apply",
-    "logout": "Logout"
+  "settings": {
+    "profile": "Profile",
+    "My Friends": "My Friends",
+    "Theme": "Theme",
+    "Language": "Language",
+    "Delete Account": "Delete Account",
+    "Logout": "Logout"
   },
+
+  "bottomSheet": {
+    "selectTheme": "Select Theme",
+    "selectLanguage": "Select Language",
+    "deleteAccount": "Delete Account",
+    "confirmLogout": "Confirm Logout"
+  },
+
   "HeroSection": {
     "titleone": "Welcome to Allio",
     "description": "Allio is your all-in-one productivity app. Edit videos and photos, scan documents, and manage files with ease. Powered by Firebase for secure and reliable features. Our goal: bring every essential tool into one seamless app experience."
@@ -115,6 +124,11 @@
   "Home": {
     "Home": "Home"
   },
+  "languages": {
+    "English": "English",
+    "Hindi": "Hindi",
+    "Gujarati": "Gujarati"
+  },
   "features": {
     "scanQR": {
       "title": "Scan QR",
@@ -135,6 +149,10 @@
       "title": "Home",
       "description": "Fast and reliable scanning for all your needs.",
       "button": "Home"
+    },
+    "ApplyLanguage": {
+      "apply_language": "apply_language",
+      "apply_theme": "apply_language "
     }
   }
 }

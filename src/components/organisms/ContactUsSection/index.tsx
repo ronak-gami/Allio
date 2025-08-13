@@ -15,24 +15,31 @@ const ContactUsSection: React.FC = () => {
 
   const handleSubmit = (fields: {
     name: string;
-    mobile: string;
+    mobileNo: string;
     email: string;
     message: string;
   }) => {
     console.log('hello');
     // Handle form submission (e.g., send to backend, show toast, etc.)
   };
+  interface ContactFormFields {
+    name: string;
+    mobileNo: string;
+    email: string;
+    message: string;
+  }
 
   return (
     <View style={styles.sectionContainer}>
       <Text type="bold" style={styles.title} label={'ContactUsSection.title'} />
 
       <Button
-        title="Contact Us"
+        title={'ContactUsSection.contact_button'}
         onPress={handleOpen}
         style={styles.contactButton}
       />
       <ContactFormModal
+        key={modalVisible ? 'open' : 'closed'}
         visible={modalVisible}
         onClose={handleClose}
         onSubmit={handleSubmit}

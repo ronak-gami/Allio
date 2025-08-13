@@ -5,10 +5,6 @@ import { useTheme } from '@react-navigation/native';
 const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
-    form: {
-      gap: scale(10),
-      marginTop: scale(10),
-    },
     input: {
       width: '100%',
       borderRadius: scale(8),
@@ -19,7 +15,7 @@ const useStyle = () => {
     },
     button: {
       width: '100%',
-      marginTop: scale(8),
+      marginTop: scale(20),
       borderRadius: scale(8),
       backgroundColor: colors.primary,
     },
