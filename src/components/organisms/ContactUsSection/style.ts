@@ -14,7 +14,7 @@ const useStyle = () => {
       marginBottom: scale(16),
     },
     title: {
-      fontSize: scale(24),
+      fontSize: scale(18),
       color: colors.text,
       marginBottom: scale(8),
     },

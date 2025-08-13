@@ -8,6 +8,7 @@ import {
   ThemeOrganism,
   DeleteProfileOrganism,
   LogoutOrganism,
+  Container,
 } from '@components/index';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -199,12 +200,12 @@ const More: React.FC<Props> = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title} type="BOLD">
-        More.More
-      </Text>
-      <CustomFlatList data={settingsConfig} renderItem={renderItem} />
-    </View>
+    // <View style={styles.container}>
+    <Container title="More.More">
+      <View style={styles.container}>
+        <CustomFlatList data={settingsConfig} renderItem={renderItem} />
+      </View>
+    </Container>
   );
 };
 

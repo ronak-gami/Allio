@@ -8,8 +8,7 @@ import { FeaturesCarousel } from '@components/organisms/FeaturesCorozal';
 import { FeaturesDataItem } from '@utils/constant';
 import { HOME } from '@utils/constant';
 import { HomeTabsNavigationProp } from '@types/navigations';
-import Container from '@components/molecules/Container';
-import { ContactUsSection } from '@components/index';
+import { ContactUsSection, Container } from '@components/index';
 
 const promoImages = [
   IMAGES.OnboardingThree,
@@ -50,7 +49,7 @@ const HomeScreen: React.FC = () => {
   return (
     <Container
       onProfilePress={handleProfilePress}
-      title="Home"
+      title="Home.Home"
       showAppLogo
       showProfileLogo
       keyboardAvoiding>

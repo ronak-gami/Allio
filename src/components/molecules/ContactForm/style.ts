@@ -5,9 +5,12 @@ import { useTheme } from '@react-navigation/native';
 const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
+    form: {
+      gap: scale(10),
+      marginTop: scale(10),
+    },
     input: {
       width: '100%',
-      marginBottom: scale(12),
       borderRadius: scale(8),
     },
     messageInput: {

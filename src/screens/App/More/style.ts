@@ -7,8 +7,7 @@ const useStyle = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      padding: height * 0.02,
-      backgroundColor: colors.background,
+      paddingHorizontal: scale(16),
     },
 
     title: {

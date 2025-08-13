@@ -19,14 +19,14 @@ const ContactUsSection: React.FC = () => {
     email: string;
     message: string;
   }) => {
+    console.log('hello');
     // Handle form submission (e.g., send to backend, show toast, etc.)
   };
 
   return (
     <View style={styles.sectionContainer}>
-      <Text type="bold" style={styles.title}>
-        Connect with us
-      </Text>
+      <Text type="bold" style={styles.title} label={'ContactUsSection.title'} />
+
       <Button
         title="Contact Us"
         onPress={handleOpen}

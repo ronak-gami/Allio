@@ -63,11 +63,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 
       {/* Center: Title (Flex 1 with Center Alignment) */}
       <View style={styles.centerContainer}>
-        {title && (
-          <Text type="BOLD" style={styles.title}>
-            {title}
-          </Text>
-        )}
+        {title && <Text type="BOLD" style={styles.title} label={title} />}
       </View>
 
       {/* Right: Profile Logo (Absolute Position) */}
