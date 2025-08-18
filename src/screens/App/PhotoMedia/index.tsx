@@ -153,6 +153,7 @@ const PhotoMedia: React.FC<Props> = () => {
                   title="Choose from Gallery"
                   onPress={handleSelectPhoto}
                   outlineColor={colors.primary}
+                  style={styles.buttonStyle}
                 />
               </View>
             )}

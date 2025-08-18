@@ -8,8 +8,9 @@ const useStyle = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.background,
-      marginHorizontal: height * 0.02,
+    },
+    primaryText: {
+      color: colors.primary,
     },
     subView: { flexGrow: 1 },
     form: {

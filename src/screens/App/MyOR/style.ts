@@ -6,6 +6,9 @@ import { scale } from 'react-native-size-matters';
 const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
+    textColor: {
+      color: colors.text,
+    },
     container: {
       flex: 1,
       padding: height * 0.02,
