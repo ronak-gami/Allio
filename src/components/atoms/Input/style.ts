@@ -6,6 +6,7 @@ import { FONTS } from '@utils/helper';
 const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
+    container: {},
     label: {
       fontSize: scale(14),
       color: colors.text,
@@ -33,7 +34,7 @@ const useStyle = () => {
     },
     textInput: {
       flex: 1,
-      fontSize: scale(12),
+      fontSize: scale(14),
       fontFamily: FONTS.regular,
       color: colors.text,
       paddingHorizontal: scale(12),
