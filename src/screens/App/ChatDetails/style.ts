@@ -129,6 +129,7 @@ const useStyle = () => {
     },
 
     textInput: {
+      paddingHorizontal: width * 0.02,
       fontSize: scale(14),
       color: colors.text,
       width: '80%',

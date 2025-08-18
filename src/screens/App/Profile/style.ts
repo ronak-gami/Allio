@@ -1,14 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { width, height } from '@utils/helper';
 import { useTheme } from '@react-navigation/native';
+import { width, height } from '@utils/helper';
 
 const useStyle = () => {
   const { colors } = useTheme();
+
   return StyleSheet.create({
-    Container: {
-      flex: 1,
-    },
     container: {
       flex: 1,
       backgroundColor: colors.background,
@@ -93,19 +91,6 @@ const useStyle = () => {
       color: colors.text,
       opacity: 0.7,
     },
-    actionButton: {
-      backgroundColor: colors.card,
-      borderWidth: scale(1),
-      borderColor: colors.border,
-      borderRadius: scale(8),
-      paddingVertical: scale(8),
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    actionButtonText: {
-      color: colors.text,
-      fontSize: scale(14),
-    },
     contentHeader: {
       flexDirection: 'row',
       justifyContent: 'space-around',
@@ -142,16 +127,39 @@ const useStyle = () => {
       height: width * 0.45,
       borderRadius: scale(8),
     },
-    emptyContainer: {
+    emptyGridContainer: {
       flex: 1,
-      justifyContent: 'center',
       alignItems: 'center',
+      justifyContent: 'center',
       paddingVertical: height * 0.1,
     },
-    emptyText: {
+    emptyGridIcon: {
+      width: scale(80),
+      height: scale(80),
+      tintColor: colors.text,
+      opacity: 0.5,
+    },
+    emptyGridTitle: {
       fontSize: scale(18),
       color: colors.text,
-      opacity: 0.7,
+      marginTop: scale(16),
+    },
+    emptyStateContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: height * 0.1,
+    },
+    noGalleryIcon: {
+      width: scale(80),
+      height: scale(80),
+      tintColor: colors.text,
+      opacity: 0.5,
+    },
+    emptyStateTitle: {
+      fontSize: scale(18),
+      color: colors.text,
+      marginTop: scale(16),
     },
   });
 };

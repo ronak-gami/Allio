@@ -126,7 +126,7 @@ export const useChatDetails = (targetUser: any) => {
       }
 
       await relationRef.collection('messages').add({
-        text: messageToSend, // ✅ use stored value
+        text: messageToSend,
         from: myEmail,
         to: targetUser?.email,
         timestamp,
@@ -143,18 +143,14 @@ export const useChatDetails = (targetUser: any) => {
         body: body,
       };
 
-      console.log('shyam patel', data, 'data---->>>>');
       const response = await api?.NOTIFICATION.sendNotification({ data });
-
-      console.log(response, 'response---->>>>');
 
       if (response?.data?.success) {
         showSuccess(response?.data?.message || 'Notification sent!');
       }
-      setMessage(''); // ✅ clear AFTER send
+      setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
-      showError('Failed to send message');
     }
   };
 

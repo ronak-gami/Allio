@@ -89,7 +89,11 @@ const ChatDetailsScreen = () => {
 
         <View style={styles.actionRowCentered}>
           {relationStatus === 'notsent' && (
-            <Button title="Send Friend Request" onPress={sendRequest} />
+            <Button
+              title="Send Friend Request"
+              onPress={sendRequest}
+              style={styles.button}
+            />
           )}
           {relationStatus === 'received' && (
             <>

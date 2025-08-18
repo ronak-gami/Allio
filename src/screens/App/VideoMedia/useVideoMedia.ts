@@ -12,7 +12,7 @@ import IMGLYEditor, {
   EditorSettingsModel,
   SourceType,
 } from '@imgly/editor-react-native';
-import { fetchVideos } from '@redux/slices/MediaSlice';
+import { fetchVideos, setVideos } from '@redux/slices/MediaSlice';
 import { handlePermissions } from '@utils/helper';
 import { LICENSE_KEY } from '@utils/constant';
 import { AppDispatch } from '@redux/store';
@@ -47,6 +47,8 @@ const useVideoMedia = () => {
     handlePermissions('all');
     if (email) {
       dispatch(fetchVideos(email));
+    } else {
+      dispatch(setVideos([]));
     }
   }, [dispatch, email]);
 

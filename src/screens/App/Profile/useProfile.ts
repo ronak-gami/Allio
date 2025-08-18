@@ -1,12 +1,12 @@
-import { fetchImages, fetchVideos } from '@redux/slices/MediaSlice';
-import { RootState, AppDispatch } from '@redux/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { HomeStackParamList } from '@types/navigations';
+import { fetchImages, fetchVideos, resetMedia } from '@redux/slices/MediaSlice';
+import { RootState, AppDispatch } from '@redux/store';
+import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 import { getUserData } from '@utils/helper';
 import { HOME } from '@utils/constant';
-import { useNavigation } from '@react-navigation/native';
-import { HomeStackParamList } from '@types/navigations';
-import firestore from '@react-native-firebase/firestore';
 
 interface UseProfileProps {
   userEmail?: string;
@@ -23,7 +23,6 @@ interface UserData {
 const useProfile = ({ userEmail }: UseProfileProps = {}) => {
   const [activeTab, setActiveTab] = useState<string>('images');
   const [isFriend, setIsFriend] = useState<boolean>(false);
-  console.log('isFriend: ', isFriend);
   const [userData, setUserData] = useState<UserData>({
     email: '',
     firstName: undefined,
@@ -43,24 +42,19 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
 
   const checkIfFriend = useCallback(
     async (friendEmail: string): Promise<boolean> => {
-      console.log('Hellow');
       const email1 = authEmail.trim().toLowerCase();
-      console.log('userData?.email: ', userData?.email);
       const email2 = friendEmail?.trim().toLowerCase();
 
       if (!email1 || !email2) return false;
 
       const docId1 = `${email1}_${email2}`;
-      console.log('docId1: ', docId1);
       const docId2 = `${email2}_${email1}`;
-      console.log('docId2: ', docId2);
 
       try {
         const docSnap1 = await firestore()
           .collection('relation')
           .doc(docId1)
           .get();
-        console.log('docSnap1: ', docSnap1);
         if (docSnap1.exists && docSnap1.data()?.isAccept === true) {
           return true;
         }
@@ -121,11 +115,21 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
   }, [email]);
 
   useEffect(() => {
-    if (email) {
-      dispatch(fetchImages(email));
-      dispatch(fetchVideos(email));
-    }
-  }, [dispatch, email]);
+    const fetchMediaData = async () => {
+      if (email) {
+        if (isExternalProfile) {
+          dispatch(resetMedia());
+          await dispatch(fetchImages(email));
+          await dispatch(fetchVideos(email));
+        } else {
+          dispatch(fetchImages(email));
+          dispatch(fetchVideos(email));
+        }
+      }
+    };
+
+    fetchMediaData();
+  }, [dispatch, email, isExternalProfile]);
 
   const handleTabChange = (tab: string) => setActiveTab(tab);
 

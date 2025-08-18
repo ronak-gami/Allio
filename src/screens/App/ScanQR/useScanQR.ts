@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useCameraPermission } from 'react-native-vision-camera';
 import firestore from '@react-native-firebase/firestore';
 
@@ -27,7 +27,14 @@ const useScanQR = () => {
     (async () => {
       await requestPermission();
     })();
-  }, []);
+  }, [requestPermission]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setEmail('');
+      setEmailError('');
+    }, []),
+  );
 
   const states = {
     loading,

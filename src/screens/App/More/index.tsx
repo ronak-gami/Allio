@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import {
@@ -8,9 +8,10 @@ import {
   ThemeOrganism,
   DeleteProfileOrganism,
   LogoutOrganism,
+  Container,
 } from '@components/index';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logout } from '@redux/slices/AuthSlice';
 import { getAuth } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -19,7 +20,8 @@ import { TabParamList } from '@types/navigations';
 
 import { useBottomSheet } from '../../../context/BottomSheetContext';
 import useStyle from './style';
-import { HOME } from '@utils/constant';
+import { HOME, settingsData } from '@utils/constant';
+import { resetMedia } from '@redux/slices/MediaSlice';
 
 type Props = BottomTabScreenProps<TabParamList, 'More'>;
 
@@ -28,7 +30,6 @@ const More: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { openBottomSheet, closeBottomSheet } = useBottomSheet();
-  const isDarkMode = useSelector((state: any) => state.theme.isDarkMode);
 
   const handleLogout = useCallback(async () => {
     try {
@@ -40,6 +41,7 @@ const More: React.FC<Props> = ({ navigation }) => {
           fcmUpdatedAt: firestore.FieldValue.delete(),
         });
         await authInstance.signOut();
+        dispatch(resetMedia());
         dispatch(logout());
         closeBottomSheet();
       }
@@ -65,40 +67,43 @@ const More: React.FC<Props> = ({ navigation }) => {
     }
   }, [dispatch, closeBottomSheet]);
 
-  const settingsConfig = [
-    {
-      key: 'profile',
-      title: 'Profile',
-      type: 'navigation' as const,
-      screenName: HOME.Profile,
-    },
-    {
-      key: 'friends',
-      title: 'My Friends',
-      type: 'navigation' as const,
-      screenName: HOME.MyFriends,
-    },
-    {
-      key: 'theme',
-      title: 'Theme',
-      type: 'bottomSheet' as const,
-    },
-    {
-      key: 'language',
-      title: 'Language',
-      type: 'bottomSheet' as const,
-    },
-    {
-      key: 'delete',
-      title: 'Delete Account',
-      type: 'bottomSheet' as const,
-    },
-    {
-      key: 'logout',
-      title: 'Logout',
-      type: 'bottomSheet' as const,
-    },
-  ];
+  const settingsConfig = useMemo(
+    () => [
+      {
+        key: 'profile',
+        title: 'Profile',
+        type: 'navigation' as const,
+        screenName: HOME.Profile,
+      },
+      {
+        key: 'friends',
+        title: 'My Friends',
+        type: 'navigation' as const,
+        screenName: HOME.MyFriends,
+      },
+      {
+        key: 'theme',
+        title: 'Theme',
+        type: 'bottomSheet' as const,
+      },
+      {
+        key: 'language',
+        title: 'Language',
+        type: 'bottomSheet' as const,
+      },
+      {
+        key: 'delete',
+        title: 'Delete Account',
+        type: 'bottomSheet' as const,
+      },
+      {
+        key: 'logout',
+        title: 'Logout',
+        type: 'bottomSheet' as const,
+      },
+    ],
+    [],
+  );
 
   // Single handler for all items
   const handleItemPress = useCallback(
@@ -182,29 +187,30 @@ const More: React.FC<Props> = ({ navigation }) => {
       settingsConfig,
       navigation,
       openBottomSheet,
-      closeBottomSheet,
       handleLogout,
       handleDeleteProfile,
     ],
   );
 
-  const renderItem = ({ item }: { item: (typeof settingsConfig)[0] }) => (
-    <TouchableOpacity
-      style={styles.item}
-      onPress={() => handleItemPress(item.key)}>
-      <Text style={styles.itemText} type="semibold">
-        {item.title}
-      </Text>
-    </TouchableOpacity>
+  const renderItem = ({ item }: { item: { key: string; title: string } }) => (
+    <>
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() => handleItemPress(item.key)}>
+        <Text style={styles.itemText} type="semibold">
+          {item.title}
+        </Text>
+      </TouchableOpacity>
+      <View style={styles.separator} />
+    </>
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title} type="BOLD">
-        More.More
-      </Text>
-      <CustomFlatList data={settingsConfig} renderItem={renderItem} />
-    </View>
+    <Container showLoader={false} title="More.More">
+      <View style={styles.container}>
+        <CustomFlatList data={settingsData} renderItem={renderItem} />
+      </View>
+    </Container>
   );
 };
 

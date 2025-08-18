@@ -27,7 +27,7 @@ const promoImages = [
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeTabsNavigationProp>();
   const handleProfilePress = () => {
-    navigation.navigate(HOME.More);
+    navigation.navigate(HOME.Profile);
   };
   const handleFeaturePress = (buttonText: string) => {
     switch (buttonText) {

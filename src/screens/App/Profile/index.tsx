@@ -8,7 +8,7 @@ import {
   Container,
 } from '@components/index';
 import useStyle from './style';
-import { IMAGES } from '@assets/index';
+import { IMAGES, ICONS } from '@assets/index';
 import useProfile from './useProfile';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '@types/navigations';
@@ -113,9 +113,9 @@ const ProfileHeader: React.FC<{
         )}
       </View>
       {isExternalProfile ? (
-        isFriend ? (
+        isFriend ? null : (
           <Button title="Friend Request" onPress={navigateToMyFriends} />
-        ) : null
+        )
       ) : null}
     </View>
   );
@@ -158,6 +158,32 @@ const MediaContent: React.FC<{
   videos: any[];
   styles: ReturnType<typeof useStyle>;
 }> = ({ activeTab, images, videos, styles }) => {
+  const renderEmptyVideoState = () => (
+    <View style={styles.emptyGridContainer}>
+      <Image
+        source={ICONS.NoVideo}
+        style={styles.emptyGridIcon}
+        resizeMode="contain"
+      />
+      <Text type="BOLD" style={styles.emptyGridTitle}>
+        No Videos Yet
+      </Text>
+    </View>
+  );
+
+  const renderEmptyImageState = () => (
+    <View style={styles.emptyStateContainer}>
+      <Image
+        source={ICONS.gallery}
+        style={styles.noGalleryIcon}
+        resizeMode="contain"
+      />
+      <Text type="BOLD" style={styles.emptyStateTitle}>
+        No Images Yet
+      </Text>
+    </View>
+  );
+
   if (activeTab === 'videos') {
     return (
       <CustomFlatList
@@ -167,13 +193,7 @@ const MediaContent: React.FC<{
         numColumns={2}
         columnWrapperStyle={styles.gridRow}
         contentContainerStyle={styles.gridContent}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text type="BOLD" style={styles.emptyText}>
-              No Videos Yet
-            </Text>
-          </View>
-        }
+        ListEmptyComponent={renderEmptyVideoState()}
       />
     );
   }
@@ -192,23 +212,16 @@ const MediaContent: React.FC<{
       numColumns={2}
       columnWrapperStyle={styles.gridRow}
       contentContainerStyle={styles.gridContent}
-      ListEmptyComponent={
-        <View style={styles.emptyContainer}>
-          <Text type="BOLD" style={styles.emptyText}>
-            No Images Yet
-          </Text>
-        </View>
-      }
+      ListEmptyComponent={renderEmptyImageState()}
     />
   );
 };
 
 const Profile: React.FC<ProfileProps> = ({ route }) => {
   const styles = useStyle();
-  const { states, data, isExternalProfile, navigateToMyFriends, isFriend } =
-    useProfile({
-      userEmail: route.params?.email,
-    });
+  const { states, data, isExternalProfile, navigateToMyFriends } = useProfile({
+    userEmail: route.params?.email,
+  });
 
   return (
     <Container showLoader={false} showBackArrow title="Profile">
@@ -224,7 +237,7 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
           styles={styles}
           isExternalProfile={isExternalProfile}
           navigateToMyFriends={navigateToMyFriends}
-          isFriend={isFriend}
+          isFriend={states?.isFriend}
         />
         <TabBar
           activeTab={states.activeTab}
