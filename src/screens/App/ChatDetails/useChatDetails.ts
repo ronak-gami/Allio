@@ -180,17 +180,15 @@ export const useChatDetails = (targetUser: any) => {
         title: 'Message Sent',
         body: `${email1} has sent message to you.`,
       };
-      // Send notification
 
-      // const response = await api?.NOTIFICATION.sendNotification({ data });
+      const response = await api?.NOTIFICATION.sendNotification({ data });
 
-      // if (response?.data?.success) {
-      //   showSuccess(response?.data?.message || 'Notification sent!');
-      // }
+      if (response?.data?.success) {
+        showSuccess(response?.data?.message || 'Notification sent!');
+      }
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
-      showError('Failed to send message');
     }
   };
 

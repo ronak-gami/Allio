@@ -7,9 +7,9 @@ import Button from '@components/atoms/Button';
 import { useBottomSheet } from '../../../context/BottomSheetContext';
 
 interface ThemeOrganismProps {
-  selectedTheme: string;
-  onSelect: (value: string) => void;
-  onApply: () => void;
+  selectedTheme?: string;
+  onSelect?: (value: string) => void;
+  onApply?: () => void;
 }
 
 const ThemeOrganism: React.FC<ThemeOrganismProps> = () => {

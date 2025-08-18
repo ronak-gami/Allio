@@ -80,11 +80,16 @@ const VideoMedia: React.FC<Props> = () => {
 
   const renderBottomButtons = () => (
     <View style={styles.bottomButtonsContainer}>
-      <Button title="Record New" onPress={handleRecordVideo} />
+      <Button
+        title="Record New"
+        onPress={handleRecordVideo}
+        style={styles.buttonStyle}
+      />
       <Button
         title="Choose From Gallery"
         onPress={handleSelectVideo}
         outlineColor={colors.primary}
+        style={styles.buttonStyle}
       />
     </View>
   );

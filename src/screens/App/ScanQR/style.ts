@@ -41,7 +41,6 @@ const useStyle = () => {
       width: height * 0.05,
       height: height * 0.05,
       resizeMode: 'contain',
-      tintColor: colors.black,
     },
     flashIconContainer: {
       alignSelf: 'center',
@@ -84,7 +83,7 @@ const useStyle = () => {
       width: height * 0.04,
       height: height * 0.04,
       borderColor: colors.primary,
-      borderWidth: 6,
+      borderWidth: 5,
     },
     topLeft: {
       top: height * 0.01,
@@ -92,7 +91,6 @@ const useStyle = () => {
       borderTopLeftRadius: height * 0.01,
       borderRightWidth: 0,
       borderBottomWidth: 0,
-      borderTopRightRadius: height * 0.01,
     },
     topRight: {
       top: height * 0.01,
@@ -115,12 +113,6 @@ const useStyle = () => {
       borderTopWidth: 0,
       borderBottomRightRadius: height * 0.01,
     },
-    flashIconButton: {
-      alignSelf: 'center',
-      marginVertical: 5,
-      borderRadius: 10,
-    },
-
     orContainer: {
       flexDirection: 'row',
       alignItems: 'center',

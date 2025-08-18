@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { HomeStackParamList } from '@types/navigations';
+import { fetchImages, fetchVideos, resetMedia } from '@redux/slices/MediaSlice';
+import { RootState, AppDispatch } from '@redux/store';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
-
-import { fetchImages, fetchVideos } from '@redux/slices/MediaSlice';
-import { RootState, AppDispatch } from '@redux/store';
 import { getUserData } from '@utils/helper';
 import { HOME } from '@utils/constant';
-import { HomeStackParamList } from '@types/navigations';
 import { useUserCard } from '@components/cards/UserCard/useUserCard';
 
 interface UseProfileProps {
@@ -125,11 +124,21 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
 
   // Fetch media (images/videos)
   useEffect(() => {
-    if (email) {
-      dispatch(fetchImages(email));
-      dispatch(fetchVideos(email));
-    }
-  }, [dispatch, email]);
+    const fetchMediaData = async () => {
+      if (email) {
+        if (isExternalProfile) {
+          dispatch(resetMedia());
+          await dispatch(fetchImages(email));
+          await dispatch(fetchVideos(email));
+        } else {
+          dispatch(fetchImages(email));
+          dispatch(fetchVideos(email));
+        }
+      }
+    };
+
+    fetchMediaData();
+  }, [dispatch, email, isExternalProfile]);
 
   useEffect(() => {
     const checkFriendStatus = async () => {

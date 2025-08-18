@@ -10,12 +10,7 @@ const MyQR: React.FC = () => {
   const styles = useStyle();
   const { colors } = useTheme();
 
-  const {
-    qrImageUri,
-    handleDownload,
-    handleShare,
-    states,
-  } = useMyQR();
+  const { qrImageUri, handleDownload, handleShare, states } = useMyQR();
 
   return (
     <Container title="My QR " showBackArrow keyboardAvoiding>
@@ -36,29 +31,27 @@ const MyQR: React.FC = () => {
               </Text>
             )}
           </View>
-        </View>
 
-        <View style={styles.orContainer}>
-          <View style={styles.line} />
-          <Text style={styles.orText} type="extrabold">
-            OR
-          </Text>
-          <View style={styles.line} />
-        </View>
+          <View style={styles.orContainer}>
+            <View style={styles.line} />
+            <Text style={styles.orText} type="extrabold">
+              OR
+            </Text>
+            <View style={styles.line} />
+          </View>
 
-        <View style={styles.buttonGroup}>
-          <Button
-            title="Download QR"
-            onPress={handleDownload}
-            bgColor={colors.primary}
-            textColor={colors.text}
-          />
-          <Button
-            title="Share QR"
-            onPress={handleShare}
-            bgColor={colors.primary}
-            textColor={colors.text}
-          />
+          <View style={styles.buttonGroup}>
+            <Button
+              title="Download QR"
+              onPress={handleDownload}
+              bgColor={colors.primary}
+            />
+            <Button
+              title="Share QR"
+              onPress={handleShare}
+              bgColor={colors.primary}
+            />
+          </View>
         </View>
       </View>
     </Container>

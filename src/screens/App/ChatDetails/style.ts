@@ -26,9 +26,10 @@ const useStyle = () => {
       backgroundColor: colors.primary,
     },
     backIcon: {
-      width: height * 0.03,
-      height: height * 0.03,
       marginRight: width * 0.04,
+      width: scale(18),
+      height: scale(18),
+      tintColor: colors.black,
     },
     headerImage: {
       width: width * 0.12,
@@ -129,6 +130,7 @@ const useStyle = () => {
     },
 
     textInput: {
+      paddingHorizontal: width * 0.02,
       fontSize: scale(14),
       color: colors.text,
       width: '80%',

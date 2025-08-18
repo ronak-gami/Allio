@@ -19,7 +19,7 @@ import { Button, Container, CustomModal, Input, Text } from '@components/index';
 import useStyle from './style';
 import { useChatDetails } from './useChatDetails';
 
-type ChatDetailsRouteProp = RouteProp<HomeStackParamList, 'ChatDetails'>;
+type ChatDetailsRouteProp = RouteProp<HomeStackParamList, 'ChatDetailsScreen'>;
 
 const ChatDetailsScreen = () => {
   const styles = useStyle();
@@ -87,7 +87,11 @@ const ChatDetailsScreen = () => {
 
         <View style={styles.actionRowCentered}>
           {relationStatus === 'notsent' && (
-            <Button title="Send Friend Request" onPress={sendRequest} />
+            <Button
+              title="Send Friend Request"
+              onPress={sendRequest}
+              style={styles.button}
+            />
           )}
           {relationStatus === 'received' && (
             <>
@@ -117,7 +121,7 @@ const ChatDetailsScreen = () => {
           keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
           {/* <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Image source={ICONS.Left} style={styles.backIcon} />
+              <Image source={ICONS.BackArrow} style={styles.backIcon} />
             </TouchableOpacity>
             {showImage ? (
               <Image
@@ -168,7 +172,9 @@ const ChatDetailsScreen = () => {
           </View>
 
           <ImageBackground
-            source={states?.selectedTheme ? { uri: states?.selectedTheme } : null}
+            source={
+              states?.selectedTheme ? { uri: states?.selectedTheme } : null
+            }
             style={styles.flex}
             resizeMode="cover">
             {/* Chat Content */}
@@ -180,7 +186,9 @@ const ChatDetailsScreen = () => {
               ]}
               style={{
                 flex: 1,
-                backgroundColor: states?.selectedTheme ? undefined : colors.background,
+                backgroundColor: states?.selectedTheme
+                  ? undefined
+                  : colors.background,
               }}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}

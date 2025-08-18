@@ -4,6 +4,7 @@ import i18n from '@assets/i18n';
 import RadioGroup from '@components/molecules/RadioGroups';
 import Button from '@components/atoms/Button';
 import { useBottomSheet } from '../../../context/BottomSheetContext';
+import useStyle from './style';
 
 const languageOptions = [
   { label: 'English', value: 'en' },
@@ -15,6 +16,7 @@ const LanguageOrganism: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>(
     i18n.language || 'en' || 'hi' || 'gu',
   );
+  const styles = useStyle();
   const { closeBottomSheet } = useBottomSheet();
 
   const handleLanguageApply = useCallback(() => {
@@ -29,7 +31,7 @@ const LanguageOrganism: React.FC = () => {
         selectedValue={selectedLanguage}
         onSelect={setSelectedLanguage}
       />
-      <View style={{ marginTop: 20 }}>
+      <View style={styles.container}>
         <Button title="Apply Language" onPress={handleLanguageApply} />
       </View>
     </View>

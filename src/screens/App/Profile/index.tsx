@@ -8,7 +8,7 @@ import {
   Container,
 } from '@components/index';
 import useStyle from './style';
-import { IMAGES } from '@assets/index';
+import { IMAGES, ICONS } from '@assets/index';
 import useProfile from './useProfile';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '@types/navigations';
@@ -186,8 +186,34 @@ const MediaContent: React.FC<{
   onRefresh: () => void;
   states: object;
   styles: ReturnType<typeof useStyle>;
-}> = ({ images, videos, styles, onRefresh, states }) => {
-  if (states?.activeTab === 'videos') {
+}> = ({ activeTab, images, videos, styles, onRefresh, states }) => {
+  const renderEmptyVideoState = () => (
+    <View style={styles.emptyGridContainer}>
+      <Image
+        source={ICONS.NoVideo}
+        style={styles.emptyGridIcon}
+        resizeMode="contain"
+      />
+      <Text type="BOLD" style={styles.emptyGridTitle}>
+        No Videos Yet
+      </Text>
+    </View>
+  );
+
+  const renderEmptyImageState = () => (
+    <View style={styles.emptyStateContainer}>
+      <Image
+        source={ICONS.gallery}
+        style={styles.noGalleryIcon}
+        resizeMode="contain"
+      />
+      <Text type="BOLD" style={styles.emptyStateTitle}>
+        No Images Yet
+      </Text>
+    </View>
+  );
+
+  if (activeTab === 'videos') {
     return (
       <CustomFlatList
         key="videos"
@@ -196,15 +222,7 @@ const MediaContent: React.FC<{
         numColumns={2}
         columnWrapperStyle={styles.gridRow}
         contentContainerStyle={styles.gridContent}
-        refreshing={states?.refreshing}
-        onRefresh={onRefresh}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text type="BOLD" style={styles.emptyText}>
-              No Videos Yet
-            </Text>
-          </View>
-        }
+        ListEmptyComponent={renderEmptyVideoState()}
       />
     );
   }
@@ -223,15 +241,7 @@ const MediaContent: React.FC<{
       numColumns={2}
       columnWrapperStyle={styles.gridRow}
       contentContainerStyle={styles.gridContent}
-      refreshing={states?.refreshing}
-      onRefresh={onRefresh}
-      ListEmptyComponent={
-        <View style={styles.emptyContainer}>
-          <Text type="BOLD" style={styles.emptyText}>
-            No Images Yet
-          </Text>
-        </View>
-      }
+      ListEmptyComponent={renderEmptyImageState()}
     />
   );
 };

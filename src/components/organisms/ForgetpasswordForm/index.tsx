@@ -40,17 +40,27 @@ const ForgotPasswordForm: React.FC = () => {
           initialValues={{ email: '' }}
           validationSchema={forgotPasswordSchema}
           onSubmit={handleForgotPassword}>
-          {({ handleChange, handleSubmit, values, errors, touched }) => (
+          {({
+            handleChange,
+            handleSubmit,
+            handleBlur,
+            values,
+            errors,
+            touched,
+          }) => (
             <View style={style.form}>
               <Text style={style.title} label="forgot_password" type="bold" />
               <Text style={style.subtitle} label="forgot_password_subtitle" />
               <Input
-                placeholder="email"
-                keyboardType="email-address"
-                autoCapitalize="none"
+                label="Email"
+                placeholder="e.g., Ronak.Gami@example.com"
                 value={values.email}
                 onChangeText={handleChange('email')}
-                error={touched.email ? errors.email : ''}
+                onBlur={handleBlur('email')}
+                error={errors.email}
+                touched={touched.email}
+                keyboardType="email-address"
+                autoCapitalize="none"
               />
               <Button
                 loading={loading}

@@ -99,7 +99,6 @@ export const useUserCard = (
       body: body,
     };
     const response = await api?.NOTIFICATION.sendNotification({ data });
-    console.log('response', response, 'response---->>>>');
     if (response?.data?.success) {
       showSuccess(response?.data?.message || 'Notification sent!');
     }
@@ -120,7 +119,6 @@ export const useUserCard = (
       body: body,
     };
     const response = await api?.NOTIFICATION.sendNotification({ data });
-    console.log('response', response, 'reject request---->>>>');
 
     if (response?.data?.success) {
       showSuccess(response?.data?.message || 'Notification sent!');

@@ -6,10 +6,10 @@ const useStyle = () => {
   return StyleSheet.create({
     button: {
       borderRadius: 10,
-      paddingHorizontal: width * 0.05,
+      // paddingHorizontal: width * 0.05,
       alignItems: 'center',
       justifyContent: 'center',
-      paddingVertical: width * 0.045,
+      paddingVertical: width * 0.04,
     },
     content: {
       flexDirection: 'row',

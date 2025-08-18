@@ -19,8 +19,6 @@ interface CustomHeaderProps {
   showProfileLogo?: boolean;
   onProfilePress?: () => void;
 }
-// Import the correct navigation prop type from your navigation types file
-// Adjust the path as needed
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({
   showBackArrow = false,
@@ -32,7 +30,6 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 }) => {
   const styles = useStyle();
   const navigate = useNavigation<HomeTabsNavigationProp>();
-  //i click on back arrow i want to nevigate go back screen when back arrow is pressed
 
   const handleBackPress = () => {
     onBackPress ? onBackPress() : navigate.goBack();
@@ -60,7 +57,6 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
         </View>
       )}
 
-      {/* Center: Title (Flex 1 with Center Alignment) */}
       <View style={styles.centerContainer}>
         {title && (
           <Text type="BOLD" style={styles.title}>
@@ -69,7 +65,6 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
         )}
       </View>
 
-      {/* Right: Profile Logo (Absolute Position) */}
       {showProfileLogo && (
         <View style={styles.rightButton}>
           <CustomProfileButton onPress={handleProfilePress} />

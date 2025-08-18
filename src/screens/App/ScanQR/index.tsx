@@ -87,7 +87,7 @@ const ScanQR: React.FC<Props> = () => {
                 style={[
                   styles.flashIcon,
                   {
-                    tintColor: states?.torchOn ? colors.primary : colors.black,
+                    tintColor: states?.torchOn ? colors.primary : colors.text,
                   },
                 ]}
               />
@@ -103,12 +103,14 @@ const ScanQR: React.FC<Props> = () => {
 
             <View style={styles.inputContainer}>
               <Input
-                placeholder="scanQr.enter_email"
                 label="Email"
+                placeholder="e.g., Ronak.Gami@example.com"
                 value={states?.email}
                 onChangeText={states?.setEmail}
-                keyboardType="email-address"
                 error={emailError}
+                touched={!!emailError}
+                keyboardType="email-address"
+                autoCapitalize="none"
               />
 
               <Button
