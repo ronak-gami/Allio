@@ -26,12 +26,12 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
   onSubmit,
 }) => {
   const styles = useStyle();
-  const { contactUsValidationSchema } = useValidation();
+  const { contetUsValidationSchema } = useValidation();
 
   return (
     <Formik
       initialValues={{ name: '', mobile: '', email: '', message: '' }}
-      validationSchema={contactUsValidationSchema}
+      validationSchema={contetUsValidationSchema}
       onSubmit={(values, { resetForm }) => {
         onSubmit(values);
         resetForm();
@@ -48,10 +48,9 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
       }) => (
         <BottomModal visible={visible} onClose={onClose} title="Contact Us">
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.modalContainer}>
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <Input
-              placeholder="Name"
+              placeholder="name"
               value={values.name}
               onChangeText={handleChange('name')}
               onBlur={handleBlur('name')}
@@ -59,7 +58,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
               style={styles.input}
             />
             <Input
-              placeholder="Mobile No"
+              placeholder="mobile"
               value={values.mobile}
               onChangeText={handleChange('mobile')}
               onBlur={handleBlur('mobile')}
@@ -77,7 +76,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
               style={styles.input}
             />
             <Input
-              placeholder="Message"
+              placeholder="message"
               value={values.message}
               onChangeText={handleChange('message')}
               onBlur={handleBlur('message')}

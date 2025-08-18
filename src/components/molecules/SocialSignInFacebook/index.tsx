@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import {
@@ -125,4 +125,4 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
   );
 };
 
-export default SignInWithFacebook;
+export default memo(SignInWithFacebook);

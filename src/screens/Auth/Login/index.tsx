@@ -10,7 +10,7 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
 const Login: React.FC<Props> = () => {
   useAnalytics({ screenName: 'Login' });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   return (
     <Container showHeader={false} auth keyboardAvoiding showLoader={loading}>

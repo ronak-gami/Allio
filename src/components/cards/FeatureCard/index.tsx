@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Image } from 'react-native';
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
@@ -29,4 +29,4 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   );
 };
 
-export default FeatureCard;
+export default memo(FeatureCard);

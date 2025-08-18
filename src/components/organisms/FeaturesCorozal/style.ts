@@ -1,24 +1,28 @@
-// style.ts
-import { Dimensions, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { width } from '@utils/helper';
+import { useTheme } from '@react-navigation/native';
 import { CARD_WIDTH } from '@utils/constant';
-import { SPACING } from '@utils/constant';
-export interface FeatureDataItem {
-  image: any;
-  title: string;
-  description: string;
-  buttonText: string;
-}
+import { useMemo } from 'react';
 
-const styles = StyleSheet.create({
-  textone: {
-    padding: 10,
-    fontSize: scale(28),
-    fontWeight: 'bold',
-  },
-});
+// Step 1: Define a function to generate styles using the theme
+const makeStyles = (theme: ReturnType<typeof useTheme>) =>
+  StyleSheet.create({
+    textone: {
+      padding: scale(10),
+      fontSize: scale(18),
+      color: theme.colors.text,
+    },
+    container: {
+      width: CARD_WIDTH, // if you have CARD_WIDTH imported
 
-export default function useStyle() {
-  return { CARD_WIDTH, SPACING, styles };
-}
+      backgroundColor: theme.colors.card,
+    },
+  });
+
+// Step 2: Use a custom hook that memoizes styles based on theme
+const useStyle = () => {
+  const theme = useTheme();
+  return useMemo(() => makeStyles(theme), [theme]);
+};
+
+export default useStyle;

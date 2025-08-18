@@ -2,10 +2,11 @@ import React, { useRef } from 'react';
 import { View, Dimensions } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import type { ICarouselInstance } from 'react-native-reanimated-carousel';
-import FeatureCard from '@components/molecules/FeatureCard';
+import FeatureCard from '@components/cards/FeatureCard';
 import type { FeatureDataItem } from './style';
 import Text from '@components/atoms/Text';
 import useStyle from './style';
+import { CARD_WIDTH } from '@utils/constant';
 const windowWidth = Dimensions.get('window').width;
 
 interface FeaturesCarouselProps {
@@ -17,7 +18,8 @@ export const FeaturesCarousel: React.FC<FeaturesCarouselProps> = ({
   data,
   onPress,
 }) => {
-  const { CARD_WIDTH, styles } = useStyle();
+  const styles = useStyle();
+  // Adjust card width as needed
   const carouselRef = useRef<ICarouselInstance>(null);
 
   return (

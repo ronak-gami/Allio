@@ -2,9 +2,11 @@
   "login": "Login",
   "login_subtitle": "Welcome back! Please login to your account",
   "email": "Email",
+  "message": "Message",
   "password": "Password",
   "remember_me": "Remember me",
   "first_name": "First Name",
+  "name": "Name",
   "last_name": "Last Name",
   "mobile": "Mobile Number",
   "confirm_password": "Confirm Password",
@@ -79,5 +81,23 @@
     "title": "My QR",
     "download_qr": "Download QR",
     "share_qr": "Share QR"
+  },
+  "More": {
+    "More": "More"
+  },
+  "Settings": {
+    "select_theme": "Select Theme",
+    "select_language": "Select Language",
+    "confirm_logout": "Confirm Logout",
+    "apply": "Apply",
+    "logout": "Logout"
+  },
+  "HeroSection": {
+    "titleone": "Welcome to Allio",
+    "description": "Your one-stop solution for all your needs. Explore our features and get started today!"
+  },
+  "CustomLogout": {
+    "description": "Are you sure you want to logout? You can always log back in later.",
+    "button_title": "Logout"
   }
 }

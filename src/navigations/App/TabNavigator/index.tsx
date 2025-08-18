@@ -1,5 +1,5 @@
-import React from 'react';
-import { Platform, Image, ImageSourcePropType } from 'react-native';
+import React, { useImperativeHandle, useRef } from 'react';
+import { Platform, Image, ImageSourcePropType, Animated } from 'react-native';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
@@ -15,12 +15,15 @@ import More from '@screens/App/More';
 import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
 import { TabParamList } from '@types/navigations';
+import GlobalBottomSheet from '@components/atoms/GlobalBottomSheet';
+import { useBottomSheet } from '../../../context/BottomSheetContext';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const TabNavigator: React.FC = () => {
   const styles = useStyle();
   const { colors } = useTheme();
+
   const icons: Record<keyof TabParamList, ImageSourcePropType> = {
     Home: IMAGES.Home,
     Photo: IMAGES.ImageMedia,
@@ -64,13 +67,15 @@ const TabNavigator: React.FC = () => {
   });
 
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
-      <Tab.Screen name={HOME.Home} component={HomeScreen} />
-      <Tab.Screen name={HOME.Photo} component={PhotoMedia} />
-      <Tab.Screen name={HOME.ScanQR} component={ScanQR} />
-      <Tab.Screen name={HOME.Video} component={VideoMedia} />
-      <Tab.Screen name={HOME.More} component={More} />
-    </Tab.Navigator>
+    <GlobalBottomSheet>
+      <Tab.Navigator screenOptions={screenOptions}>
+        <Tab.Screen name={HOME.Home} component={HomeScreen} />
+        <Tab.Screen name={HOME.Photo} component={PhotoMedia} />
+        <Tab.Screen name={HOME.ScanQR} component={ScanQR} />
+        <Tab.Screen name={HOME.Video} component={VideoMedia} />
+        <Tab.Screen name={HOME.More} component={More} />
+      </Tab.Navigator>
+    </GlobalBottomSheet>
   );
 };
 

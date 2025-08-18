@@ -53,10 +53,9 @@ const useValidation = () => {
   });
   const emailOnlyValidationSchema = Yup.object().shape({
     email: Yup.string()
-      .email('Please enter a valid email')
-      .required('Email is required'),
+      .email(t('email_valid', { field: t('email') }))
+      .required(t('field_required', { field: t('email') })),
   });
-
   const contetUsValidationSchema = Yup.object().shape({
     name: Yup.string()
       .required(t('field_required', { field: t('name') }))

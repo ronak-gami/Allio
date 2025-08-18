@@ -23,7 +23,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
   error,
   touched,
 }) => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState<boolean>(false);
   const styles = useStyle();
   const { colors } = useTheme();
 

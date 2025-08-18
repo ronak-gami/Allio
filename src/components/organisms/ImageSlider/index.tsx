@@ -15,8 +15,6 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
   const {
     flatListRef,
     current,
-    goNext,
-    goPrev,
     onMomentumScrollEnd,
     IMAGE_WIDTH,
     IMAGE_MARGIN,
@@ -24,10 +22,6 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.arrowLeft} onPress={goPrev}>
-        <Image source={ICONS.Left} style={styles.arrowIcon} />
-      </TouchableOpacity>
-
       <CustomFlatList
         ref={flatListRef as React.RefObject<any>}
         data={images}
@@ -51,10 +45,6 @@ const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
         extraData={current}
         ListEmptyComponent={null as React.ReactElement | null}
       />
-
-      <TouchableOpacity style={styles.arrowRight} onPress={goNext}>
-        <Image source={ICONS.ArrowRight} style={styles.arrowIcon} />
-      </TouchableOpacity>
     </View>
   );
 };

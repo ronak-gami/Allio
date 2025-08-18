@@ -36,15 +36,7 @@ const MPINSetupScreen = () => {
     (s: RootState) => s.biometric.isBiometricAuthenticated,
   );
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     promptAppLock().then(success => {
-  //       if (success) {
-  //         navigation.replace(HOME.HomeTabs);
-  //       }
-  //     });
-  //   }, [navigation, email]),
-  // );
+
 
   useFocusEffect(
     React.useCallback(() => {

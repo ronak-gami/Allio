@@ -20,7 +20,6 @@ const ContactUsSection: React.FC = () => {
     message: string;
   }) => {
     // Handle form submission (e.g., send to backend, show toast, etc.)
-    console.log('Contact form submitted:', fields);
   };
 
   return (
