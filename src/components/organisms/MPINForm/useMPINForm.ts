@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import api from '@api/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { Buffer } from 'buffer';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import { RootState } from '@redux/store';
 import type { HomeStackParamList } from '@types/navigations';
-import { BASE_URL, HOME } from '@utils/constant';
+import { HOME } from '@utils/constant';
 import { showError, showSuccess } from '@utils/toast';
 
 type MPINNavigationProp = NativeStackNavigationProp<HomeStackParamList, 'MPIN'>;
@@ -67,8 +66,6 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
           setStoredEncryptedMPIN(data.mpin);
           return true;
         }
-      } else {
-        Alert.alert('Error', 'User not found in Firestore');
       }
       return false;
     } catch (error: any) {
@@ -114,9 +111,8 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
         showError('Email is missing');
         return;
       }
-      const response = await axios.post(`${BASE_URL}/set-new-mpin`, {
-        email,
-        newMpin: mpin,
+      const response = await api.MPIN.setNewMpin({
+        data: { email, newMpin: mpin },
       });
       if (response?.data?.status === true) {
         showSuccess('MPIN reset successfully');

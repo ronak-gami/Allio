@@ -44,7 +44,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       {showBackArrow && (
         <TouchableOpacity onPress={handleBackPress} style={styles.leftButton}>
           <Image
-            source={ICONS.Left}
+            source={ICONS.BackArrow}
             style={styles.backIcon}
             resizeMode="contain"
           />

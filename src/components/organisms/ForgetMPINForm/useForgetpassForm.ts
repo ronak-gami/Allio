@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '@api/index';
 import { useNavigation } from '@react-navigation/native';
 
 import { showError, showSuccess } from '@utils/toast';
 import { checkUserExistsByEmail } from '@utils/helper';
-import { BASE_URL } from '@utils/constant';
+import { HOME } from '@utils/constant';
 
 export const useForgotPassword = (
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
@@ -39,9 +39,10 @@ export const useForgotPassword = (
         return;
       }
       setEmail(values.email);
-      const response = await axios.post(`${BASE_URL}/send-otp`, {
-        email: values.email,
+      const response = await api.MPIN.sendOtp({
+        data: { email: values.email },
       });
+      console.log('response: ', response);
       if (response?.data?.status === true) {
         setShowOtpBox(true);
         showSuccess('OTP sent to your email');
@@ -57,9 +58,7 @@ export const useForgotPassword = (
   const handleResendOtp = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`${BASE_URL}/send-otp`, {
-        email: Email,
-      });
+      const response = await api.MPIN.sendOtp({ data: { email: Email } });
       if (response?.data?.status === true) {
         showSuccess('OTP resent to your email');
         startResendTimer();
@@ -74,14 +73,13 @@ export const useForgotPassword = (
   const handleOTPVerify = async () => {
     try {
       setIsVerifying(true);
-      const response = await axios.post(`${BASE_URL}/validate-otp`, {
-        email: Email,
-        otp: otp,
+      const response = await api.MPIN.validateOtp({
+        data: { email: Email, otp: otp },
       });
-
+      console.log('response: ', response);
       if (response?.data?.status === true) {
         showSuccess('OTP verified');
-        navigation.navigate('MPIN', {
+        navigation.navigate(HOME.MPIN, {
           email: Email,
           resetMpin: true,
         });

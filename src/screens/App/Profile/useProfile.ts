@@ -188,8 +188,16 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
       lastName: userData.lastName,
       mobileNo: userData.mobileNo,
       profileImage: userData.profileImage,
-      images: isFriend ? images : images.slice(0, 4),
-      videos: isFriend ? videos : videos.slice(0, 4),
+      images: isExternalProfile
+        ? isFriend
+          ? images
+          : images.slice(0, 4)
+        : images,
+      videos: isExternalProfile
+        ? isFriend
+          ? videos
+          : videos.slice(0, 4)
+        : videos,
       allImages: images,
       allVideos: videos,
     },

@@ -8,6 +8,7 @@ const useStyle = () => {
     container: {
       flex: 1,
       backgroundColor: colors.background,
+      paddingHorizontal: scale(10),
     },
     contentContainer: {
       flexGrow: 1,

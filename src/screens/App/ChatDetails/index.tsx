@@ -144,7 +144,7 @@ const ChatDetailsScreen = () => {
 
           <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Image source={ICONS.Left} style={styles.backIcon} />
+              <Image source={ICONS.BackArrow} style={styles.backIcon} />
             </TouchableOpacity>
 
             {showImage ? (
@@ -370,7 +370,6 @@ const ChatDetailsScreen = () => {
             )}
           </CustomModal>
 
-          {/* Simple Menu Modal */}
           <Modal
             visible={menuVisible}
             transparent

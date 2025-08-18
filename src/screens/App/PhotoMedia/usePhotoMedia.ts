@@ -225,18 +225,18 @@ const usePhotoMedia = () => {
   );
 
   const onRefresh = useCallback(async () => {
-    if (!userData?.email) return;
+    if (!email) return;
 
     setRefreshing(true);
 
     try {
-      await dispatch(fetchImages(userData.email));
+      await dispatch(fetchImages(email));
     } catch (error) {
       showError('Failed to refresh images.');
     } finally {
       setRefreshing(false);
     }
-  }, [dispatch, userData?.email]);
+  }, [dispatch, email]);
 
   return {
     handleCameraOpen,

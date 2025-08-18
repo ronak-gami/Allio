@@ -44,10 +44,7 @@ const useStyle = () => {
       borderRadius: 10,
     },
     cameraContainer: {
-      width: height * 0.35 - 90,
-      height: height * 0.35 - 90,
       alignItems: 'center',
-      marginVertical: height * 0.05,
       justifyContent: 'center',
     },
     camera: {

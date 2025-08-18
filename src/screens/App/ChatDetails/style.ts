@@ -293,20 +293,11 @@ const useStyle = () => {
     },
     menuContainer: {
       position: 'absolute',
-      top: 70,
-
-      right: 20,
-      backgroundColor: colors.background,
-      borderRadius: 6,
-      shadowColor: '#000',
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      elevation: 5,
-      paddingVertical: height * 0.01,
-
-      width: height * 0.12,
+      top: scale(55),
+      right: scale(20),
+      backgroundColor: colors.text,
+      borderRadius: scale(10),
     },
-
     themeModalOverlay: {
       flex: 1,
       backgroundColor: 'rgba(0,0,0,0.5)',
@@ -339,7 +330,7 @@ const useStyle = () => {
       marginBottom: height * 0.02,
       borderRadius: 8,
       overflow: 'hidden',
-      backgroundColor:colors.background,
+      backgroundColor: colors.background,
     },
 
     themeImage: {
@@ -347,7 +338,7 @@ const useStyle = () => {
       height: '100%',
     },
     padding: {
-      padding: 10,
+      padding: scale(10),
     },
     flex: {
       flex: 1,

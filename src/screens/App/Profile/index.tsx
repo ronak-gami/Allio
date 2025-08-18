@@ -186,7 +186,7 @@ const MediaContent: React.FC<{
   onRefresh: () => void;
   states: object;
   styles: ReturnType<typeof useStyle>;
-}> = ({ activeTab, images, videos, styles, onRefresh, states }) => {
+}> = ({ activeTab, images, videos, styles }) => {
   const renderEmptyVideoState = () => (
     <View style={styles.emptyGridContainer}>
       <Image
