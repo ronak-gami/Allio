@@ -92,10 +92,17 @@ const useStyle = () => {
     },
 
     actionButtonContainer: {
-      paddingRight: height * 0.02,
-      paddingBottom: height * 0.02,
-      paddingLeft: height * 0.02,
-      gap: height * 0.015,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: width * 0.02,
+      borderTopColor: colors.primary,
+      borderTopWidth: 1,
+      paddingHorizontal: width * 0.04,
+      paddingVertical: width * 0.025,
+    },
+    buttonStyle: {
+      flex: 1,
     },
     primaryActionText: {
       fontSize: scale(18),

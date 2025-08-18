@@ -20,7 +20,7 @@ const useScanQR = () => {
 
   const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [emailError, setEmailError] = useState<String>('');
+  const [emailError, setEmailError] = useState<string>('');
   const [torchOn, setTorchOn] = useState<boolean>(false);
 
   useEffect(() => {
