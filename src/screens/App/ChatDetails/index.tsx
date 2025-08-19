@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   View,
@@ -139,7 +140,12 @@ const ChatDetailsScreen = () => {
             <TouchableOpacity
               style={styles.flex}
               activeOpacity={0.7}
-              onPress={() => navigateToProfile()}>
+              // Disable navigation if user is blocked by me
+              onPress={() => {
+                if (!states?.isBlockedByThem) {
+                  navigateToProfile();
+                }
+              }}>
               <Text style={styles.headerName}>{user?.firstName}</Text>
               <Text style={styles.headerEmail}>{user?.email}</Text>
             </TouchableOpacity>
@@ -180,7 +186,7 @@ const ChatDetailsScreen = () => {
 
               {relationStatus === 'accepted' && (
                 <>
-                  {states?.isBlockedByThem ? (
+                  {states?.isBlockedByMe ? (
                     <View style={styles.flexGrow}>
                       <View style={styles.card}>
                         {showImage ? (
@@ -197,35 +203,12 @@ const ChatDetailsScreen = () => {
                         )}
                         <Text style={styles.cardTitle}>Block</Text>
                         <Text style={styles.cardDescriptionCentered}>
-                          {user?.firstName} has blocked you
-                        </Text>
-                      </View>
-                    </View>
-                  ) : states?.isBlockedByMe ? (
-                    <View style={styles.flexGrow}>
-                      <View style={styles.card}>
-                        {showImage ? (
-                          <Image
-                            source={{ uri: user?.profile }}
-                            style={styles.cardImageCentered}
-                          />
-                        ) : (
-                          <View style={styles.cardPlaceholderCentered}>
-                            <Text style={styles.cardPlaceholderText}>
-                              {firstLetter}
-                            </Text>
-                          </View>
-                        )}
-                        <Text style={styles.cardTitle}>Block</Text>
-                        <Text style={styles.cardDescriptionCentered}>
-                          you blocked this user.
+                          You blocked this user.
                         </Text>
                         <Button
                           style={styles.padding}
                           title="Unblock User"
-                          onPress={() => {
-                            unblockUser();
-                          }}
+                          onPress={unblockUser}
                         />
                       </View>
                     </View>
@@ -246,7 +229,7 @@ const ChatDetailsScreen = () => {
                         )}
                         <Text style={styles.cardTitle}>Let’s Message</Text>
                         <Text style={styles.cardDescriptionCentered}>
-                          {'No messages yet.'}
+                          No messages yet.
                         </Text>
                       </View>
                     </View>
@@ -300,24 +283,19 @@ const ChatDetailsScreen = () => {
             </ScrollView>
           </ImageBackground>
 
-          {/* Input */}
-          {relationStatus === 'accepted' &&
-            !states?.isBlockedByMe &&
-            !states?.isBlockedByThem && (
-              <View style={styles.inputContainer}>
-                <Input
-                  placeholder="Type your message..."
-                  value={states?.message}
-                  onChangeText={states?.setMessage}
-                  style={styles.textInput}
-                />
-                <TouchableOpacity
-                  onPress={sendMessage}
-                  style={styles.sendButton}>
-                  <Image source={ICONS.Send} style={styles.sendIcon} />
-                </TouchableOpacity>
-              </View>
-            )}
+          {relationStatus === 'accepted' && (
+            <View style={styles.inputContainer}>
+              <Input
+                placeholder="Type your message..."
+                value={states?.message}
+                onChangeText={states?.setMessage}
+                style={styles.textInput}
+              />
+              <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+                <Image source={ICONS.Send} style={styles.sendIcon} />
+              </TouchableOpacity>
+            </View>
+          )}
 
           {/* Image Modal */}
           <CustomModal
@@ -398,31 +376,33 @@ const ChatDetailsScreen = () => {
             title="Select Chat Theme"
             onClose={() => setThemeModalVisible(false)}>
             <View style={styles.themeGrid}>
-              {['Chattheme1', 'Chattheme4'].map(key => {
-                const themeUri = IMAGES[key];
-                const isSelected =
-                  states?.selectedTheme === themeUri ||
-                  states?.selecturl === themeUri;
+              {['Chattheme1', 'Chattheme2', 'Chattheme3', 'Chattheme4'].map(
+                key => {
+                  const themeUri = IMAGES[key];
+                  const isSelected =
+                    states?.selectedTheme === themeUri ||
+                    states?.selecturl === themeUri;
 
-                return (
-                  <TouchableOpacity
-                    key={key}
-                    onPress={() => states?.setselecturl(themeUri)}
-                    style={[
-                      styles.themeOption,
-                      isSelected && {
-                        borderWidth: 5,
-                        borderColor: colors.primary,
-                      },
-                    ]}>
-                    <Image
-                      source={themeUri}
-                      style={styles.themeImage}
-                      resizeMode="cover"
-                    />
-                  </TouchableOpacity>
-                );
-              })}
+                  return (
+                    <TouchableOpacity
+                      key={key}
+                      onPress={() => states?.setselecturl(themeUri)}
+                      style={[
+                        styles.themeOption,
+                        isSelected && {
+                          borderWidth: 5,
+                          borderColor: colors.primary,
+                        },
+                      ]}>
+                      <Image
+                        source={themeUri}
+                        style={styles.themeImage}
+                        resizeMode="cover"
+                      />
+                    </TouchableOpacity>
+                  );
+                },
+              )}
             </View>
 
             <Button
