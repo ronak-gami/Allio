@@ -96,7 +96,6 @@ export const useChatDetails = (targetUser: any) => {
     setVideoModalVisible(false);
   };
 
-  /** Listen for relation + messages */
   useEffect(() => {
     if (!myEmail || !targetUser?.email) return;
 
@@ -104,7 +103,6 @@ export const useChatDetails = (targetUser: any) => {
     const relationId = `${sortedEmails[0]}_${sortedEmails[1]}`;
     const relationRef = firestore().collection('relation').doc(relationId);
 
-    // Relation listener (block status + clearTime)
     const unsubRelation = relationRef.onSnapshot(doc => {
       const data = doc.data();
       if (data) {
@@ -114,7 +112,6 @@ export const useChatDetails = (targetUser: any) => {
       }
     });
 
-    // Messages listener with clearTime filter
     const unsubMessages = relationRef
       .collection('messages')
       .orderBy('timestamp', 'asc')
@@ -141,14 +138,12 @@ export const useChatDetails = (targetUser: any) => {
     };
   }, [myEmail, targetUser?.email, clearTime]);
 
-  /** Auto scroll */
   useEffect(() => {
     if (isAutoScroll.current) {
       scrollToBottom(true);
     }
   }, [chatHistory, scrollToBottom]);
 
-  /** Send message */
   const handleSendMessage = async () => {
     if (!message.trim()) return;
     try {
@@ -234,7 +229,6 @@ export const useChatDetails = (targetUser: any) => {
           { merge: true },
         );
 
-      // Instantly update without waiting for Firestore
       setClearTime({ toDate: () => now });
 
       showSuccess('Chat cleared from your side');
@@ -290,7 +284,7 @@ export const useChatDetails = (targetUser: any) => {
 
       await themesRef.set({
         themeUrl: uploadedUrl,
-        localKey: localImage, // to identify if same image chosen again
+        localKey: localImage, 
         updatedAt: new Date(),
       });
 
@@ -312,7 +306,7 @@ export const useChatDetails = (targetUser: any) => {
       const chatId = `${sortedEmails[0]}_${sortedEmails[1]}`;
       const themesRef = firestore().collection('themes').doc(chatId);
 
-      await themesRef.delete(); // remove theme doc
+      await themesRef.delete();
 
       setSelectedTheme(null);
       setselecturl(null);

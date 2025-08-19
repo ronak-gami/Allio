@@ -393,81 +393,36 @@ const ChatDetailsScreen = () => {
             </TouchableOpacity>
           </Modal>
 
-          {/* <CustomModal
-            visible={states?.themeModalVisible}
-            title="Select Chat Theme"
-            onClose={() => setThemeModalVisible(false)}>
-            <View style={styles.themeGrid}>
-              {['Chattheme1', 'Chattheme2', 'Chattheme3', 'Chattheme4'].map(
-                key => {
-                  const themeUri = IMAGES[key];
-                  const isSelected = states?.selecturl === themeUri;
-
-                  return (
-                    <TouchableOpacity
-                      key={key}
-                      onPress={() => states?.setselecturl(themeUri)}
-                      style={[
-                        styles.themeOption,
-                        isSelected && {
-                          borderWidth: 5,
-                          borderColor: colors.primary,
-                        },
-                      ]}>
-                      <Image
-                        source={themeUri}
-                        style={styles.themeImage}
-                        resizeMode="cover"
-                      />
-                    </TouchableOpacity>
-                  );
-                },
-              )}
-            </View>
-
-            <Button
-              title="Apply"
-              loading={states?.loding}
-              onPress={() => {
-                // setThemeModalVisible(false);
-                selectTheme(states?.selecturl);
-              }}
-              style={styles.applyButton}
-            />
-          </CustomModal> */}
-
           <CustomModal
             visible={states?.themeModalVisible}
             title="Select Chat Theme"
             onClose={() => setThemeModalVisible(false)}>
             <View style={styles.themeGrid}>
-              {['Chattheme1', 'Chattheme2', 'Chattheme3', 'Chattheme4'].map(
-                key => {
-                  const themeUri = IMAGES[key];
-                  const isSelected =
-                    states?.selectedTheme === themeUri ||
-                    states?.selecturl === themeUri;
+              {['Chattheme1', 'Chattheme4'].map(key => {
+                const themeUri = IMAGES[key];
+                const isSelected =
+                  states?.selectedTheme === themeUri ||
+                  states?.selecturl === themeUri;
 
-                  return (
-                    <TouchableOpacity
-                      key={key}
-                      onPress={() => states?.setselecturl(themeUri)}
-                      style={[
-                        styles.themeOption,
-                        isSelected && {
-                          borderWidth: 5,
-                          borderColor: colors.primary,
-                        },
-                      ]}>
-                      <Image
-                        source={themeUri}
-                        style={styles.themeImage}
-                        resizeMode="cover"
-                      />
-                    </TouchableOpacity>
-                  );
-                },
-              )}
+                return (
+                  <TouchableOpacity
+                    key={key}
+                    onPress={() => states?.setselecturl(themeUri)}
+                    style={[
+                      styles.themeOption,
+                      isSelected && {
+                        borderWidth: 5,
+                        borderColor: colors.primary,
+                      },
+                    ]}>
+                    <Image
+                      source={themeUri}
+                      style={styles.themeImage}
+                      resizeMode="cover"
+                    />
+                  </TouchableOpacity>
+                );
+              })}
             </View>
 
             <Button
