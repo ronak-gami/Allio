@@ -182,10 +182,6 @@ const useStyle = () => {
       color: colors.background,
     },
 
-    cardTextContainer: {
-      flex: 1,
-    },
-
     cardTitle: {
       fontSize: scale(26),
       marginBottom: height * 0.005,
@@ -300,7 +296,7 @@ const useStyle = () => {
     },
     themeModalOverlay: {
       flex: 1,
-      backgroundColor: 'rgba(0,0,0,0.5)',
+      backgroundColor: colors.modelbg,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -346,9 +342,9 @@ const useStyle = () => {
     flexGrow: {
       flexGrow: 1,
     },
-    applyButton: {
-      marginTop: height * 0.02,
-      padding: height * 0.015,
+
+    menuText: {
+      color: colors.primary,
     },
   });
 };

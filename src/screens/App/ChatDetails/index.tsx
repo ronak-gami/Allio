@@ -46,6 +46,7 @@ const ChatDetailsScreen = () => {
     unblockUser,
     setThemeModalVisible,
     selectTheme,
+    removeTheme,
     navigateToProfile,
   } = useChatDetails(user);
 
@@ -119,29 +120,6 @@ const ChatDetailsScreen = () => {
           style={styles.container}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
-          {/* <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Image source={ICONS.BackArrow} style={styles.backIcon} />
-            </TouchableOpacity>
-            {showImage ? (
-              <Image
-                source={{ uri: user?.profile }}
-                style={styles.headerImage}
-              />
-            ) : (
-              <View style={styles.headerPlaceholder}>
-                <Text style={styles.headerPlaceholderText}>{firstLetter}</Text>
-              </View>
-            )}
-            <View style={{ flex: 1 }}>
-              <Text style={styles.headerName}>{user?.firstName}</Text>
-              <Text style={styles.headerEmail}>{user?.email}</Text>
-            </View>
-            <TouchableOpacity onPress={openMenu}>
-              <Image source={ICONS.menu} style={styles.menuIcon} />
-            </TouchableOpacity>
-          </View> */}
-
           <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Image source={ICONS.BackArrow} style={styles.backIcon} />
@@ -243,6 +221,7 @@ const ChatDetailsScreen = () => {
                           you blocked this user.
                         </Text>
                         <Button
+                          style={styles.padding}
                           title="Unblock User"
                           onPress={() => {
                             unblockUser();
@@ -376,7 +355,7 @@ const ChatDetailsScreen = () => {
             animationType="fade"
             onRequestClose={() => setMenuVisible(false)}>
             <TouchableOpacity
-              style={{ flex: 1 }}
+              style={styles.flex}
               activeOpacity={1}
               onPress={() => setMenuVisible(false)}>
               <View style={styles.menuContainer}>
@@ -386,7 +365,7 @@ const ChatDetailsScreen = () => {
                     states?.isBlockedByMe ? unblockUser() : blockUser();
                   }}
                   style={styles.padding}>
-                  <Text type="semibold">
+                  <Text type="semibold" style={styles.menuText}>
                     {states?.isBlockedByMe ? 'Unblock User' : 'Block User'}
                   </Text>
                 </TouchableOpacity>
@@ -396,7 +375,9 @@ const ChatDetailsScreen = () => {
                     clearChat();
                   }}
                   style={styles.padding}>
-                  <Text type="semibold">Clear Chat</Text>
+                  <Text type="semibold" style={styles.menuText}>
+                    Clear Chat
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -404,18 +385,20 @@ const ChatDetailsScreen = () => {
                     setThemeModalVisible(true);
                   }}
                   style={styles.padding}>
-                  <Text type="semibold">Theme</Text>
+                  <Text type="semibold" style={styles.menuText}>
+                    Theme
+                  </Text>
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
           </Modal>
 
-          <CustomModal
+          {/* <CustomModal
             visible={states?.themeModalVisible}
             title="Select Chat Theme"
             onClose={() => setThemeModalVisible(false)}>
             <View style={styles.themeGrid}>
-              {['chattheme1', 'chattheme2', 'chattheme3', 'chattheme4'].map(
+              {['Chattheme1', 'Chattheme2', 'Chattheme3', 'Chattheme4'].map(
                 key => {
                   const themeUri = IMAGES[key];
                   const isSelected = states?.selecturl === themeUri;
@@ -444,12 +427,67 @@ const ChatDetailsScreen = () => {
 
             <Button
               title="Apply"
+              loading={states?.loding}
               onPress={() => {
-                setThemeModalVisible(false);
+                // setThemeModalVisible(false);
                 selectTheme(states?.selecturl);
               }}
               style={styles.applyButton}
             />
+          </CustomModal> */}
+
+          <CustomModal
+            visible={states?.themeModalVisible}
+            title="Select Chat Theme"
+            onClose={() => setThemeModalVisible(false)}>
+            <View style={styles.themeGrid}>
+              {['Chattheme1', 'Chattheme2', 'Chattheme3', 'Chattheme4'].map(
+                key => {
+                  const themeUri = IMAGES[key];
+                  const isSelected =
+                    states?.selectedTheme === themeUri ||
+                    states?.selecturl === themeUri;
+
+                  return (
+                    <TouchableOpacity
+                      key={key}
+                      onPress={() => states?.setselecturl(themeUri)}
+                      style={[
+                        styles.themeOption,
+                        isSelected && {
+                          borderWidth: 5,
+                          borderColor: colors.primary,
+                        },
+                      ]}>
+                      <Image
+                        source={themeUri}
+                        style={styles.themeImage}
+                        resizeMode="cover"
+                      />
+                    </TouchableOpacity>
+                  );
+                },
+              )}
+            </View>
+
+            <Button
+              title="Apply"
+              loading={states?.loding}
+              onPress={() => {
+                selectTheme(states?.selecturl);
+              }}
+            />
+
+            {/* Remove Theme Button */}
+            {states?.selectedTheme && (
+              <Button
+                title="Remove Theme"
+                outlineColor={colors.primary}
+                onPress={() => {
+                  removeTheme();
+                }}
+              />
+            )}
           </CustomModal>
         </KeyboardAvoidingView>
       </SafeAreaView>

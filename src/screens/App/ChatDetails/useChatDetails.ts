@@ -5,11 +5,12 @@ import { RootState } from '@redux/store';
 import { showSuccess, showError } from '@utils/toast';
 import { useUserCard } from '@components/cards/UserCard/useUserCard';
 import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+
 import api from '@api/index';
 import { uploadToCloudinary } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
-import { useNavigation } from '@react-navigation/native';
 
 export const useChatDetails = (targetUser: any) => {
   const myEmail = useSelector(
@@ -28,6 +29,7 @@ export const useChatDetails = (targetUser: any) => {
   const [isBlockedByThem, setIsBlockedByThem] = useState(false);
   const [clearTime, setClearTime] = useState<any>(null);
   const [themeModalVisible, setThemeModalVisible] = useState<boolean>(false);
+  const [loding, setloding] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
   const [selecturl, setselecturl] = useState<string | null>(null);
 
@@ -64,6 +66,7 @@ export const useChatDetails = (targetUser: any) => {
     selectedTheme,
     setselecturl,
     selecturl,
+    loding,
   };
 
   const handleScroll = (e: any) => {
@@ -260,7 +263,7 @@ export const useChatDetails = (targetUser: any) => {
   }, [myEmail, targetUser?.email]);
 
   const selectTheme = async localImage => {
-    console.log(localImage, 'localImage');
+    setloding(true);
     try {
       const sortedEmails = [myEmail, targetUser.email].sort();
       const chatId = `${sortedEmails[0]}_${sortedEmails[1]}`;
@@ -297,12 +300,35 @@ export const useChatDetails = (targetUser: any) => {
       console.error(err);
       showError('Failed to apply theme');
     } finally {
+      setloding(false);
       setThemeModalVisible(false);
     }
   };
+
+  /** Remove Theme */
+  const removeTheme = async () => {
+    try {
+      const sortedEmails = [myEmail, targetUser.email].sort();
+      const chatId = `${sortedEmails[0]}_${sortedEmails[1]}`;
+      const themesRef = firestore().collection('themes').doc(chatId);
+
+      await themesRef.delete(); // remove theme doc
+
+      setSelectedTheme(null);
+      setselecturl(null);
+      showSuccess('Theme removed, default background applied');
+    } catch (err) {
+      console.error(err);
+      showError('Failed to remove theme');
+    } finally {
+      setThemeModalVisible(false);
+    }
+  };
+
   const navigateToProfile = () => {
     navigation.navigate(HOME.Profile, { email: targetUser?.email });
   };
+
   return {
     states,
     relationStatus,
@@ -336,7 +362,6 @@ export const useChatDetails = (targetUser: any) => {
     selectedImage,
     openImageModal,
     closeImageModal,
-    videoModalVisible,
     selectedVideo,
     openVideoModal,
     closeVideoModal,
@@ -348,5 +373,6 @@ export const useChatDetails = (targetUser: any) => {
     selectTheme,
     setselecturl,
     navigateToProfile,
+    removeTheme,
   };
 };
