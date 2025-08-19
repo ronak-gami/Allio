@@ -64,13 +64,12 @@ const useValidation = () => {
       .email(t('email_valid', { field: t('email') }))
       .required(t('field_required', { field: t('email') }))
       .trim(),
-    mobile: Yup.string()
+    mobileNo: Yup.string()
       .required(t('field_required', { field: t('mobile') }))
       .matches(/^[0-9]{10}$/, t('mobile_pattern', { field: t('mobile') })),
-
     message: Yup.string()
       .required(t('field_required', { field: t('message') }))
-      .min(10, t('field_min', { field: t('message'), min: 10 })),
+      .min(5, t('field_min', { field: t('message'), min: 5 })),
   });
   return {
     loginValidationSchema,

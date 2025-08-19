@@ -1,20 +1,17 @@
 import React, { memo } from 'react';
-import { KeyboardAvoidingView, Platform } from 'react-native';
+import { KeyboardAvoidingView, Platform, View, ScrollView } from 'react-native';
 import { Formik } from 'formik';
-
-import Input from '@components/atoms/Input';
 import Button from '@components/atoms/Button';
 import useValidation from '@utils/validationSchema';
-
-import useStyle from './style';
 import BottomModal from '@components/atoms/BottomModal';
-
+import Input from '@components/atoms/Input';
+import useStyle from './style';
 interface ContactFormModalProps {
   visible: boolean;
   onClose: () => void;
   onSubmit: (fields: {
     name: string;
-    mobile: string;
+    mobileNo: string;
     email: string;
     message: string;
   }) => void;
@@ -30,16 +27,17 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
 
   return (
     <Formik
-      initialValues={{ name: '', mobile: '', email: '', message: '' }}
+      initialValues={{ name: '', mobileNo: '', email: '', message: '' }}
       validationSchema={contetUsValidationSchema}
       onSubmit={(values, { resetForm }) => {
+        // This will only run if validation passes
+        console.log('Form submitted with values:', values);
         onSubmit(values);
         resetForm();
         onClose();
       }}>
       {({
         handleChange,
-        handleBlur,
         handleSubmit,
         values,
         errors,
@@ -48,45 +46,52 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
       }) => (
         <BottomModal visible={visible} onClose={onClose} title="Contact Us">
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={100}>
             <Input
-              placeholder="name"
+              label="Name"
+              placeholder="e.g., pn"
               value={values.name}
               onChangeText={handleChange('name')}
-              onBlur={handleBlur('name')}
-              error={touched.name ? errors.name : ''}
-              style={styles.input}
+              error={touched.name ? errors.name : undefined}
+              touched={touched.name}
+              autoCapitalize="words"
             />
+
             <Input
-              placeholder="mobile"
-              value={values.mobile}
-              onChangeText={handleChange('mobile')}
-              onBlur={handleBlur('mobile')}
-              keyboardType="phone-pad"
-              error={touched.mobile ? errors.mobile : ''}
-              style={styles.input}
-            />
-            <Input
-              placeholder="email"
+              label="Email"
+              placeholder="purvin.itpath@gmail"
               value={values.email}
               onChangeText={handleChange('email')}
-              onBlur={handleBlur('email')}
+              error={touched.email ? errors.email : undefined}
+              touched={touched.email}
               keyboardType="email-address"
-              error={touched.email ? errors.email : ''}
-              style={styles.input}
+              autoCapitalize="none"
             />
+
             <Input
-              placeholder="message"
+              label="Mobile Number"
+              placeholder="4356789076"
+              value={values.mobileNo}
+              onChangeText={handleChange('mobileNo')}
+              error={touched.mobileNo ? errors.mobileNo : undefined}
+              touched={touched.mobileNo}
+              keyboardType="phone-pad"
+              maxLength={10}
+            />
+
+            <Input
+              label="Message"
+              placeholder="Hello "
               value={values.message}
               onChangeText={handleChange('message')}
-              onBlur={handleBlur('message')}
               multiline
-              error={touched.message ? errors.message : ''}
-              style={[styles.input, styles.messageInput]}
+              error={touched.message ? errors.message : undefined}
+              touched={touched.message}
             />
             <Button
               title="Send"
-              onPress={handleSubmit as any}
+              onPress={handleSubmit as () => void}
               disabled={isSubmitting}
               style={styles.button}
             />

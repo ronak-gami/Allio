@@ -24,7 +24,7 @@ export const FeaturesCarousel: React.FC<FeaturesCarouselProps> = ({
 
   return (
     <>
-      <Text style={styles.textone}>Features of ALLIO</Text>
+      <Text style={styles.textone} label={'FeaturesCarousel.title'} />
 
       <Carousel
         ref={carouselRef}

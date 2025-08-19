@@ -90,19 +90,80 @@
     "about_us": "અમારા વિશે",
     "contact_us": "અમારો સંપર્ક કરો"
   },
-  "Settings": {
-    "select_theme": "થિમ પસંદ કરો",
-    "select_language": "ભાષા પસંદ કરો",
-    "confirm_logout": "લૉગઆઉટની પુષ્ટિ કરો",
-    "apply": "લાગુ કરો",
-    "logout": "લૉગઆઉટ"
+  "settings": {
+    "profile": "પ્રોફાઇલ",
+    "My Friends": "મારા મિત્રો",
+    "Theme": "થીમ",
+    "Language": "ભાષા",
+    "Delete Account": "એકાઉન્ટ કાઢી નાખો",
+    "Logout": "લોગઆઉટ"
+  },
+  "bottomSheet": {
+    "selectTheme": "થીમ પસંદ કરો",
+    "selectLanguage": "ભાષા પસંદ કરો",
+    "deleteAccount": "એકાઉન્ટ કાઢી નાખો",
+    "confirmLogout": "લોગઆઉટની પુષ્ટિ કરો"
   },
   "HeroSection": {
     "titleone": "Allio માં આપનું સ્વાગત છે",
-    "description": "તમારા તમામ જરૂરિયાતો માટે એક-સ્ટોપ સોલ્યુશન. અમારી સુવિધાઓ શોધો અને આજે જ શરૂ કરો!"
+    "description": "Allio તમારી તમામ-માં-એક productivity એપ છે. અત્યંત સરળતાથી વિડિયાઓ અને ફોટાઓ એડિટ કરો, દસ્તાવેજો સ્કેન કરો, અને ફાઇલો મેનેજ કરો. સુરક્ષિત અને વિશ્વસનીય ફીચર્સ માટે Firebase પર આધારિત. અમારા લક્ષ્ય: દરેક અનિવાર્ય સાધનને એક સચોટ અનુકૂળ એપ અનુભવમાં લાવવો."
   },
-  "customlogout": {
+
+  "CustomLogout": {
     "description": "તમારા એકાઉન્ટમાંથી લૉગઆઉટ કરવા માટે નીચે આપેલ બટન પર ક્લિક કરો.",
     "logout_button": "લૉગઆઉટ કરો"
+  },
+  "CustomDelete": {
+    "description": "શું તમે ખાતરી કરો છો કે તમારું એકાઉન્ટ ડિલીટ કરવું છે? આ ક્રિયા પાછી લેવામાં નહીં આવે.",
+    "button_title": "એકાઉન્ટ ડિલીટ કરો"
+  },
+  "ContactUsSection": {
+    "title": "અમારો સંપર્ક કરો",
+    "contact_button": "અમારો સંપર્ક કરો"
+  },
+  "FeaturesCarousel": {
+    "title": "ALLIO ની વિશેષતાઓ"
+  },
+  "Home": {
+    "Home": "હોમ"
+  },
+  "ApplyLanguage": {
+    "apply_language": "ભાષા લાગુ કરો",
+    "apply_theme": "થીમ લાગુ કરો"
+  },
+
+  "languages": {
+    "English": "અંગ્રેજી",
+    "Hindi": "હિન્દી",
+    "Gujarati": "ગુજરાતી"
+  },
+
+  "features": {
+    "scanQR": {
+      "title": "ક્યુઆર સ્કેન કરો",
+      "description": "દસ્તાવેજો ઝડપથી સ્કેન કરો અને સુરક્ષિત રીતે સાચવો.",
+      "button": "ક્યુઆર સ્કેન"
+    },
+    "videoEditing": {
+      "title": "વિડિયો એડિટિંગ",
+      "description": "તાત્કાલિક સૂચનાઓ અને રિમાઇન્ડર્સ સાથે અપડેટ રહો.",
+      "button": "વિડિયો એડિટિંગ"
+    },
+    "photoEditing": {
+      "title": "ફોટો એડિટિંગ",
+      "description": "સરળતાથી ક્યુઆર કોડ્સ અને બારકોડ્સ સ્કેન કરો.",
+      "button": "ફોટો એડિટિંગ"
+    },
+    "home": {
+      "title": "હોમ",
+      "description": "તમારી તમામ જરૂરિયાતો માટે ઝડપી અને વિશ્વસનીય સ્કેનિંગ.",
+      "button": "હોમ"
+    },
+    "ProfileButton": {
+      "Pending": "બાકી",
+      "Accept": "પૂર્ણ",
+      "Send": "મોકલો",
+      "Reject": "નકારવામાં આવ્યું"
+    }
   }
 }

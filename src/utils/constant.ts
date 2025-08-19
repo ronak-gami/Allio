@@ -83,39 +83,30 @@ const LICENSE_KEY =
 const FeaturesDataItem = [
   {
     image: IMAGES.Notification,
-    title: ' ScanQR',
-    description: 'Scan documents quickly and save them securely.',
-    buttonText: 'ScanQR',
+    title: 'features.scanQR.title',
+    description: 'features.scanQR.description',
+    buttonText: 'features.scanQR.button',
   },
   {
     image: IMAGES.Notification,
-    title: 'Video Editing',
-    description: 'Stay updated with instant alerts and reminders.',
-    buttonText: 'Video Editing',
+    title: 'features.videoEditing.title',
+    description: 'features.videoEditing.description',
+    buttonText: 'features.videoEditing.button',
   },
   {
     image: IMAGES.Notification,
-    title: 'Photo Editing',
-    description: 'Scan QR codes and barcodes with ease.',
-    buttonText: 'Photo Editing',
+    title: 'features.photoEditing.title',
+    description: 'features.photoEditing.description',
+    buttonText: 'features.photoEditing.button',
   },
-
   {
     image: IMAGES.Scanner,
-    title: 'Home',
-    description: 'Fast and reliable scanning for all your needs.',
-    buttonText: 'Home',
+    title: 'features.home.title',
+    description: 'features.home.description',
+    buttonText: 'features.home.button',
   },
 ];
 
-const settingsData = [
-  { key: 'profile', title: 'Profile' },
-  { key: 'friends', title: 'My Friends' },
-  { key: 'theme', title: 'Theme' },
-  { key: 'language', title: 'Language' },
-  { key: 'delete', title: 'Delete Account' },
-  { key: 'logout', title: 'Logout' },
-];
 export {
   WEB_CLIENT_ID,
   BASE_URL,
@@ -126,5 +117,4 @@ export {
   CARD_WIDTH,
   SPACING,
   FeaturesDataItem,
-  settingsData,
 };
