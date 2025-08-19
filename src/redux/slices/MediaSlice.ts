@@ -1,5 +1,5 @@
 import api from '@api/index';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface MediaState {
   images: string[];
@@ -48,7 +48,18 @@ export const fetchVideos = createAsyncThunk<string[], string>(
 const mediaSlice = createSlice({
   name: 'media',
   initialState,
-  reducers: {},
+  reducers: {
+    setImages: (state, action: PayloadAction<string[]>) => {
+      state.images = action.payload;
+    },
+    setVideos: (state, action: PayloadAction<string[]>) => {
+      state.videos = action.payload;
+    },
+    resetMedia: state => {
+      state.images = [];
+      state.videos = [];
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchImages.fulfilled, (state, action) => {
@@ -60,4 +71,5 @@ const mediaSlice = createSlice({
   },
 });
 
+export const { setImages, setVideos, resetMedia } = mediaSlice.actions;
 export default mediaSlice.reducer;

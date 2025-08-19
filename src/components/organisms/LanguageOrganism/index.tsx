@@ -2,11 +2,10 @@ import React, { useState, useCallback } from 'react';
 import { View } from 'react-native';
 import i18n from '@assets/i18n';
 import RadioGroup from '@components/molecules/RadioGroups';
-import Button from '@components/atoms/Button';
+import { Button } from '@components/index';
 import { useBottomSheet } from '../../../context/BottomSheetContext';
 import { useTranslation } from 'react-i18next';
 import { capitalizeFirst } from '@utils/helper';
-import BottomSheet from '@gorhom/bottom-sheet';
 const { t } = useTranslation();
 const languageOptions = [
   { label: t('languages.English'), value: 'en' },
@@ -34,12 +33,12 @@ const LanguageOrganism: React.FC = () => {
       />
       <View style={{ marginTop: 20 }}>
         <Button
-          title={'ApplyLanguage.apply_language'}
+          title={capitalizeFirst(t('bottomSheet.selectLanguage'))}
           onPress={handleLanguageApply}
         />
       </View>
     </View>
   );
 };
-//  title={'ContactUsSection.contact_button'}
+
 export default LanguageOrganism;

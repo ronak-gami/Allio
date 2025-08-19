@@ -35,13 +35,13 @@ const useStyle = () => {
       borderRadius: scale(15),
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: colors.primary,
+      // backgroundColor: colors.background,
     },
     closeIcon: {
       fontSize: scale(16),
       width: scale(10),
       height: scale(10),
-      tintColor: colors.black,
+      tintColor: colors.background,
     },
     content: {
       flex: 1,
