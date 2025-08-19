@@ -153,6 +153,12 @@
     "ApplyLanguage": {
       "apply_language": "apply language",
       "apply_theme": "apply theme"
+    },
+    "ProfileButton": {
+      "Pending": "Pending",
+      "Accept": "Completed",
+      "Send": "Send",
+      "Reject": "Rejected"
     }
   }
 }
