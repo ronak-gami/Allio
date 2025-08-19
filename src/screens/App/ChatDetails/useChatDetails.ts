@@ -8,9 +8,10 @@ import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 
 import api from '@api/index';
-import { uploadToCloudinary } from '@utils/helper';
+import { checkLocationPermission, uploadToCloudinary } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
+import { registerLocationCallback } from '@utils/LocationCallbackManager';
 
 export const useChatDetails = (targetUser: any) => {
   const myEmail = useSelector(
@@ -38,7 +39,12 @@ export const useChatDetails = (targetUser: any) => {
       text?: string;
       image?: string | null;
       video?: string | null;
+      location?: {
+        latitude: number;
+        longitude: number;
+      } | null;
       fromMe: boolean;
+      timestamp?: any;
     }[]
   >([]);
 
@@ -114,18 +120,19 @@ export const useChatDetails = (targetUser: any) => {
 
     const unsubMessages = relationRef
       .collection('messages')
-      .orderBy('timestamp', 'asc')
+      .orderBy('timestamp', 'desc') // Changed to desc for inverted list
       .onSnapshot(snapshot => {
         const messages = snapshot.docs
           .map(doc => ({
             text: doc.data()?.text || '',
             image: doc.data()?.image || null,
             video: doc.data()?.video || null,
+            location: doc.data()?.location || null,
             fromMe: doc.data()?.from === myEmail,
             timestamp: doc.data()?.timestamp,
           }))
           .filter(msg => {
-            if (!clearTime) return true; // show all if not cleared
+            if (!clearTime) return true;
             return msg.timestamp?.toDate?.() > clearTime.toDate?.();
           });
 
@@ -322,8 +329,87 @@ export const useChatDetails = (targetUser: any) => {
     navigation.navigate(HOME.Profile, { email: targetUser?.email });
   };
 
+  const sendLocationToFirestore = async (location: {
+    latitude: number;
+    longitude: number;
+  }) => {
+    try {
+      const sortedEmails = [myEmail, targetUser.email].sort();
+      const relationId = `${sortedEmails[0]}_${sortedEmails[1]}`;
+      const relationRef = firestore().collection('relation').doc(relationId);
+
+      await relationRef.collection('messages').add({
+        from: myEmail,
+        to: targetUser?.email,
+        fromMe: true,
+        timestamp: firestore.FieldValue.serverTimestamp(),
+        text: '',
+        image: null,
+        video: null,
+        location: {
+          latitude: location.latitude,
+          longitude: location.longitude,
+        },
+      });
+    } catch (error) {
+      console.error('Error sending location:', error);
+      showError('Failed to share location');
+    }
+  };
+
+  const handleAttachLocation = async () => {
+    console.log('🚀 Starting handleAttachLocation');
+    try {
+      // Validate user data
+      if (!myEmail || !targetUser?.email) {
+        console.error('❌ Missing email data:', {
+          myEmail,
+          targetUserEmail: targetUser?.email,
+        });
+        showError('Missing required data');
+        return;
+      }
+
+      // Check location permission
+      const hasPermission = await checkLocationPermission();
+      if (!hasPermission) {
+        console.error('❌ Location permission denied');
+        showError('Location permission is required');
+        return;
+      }
+
+      const callbackId = registerLocationCallback(sendLocationToFirestore);
+      console.log('📝 Generated callbackId:', callbackId);
+
+      // Navigate immediately after registering callback
+      navigation.navigate(HOME.LocationPicker, { callbackId });
+      console.log('✅ Navigation successful');
+    } catch (error) {
+      console.error('❌ Error in handleAttachLocation:', error);
+      showError('Failed to open location picker');
+    }
+  };
+
+  const handleLocationPress = (location: {
+    latitude: number;
+    longitude: number;
+  }) => {
+    // Here you can decide what to do when user taps the location:
+    // Options:
+    // 1. Open in Maps app
+    // 2. Show full screen map preview
+    // 3. Show location details
+    // 4. Navigate to custom location view
+
+    console.log('Location pressed:', location);
+    // We can implement the desired action once you decide
+  };
+
   return {
-    states,
+    states: {
+      ...states,
+      handleLocationPress,
+    },
     relationStatus,
     sendRequest: async () => {
       try {
@@ -367,5 +453,6 @@ export const useChatDetails = (targetUser: any) => {
     setselecturl,
     navigateToProfile,
     removeTheme,
+    handleAttachLocation,
   };
 };

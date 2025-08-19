@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   View,
@@ -9,6 +8,7 @@ import {
   ScrollView,
   Modal,
   ImageBackground,
+  VirtualizedList,
 } from 'react-native';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '@types/navigations';
@@ -19,8 +19,12 @@ import Video from 'react-native-video';
 import { Button, Container, CustomModal, Input, Text } from '@components/index';
 import useStyle from './style';
 import { useChatDetails } from './useChatDetails';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 type ChatDetailsRouteProp = RouteProp<HomeStackParamList, 'ChatDetailsScreen'>;
+
+const getItemCount = (data: any[]) => data.length;
+const getItem = (data: any[], index: number) => data[index];
 
 const ChatDetailsScreen = () => {
   const styles = useStyle();
@@ -49,6 +53,7 @@ const ChatDetailsScreen = () => {
     selectTheme,
     removeTheme,
     navigateToProfile,
+    handleAttachLocation,
   } = useChatDetails(user);
 
   const showImage = user?.profile && user?.profile !== '';
@@ -114,6 +119,74 @@ const ChatDetailsScreen = () => {
     setMenuVisible(true);
   };
 
+  const renderMessage = ({
+    item: chat,
+    index,
+  }: {
+    item: any;
+    index: number;
+  }) => {
+    return (
+      <View
+        key={index}
+        style={[
+          styles.messageBubble,
+          chat.fromMe ? styles.myMessage : styles.theirMessage,
+        ]}>
+        {chat?.text && <Text style={styles.messageText}>{chat.text}</Text>}
+        {chat?.image && (
+          <TouchableOpacity onPress={() => openImageModal(chat.image)}>
+            <Image
+              source={{ uri: chat.image }}
+              style={[styles.chatImage, { marginTop: chat.text ? 5 : 0 }]}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+        )}
+        {chat?.video && (
+          <TouchableOpacity onPress={() => openVideoModal(chat.video)}>
+            <Video
+              source={{ uri: chat.video }}
+              style={styles.chatVideo}
+              resizeMode="cover"
+              paused
+              pointerEvents="none"
+            />
+            <View style={styles.playIconOverlay}>
+              <Image source={ICONS.VideoPlay} style={styles.playBtn} />
+            </View>
+          </TouchableOpacity>
+        )}
+        {chat?.location && (
+          <TouchableOpacity
+            onPress={() => states.handleLocationPress(chat.location)}
+            style={styles.locationPreviewContainer}>
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              style={styles.locationPreview}
+              scrollEnabled={false}
+              zoomEnabled={false}
+              pitchEnabled={false}
+              rotateEnabled={false}
+              initialRegion={{
+                latitude: chat.location.latitude,
+                longitude: chat.location.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}>
+              <Marker
+                coordinate={{
+                  latitude: chat.location.latitude,
+                  longitude: chat.location.longitude,
+                }}
+              />
+            </MapView>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
+
   return (
     <Container title="Chat Details" showHeader={false}>
       <SafeAreaView style={styles.container}>
@@ -140,7 +213,6 @@ const ChatDetailsScreen = () => {
             <TouchableOpacity
               style={styles.flex}
               activeOpacity={0.7}
-              // Disable navigation if user is blocked by me
               onPress={() => {
                 if (!states?.isBlockedByThem) {
                   navigateToProfile();
@@ -227,56 +299,43 @@ const ChatDetailsScreen = () => {
                             </Text>
                           </View>
                         )}
-                        <Text style={styles.cardTitle}>Let’s Message</Text>
+                        <Text style={styles.cardTitle}>Let's Message</Text>
                         <Text style={styles.cardDescriptionCentered}>
                           No messages yet.
                         </Text>
                       </View>
                     </View>
                   ) : (
-                    states?.chatHistory?.map((chat, index) => (
-                      <View
-                        key={index}
-                        style={[
-                          styles.messageBubble,
-                          chat.fromMe ? styles.myMessage : styles.theirMessage,
-                        ]}>
-                        {chat?.text && (
-                          <Text style={styles.messageText}>{chat.text}</Text>
-                        )}
-                        {chat?.image && (
-                          <TouchableOpacity
-                            onPress={() => openImageModal(chat.image)}>
-                            <Image
-                              source={{ uri: chat.image }}
-                              style={[
-                                styles.chatImage,
-                                { marginTop: chat.text ? 5 : 0 },
-                              ]}
-                              resizeMode="cover"
-                            />
-                          </TouchableOpacity>
-                        )}
-                        {chat?.video && (
-                          <TouchableOpacity
-                            onPress={() => openVideoModal(chat.video)}>
-                            <Video
-                              source={{ uri: chat.video }}
-                              style={styles.chatVideo}
-                              resizeMode="cover"
-                              paused
-                              pointerEvents="none"
-                            />
-                            <View style={styles.playIconOverlay}>
-                              <Image
-                                source={ICONS.VideoPlay}
-                                style={styles.playBtn}
-                              />
-                            </View>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    ))
+                    <VirtualizedList
+                      ref={states?.scrollViewRef}
+                      data={states?.chatHistory}
+                      initialNumToRender={15}
+                      renderItem={renderMessage}
+                      keyExtractor={(_, index) => index.toString()}
+                      getItemCount={getItemCount}
+                      getItem={getItem}
+                      maxToRenderPerBatch={10}
+                      windowSize={10}
+                      onScroll={handleScroll}
+                      scrollEventThrottle={16}
+                      contentContainerStyle={[
+                        styles.scrollContainer,
+                        states?.selectedTheme
+                          ? { backgroundColor: 'transparent' }
+                          : {},
+                      ]}
+                      style={{
+                        flex: 1,
+                        backgroundColor: states?.selectedTheme
+                          ? undefined
+                          : colors.background,
+                      }}
+                      inverted
+                      maintainVisibleContentPosition={{
+                        minIndexForVisible: 0,
+                        autoscrollToTopThreshold: 10,
+                      }}
+                    />
                   )}
                 </>
               )}
@@ -365,6 +424,13 @@ const ChatDetailsScreen = () => {
                   style={styles.padding}>
                   <Text type="semibold" style={styles.menuText}>
                     Theme
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleAttachLocation}
+                  style={styles.padding}>
+                  <Text type="semibold" style={styles.menuText}>
+                    Share Location
                   </Text>
                 </TouchableOpacity>
               </View>

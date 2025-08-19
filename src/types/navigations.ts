@@ -24,6 +24,9 @@ export type HomeStackParamList = {
   MyQR: undefined;
   MyFriends: undefined;
   ChatDetailsScreen: undefined;
+  LocationPicker: {
+    callbackId: string;
+  };
   HomeTabs: NavigatorScreenParams<TabParamList> | undefined;
   Profile: { email?: string };
 };

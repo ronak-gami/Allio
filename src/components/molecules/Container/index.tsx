@@ -19,6 +19,7 @@ interface PageLayoutProps {
   showLoader?: boolean;
   loaderText?: string;
   keyboardAvoiding?: boolean;
+  containerStyle?: ViewStyle;
   style?: ViewStyle;
   auth?: boolean;
   showProfileLogo?: boolean;
@@ -34,6 +35,7 @@ const Container: React.FC<PageLayoutProps> = ({
   showLoader = false,
   loaderText = 'Loading...',
   keyboardAvoiding = false,
+  containerStyle,
   style,
   auth = false,
   showProfileLogo = false,
@@ -45,7 +47,12 @@ const Container: React.FC<PageLayoutProps> = ({
   const styles = useStyle();
 
   return (
-    <View style={[styles.flex, { backgroundColor: colors.background }]}>
+    <View
+      style={[
+        styles.flex,
+        { backgroundColor: colors.background },
+        containerStyle,
+      ]}>
       <StatusBar
         backgroundColor={auth ? colors.background : colors.primary}
         barStyle={auth && dark ? 'light-content' : 'dark-content'}

@@ -5,6 +5,7 @@ import { scale } from 'react-native-size-matters';
 
 const useStyle = () => {
   const { colors } = useTheme();
+
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -342,9 +343,33 @@ const useStyle = () => {
     flexGrow: {
       flexGrow: 1,
     },
-
     menuText: {
+      textAlign: 'center',
       color: colors.primary,
+    },
+    locationPreviewContainer: {
+      width: scale(200),
+      height: scale(150),
+      borderRadius: scale(8),
+      overflow: 'hidden',
+      marginVertical: scale(4),
+    },
+    locationPreview: {
+      width: '100%',
+      height: '100%',
+    },
+    contentContainer: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    messageList: {
+      flex: 1,
+    },
+    messageListContainer: {
+      paddingHorizontal: scale(16),
+      paddingVertical: scale(10),
+      // For inverted list
+      transform: [{ scaleY: -1 }],
     },
   });
 };

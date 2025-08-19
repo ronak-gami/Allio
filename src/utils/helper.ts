@@ -1,4 +1,4 @@
-import { Dimensions, PermissionsAndroid, Platform, View } from 'react-native';
+import { Dimensions, PermissionsAndroid, Platform } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {
   PERMISSIONS,
@@ -8,6 +8,7 @@ import {
   PermissionStatus,
   checkMultiple,
 } from 'react-native-permissions';
+import Geolocation from '@react-native-community/geolocation';
 import messaging from '@react-native-firebase/messaging';
 import RNFS from 'react-native-fs';
 import axios from 'axios';
@@ -419,6 +420,31 @@ const uploadToCloudinary = async file => {
   }
 };
 
+const checkLocationPermission = async (): Promise<boolean> => {
+  try {
+    if (Platform.OS === 'ios') {
+      const status = await Geolocation.requestAuthorization('whenInUse');
+      return status === 'granted';
+    } else {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message:
+            'This app needs access to your location to share it with friends',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    }
+  } catch (error) {
+    console.error('Error checking location permission:', error);
+    return false;
+  }
+};
+
 export {
   height,
   width,
@@ -436,4 +462,5 @@ export {
   getCurrentTimestamp,
   requestNotificationPermission,
   uploadToCloudinary,
+  checkLocationPermission,
 };

@@ -74,6 +74,7 @@ const HOME = {
   MyQR: 'MyQR',
   MyFriends: 'MyFriends',
   ChatDetailsScreen: 'ChatDetailsScreen',
+  LocationPicker: 'LocationPicker',
 } as const;
 
 const LICENSE_KEY =
