@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '@types/navigations';
 import MPINSetupScreen from '@screens/App/MPIN';
@@ -12,10 +12,18 @@ import MyFriends from '@screens/App/MyFriends';
 import Profile from '@screens/App/Profile';
 import { CustomStatusBar } from '@components/index';
 import ChatDetailsScreen from '@screens/App/ChatDetails';
-
+import { requestNotificationPermission } from '@utils/helper';
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeNavigator: React.FC = () => {
+  useEffect(() => {
+    const timeoutId = setTimeout(async () => {
+      await requestNotificationPermission();
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   return (
     <>
       <CustomStatusBar
@@ -31,7 +39,6 @@ const HomeNavigator: React.FC = () => {
           name={HOME.ChatDetailsScreen}
           component={ChatDetailsScreen}
         />
-
         <Stack.Screen name={HOME.Profile} component={Profile} />
         <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />
       </Stack.Navigator>

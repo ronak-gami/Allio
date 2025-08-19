@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
 import useStyle from './style';
 import Text from '../Text';
 
@@ -11,6 +11,8 @@ interface CustomFlatListProps {
   contentContainerStyle?: object;
   ListEmptyComponent?: JSX.Element;
   [key: string]: any;
+  refreshing?: boolean;
+  onRefresh?: () => void;
 }
 
 const CustomFlatList = forwardRef<FlatList<any>, CustomFlatListProps>(
@@ -22,6 +24,8 @@ const CustomFlatList = forwardRef<FlatList<any>, CustomFlatListProps>(
       ListEmptyComponent,
       renderItem,
       data,
+      refreshing = false,
+      onRefresh,
       ...props
     },
     ref,
@@ -50,6 +54,11 @@ const CustomFlatList = forwardRef<FlatList<any>, CustomFlatListProps>(
           )
         }
         removeClippedSubviews={false}
+        refreshControl={
+          onRefresh ? (
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          ) : undefined
+        }
         {...props}
       />
     );

@@ -22,7 +22,7 @@ const useStyle = () => {
       borderRadius: scale(10),
     },
     messageText: {
-      color: colors.text,
+      color: colors.background,
       fontSize: scale(15),
       flexShrink: 1,
     },
@@ -32,7 +32,7 @@ const useStyle = () => {
     closeIcon: {
       width: scale(10),
       height: scale(10),
-      tintColor: colors.text,
+      tintColor: colors.background,
     },
   });
 };

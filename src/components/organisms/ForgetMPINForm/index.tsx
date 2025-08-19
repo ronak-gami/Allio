@@ -47,7 +47,14 @@ const ForgetMPINForm: React.FC<ForgetMPINFormProps> = ({ setLoading }) => {
           initialValues={{ email: '' }}
           validationSchema={forgotPasswordSchema}
           onSubmit={handleForgotPassword}>
-          {({ handleChange, handleSubmit, values, errors, touched }) => (
+          {({
+            handleChange,
+            handleSubmit,
+            handleBlur,
+            values,
+            errors,
+            touched,
+          }) => (
             <View style={style.form}>
               <View style={style.buttonGrow}>
                 <Text
@@ -62,12 +69,15 @@ const ForgetMPINForm: React.FC<ForgetMPINFormProps> = ({ setLoading }) => {
                 />
 
                 <Input
-                  placeholder="Email"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
+                  label="Email"
+                  placeholder="e.g., Ronak.Gami@example.com"
                   value={values.email}
                   onChangeText={handleChange('email')}
-                  error={touched.email ? errors.email : ''}
+                  onBlur={handleBlur('email')}
+                  error={errors.email}
+                  touched={touched.email}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                 />
 
                 <Pressable

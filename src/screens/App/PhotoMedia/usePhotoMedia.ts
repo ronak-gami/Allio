@@ -17,7 +17,7 @@ import { showError, showSuccess } from '@utils/toast';
 import { LICENSE_KEY } from '@utils/constant';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@redux/store';
-import { fetchImages } from '@redux/slices/MediaSlice';
+import { fetchImages, setImages } from '@redux/slices/MediaSlice';
 import api from '@api/index';
 
 interface PhotoAsset {
@@ -41,8 +41,9 @@ const usePhotoMedia = () => {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined,
   );
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  const userData = useSelector((state: RootState) => state?.auth?.userData);
+  const { email } = useSelector((state: any) => state.auth.userData);
   const dispatch = useDispatch<AppDispatch>();
   const images = useSelector((state: RootState) => state?.media?.images);
 
@@ -58,13 +59,16 @@ const usePhotoMedia = () => {
     modalVisible,
     selectedImage,
     images,
+    refreshing,
   };
 
   useEffect(() => {
-    if (userData?.email) {
-      dispatch(fetchImages(userData?.email));
+    if (email) {
+      dispatch(fetchImages(email));
+    } else {
+      dispatch(setImages([]));
     }
-  }, [userData?.email]);
+  }, [email, dispatch]);
 
   const formatFileSize = (bytes?: number): string => {
     if (!bytes) return 'Unknown';
@@ -168,7 +172,7 @@ const usePhotoMedia = () => {
         : `file://${result?.artifact}`;
 
       const formData = new FormData();
-      formData.append('email', userData?.email);
+      formData.append('email', email);
       formData.append('fileType', 'image');
       formData.append('file', {
         uri: compressedUri,
@@ -180,15 +184,14 @@ const usePhotoMedia = () => {
 
       if (response?.data?.success) {
         showSuccess(response?.data?.message || 'Upload successful!');
-        dispatch(fetchImages(userData?.email));
+        dispatch(fetchImages(email));
       }
     } catch (error: any) {
       const apiError =
         error?.response?.data?.message ||
         error?.message ||
         'Something went wrong during upload.';
-      showError(apiError);
-      console.error('Caught error:', error);
+      console.error('Caught error:', apiError);
     } finally {
       setLoading(false);
       handleClear();
@@ -221,6 +224,20 @@ const usePhotoMedia = () => {
     }, []),
   );
 
+  const onRefresh = useCallback(async () => {
+    if (!email) return;
+
+    setRefreshing(true);
+
+    try {
+      await dispatch(fetchImages(email));
+    } catch (error) {
+      showError('Failed to refresh images.');
+    } finally {
+      setRefreshing(false);
+    }
+  }, [dispatch, email]);
+
   return {
     handleCameraOpen,
     handleSelectPhoto,
@@ -239,6 +256,7 @@ const usePhotoMedia = () => {
     openModal,
     closeModal,
     states,
+    onRefresh,
   };
 };
 

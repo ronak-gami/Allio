@@ -37,6 +37,7 @@ const VideoMedia: React.FC<Props> = () => {
     handleSaveMedia,
     isPreviewModalOpen,
     handleSelectStoredVideo,
+    onRefresh,
   } = useVideoMedia();
 
   const styles = useStyle();
@@ -56,6 +57,8 @@ const VideoMedia: React.FC<Props> = () => {
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={styles.gridRow}
         contentContainerStyle={styles.gridContent}
+        refreshing={states?.refreshing}
+        onRefresh={onRefresh}
         ListEmptyComponent={
           <View style={styles.emptyGridContainer}>
             <Image
@@ -77,11 +80,16 @@ const VideoMedia: React.FC<Props> = () => {
 
   const renderBottomButtons = () => (
     <View style={styles.bottomButtonsContainer}>
-      <Button title="Record New" onPress={handleRecordVideo} />
+      <Button
+        title="Record New"
+        onPress={handleRecordVideo}
+        style={styles.buttonStyle}
+      />
       <Button
         title="Choose From Gallery"
         onPress={handleSelectVideo}
         outlineColor={colors.primary}
+        style={styles.buttonStyle}
       />
     </View>
   );

@@ -45,6 +45,16 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
     }
   };
 
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      flatListRef.current?.scrollToIndex({
+        index: currentIndex - 1,
+        animated: true,
+      });
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
   const handleSkip = async () => {
     dispatch(setStateKey({ key: 'onboardingCompleted', value: false }));
     await analytics().logEvent('onboarding_skipped');
@@ -87,11 +97,23 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
         }}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleNext}>
-        <Text style={styles.buttonText}>
-          {currentIndex === onboardingData.length - 1 ? 'Get Started' : 'Next'}
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        {currentIndex > 0 ? (
+          <TouchableOpacity style={styles.navButton} onPress={handlePrevious}>
+            <Text style={styles.buttonText}>Previous</Text>
+          </TouchableOpacity>
+        ) : (
+          <View />
+        )}
+
+        <TouchableOpacity style={styles.navButton} onPress={handleNext}>
+          <Text style={styles.buttonText}>
+            {currentIndex === onboardingData.length - 1
+              ? 'Get Started'
+              : 'Next'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

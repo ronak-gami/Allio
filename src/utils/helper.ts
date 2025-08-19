@@ -1,4 +1,4 @@
-import { Dimensions, PermissionsAndroid, Platform } from 'react-native';
+import { Dimensions, PermissionsAndroid, Platform, View } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {
   PERMISSIONS,
@@ -8,7 +8,9 @@ import {
   PermissionStatus,
   checkMultiple,
 } from 'react-native-permissions';
+import messaging from '@react-native-firebase/messaging';
 import RNFS from 'react-native-fs';
+import axios from 'axios';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import Share from 'react-native-share';
 import { showError, showSuccess } from './toast';
@@ -301,6 +303,7 @@ const handleMediaDownload = async (
 const handleMediaShare = async (
   mediaUri: string,
   mediaType: 'photo' | 'video',
+  userEmail?: string, // name from props (optional)
 ) => {
   try {
     const extension = mediaType === 'photo' ? 'jpg' : 'mp4';
@@ -317,6 +320,10 @@ const handleMediaShare = async (
         title: `Share ${mediaType}`,
         url: `file://${tempPath}`,
         type: mediaType === 'photo' ? 'image/jpeg' : 'video/mp4',
+        message:
+          mediaType === 'photo' && userEmail
+            ? `QR code for friend request: ${userEmail}`
+            : undefined,
         failOnCancel: false,
       };
 
@@ -363,6 +370,55 @@ const getCurrentTimestamp = () => {
   const now = new Date();
   return now.toISOString();
 };
+const requestNotificationPermission = async (): Promise<boolean> => {
+  try {
+    if (Platform.OS === 'ios') {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      return enabled;
+    } else if (Platform.OS === 'android') {
+      if (Platform.Version >= 33) {
+        const result = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+        const granted = result === PermissionsAndroid.RESULTS.GRANTED;
+
+        return granted;
+      }
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error requesting notification permission:', error);
+    return false;
+  }
+};
+
+const uploadToCloudinary = async file => {
+  const formData = new FormData();
+  formData.append('file', {
+    uri: file.uri,
+    type: file.type,
+    name: file.fileName || 'upload.jpg',
+  });
+  formData.append('upload_preset', 'chat_app_upload');
+
+  try {
+    const res = await axios.post(
+      'https://api.cloudinary.com/v1_1/dmoajpxcj/image/upload',
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } },
+    );
+
+    return res.data.secure_url; // Cloudinary URL
+  } catch (error) {
+    console.error('Cloudinary Upload Error:', error);
+    throw error;
+  }
+};
 
 export {
   height,
@@ -380,4 +436,6 @@ export {
   getUserData,
   getCurrentTimestamp,
   capitalizeFirst,
+  requestNotificationPermission,
+  uploadToCloudinary,
 };

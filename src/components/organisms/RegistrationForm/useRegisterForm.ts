@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import { useDispatch } from 'react-redux';
 import {
   getAuth,
@@ -9,7 +8,6 @@ import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
 import firestore from '@react-native-firebase/firestore';
-
 import { useNavigation } from '@react-navigation/native';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import useValidation from '@utils/validationSchema';
@@ -60,15 +58,20 @@ const useRegister = (options?: UseRegisterOptions) => {
     try {
       crashlytics().log('Registration started for ' + values.email);
 
+      // Create Firebase user
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         values.email,
         values.password,
       );
+
       const user = userCredential.user;
       if (!user) {
         throw new Error('No user created');
       }
+
+      const idToken = await user.getIdToken();
+      dispatch(setStateKey({ key: 'token', value: idToken }));
 
       const userData = {
         firstName: values.firstName,
@@ -76,7 +79,9 @@ const useRegister = (options?: UseRegisterOptions) => {
         email: values.email,
         mobileNo: values.mobileNo,
       };
+
       await saveUserToFirestore(user.uid, userData);
+
       dispatch(setStateKey({ key: 'userData', value: userData }));
 
       await analytics().logEvent('register', {

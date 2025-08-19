@@ -50,17 +50,22 @@ const useStyle = () => {
       opacity: 0.7,
     },
     bottomButtonsContainer: {
-      padding: width * 0.04,
-      gap: width * 0.03,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: width * 0.02,
+      borderTopColor: colors.primary,
       borderTopWidth: 1,
-      borderTopColor: colors.border,
-      backgroundColor: colors.background,
+      paddingHorizontal: width * 0.04,
+      paddingVertical: width * 0.025,
+    },
+    buttonStyle: {
+      flex: 1,
     },
     content: {
       flex: 1,
       padding: width * 0.04,
     },
-
     headerView: {
       flexDirection: 'row',
       justifyContent: 'space-between',

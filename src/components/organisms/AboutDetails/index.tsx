@@ -2,10 +2,8 @@ import React, { memo, useState } from 'react';
 import { View } from 'react-native';
 import HeroSection from '@components/molecules/HeroSection';
 import CustomModal from '@components/atoms/CustomModel';
-import useStyle from './style';
 
 const AboutOrganism: React.FC = () => {
-  const styles = useStyle();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalDescription, setModalDescription] = useState('');
@@ -28,7 +26,6 @@ const AboutOrganism: React.FC = () => {
         title={modalTitle}
         description={modalDescription}
         onClose={handleCloseModal}
-        // Example: light yellow
       />
     </View>
   );

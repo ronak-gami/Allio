@@ -1,15 +1,24 @@
 import React, { useRef } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
+import { FormikProps } from 'formik';
+
 import Text from '@components/atoms/Text';
 import Button from '@components/atoms/Button';
-import useRegister from './useRegisterForm';
-import useAnalytics from '@hooks/useAnalytics';
-import { FormikProps } from 'formik';
-import useStyle from './style';
 import Input from '@components/atoms/Input';
 
-const RegistrationForm = () => {
+import SignInWithFacebook from '@components/molecules/SocialSignInFacebook';
+import SignInWithGoogle from '@components/molecules/SocialSignInGoogle';
+import SignInWithGitHub from '@components/molecules/SocialGithub';
+
+import useRegister from './useRegisterForm';
+import useAnalytics from '@hooks/useAnalytics';
+import useStyle from './style';
+
+interface RegistrationFormProps {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const RegistrationForm: React.FC<RegistrationFormProps> = ({ setLoading }) => {
   const styles = useStyle();
   const { track } = useAnalytics({ screenName: 'RegistrationForm' });
   const formikRef = useRef<FormikProps<any>>(undefined);
@@ -118,6 +127,19 @@ const RegistrationForm = () => {
             </>
           )}
         </Formik>
+      </View>
+      <View style={styles.dividerContainer}>
+        <View style={styles.line} />
+        <Text style={styles.socialSignInText} label="social_sign_in">
+          Social Sign-In
+        </Text>
+        <View style={styles.line} />
+      </View>
+
+      <View style={styles.SocialButtonStyle}>
+        {__DEV__ && <SignInWithFacebook setLoading={setLoading} />}
+        <SignInWithGoogle setLoading={setLoading} />
+        {__DEV__ && <SignInWithGitHub />}
       </View>
       <View style={styles.dividerContainer}>
         <Text label="no_account" style={styles.orText} />

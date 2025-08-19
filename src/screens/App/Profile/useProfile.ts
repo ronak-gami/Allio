@@ -1,12 +1,13 @@
-import { fetchImages, fetchVideos } from '@redux/slices/MediaSlice';
-import { RootState, AppDispatch } from '@redux/store';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { HomeStackParamList } from '@types/navigations';
+import { fetchImages, fetchVideos, resetMedia } from '@redux/slices/MediaSlice';
+import { RootState, AppDispatch } from '@redux/store';
+import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 import { getUserData } from '@utils/helper';
 import { HOME } from '@utils/constant';
-import { useNavigation } from '@react-navigation/native';
-import { HomeStackParamList } from '@types/navigations';
-import firestore from '@react-native-firebase/firestore';
+import { useUserCard } from '@components/cards/UserCard/useUserCard';
 
 interface UseProfileProps {
   userEmail?: string;
@@ -23,7 +24,7 @@ interface UserData {
 const useProfile = ({ userEmail }: UseProfileProps = {}) => {
   const [activeTab, setActiveTab] = useState<string>('images');
   const [isFriend, setIsFriend] = useState<boolean>(false);
-  console.log('isFriend: ', isFriend);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserData>({
     email: '',
     firstName: undefined,
@@ -31,6 +32,7 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
     mobileNo: undefined,
     profileImage: undefined,
   });
+
   const navigation = useNavigation<HomeStackParamList>();
   const { email: authEmail } = useSelector(
     (state: RootState) => state.auth.userData,
@@ -38,33 +40,33 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
   const { images, videos } = useSelector((state: RootState) => state.media);
   const dispatch = useDispatch<AppDispatch>();
 
+  // Determine which email to use (profile email or logged-in user email)
   const email = userEmail || authEmail;
   const isExternalProfile = !!userEmail && userEmail !== authEmail;
 
+  // Use the relation hook with logged-in user email and profile user email
+  const { relationStatus, handleSend, handleAccept, handleReject } =
+    useUserCard(authEmail, email);
+
+  // Check if this user is friend (accepted connection)
   const checkIfFriend = useCallback(
     async (friendEmail: string): Promise<boolean> => {
-      console.log('Hellow');
-      const email1 = authEmail.trim().toLowerCase();
-      console.log('userData?.email: ', userData?.email);
+      const email1 = authEmail?.trim().toLowerCase();
       const email2 = friendEmail?.trim().toLowerCase();
 
       if (!email1 || !email2) return false;
 
       const docId1 = `${email1}_${email2}`;
-      console.log('docId1: ', docId1);
       const docId2 = `${email2}_${email1}`;
-      console.log('docId2: ', docId2);
 
       try {
         const docSnap1 = await firestore()
           .collection('relation')
           .doc(docId1)
           .get();
-        console.log('docSnap1: ', docSnap1);
         if (docSnap1.exists && docSnap1.data()?.isAccept === true) {
           return true;
         }
-
         const docSnap2 = await firestore()
           .collection('relation')
           .doc(docId2)
@@ -72,16 +74,16 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
         if (docSnap2.exists && docSnap2.data()?.isAccept === true) {
           return true;
         }
-
         return false;
       } catch (error) {
         console.error('[Firestore] Error checking friendship:', error);
         return false;
       }
     },
-    [userData?.email],
+    [authEmail],
   );
 
+  // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
       if (email) {
@@ -121,17 +123,21 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
   }, [email]);
 
   useEffect(() => {
-    if (email) {
-      dispatch(fetchImages(email));
-      dispatch(fetchVideos(email));
-    }
-  }, [dispatch, email]);
+    const fetchMediaData = async () => {
+      if (email) {
+        if (isExternalProfile) {
+          dispatch(resetMedia());
+          await dispatch(fetchImages(email));
+          await dispatch(fetchVideos(email));
+        } else {
+          dispatch(fetchImages(email));
+          dispatch(fetchVideos(email));
+        }
+      }
+    };
 
-  const handleTabChange = (tab: string) => setActiveTab(tab);
-
-  const navigateToMyFriends = () => {
-    navigation.navigate(HOME.ChatDetailsScreen, { user: userData });
-  };
+    fetchMediaData();
+  }, [dispatch, email, isExternalProfile]);
 
   useEffect(() => {
     const checkFriendStatus = async () => {
@@ -143,11 +149,37 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
     checkFriendStatus();
   }, [userEmail, userData.email, checkIfFriend]);
 
+  const handleTabChange = (tab: string) => setActiveTab(tab);
+
+  const navigateToMyFriends = () => {
+    navigation.navigate(HOME.ChatDetailsScreen, { user: userData });
+  };
+
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      if (email) {
+        await dispatch(fetchImages(email));
+        await dispatch(fetchVideos(email));
+      }
+      if (userEmail && userData.email) {
+        const result = await checkIfFriend(userEmail);
+        setIsFriend(result);
+      }
+    } catch (error) {
+      console.error('[useProfile] Error refreshing data:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return {
     states: {
       isFriend,
       activeTab,
       setActiveTab: handleTabChange,
+      relationStatus,
+      refreshing,
     },
     data: {
       email: userData.email,
@@ -155,13 +187,25 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
       lastName: userData.lastName,
       mobileNo: userData.mobileNo,
       profileImage: userData.profileImage,
-      images: isFriend ? images : images.slice(0, 4),
-      videos: isFriend ? videos : videos.slice(0, 4),
+      images: isExternalProfile
+        ? isFriend
+          ? images
+          : images.slice(0, 4)
+        : images,
+      videos: isExternalProfile
+        ? isFriend
+          ? videos
+          : videos.slice(0, 4)
+        : videos,
       allImages: images,
       allVideos: videos,
     },
     isExternalProfile,
     navigateToMyFriends,
+    handleSend,
+    handleAccept,
+    handleReject,
+    onRefresh,
   };
 };
 

@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useCameraPermission } from 'react-native-vision-camera';
 import firestore from '@react-native-firebase/firestore';
 
 import { RootState } from '@redux/store';
 import useValidation from '@utils/validationSchema';
-import { checkUserExistsByEmail } from '@utils/helper';
+import { checkUserExistsByEmail, getAllUsers } from '@utils/helper';
 import { HomeNavigationProp } from '@types/navigations';
 import { HOME } from '@utils/constant';
 import api from '@api/index';
@@ -20,14 +20,21 @@ const useScanQR = () => {
 
   const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [emailError, setEmailError] = useState<String>('');
+  const [emailError, setEmailError] = useState<string>('');
   const [torchOn, setTorchOn] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
       await requestPermission();
     })();
-  }, []);
+  }, [requestPermission]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setEmail('');
+      setEmailError('');
+    }, []),
+  );
 
   const states = {
     loading,
@@ -123,11 +130,18 @@ const useScanQR = () => {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      setEmail('');
+    }, []),
+  );
+
   return {
     emailError,
     toggleTorch,
     handleOpenMyQR,
     externalSubmitHandler,
+    emailOnlyValidationSchema,
     onQRCodeScanned,
     states,
   };

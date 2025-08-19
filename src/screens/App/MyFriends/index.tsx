@@ -13,7 +13,7 @@ import useStyle from './style';
 const MyFriends = () => {
   const styles = useStyle();
   const navigation = useNavigation();
-  const { activeTab, setActiveTab, users, loading } = useMyFriends();
+  const { activeTab, setActiveTab, users, states, onRefresh } = useMyFriends();
 
   const renderUser = ({ item, index }: { item: any; index: number }) => (
     <UserCard user={item} index={index} />
@@ -67,13 +67,15 @@ const MyFriends = () => {
       </View>
 
       <View style={styles.contentContainer}>
-        {loading ? (
-          <CustomLoader visible={loading} />
+        {states?.loading ? (
+          <CustomLoader visible={states?.loading} />
         ) : (
           <CustomFlatList
             data={users}
             renderItem={renderUser}
             ListEmptyComponent={renderEmptyState}
+            refreshing={states?.refreshing}
+            onRefresh={onRefresh}
           />
         )}
       </View>

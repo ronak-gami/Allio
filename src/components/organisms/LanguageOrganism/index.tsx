@@ -7,6 +7,8 @@ import { useBottomSheet } from '../../../context/BottomSheetContext';
 import { useTranslation } from 'react-i18next';
 import { capitalizeFirst } from '@utils/helper';
 const { t } = useTranslation();
+import useStyle from './style';
+
 const languageOptions = [
   { label: t('languages.English'), value: 'en' },
   { label: t('languages.Hindi'), value: 'hi' },
@@ -17,6 +19,7 @@ const LanguageOrganism: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>(
     i18n.language || 'en' || 'hi' || 'gu',
   );
+  const styles = useStyle();
   const { closeBottomSheet } = useBottomSheet();
 
   const handleLanguageApply = useCallback(() => {

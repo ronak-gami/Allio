@@ -6,10 +6,10 @@ import {
   View,
   Image,
 } from 'react-native';
-import ForgetMPINForm from '@components/organisms/MpinForgetpasswordForm';
 import useStyle from './style';
 import { ICONS } from '@assets/index';
 import CustomLoader from '@components/atoms/CustomLoader';
+import ForgetMPINForm from '@components/organisms/ForgetMPINForm';
 
 const ForgetMPIN: React.FC = () => {
   const [loading, setLoading] = useState(false);

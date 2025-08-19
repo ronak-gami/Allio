@@ -8,10 +8,11 @@ import {
   Container,
 } from '@components/index';
 import useStyle from './style';
-import { IMAGES } from '@assets/index';
+import { IMAGES, ICONS } from '@assets/index';
 import useProfile from './useProfile';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '@types/navigations';
+import { useTheme } from '@react-navigation/native';
 
 type ProfileProps = NativeStackScreenProps<HomeStackParamList, 'Profile'>;
 
@@ -27,6 +28,11 @@ const ProfileHeader: React.FC<{
   isExternalProfile: boolean;
   navigateToMyFriends: () => void;
   isFriend: boolean;
+  relationStatus: 'accepted' | 'sent' | 'pending' | 'received' | 'notsent';
+  handleSend?: () => void;
+  handleAccept?: () => void;
+  handleReject?: () => void;
+  states: object;
 }> = ({
   email,
   firstName,
@@ -37,8 +43,10 @@ const ProfileHeader: React.FC<{
   videos,
   styles,
   isExternalProfile,
-  navigateToMyFriends,
-  isFriend,
+  handleSend,
+  handleAccept,
+  handleReject,
+  states,
 }) => {
   const displayName =
     firstName && lastName
@@ -48,6 +56,8 @@ const ProfileHeader: React.FC<{
   const imageSource = profileImage
     ? { uri: profileImage }
     : IMAGES.Dummy_Profile;
+
+  const { colors } = useTheme();
 
   return (
     <View style={styles.profileHeaderContainer}>
@@ -112,39 +122,61 @@ const ProfileHeader: React.FC<{
           </Text>
         )}
       </View>
-      {isExternalProfile ? (
-        isFriend ? (
-          <Button title="Friend Request" onPress={navigateToMyFriends} />
-        ) : null
-      ) : null}
+
+      {isExternalProfile && !states?.isFriend && (
+        <>
+          {states?.relationStatus === 'notsent' && (
+            <Button title="Send" onPress={handleSend} />
+          )}
+          {states?.relationStatus === 'sent' && (
+            <Button title="Pending" disabled />
+          )}
+          {states?.relationStatus === 'received' && (
+            <View style={styles.buttonRow}>
+              <Button
+                title="Accept"
+                onPress={handleAccept}
+                style={styles.button}
+                outlineColor={colors.primary}
+              />
+              <Button
+                title="Reject"
+                onPress={handleReject}
+                style={styles.button}
+                outlineColor={colors.error}
+              />
+            </View>
+          )}
+        </>
+      )}
     </View>
   );
 };
 
 const TabBar: React.FC<{
-  activeTab: string;
   onTabChange: (tab: string) => void;
+  states: object;
   styles: ReturnType<typeof useStyle>;
-}> = ({ activeTab, onTabChange, styles }) => (
+}> = ({ onTabChange, styles, states }) => (
   <View style={styles.contentHeader}>
     <TouchableOpacity
-      style={[styles.tab, activeTab === 'images' && styles.activeTab]}
+      style={[styles.tab, states?.activeTab === 'images' && styles.activeTab]}
       onPress={() => onTabChange('images')}>
       <Text
         style={[
           styles.tabText,
-          activeTab === 'images' && styles.activeTabText,
+          states?.activeTab === 'images' && styles.activeTabText,
         ]}>
         Images
       </Text>
     </TouchableOpacity>
     <TouchableOpacity
-      style={[styles.tab, activeTab === 'videos' && styles.activeTab]}
+      style={[styles.tab, states?.activeTab === 'videos' && styles.activeTab]}
       onPress={() => onTabChange('videos')}>
       <Text
         style={[
           styles.tabText,
-          activeTab === 'videos' && styles.activeTabText,
+          states?.activeTab === 'videos' && styles.activeTabText,
         ]}>
         Videos
       </Text>
@@ -153,11 +185,38 @@ const TabBar: React.FC<{
 );
 
 const MediaContent: React.FC<{
-  activeTab: string;
   images: any[];
   videos: any[];
+  onRefresh: () => void;
+  states: object;
   styles: ReturnType<typeof useStyle>;
 }> = ({ activeTab, images, videos, styles }) => {
+  const renderEmptyVideoState = () => (
+    <View style={styles.emptyGridContainer}>
+      <Image
+        source={ICONS.NoVideo}
+        style={styles.emptyGridIcon}
+        resizeMode="contain"
+      />
+      <Text type="BOLD" style={styles.emptyGridTitle}>
+        No Videos Yet
+      </Text>
+    </View>
+  );
+
+  const renderEmptyImageState = () => (
+    <View style={styles.emptyStateContainer}>
+      <Image
+        source={ICONS.gallery}
+        style={styles.noGalleryIcon}
+        resizeMode="contain"
+      />
+      <Text type="BOLD" style={styles.emptyStateTitle}>
+        No Images Yet
+      </Text>
+    </View>
+  );
+
   if (activeTab === 'videos') {
     return (
       <CustomFlatList
@@ -167,13 +226,7 @@ const MediaContent: React.FC<{
         numColumns={2}
         columnWrapperStyle={styles.gridRow}
         contentContainerStyle={styles.gridContent}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text type="BOLD" style={styles.emptyText}>
-              No Videos Yet
-            </Text>
-          </View>
-        }
+        ListEmptyComponent={renderEmptyVideoState()}
       />
     );
   }
@@ -192,23 +245,25 @@ const MediaContent: React.FC<{
       numColumns={2}
       columnWrapperStyle={styles.gridRow}
       contentContainerStyle={styles.gridContent}
-      ListEmptyComponent={
-        <View style={styles.emptyContainer}>
-          <Text type="BOLD" style={styles.emptyText}>
-            No Images Yet
-          </Text>
-        </View>
-      }
+      ListEmptyComponent={renderEmptyImageState()}
     />
   );
 };
 
 const Profile: React.FC<ProfileProps> = ({ route }) => {
   const styles = useStyle();
-  const { states, data, isExternalProfile, navigateToMyFriends, isFriend } =
-    useProfile({
-      userEmail: route.params?.email,
-    });
+  const {
+    states,
+    data,
+    isExternalProfile,
+    navigateToMyFriends,
+    handleSend,
+    handleAccept,
+    handleReject,
+    onRefresh,
+  } = useProfile({
+    userEmail: route.params?.email,
+  });
 
   return (
     <Container showLoader={false} showBackArrow title="Profile">
@@ -224,11 +279,17 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
           styles={styles}
           isExternalProfile={isExternalProfile}
           navigateToMyFriends={navigateToMyFriends}
-          isFriend={isFriend}
+          isFriend={states.isFriend}
+          relationStatus={states.relationStatus}
+          handleSend={handleSend}
+          handleAccept={handleAccept}
+          handleReject={handleReject}
+          states={states}
         />
         <TabBar
           activeTab={states.activeTab}
           onTabChange={states.setActiveTab}
+          states={states}
           styles={styles}
         />
         <View style={styles.contentContainer}>
@@ -237,6 +298,8 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
             images={data.images}
             videos={data.videos}
             styles={styles}
+            onRefresh={onRefresh}
+            states={states}
           />
         </View>
       </View>

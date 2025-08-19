@@ -7,13 +7,13 @@ interface OnboardingItem {
   title: string;
   description: string;
 }
-export const WEB_CLIENT_ID =
+const WEB_CLIENT_ID =
   '299086233123-40u7rfe1tdb4q5m7341rtdqo5qabf7eu.apps.googleusercontent.com';
 
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
-export const BASE_URL = 'https://7b74655f430e.ngrok-free.app/api' as const;
+const BASE_URL = 'https://7b74655f430e.ngrok-free.app/api' as const;
 
 const onboardingData: OnboardingItem[] = [
   {
@@ -107,6 +107,8 @@ const FeaturesDataItem = [
 ];
 
 export {
+  WEB_CLIENT_ID,
+  BASE_URL,
   onboardingData,
   AUTH,
   HOME,

@@ -45,48 +45,61 @@ const Button: React.FC<ButtonProps> = ({
   const { colors } = useTheme();
   const styles = useStyle();
 
-  const isOutline = typeof outlineColor === 'string';
+  // Determine button type based on props
+  const isOutlineType = outlineColor !== undefined;
+  const isFillType = !isOutlineType;
 
+  // Button wrapper styles
   const wrapperStyles: StyleProp<ViewStyle> = [
     styles.button,
-    {
-      backgroundColor: isOutline ? 'transparent' : colors.primary,
+    // Fill type styling
+    isFillType && {
+      backgroundColor: bgColor || colors.primary,
+      borderWidth: 0,
     },
-    !isOutline && bgColor && { backgroundColor: bgColor },
-    isOutline && {
+    // Outline type styling
+    isOutlineType && {
+      backgroundColor: 'transparent',
       borderColor: outlineColor,
       borderWidth: outlineWidth,
     },
+    // Disabled/loading state
     (disabled || loading) && { opacity: 0.45 },
     style,
   ];
+
+  // Text color logic
   let currentTextColor = colors.black;
   if (textColor) {
+    // Custom text color takes priority
     currentTextColor = textColor;
-  } else if (isOutline) {
+  } else if (isOutlineType) {
+    // For outline buttons, use outline color as text color
     currentTextColor = outlineColor;
+  } else if (isFillType) {
+    // For fill buttons, use white text by default (or custom logic)
+    currentTextColor = colors.black;
   }
 
   return (
     <TouchableOpacity
       activeOpacity={0.5}
       disabled={loading || disabled}
+      style={wrapperStyles}
       {...props}>
-      <View style={wrapperStyles}>
-        {loading ? (
-          <ActivityIndicator color={currentTextColor} />
-        ) : (
-          <View style={styles.content}>
-            {prefixLogo && <View style={styles.icon}>{prefixLogo}</View>}
-            <Text
-              type="SEMIBOLD"
-              style={[styles.text, { color: currentTextColor }]}>
-              {title}
-            </Text>
-            {postfixLogo && <View style={styles.icon}>{postfixLogo}</View>}
-          </View>
-        )}
-      </View>
+      {loading ? (
+        <ActivityIndicator color={currentTextColor} size="small" />
+      ) : (
+        <View style={styles.content}>
+          {prefixLogo && <View style={styles.icon}>{prefixLogo}</View>}
+          <Text
+            type="SEMIBOLD"
+            style={[styles.text, { color: currentTextColor }]}>
+            {title}
+          </Text>
+          {postfixLogo && <View style={styles.icon}>{postfixLogo}</View>}
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

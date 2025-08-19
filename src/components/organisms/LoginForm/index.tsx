@@ -103,10 +103,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
       </View>
 
       <View style={styles.SocialButtonStyle}>
-        <SignInWithFacebook setLoading={setLoading} />
+        {__DEV__ && <SignInWithFacebook setLoading={setLoading} />}
         <SignInWithGoogle setLoading={setLoading} />
-        <SignInWithGitHub />
+        {__DEV__ && <SignInWithGitHub />}
       </View>
+
       <View style={styles.dividerContainer}>
         <Text label="no_account" style={styles.orText} />
         <TouchableOpacity onPress={navigateToRegister}>

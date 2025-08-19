@@ -51,6 +51,23 @@ const useStyle = () => {
       color: colors.text,
       fontSize: scale(16),
     },
+
+    socialSignInText: {
+      fontSize: scale(16),
+      color: colors.primary,
+      textAlign: 'center',
+      marginVertical: scale(10),
+    },
+    line: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.text,
+    },
+    SocialButtonStyle: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginVertical: 12,
+    },
   });
 };
 

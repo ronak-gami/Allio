@@ -10,9 +10,9 @@ import { useBottomSheet } from '../../../context/BottomSheetContext';
 import { capitalizeFirst } from '@utils/helper';
 
 interface ThemeOrganismProps {
-  selectedTheme: string;
-  onSelect: (value: string) => void;
-  onApply: () => void;
+  selectedTheme?: string;
+  onSelect?: (value: string) => void;
+  onApply?: () => void;
 }
 
 const ThemeOrganism: React.FC<ThemeOrganismProps> = () => {
