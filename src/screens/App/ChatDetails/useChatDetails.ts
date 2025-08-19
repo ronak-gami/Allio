@@ -170,7 +170,6 @@ export const useChatDetails = (targetUser: any) => {
         timestamp,
       });
 
-      console.log('Sending notification...');
       const email1 = myEmail.trim().toLowerCase();
       const email2 = targetUser?.email.trim().toLowerCase();
       const data = {
@@ -284,7 +283,7 @@ export const useChatDetails = (targetUser: any) => {
 
       await themesRef.set({
         themeUrl: uploadedUrl,
-        localKey: localImage, 
+        localKey: localImage,
         updatedAt: new Date(),
       });
 

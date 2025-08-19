@@ -122,7 +122,6 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
     fetchUserData();
   }, [email]);
 
-  // Fetch media (images/videos)
   useEffect(() => {
     const fetchMediaData = async () => {
       if (email) {

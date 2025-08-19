@@ -42,7 +42,6 @@ export const useForgotPassword = (
       const response = await api.MPIN.sendOtp({
         data: { email: values.email },
       });
-      console.log('response: ', response);
       if (response?.data?.status === true) {
         setShowOtpBox(true);
         showSuccess('OTP sent to your email');
@@ -76,7 +75,6 @@ export const useForgotPassword = (
       const response = await api.MPIN.validateOtp({
         data: { email: Email, otp: otp },
       });
-      console.log('response: ', response);
       if (response?.data?.status === true) {
         showSuccess('OTP verified');
         navigation.navigate(HOME.MPIN, {

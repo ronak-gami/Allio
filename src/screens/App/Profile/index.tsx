@@ -12,6 +12,7 @@ import { IMAGES, ICONS } from '@assets/index';
 import useProfile from './useProfile';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '@types/navigations';
+import { useTheme } from '@react-navigation/native';
 
 type ProfileProps = NativeStackScreenProps<HomeStackParamList, 'Profile'>;
 
@@ -55,6 +56,8 @@ const ProfileHeader: React.FC<{
   const imageSource = profileImage
     ? { uri: profileImage }
     : IMAGES.Dummy_Profile;
+
+  const { colors } = useTheme();
 
   return (
     <View style={styles.profileHeaderContainer}>
@@ -133,13 +136,14 @@ const ProfileHeader: React.FC<{
               <Button
                 title="Accept"
                 onPress={handleAccept}
-                container={{ flex: 1 }}
+                style={styles.button}
+                outlineColor={colors.primary}
               />
               <Button
                 title="Reject"
                 onPress={handleReject}
-                container={{ flex: 1 }}
-                style={styles.buttonbg}
+                style={styles.button}
+                outlineColor={colors.error}
               />
             </View>
           )}
