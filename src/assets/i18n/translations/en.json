@@ -151,8 +151,8 @@
       "button": "Home"
     },
     "ApplyLanguage": {
-      "apply_language": "apply_language",
-      "apply_theme": "apply_language "
+      "apply_language": "apply language",
+      "apply_theme": "apply theme"
     }
   }
 }
