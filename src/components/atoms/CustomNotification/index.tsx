@@ -7,7 +7,6 @@ import React, {
 import { Text, Animated, TouchableOpacity, Image } from 'react-native';
 
 import { ICONS } from '@assets/index';
-import { colors } from '@utils/color';
 
 import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
@@ -54,7 +53,7 @@ const CustomNotification = forwardRef<CustomToastRef, {}>(({}, ref) => {
   const getBackgroundColor = () => {
     switch (type) {
       case 'success':
-        return colors.background;
+        return colors.text;
       case 'error':
         return colors.error;
       case 'info':

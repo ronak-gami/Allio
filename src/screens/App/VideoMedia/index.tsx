@@ -37,6 +37,7 @@ const VideoMedia: React.FC<Props> = () => {
     handleSaveMedia,
     isPreviewModalOpen,
     handleSelectStoredVideo,
+    onRefresh,
   } = useVideoMedia();
 
   const styles = useStyle();
@@ -56,6 +57,8 @@ const VideoMedia: React.FC<Props> = () => {
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={styles.gridRow}
         contentContainerStyle={styles.gridContent}
+        refreshing={states?.refreshing}
+        onRefresh={onRefresh}
         ListEmptyComponent={
           <View style={styles.emptyGridContainer}>
             <Image

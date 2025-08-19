@@ -18,6 +18,7 @@ import { ICONS } from '@assets/index';
 
 import useStyle from './style';
 import usePhotoMedia from './usePhotoMedia';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type Props = BottomTabScreenProps<TabParamList, 'Video'>;
 
@@ -35,6 +36,7 @@ const PhotoMedia: React.FC<Props> = () => {
     openModal,
     closeModal,
     states,
+    onRefresh,
   } = usePhotoMedia();
 
   const styles = useStyle();
@@ -65,7 +67,7 @@ const PhotoMedia: React.FC<Props> = () => {
           <View style={styles.container}>
             <View style={isPhotoLoaded() ? styles.content : styles.contentNone}>
               {isPhotoLoaded() ? (
-                <>
+                <ScrollView showsVerticalScrollIndicator={false}>
                   <View style={styles.headerView}>
                     <CustomChip
                       label="Edit"
@@ -116,7 +118,7 @@ const PhotoMedia: React.FC<Props> = () => {
                       </View>
                     </View>
                   )}
-                </>
+                </ScrollView>
               ) : (
                 <>
                   <CustomFlatList
@@ -131,6 +133,8 @@ const PhotoMedia: React.FC<Props> = () => {
                     showsVerticalScrollIndicator={false}
                     removeClippedSubviews={false}
                     ListEmptyComponent={renderEmptyState}
+                    refreshing={states?.refreshing}
+                    onRefresh={onRefresh}
                   />
                   <ImagePreviewModal
                     visible={states?.modalVisible}

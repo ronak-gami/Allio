@@ -13,11 +13,17 @@ export const useMyFriends = () => {
     'friends',
   );
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
     fetchAllUsersWithRelation();
   }, [activeTab]);
+
+  const states = {
+    loading,
+    refreshing,
+  };
 
   const fetchAllUsersWithRelation = async () => {
     try {
@@ -77,10 +83,20 @@ export const useMyFriends = () => {
     }
   };
 
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await fetchAllUsersWithRelation();
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   return {
     activeTab,
     setActiveTab,
     users,
-    loading,
+    states,
+    onRefresh,
   };
 };

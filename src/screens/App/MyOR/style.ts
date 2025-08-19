@@ -10,9 +10,9 @@ const useStyle = () => {
       color: colors.text,
     },
     container: {
-      flex: 1,
       padding: height * 0.02,
       backgroundColor: colors.background,
+      alignItems: 'center',
     },
     scrollcontainer: {
       alignItems: 'center',
@@ -39,23 +39,17 @@ const useStyle = () => {
       gap: height * 0.02,
     },
     qrImage: {
-      width: height * 0.2,
-      height: height * 0.2,
+      width: '100%',
+      height: '100%',
       borderRadius: 10,
-      backgroundColor: colors.white,
     },
     cameraContainer: {
-      width: height * 0.3 - 90,
-      height: height * 0.3 - 90,
-      backgroundColor: colors.text,
-      borderRadius: height * 0.02,
       alignItems: 'center',
       justifyContent: 'center',
-      borderWidth: 1,
     },
     camera: {
-      width: width * 0.5 - 20,
-      height: height * 0.2,
+      width: height * 0.35 - 20,
+      height: height * 0.35,
       borderRadius: height * 0.01,
       overflow: 'hidden',
       position: 'relative',

@@ -7,7 +7,7 @@ import firestore from '@react-native-firebase/firestore';
 
 import { RootState } from '@redux/store';
 import useValidation from '@utils/validationSchema';
-import { checkUserExistsByEmail } from '@utils/helper';
+import { checkUserExistsByEmail, getAllUsers } from '@utils/helper';
 import { HomeNavigationProp } from '@types/navigations';
 import { HOME } from '@utils/constant';
 import api from '@api/index';
@@ -130,11 +130,18 @@ const useScanQR = () => {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      setEmail('');
+    }, []),
+  );
+
   return {
     emailError,
     toggleTorch,
     handleOpenMyQR,
     externalSubmitHandler,
+    emailOnlyValidationSchema,
     onQRCodeScanned,
     states,
   };

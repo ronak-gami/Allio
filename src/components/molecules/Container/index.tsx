@@ -45,7 +45,7 @@ const Container: React.FC<PageLayoutProps> = ({
   const styles = useStyle();
 
   return (
-    <View style={[styles.flex, style, { backgroundColor: colors.background }]}>
+    <View style={[styles.flex, { backgroundColor: colors.background }]}>
       <StatusBar
         backgroundColor={auth ? colors.background : colors.primary}
         barStyle={auth && dark ? 'light-content' : 'dark-content'}
@@ -63,7 +63,7 @@ const Container: React.FC<PageLayoutProps> = ({
       {keyboardAvoiding ? (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.flex}>
+          style={[styles.flex, style]}>
           <ScrollView
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"

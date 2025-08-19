@@ -81,7 +81,8 @@ const useStyle = () => {
       fontSize: scale(14),
     },
     chatArea: {
-      marginTop: height * 0.02,
+      flex: 1,
+      borderWidth: 1,
     },
     messageBubble: {
       padding: height * 0.015,
@@ -181,16 +182,14 @@ const useStyle = () => {
       color: colors.background,
     },
 
-    cardTextContainer: {
-      flex: 1,
-    },
-
     cardTitle: {
       fontSize: scale(26),
       marginBottom: height * 0.005,
       color: colors.text,
     },
-
+    actionButton: {
+      marginTop: height * 0.01,
+    },
     cardDescription: {
       fontSize: scale(36),
       color: colors.gray,
@@ -283,6 +282,69 @@ const useStyle = () => {
       width: height * 0.025,
       height: height * 0.025,
       tintColor: colors.primary,
+    },
+    menuIcon: {
+      width: height * 0.025,
+      height: height * 0.025,
+    },
+    menuContainer: {
+      position: 'absolute',
+      top: scale(55),
+      right: scale(20),
+      backgroundColor: colors.text,
+      borderRadius: scale(10),
+    },
+    themeModalOverlay: {
+      flex: 1,
+      backgroundColor: colors.modelbg,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+
+    themeModalContainer: {
+      backgroundColor: colors.background,
+      borderRadius: height * 0.02,
+      padding: height * 0.02,
+      width: '85%',
+      alignItems: 'center',
+      shadowColor: colors.modelbg,
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
+      elevation: 5,
+    },
+
+    themeGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      padding: 10,
+    },
+
+    themeOption: {
+      width: '48%',
+      aspectRatio: 2 / 3,
+      marginBottom: height * 0.02,
+      borderRadius: 8,
+      overflow: 'hidden',
+      backgroundColor: colors.background,
+    },
+
+    themeImage: {
+      width: '100%',
+      height: '100%',
+    },
+    padding: {
+      padding: scale(10),
+    },
+    flex: {
+      flex: 1,
+    },
+    flexGrow: {
+      flexGrow: 1,
+    },
+
+    menuText: {
+      color: colors.primary,
     },
   });
 };

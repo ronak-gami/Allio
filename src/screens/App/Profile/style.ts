@@ -161,6 +161,16 @@ const useStyle = () => {
       color: colors.text,
       marginTop: scale(16),
     },
+    buttonRow: {
+      flexDirection: 'row',
+      columnGap: scale(10),
+    },
+    button: {
+      flex: 1,
+    },
+    buttonbg: {
+      backgroundColor: colors.error,
+    },
   });
 };
 

@@ -22,6 +22,10 @@ export const IMAGES = {
   Deleteimage: require('./images/icondelete.png'),
   Logout: require('./images/logoutimag.png'),
   Nodata: require('./images/Nodata.png'),
+  Chattheme1: require('./images/chattheme1.jpeg'),
+  Chattheme2: require('./images/chattheme2.jpeg'),
+  Chattheme3: require('./images/chattheme3.jpeg'),
+  Chattheme4: require('./images/chattheme4.jpeg'),
 };
 
 export const ICONS = {
@@ -30,7 +34,8 @@ export const ICONS = {
   down: require('./icons/arrowdown.png'),
   check: require('./icons/check.png'),
   cancel: require('./icons/cancel.png'),
-  logout: require('./icons/logout.png'),  BackArrow: require('./icons/simple-backArrow.png'),
+  logout: require('./icons/logout.png'),
+  BackArrow: require('./icons/simple-backArrow.png'),
   Clear: require('./icons/clear.png'),
   FaceBook: require('./icons/facebook.png'),
   Google: require('./icons/googleicon.png'),
@@ -51,6 +56,7 @@ export const ICONS = {
   MultipleUser: require('./icons/Multiple_User.png'),
   true: require('./icons/true.png'),
   false: require('./icons/false.png'),
+  menu: require('./icons/menu.png'),
 };
 
 export const FONTS = {
