@@ -9,7 +9,7 @@ const LogoutOrganism: React.FC<LogoutOrganismProps> = ({ onConfirm }) => {
   return (
     <Customlogout
       image={IMAGES.Logout}
-      description="Are you sure you want to logout?"
+      description={'CustomLogout.description'}
       buttonTitle=""
       onButtonPress={onConfirm}
     />

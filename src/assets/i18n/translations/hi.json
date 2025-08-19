@@ -93,19 +93,76 @@
     "logout": "लॉग आउट"
   },
 
-  "Settings": {
-    "select_theme": "थीम चुनें",
-    "select_language": "भाषा चुनें",
-    "confirm_logout": "लॉगआउट की पुष्टि करें",
-    "apply": "लागू करें",
-    "logout": "लॉगआउट"
+  "settings": {
+    "profile": "प्रोफ़ाइल",
+    "My Friends": "मेरे दोस्त",
+    "Theme": "थीम",
+    "Language": "भाषा",
+    "Delete Account": "खाता हटाएं",
+    "Logout": "लॉगआउट"
   },
   "HeroSection": {
     "titleone": "Allio में आपका स्वागत है",
-    "description": "आपकी सभी जरूरतों के लिए एक-स्टॉप समाधान। हमारी सुविधाओं का अन्वेषण करें और आज ही शुरू करें!"
+    "description": "Allio आपका ऑल-इन-वन productivity ऐप है। आसानी से वीडियो और फोटो एडिट करें, दस्तावेज़ स्कैन करें, और फाइलें मैनेज करें। सुरक्षित और विश्वसनीय फीचर्स के लिए Firebase द्वारा संचालित। हमारा लक्ष्य: हर आवश्यक टूल को एक सहज ऐप अनुभव में लाना।"
   },
-  "customlogout": {
+
+  "CustomLogout": {
+    "title": "लॉगआउट",
     "description": "अपने खाते से लॉग आउट करने के लिए नीचे दिए गए बटन पर क्लिक करें।",
     "logout_button": "लॉगआउट करें"
+  },
+  "CustomDelete": {
+    "title": "खाता हटाएं",
+    "description": "क्या आप सुनिश्चित हैं कि आप अपना खाता हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
+    "button_title": "खाता हटाएं"
+  },
+  "ContactUsSection": {
+    "title": "हमसे जुड़ें",
+    "contact_button": "हमसे संपर्क करें"
+  },
+  "FeaturesCarousel": {
+    "title": "ALLIO की विशेषताएँ"
+  },
+  "Home": {
+    "Home": "होम"
+  },
+
+  "languages": {
+    "English": "अंग्रेज़ी",
+    "Hindi": "हिंदी",
+    "Gujarati": "गुजराती"
+  },
+  "ApplyLanguage": {
+    "apply_language": "भाषा लागू करें",
+    "apply_theme": "थीम लागू करें"
+  },
+  "bottomSheet": {
+    "selectTheme": "थीम चुनें",
+    "selectLanguage": "भाषा चुनें",
+    "deleteAccount": "खाता हटाएं",
+    "confirmLogout": "लॉगआउट की पुष्टि करें"
+  },
+
+  "features": {
+    "scanQR": {
+      "title": "क्यूआर स्कैन करें",
+      "description": "दस्तावेज़ों को जल्दी स्कैन करें और सुरक्षित रूप से सहेजें।",
+      "button": "क्यूआर स्कैन"
+    },
+    "videoEditing": {
+      "title": "वीडियो एडिटिंग",
+      "description": "तुरंत अलर्ट और रिमाइंडर्स के साथ अपडेट रहें।",
+      "button": "वीडियो एडिटिंग"
+    },
+    "photoEditing": {
+      "title": "फोटो एडिटिंग",
+      "description": "आसानी से क्यूआर कोड और बारकोड स्कैन करें।",
+      "button": "फोटो एडिटिंग"
+    },
+    "home": {
+      "title": "होम",
+      "description": "आपकी सभी ज़रूरतों के लिए तेज़ और विश्वसनीय स्कैनिंग।",
+      "button": "होम"
+    }
   }
 }

@@ -7,6 +7,8 @@ import {
   Button,
   Container,
 } from '@components/index';
+import { useTranslation } from 'react-i18next';
+
 import useStyle from './style';
 import { IMAGES, ICONS } from '@assets/index';
 import useProfile from './useProfile';
@@ -58,7 +60,7 @@ const ProfileHeader: React.FC<{
     : IMAGES.Dummy_Profile;
 
   const { colors } = useTheme();
-
+  const { t } = useTranslation();
   return (
     <View style={styles.profileHeaderContainer}>
       <View style={styles.topSectionContainer}>

@@ -13,14 +13,14 @@ const useStyle = () => {
       backgroundColor: colors.heromain,
     },
     modalContainer: {
-      backgroundColor: 'white',
+      backgroundColor: colors.white,
       borderTopLeftRadius: scale(16),
       borderTopRightRadius: scale(16),
       padding: scale(16),
       minHeight: height * 0.6,
     },
     title: {
-      fontSize: scale(28),
+      fontSize: scale(18),
       fontFamily: FONTS.bold,
       marginBottom: 12,
     },

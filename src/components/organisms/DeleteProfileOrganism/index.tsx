@@ -12,7 +12,7 @@ const DeleteProfileOrganism: React.FC<DeleteProfileOrganismProps> = ({
   return (
     <Customlogout
       image={IMAGES.Deleteimage}
-      description="Are you sure you want to delete your account? This action cannot be undone."
+      description={'CustomDelete.description'}
       buttonTitle=""
       onButtonPress={onConfirm}
     />

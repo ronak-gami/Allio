@@ -73,9 +73,11 @@ const GlobalBottomSheet: React.FC<GlobalBottomSheetProps> = ({ children }) => {
             <View style={styles.header}>
               <View style={styles.titleContainer}>
                 {title && (
-                  <Text type="semibold" style={styles.headerTitle}>
-                    {title}
-                  </Text>
+                  <Text
+                    type="semibold"
+                    style={styles.headerTitle}
+                    label={title}
+                  />
                 )}
               </View>
               {showCloseButton && (

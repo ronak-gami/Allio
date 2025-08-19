@@ -58,11 +58,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       )}
 
       <View style={styles.centerContainer}>
-        {title && (
-          <Text type="BOLD" style={styles.title}>
-            {title}
-          </Text>
-        )}
+        {title && <Text type="BOLD" style={styles.title} label={title} />}
       </View>
 
       {showProfileLogo && (

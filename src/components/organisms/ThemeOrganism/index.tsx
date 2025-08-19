@@ -1,10 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { setDarkMode } from '@redux/slices/ThemeSlice';
 import RadioGroup from '@components/molecules/RadioGroups';
-import Button from '@components/atoms/Button';
+import { Button } from '@components/index';
+import { t } from 'i18next';
 import { useBottomSheet } from '../../../context/BottomSheetContext';
+import { capitalizeFirst } from '@utils/helper';
 
 interface ThemeOrganismProps {
   selectedTheme?: string;
@@ -37,7 +40,10 @@ const ThemeOrganism: React.FC<ThemeOrganismProps> = () => {
         onSelect={setSelectedTheme}
       />
       <View style={[{ marginTop: 20 }]}>
-        <Button title="Apply Theme" onPress={handleThemeApply} />
+        <Button
+          title={capitalizeFirst(t('bottomSheet.selectTheme'))}
+          onPress={handleThemeApply}
+        />
       </View>
     </View>
   );

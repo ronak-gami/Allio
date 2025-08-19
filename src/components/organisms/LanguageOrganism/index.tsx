@@ -2,14 +2,17 @@ import React, { useState, useCallback } from 'react';
 import { View } from 'react-native';
 import i18n from '@assets/i18n';
 import RadioGroup from '@components/molecules/RadioGroups';
-import Button from '@components/atoms/Button';
+import { Button } from '@components/index';
 import { useBottomSheet } from '../../../context/BottomSheetContext';
+import { useTranslation } from 'react-i18next';
+import { capitalizeFirst } from '@utils/helper';
+const { t } = useTranslation();
 import useStyle from './style';
 
 const languageOptions = [
-  { label: 'English', value: 'en' },
-  { label: 'Hindi', value: 'hi' },
-  { label: 'Gujarati', value: 'gu' },
+  { label: t('languages.English'), value: 'en' },
+  { label: t('languages.Hindi'), value: 'hi' },
+  { label: t('languages.Gujarati'), value: 'gu' },
 ];
 
 const LanguageOrganism: React.FC = () => {
@@ -31,8 +34,11 @@ const LanguageOrganism: React.FC = () => {
         selectedValue={selectedLanguage}
         onSelect={setSelectedLanguage}
       />
-      <View style={styles.container}>
-        <Button title="Apply Language" onPress={handleLanguageApply} />
+      <View style={{ marginTop: 20 }}>
+        <Button
+          title={capitalizeFirst(t('bottomSheet.selectLanguage'))}
+          onPress={handleLanguageApply}
+        />
       </View>
     </View>
   );

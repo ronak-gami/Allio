@@ -85,19 +85,80 @@
   "More": {
     "More": "More"
   },
-  "Settings": {
-    "select_theme": "Select Theme",
-    "select_language": "Select Language",
-    "confirm_logout": "Confirm Logout",
-    "apply": "Apply",
-    "logout": "Logout"
+
+  "settings": {
+    "profile": "Profile",
+    "My Friends": "My Friends",
+    "Theme": "Theme",
+    "Language": "Language",
+    "Delete Account": "Delete Account",
+    "Logout": "Logout"
   },
+
+  "bottomSheet": {
+    "selectTheme": "Select Theme",
+    "selectLanguage": "Select Language",
+    "deleteAccount": "Delete Account",
+    "confirmLogout": "Confirm Logout"
+  },
+
   "HeroSection": {
     "titleone": "Welcome to Allio",
-    "description": "Your one-stop solution for all your needs. Explore our features and get started today!"
+    "description": "Allio is your all-in-one productivity app. Edit videos and photos, scan documents, and manage files with ease. Powered by Firebase for secure and reliable features. Our goal: bring every essential tool into one seamless app experience."
   },
   "CustomLogout": {
     "description": "Are you sure you want to logout? You can always log back in later.",
     "button_title": "Logout"
+  },
+  "CustomDelete": {
+    "description": "Are you sure you want to delete your account? This action cannot be undone.",
+    "button_title": "Delete Account"
+  },
+  "ContactUsSection": {
+    "title": "Connect with us",
+    "contact_button": "Contact Us"
+  },
+  "FeaturesCarousel": {
+    "title": "Features of ALLIO"
+  },
+  "Home": {
+    "Home": "Home"
+  },
+  "languages": {
+    "English": "English",
+    "Hindi": "Hindi",
+    "Gujarati": "Gujarati"
+  },
+  "features": {
+    "scanQR": {
+      "title": "Scan QR",
+      "description": "Scan documents quickly and save them securely.",
+      "button": "ScanQR"
+    },
+    "videoEditing": {
+      "title": "Video Editing",
+      "description": "Stay updated with instant alerts and reminders.",
+      "button": "Video Editing"
+    },
+    "photoEditing": {
+      "title": "Photo Editing",
+      "description": "Scan QR codes and barcodes with ease.",
+      "button": "Photo Editing"
+    },
+    "home": {
+      "title": "Home",
+      "description": "Fast and reliable scanning for all your needs.",
+      "button": "Home"
+    },
+    "ApplyLanguage": {
+      "apply_language": "apply language",
+      "apply_theme": "apply theme"
+    },
+    "ProfileButton": {
+      "Pending": "Pending",
+      "Accept": "Completed",
+      "Send": "Send",
+      "Reject": "Rejected"
+    }
   }
 }

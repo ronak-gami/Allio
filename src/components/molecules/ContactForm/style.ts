@@ -7,7 +7,6 @@ const useStyle = () => {
   return StyleSheet.create({
     input: {
       width: '100%',
-      marginBottom: scale(12),
       borderRadius: scale(8),
     },
     messageInput: {
@@ -16,7 +15,7 @@ const useStyle = () => {
     },
     button: {
       width: '100%',
-      marginTop: scale(8),
+      marginTop: scale(20),
       borderRadius: scale(8),
       backgroundColor: colors.primary,
     },
