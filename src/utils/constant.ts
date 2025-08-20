@@ -99,12 +99,6 @@ const FeaturesDataItem = [
     description: 'features.photoEditing.description',
     buttonText: 'features.photoEditing.button',
   },
-  {
-    image: IMAGES.Scanner,
-    title: 'features.home.title',
-    description: 'features.home.description',
-    buttonText: 'features.home.button',
-  },
 ];
 
 export {
