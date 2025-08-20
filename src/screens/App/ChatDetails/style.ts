@@ -15,6 +15,7 @@ const useStyle = () => {
       flexGrow: 1,
       paddingHorizontal: height * 0.02,
       paddingTop: height * 0.01,
+      paddingBottom: height * 0.02,
       backgroundColor: colors.background,
     },
     header: {
@@ -59,36 +60,17 @@ const useStyle = () => {
       fontSize: scale(12),
       color: colors.grayText,
     },
-
     button: {
       backgroundColor: colors.primary,
       paddingVertical: height * 0.015,
       paddingHorizontal: width * 0.06,
       borderRadius: height * 0.03,
     },
-    buttonText: {
-      color: colors.white,
-      fontSize: scale(14),
-    },
-    buttonOutline: {
-      borderColor: colors.primary,
-      borderWidth: 1,
-      paddingVertical: height * 0.015,
-      paddingHorizontal: width * 0.06,
-      borderRadius: height * 0.03,
-    },
-    buttonOutlineText: {
-      color: colors.primary,
-      fontSize: scale(14),
-    },
-    chatArea: {
-      flex: 1,
-      borderWidth: 1,
-    },
     messageBubble: {
       padding: height * 0.015,
       borderRadius: height * 0.02,
-      marginVertical: height * 0.01,
+      marginVertical: height * 0.005,
+      maxWidth: '80%',
     },
     myMessage: {
       alignSelf: 'flex-end',
@@ -102,6 +84,21 @@ const useStyle = () => {
       color: colors.white,
       fontSize: scale(14),
     },
+    messagesContainer: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      paddingVertical: height * 0.01,
+    },
+    messagesWrapper: {
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+      minHeight: '100%',
+    },
+    emptyMessageContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -112,13 +109,11 @@ const useStyle = () => {
       borderColor: colors.gray,
       backgroundColor: colors.background,
     },
-
     sendIcon: {
       width: height * 0.025,
       height: height * 0.025,
       resizeMode: 'contain',
     },
-
     sendButton: {
       marginLeft: width * 0.02,
       backgroundColor: colors.primary,
@@ -129,14 +124,12 @@ const useStyle = () => {
       alignItems: 'center',
       alignSelf: 'center',
     },
-
     textInput: {
       paddingHorizontal: width * 0.02,
       fontSize: scale(14),
       color: colors.text,
       width: '80%',
     },
-
     card: {
       backgroundColor: colors.background,
       borderRadius: height * 0.02,
@@ -154,55 +147,6 @@ const useStyle = () => {
       borderWidth: 1,
       borderColor: colors.lightyellow,
     },
-
-    profileContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: height * 0.015,
-    },
-
-    cardImage: {
-      width: width * 0.15,
-      height: width * 0.15,
-      borderRadius: width * 0.075,
-      marginRight: width * 0.04,
-    },
-
-    cardPlaceholder: {
-      width: width * 0.15,
-      height: width * 0.15,
-      borderRadius: width * 0.075,
-      backgroundColor: colors.gray,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginRight: width * 0.04,
-    },
-
-    cardPlaceholderText: {
-      fontSize: scale(22),
-      color: colors.background,
-    },
-
-    cardTitle: {
-      fontSize: scale(26),
-      marginBottom: height * 0.005,
-      color: colors.text,
-    },
-    actionButton: {
-      marginTop: height * 0.01,
-    },
-    cardDescription: {
-      fontSize: scale(36),
-      color: colors.gray,
-    },
-
-    actionRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: height * 0.02,
-      gap: width * 0.04,
-    },
-
     cardImageCentered: {
       width: width * 0.2,
       height: width * 0.2,
@@ -210,7 +154,6 @@ const useStyle = () => {
       marginBottom: height * 0.02,
       alignSelf: 'center',
     },
-
     cardPlaceholderCentered: {
       width: width * 0.2,
       height: width * 0.2,
@@ -221,14 +164,21 @@ const useStyle = () => {
       marginBottom: height * 0.02,
       alignSelf: 'center',
     },
-
+    cardPlaceholderText: {
+      fontSize: scale(22),
+      color: colors.background,
+    },
+    cardTitle: {
+      fontSize: scale(26),
+      marginBottom: height * 0.005,
+      color: colors.text,
+    },
     cardDescriptionCentered: {
       fontSize: scale(13),
       color: colors.text,
       textAlign: 'center',
       marginTop: height * 0.005,
     },
-
     actionRowCentered: {
       flexDirection: 'row',
       justifyContent: 'center',
@@ -237,21 +187,16 @@ const useStyle = () => {
       gap: width * 0.04,
       flexWrap: 'wrap',
     },
-    usenotfoud: {
-      color: colors.error,
-      fontSize: scale(20),
-      textAlign: 'center',
-    },
     renderFriendStatusCard: {
       alignItems: 'center',
       justifyContent: 'center',
       flexGrow: 1,
     },
-    nomessages: {
-      textAlign: 'center',
-      marginTop: 10,
+    chatImage: {
+      width: height * 0.2,
+      height: height * 0.2,
+      borderRadius: 10,
     },
-    chatImage: { width: height * 0.2, height: height * 0.2, borderRadius: 10 },
     modalImage: {
       width: '100%',
       height: height * 0.4,
@@ -295,32 +240,12 @@ const useStyle = () => {
       backgroundColor: colors.text,
       borderRadius: scale(10),
     },
-    themeModalOverlay: {
-      flex: 1,
-      backgroundColor: colors.modelbg,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-
-    themeModalContainer: {
-      backgroundColor: colors.background,
-      borderRadius: height * 0.02,
-      padding: height * 0.02,
-      width: '85%',
-      alignItems: 'center',
-      shadowColor: colors.modelbg,
-      shadowOpacity: 0.2,
-      shadowRadius: 8,
-      elevation: 5,
-    },
-
     themeGrid: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       justifyContent: 'space-between',
       padding: 10,
     },
-
     themeOption: {
       width: '48%',
       aspectRatio: 2 / 3,
@@ -329,7 +254,6 @@ const useStyle = () => {
       overflow: 'hidden',
       backgroundColor: colors.background,
     },
-
     themeImage: {
       width: '100%',
       height: '100%',
@@ -357,19 +281,6 @@ const useStyle = () => {
     locationPreview: {
       width: '100%',
       height: '100%',
-    },
-    contentContainer: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
-    messageList: {
-      flex: 1,
-    },
-    messageListContainer: {
-      paddingHorizontal: scale(16),
-      paddingVertical: scale(10),
-      // For inverted list
-      transform: [{ scaleY: -1 }],
     },
   });
 };

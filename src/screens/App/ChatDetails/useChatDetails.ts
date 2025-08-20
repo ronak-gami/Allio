@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Image, ScrollView } from 'react-native';
+import { Image, ScrollView, Linking, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
 import { showSuccess, showError } from '@utils/toast';
@@ -33,7 +33,7 @@ export const useChatDetails = (targetUser: any) => {
   const [loding, setloding] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
   const [selecturl, setselecturl] = useState<string | null>(null);
-
+  const [menuVisible, setMenuVisible] = useState<boolean>(false);
   const [chatHistory, setChatHistory] = useState<
     {
       text?: string;
@@ -54,10 +54,12 @@ export const useChatDetails = (targetUser: any) => {
   const scrollToBottom = useCallback((animated = true) => {
     setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated });
-    }, 50);
+    }, 150);
   }, []);
 
   const states = {
+    menuVisible,
+    setMenuVisible,
     message,
     setMessage,
     chatHistory,
@@ -120,7 +122,7 @@ export const useChatDetails = (targetUser: any) => {
 
     const unsubMessages = relationRef
       .collection('messages')
-      .orderBy('timestamp', 'desc') // Changed to desc for inverted list
+      .orderBy('timestamp', 'asc') // Changed to asc for normal order with map
       .onSnapshot(snapshot => {
         const messages = snapshot.docs
           .map(doc => ({
@@ -146,7 +148,8 @@ export const useChatDetails = (targetUser: any) => {
   }, [myEmail, targetUser?.email, clearTime]);
 
   useEffect(() => {
-    if (isAutoScroll.current) {
+    if (chatHistory.length > 0) {
+      // Always scroll to bottom when new messages arrive
       scrollToBottom(true);
     }
   }, [chatHistory, scrollToBottom]);
@@ -394,22 +397,31 @@ export const useChatDetails = (targetUser: any) => {
     latitude: number;
     longitude: number;
   }) => {
-    // Here you can decide what to do when user taps the location:
-    // Options:
-    // 1. Open in Maps app
-    // 2. Show full screen map preview
-    // 3. Show location details
-    // 4. Navigate to custom location view
+    const scheme = Platform.select({
+      ios: 'maps:',
+      android: 'geo:',
+    });
 
-    console.log('Location pressed:', location);
-    // We can implement the desired action once you decide
+    const url = Platform.select({
+      ios: `${scheme}?ll=${location.latitude},${location.longitude}`,
+      android: `${scheme}${location.latitude},${location.longitude}`,
+    });
+
+    try {
+      Linking.openURL(url || '');
+    } catch (error) {
+      console.error('Error opening maps:', error);
+      const webUrl = `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
+      Linking.openURL(webUrl);
+    }
+  };
+
+  const openMenu = () => {
+    setMenuVisible(true);
   };
 
   return {
-    states: {
-      ...states,
-      handleLocationPress,
-    },
+    states,
     relationStatus,
     sendRequest: async () => {
       try {
@@ -454,5 +466,7 @@ export const useChatDetails = (targetUser: any) => {
     navigateToProfile,
     removeTheme,
     handleAttachLocation,
+    handleLocationPress,
+    openMenu,
   };
 };

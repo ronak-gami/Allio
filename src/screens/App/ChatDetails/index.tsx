@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   TouchableOpacity,
@@ -32,7 +32,6 @@ const ChatDetailsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute<ChatDetailsRouteProp>();
   const { user } = route.params || {};
-  const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
   const {
     states,
@@ -54,6 +53,8 @@ const ChatDetailsScreen = () => {
     removeTheme,
     navigateToProfile,
     handleAttachLocation,
+    handleLocationPress,
+    openMenu,
   } = useChatDetails(user);
 
   const showImage = user?.profile && user?.profile !== '';
@@ -115,17 +116,7 @@ const ChatDetailsScreen = () => {
     );
   };
 
-  const openMenu = () => {
-    setMenuVisible(true);
-  };
-
-  const renderMessage = ({
-    item: chat,
-    index,
-  }: {
-    item: any;
-    index: number;
-  }) => {
+  const renderMessage = (chat: any, index: number) => {
     return (
       <View
         key={index}
@@ -159,7 +150,7 @@ const ChatDetailsScreen = () => {
         )}
         {chat?.location && (
           <TouchableOpacity
-            onPress={() => states.handleLocationPress(chat.location)}
+            onPress={() => handleLocationPress(chat.location)}
             style={styles.locationPreviewContainer}>
             <MapView
               provider={PROVIDER_GOOGLE}
@@ -185,6 +176,13 @@ const ChatDetailsScreen = () => {
         )}
       </View>
     );
+  };
+
+  const renderChatMessages = () => {
+    // Limit messages for better performance (show last 100 messages)
+    const displayMessages = states?.chatHistory?.slice(0, 100) || [];
+
+    return displayMessages.map((chat, index) => renderMessage(chat, index));
   };
 
   return (
@@ -240,17 +238,19 @@ const ChatDetailsScreen = () => {
                 styles.scrollContainer,
                 states?.selectedTheme ? { backgroundColor: 'transparent' } : {},
               ]}
-              style={{
-                flex: 1,
-                backgroundColor: states?.selectedTheme
-                  ? undefined
-                  : colors.background,
-              }}
+              style={[
+                styles.flex,
+                {
+                  backgroundColor: states?.selectedTheme
+                    ? undefined
+                    : colors.background,
+                },
+              ]}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
               onScroll={handleScroll}
               scrollEventThrottle={16}>
-              {relationStatus && (
+              {relationStatus !== 'accepted' && (
                 <View style={styles.renderFriendStatusCard}>
                   {renderFriendStatusCard()}
                 </View>
@@ -285,7 +285,7 @@ const ChatDetailsScreen = () => {
                       </View>
                     </View>
                   ) : states?.chatHistory?.length === 0 ? (
-                    <View style={styles.flexGrow}>
+                    <View style={styles.emptyMessageContainer}>
                       <View style={styles.card}>
                         {showImage ? (
                           <Image
@@ -306,36 +306,11 @@ const ChatDetailsScreen = () => {
                       </View>
                     </View>
                   ) : (
-                    <VirtualizedList
-                      ref={states?.scrollViewRef}
-                      data={states?.chatHistory}
-                      initialNumToRender={15}
-                      renderItem={renderMessage}
-                      keyExtractor={(_, index) => index.toString()}
-                      getItemCount={getItemCount}
-                      getItem={getItem}
-                      maxToRenderPerBatch={10}
-                      windowSize={10}
-                      onScroll={handleScroll}
-                      scrollEventThrottle={16}
-                      contentContainerStyle={[
-                        styles.scrollContainer,
-                        states?.selectedTheme
-                          ? { backgroundColor: 'transparent' }
-                          : {},
-                      ]}
-                      style={{
-                        flex: 1,
-                        backgroundColor: states?.selectedTheme
-                          ? undefined
-                          : colors.background,
-                      }}
-                      inverted
-                      maintainVisibleContentPosition={{
-                        minIndexForVisible: 0,
-                        autoscrollToTopThreshold: 10,
-                      }}
-                    />
+                    <View style={styles.messagesContainer}>
+                      <View style={styles.messagesWrapper}>
+                        {renderChatMessages()}
+                      </View>
+                    </View>
                   )}
                 </>
               )}
@@ -387,18 +362,18 @@ const ChatDetailsScreen = () => {
           </CustomModal>
 
           <Modal
-            visible={menuVisible}
+            visible={states.menuVisible}
             transparent
             animationType="fade"
-            onRequestClose={() => setMenuVisible(false)}>
+            onRequestClose={() => states.setMenuVisible(false)}>
             <TouchableOpacity
               style={styles.flex}
               activeOpacity={1}
-              onPress={() => setMenuVisible(false)}>
+              onPress={() => states.setMenuVisible(false)}>
               <View style={styles.menuContainer}>
                 <TouchableOpacity
                   onPress={() => {
-                    setMenuVisible(false);
+                    states.setMenuVisible(false);
                     states?.isBlockedByMe ? unblockUser() : blockUser();
                   }}
                   style={styles.padding}>
@@ -408,7 +383,7 @@ const ChatDetailsScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    setMenuVisible(false);
+                    states.setMenuVisible(false);
                     clearChat();
                   }}
                   style={styles.padding}>
@@ -418,7 +393,7 @@ const ChatDetailsScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    setMenuVisible(false);
+                    states.setMenuVisible(false);
                     setThemeModalVisible(true);
                   }}
                   style={styles.padding}>
