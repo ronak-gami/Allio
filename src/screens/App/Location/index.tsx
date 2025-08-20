@@ -178,13 +178,13 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
-  Button,
   Alert,
   Platform,
   ActivityIndicator,
   Text,
   TouchableOpacity,
 } from 'react-native';
+import { Button } from '@components/index';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import { request, PERMISSIONS, RESULTS, check } from 'react-native-permissions';
@@ -198,7 +198,7 @@ const LocationPickerScreen = ({ navigation, route }) => {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-const styles= useStyle();
+  const styles = useStyle();
   useEffect(() => {
     requestLocationPermission();
   }, []);
@@ -390,21 +390,26 @@ const styles= useStyle();
         />
       </MapView>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.sendButton}
           onPress={handleSendLocation}>
           <Text style={styles.sendButtonText}>Send This Location</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.refreshButton} onPress={handleRetry}>
-          <Text style={styles.refreshButtonText}>Refresh Location</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <Button
+          title="Send This Location"
+          onPress={handleSendLocation}
+          style={styles.sendButton}
+        />
+        <Button
+          title="Refresh Location"
+          onPress={handleRetry}
+          style={styles.refreshButton}
+        />
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  
-});
+const styles = StyleSheet.create({});
 
 export default LocationPickerScreen;

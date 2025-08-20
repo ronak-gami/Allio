@@ -346,6 +346,240 @@ const useStyle = () => {
     menuText: {
       color: colors.primary,
     },
+    // locationCard: {
+    //   backgroundColor: colors.background,
+    //   borderRadius: height * 0.02,
+    //   padding: 0,
+    //   maxWidth: '100%',
+    //   minWidth: '100%',
+    //   shadowColor: colors.black,
+    //   shadowOffset: {
+    //     width: 0,
+    //     height: 2,
+    //   },
+    //   shadowOpacity: 0.1,
+    //   shadowRadius: 4,
+    //   elevation: 3,
+    //   borderWidth: 1,
+    //   borderColor: colors.border,
+    //   overflow: 'hidden',
+    // },
+
+    // locationHeader: {
+    //   flexDirection: 'row',
+    //   alignItems: 'center',
+    //   paddingHorizontal: 12,
+    //   paddingVertical: 10,
+    //   backgroundColor: colors.card,
+    // },
+
+    // locationIcon: {
+    //   width: scale(24),
+    //   height: scale(24),
+    //   borderRadius: scale(12),
+    //   backgroundColor: colors.primary,
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    //   marginRight: 8,
+    // },
+
+    // locationIconText: {
+    //   fontSize: scale(16),
+    //   color: colors.white,
+    // },
+
+    // locationTitle: {
+    //   fontSize: scale(14),
+    //   fontWeight: '600',
+    //   color: colors.darkGray,
+    // },
+
+    // locationMapPreview: {
+    //   width: '100%',
+    //   height: 120,
+    //   backgroundColor: colors.background,
+    // },
+
+    // locationFooter: {
+    //   paddingHorizontal: 12,
+    //   paddingVertical: 10,
+    //   backgroundColor: colors.white,
+    // },
+
+    // locationCoords: {
+    //   fontSize: scale(12),
+    //   color: colors.gray,
+    //   fontFamily: 'monospace',
+    //   marginBottom: 4,
+    // },
+
+    // viewMapText: {
+    //   fontSize: 11,
+    //   color: colors.black,
+    //   fontWeight: '500',
+    // },
+
+    // locationMapPlaceholder: {
+    //   width: '100%',
+    //   height: 140,
+    //   backgroundColor: '#f0f8ff',
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    //   borderTopWidth: 1,
+    //   borderBottomWidth: 1,
+    //   borderColor: '#e0e0e0',
+    // },
+
+    // mapPlaceholderContent: {
+    //   alignItems: 'center',
+    //   paddingVertical: 10,
+    // },
+
+    // mapPlaceholderIcon: {
+    //   width: 40,
+    //   height: 40,
+    //   marginBottom: 8,
+    //   borderRadius: 8,
+    // },
+
+    // mapPlaceholderText: {
+    //   fontSize: 14,
+    //   color: '#666666',
+    //   fontWeight: '500',
+    //   marginBottom: 8,
+    // },
+
+    // coordinatesContainer: {
+    //   backgroundColor: '#ffffff',
+    //   paddingHorizontal: 12,
+    //   paddingVertical: 6,
+    //   borderRadius: 8,
+    //   alignItems: 'center',
+    // },
+
+    // coordinatesLabel: {
+    //   fontSize: 10,
+    //   color: '#888888',
+    //   marginBottom: 2,
+    // },
+
+    // coordinatesValue: {
+    //   fontSize: 10,
+    //   color: '#333333',
+    //   fontFamily: 'monospace',
+    //   lineHeight: 14,
+    // },
+    locationCard: {
+      backgroundColor: colors.background,
+      borderRadius: 12,
+      padding: 0,
+      maxWidth: 240,
+      minWidth: 200,
+      shadowColor: colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+      borderWidth: 1,
+      borderColor: colors.border,
+      overflow: 'hidden',
+    },
+
+    locationHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      backgroundColor: colors.card,
+    },
+
+    locationIcon: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: colors.primary,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 8,
+    },
+
+    locationIconText: {
+      fontSize: 12,
+      color: colors.white,
+    },
+
+    locationTitle: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: '#333333',
+    },
+
+    locationMapPlaceholder: {
+      width: '100%',
+      height: 140,
+      backgroundColor: colors.lightBackground,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      borderColor: colors.border,
+    },
+
+    mapPlaceholderContent: {
+      alignItems: 'center',
+      paddingVertical: 10,
+    },
+
+    mapPlaceholderIcon: {
+      width: 40,
+      height: 40,
+      marginBottom: 8,
+      borderRadius: 8,
+    },
+
+    mapPlaceholderText: {
+      fontSize: 14,
+      color: '#666666',
+      fontWeight: '500',
+      marginBottom: 8,
+    },
+
+    coordinatesContainer: {
+      backgroundColor: colors.white,
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 8,
+      alignItems: 'center',
+    },
+
+    coordinatesLabel: {
+      fontSize: 10,
+      color: colors.gray,
+      marginBottom: 2,
+    },
+
+    coordinatesValue: {
+      fontSize: 10,
+      color: '#333333',
+      fontFamily: 'monospace',
+      lineHeight: 14,
+    },
+
+    locationFooter: {
+      paddingHorizontal: 12,
+      paddingVertical: 12,
+      backgroundColor: colors.white,
+      alignItems: 'center',
+    },
+
+    viewMapText: {
+      fontSize: 13,
+      color: colors.primary,
+      fontWeight: '600',
+    },
   });
 };
 

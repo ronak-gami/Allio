@@ -1180,6 +1180,6 @@ export const useChatDetails = (targetUser: any) => {
     setselecturl,
     navigateToProfile,
     removeTheme,
-    handleShareLocation, // Add this to the return object
+    handleShareLocation, 
   };
 };
