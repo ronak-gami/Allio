@@ -17,8 +17,7 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme"
-    android:requestLegacyExternalStorage="true"
- 
+      android:requestLegacyExternalStorage="true"
       android:supportsRtl="true">
 
    	<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
@@ -31,7 +30,7 @@
         android:resource="@color/white" /> 
     <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyAFw05N9y7Y3WtMijTFhakBeyEC9sDCqRM"/>
+        android:value="AIzaSyD9kG5DM7T14xn7BUjKuAtVGGHn33Lk60k"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
