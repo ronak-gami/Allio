@@ -23,7 +23,10 @@ export type HomeStackParamList = {
   ForgetMPIN: undefined;
   MyQR: undefined;
   MyFriends: undefined;
-  ChatDetailsScreen: undefined;
+  ChatDetailsScreen: { user: any };
+  LocationPickerScreen: {
+    onSendLocation: (location: { latitude: number; longitude: number }) => void;
+  };
   HomeTabs: NavigatorScreenParams<TabParamList> | undefined;
   Profile: { email?: string };
 };

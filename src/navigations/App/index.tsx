@@ -13,6 +13,7 @@ import Profile from '@screens/App/Profile';
 import { CustomStatusBar } from '@components/index';
 import ChatDetailsScreen from '@screens/App/ChatDetails';
 import { requestNotificationPermission } from '@utils/helper';
+import LocationPickerScreen from '../../screens/App/Location';
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeNavigator: React.FC = () => {
@@ -38,6 +39,10 @@ const HomeNavigator: React.FC = () => {
         <Stack.Screen
           name={HOME.ChatDetailsScreen}
           component={ChatDetailsScreen}
+        />
+        <Stack.Screen
+          name={HOME.LocationPickerScreen}
+          component={LocationPickerScreen}
         />
         <Stack.Screen name={HOME.Profile} component={Profile} />
         <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />

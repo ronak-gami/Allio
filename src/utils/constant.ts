@@ -13,7 +13,7 @@ const WEB_CLIENT_ID =
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
-const BASE_URL = 'https://7b74655f430e.ngrok-free.app/api' as const;
+const BASE_URL = 'https://4d4c8e22c204.ngrok-free.app/api' as const;
 
 const onboardingData: OnboardingItem[] = [
   {
@@ -74,6 +74,7 @@ const HOME = {
   MyQR: 'MyQR',
   MyFriends: 'MyFriends',
   ChatDetailsScreen: 'ChatDetailsScreen',
+  LocationPickerScreen: 'LocationPickerScreen',
 } as const;
 
 const LICENSE_KEY =
@@ -97,12 +98,6 @@ const FeaturesDataItem = [
     title: 'features.photoEditing.title',
     description: 'features.photoEditing.description',
     buttonText: 'features.photoEditing.button',
-  },
-  {
-    image: IMAGES.Scanner,
-    title: 'features.home.title',
-    description: 'features.home.description',
-    buttonText: 'features.home.button',
   },
 ];
 

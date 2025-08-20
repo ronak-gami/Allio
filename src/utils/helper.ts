@@ -8,6 +8,7 @@ import {
   PermissionStatus,
   checkMultiple,
 } from 'react-native-permissions';
+import Geolocation from '@react-native-community/geolocation';
 import messaging from '@react-native-firebase/messaging';
 import RNFS from 'react-native-fs';
 import axios from 'axios';
@@ -420,6 +421,50 @@ const uploadToCloudinary = async file => {
   }
 };
 
+// helper.ts
+
+// Example showError function, you can replace with Toast or Alert
+
+const getCurrentLocation = async (): Promise<{
+  latitude: number;
+  longitude: number;
+} | null> => {
+  try {
+    // ✅ Request runtime permission on Android
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        showError('Location permission denied');
+        return null;
+      }
+    }
+
+    // ✅ Wrap Geolocation in Promise
+    return new Promise((resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        position => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        error => {
+          console.log('Location error:', error);
+          showError('Failed to get location');
+          reject(error);
+        }
+      );
+    });
+  } catch (err) {
+    console.log('getCurrentLocation error:', err);
+    showError('Failed to get location');
+    return null;
+  }
+};
+
 export {
   height,
   width,
@@ -430,6 +475,7 @@ export {
   handlePermissions,
   languages,
   FONTS,
+  getCurrentLocation,
   checkIfMPINExists,
   handleMediaDownload,
   handleMediaShare,

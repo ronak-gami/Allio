@@ -19,7 +19,6 @@ const ContactUsSection: React.FC = () => {
     email: string;
     message: string;
   }) => {
-    console.log('hello');
     // Handle form submission (e.g., send to backend, show toast, etc.)
   };
   interface ContactFormFields {

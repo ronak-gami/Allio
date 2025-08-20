@@ -35,7 +35,6 @@ const useStyle = () => {
       borderRadius: scale(15),
       alignItems: 'center',
       justifyContent: 'center',
-      // backgroundColor: colors.background,
     },
     closeIcon: {
       fontSize: scale(16),
