@@ -22,10 +22,10 @@ export const IMAGES = {
   Deleteimage: require('./images/icondelete.png'),
   Logout: require('./images/logoutimag.png'),
   Nodata: require('./images/Nodata.png'),
-  Chattheme1: require('./images/chattheme1.jpeg'),
-  Chattheme2: require('./images/chattheme2.jpeg'),
-  Chattheme3: require('./images/chattheme3.jpeg'),
-  Chattheme4: require('./images/chattheme4.jpeg'),
+  Chattheme1: require('./images/chattheme1.jpg'),
+  Chattheme2: require('./images/chattheme2.jpg'),
+  Chattheme3: require('./images/chattheme3.jpg'),
+  Chattheme4: require('./images/chattheme4.jpg'),
 };
 
 export const ICONS = {
