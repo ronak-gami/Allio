@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "299086233123-g3kq2dv2nl97t7btgbqdgr1td0k4q50m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.allio",
+            "certificate_hash": "a991b8fa341b82cd1b6027157f2d0efd44743ab1"
+          }
+        },
+        {
           "client_id": "299086233123-hmu3in2pbjhp99thfuip6kq605q459ii.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
