@@ -96,13 +96,23 @@ const More: React.FC<Props> = ({ navigation }) => {
       <View style={styles.container}>
         <CustomFlatList data={settingsData} renderItem={renderItem} />
       </View>
-      <AppBottomSheet ref={bottomSheetRef} height={['50%', '80%']}>
+      <AppBottomSheet ref={bottomSheetRef} height={['50%', '60%']}>
         <View style={styles.searchContainer}>
-          <BottomSheetTextInput placeholder="Search..." />
+          <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>
+            Bottom Sheet Content
+          </Text>
+          <BottomSheetTextInput
+            placeholder="Search..."
+            style={{
+              backgroundColor: '#f0f0f0',
+              padding: 12,
+              borderRadius: 8,
+              fontSize: 16,
+            }}
+          />
         </View>
       </AppBottomSheet>
     </Container>
   );
 };
-
 export default More;

@@ -1,6 +1,6 @@
 import React, { ReactElement, forwardRef, memo, useMemo } from 'react';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { TouchableOpacity } from 'react-native';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
 
 import { useBottomSheetBackHandler } from './useBottomSheetBackHandler';
 import { AppBottomSheetProps } from './types';
@@ -30,14 +30,14 @@ const AppBottomSheet = forwardRef(
     return (
       <BottomSheetModal
         ref={ref}
-        index={0}
+        index={1}
         snapPoints={snapPoints}
         onDismiss={onDismiss}
         onChange={handleSheetPositionChange}
         backdropComponent={renderBackdrop}
         backgroundStyle={styles.backgroundStyle}
         {...rest}>
-        {children}
+        <BottomSheetView style={{ flex: 1 }}>{children}</BottomSheetView>
       </BottomSheetModal>
     );
   },
