@@ -26,6 +26,10 @@ export type HomeStackParamList = {
   ChatDetailsScreen: undefined;
   HomeTabs: NavigatorScreenParams<TabParamList> | undefined;
   Profile: { email?: string };
+  LocationScreen: {
+    location?: { lat: number; lng: number };
+    liveShareId?: string;
+  };
 };
 
 export type TabParamList = {

@@ -346,6 +346,86 @@ const useStyle = () => {
     menuText: {
       color: colors.primary,
     },
+
+    mapheader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: height * 0.01,
+      paddingVertical: 8,
+    },
+
+    headerText: {
+      marginLeft: height * 0.02,
+      fontSize: scale(18),
+    },
+
+    map: {
+      width,
+      height,
+    },
+    bottomSheet: {
+      paddingTop: 12,
+      paddingBottom: height * 0.02,
+      paddingHorizontal: height * 0.02,
+      backgroundColor: colors.background,
+      borderTopLeftRadius: height * 0.02,
+      borderTopRightRadius: height * 0.02,
+      shadowColor: colors.modelbg,
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 8,
+    },
+    bottomSheetHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: height * 0.01,
+    },
+    bottomSheetTitle: {
+      fontSize: scale(16),
+      color: colors.text,
+    },
+    durationChips: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    durationChip: {
+      paddingHorizontal: height * 0.01,
+      paddingVertical: 6,
+      borderRadius: height * 0.02,
+      borderWidth: 1,
+      backgroundColor: 'transparent',
+    },
+    durationChipSelected: {
+      backgroundColor: colors.primary,
+    },
+    durationChipText: {
+      fontSize: scale(12),
+      color: colors.text,
+    },
+    durationChipTextSelected: {
+      color: colors.text,
+    },
+    buttonGroup: {
+      gap: height * 0.01,
+    },
+    promptText: {
+      marginBottom: height * 0.01,
+    },
+    mapView: {
+      height: height * 0.2,
+      width: height * 0.2,
+    },
+    stoplivebutton: {
+      paddingVertical: 7,
+      paddingHorizontal: height * 0.02,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 10,
+      backgroundColor: colors.primary,
+      color: colors.text,
+    },
   });
 };
 

@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import {
   View,
@@ -16,7 +17,14 @@ import { ICONS, IMAGES } from '@assets/index';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 import Video from 'react-native-video';
-import { Button, Container, CustomModal, Input, Text } from '@components/index';
+import MapView, { Marker } from 'react-native-maps';
+import {
+  Button,
+  Container,
+  CustomModal,
+  Input,
+  Text,
+} from '@components/index';
 import useStyle from './style';
 import { useChatDetails } from './useChatDetails';
 
@@ -28,7 +36,6 @@ const ChatDetailsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute<ChatDetailsRouteProp>();
   const { user } = route.params || {};
-  const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
   const {
     states,
@@ -49,6 +56,23 @@ const ChatDetailsScreen = () => {
     selectTheme,
     removeTheme,
     navigateToProfile,
+    setMenuVisible,
+    openMenu,
+
+    openLocationFullModal,
+    closeLocationFullModal,
+    ensureLocationReady,
+    shareCurrentLocation,
+    startLiveLocationShare,
+    stopLiveLocationShare,
+    isLiveSharingMine,
+    openInGoogleMaps,
+    setLiveDurationMin,
+    liveDurationMin,
+
+    dismissLocationPrompt,
+    openSystemLocationSettings,
+    retryLocationPreparation,
   } = useChatDetails(user);
 
   const showImage = user?.profile && user?.profile !== '';
@@ -63,9 +87,8 @@ const ChatDetailsScreen = () => {
   }
 
   const renderFriendStatusCard = () => {
-    if (relationStatus === 'accepted') {
-      return null;
-    }
+    if (relationStatus === 'accepted') return null;
+
     return (
       <View style={styles.card}>
         {showImage ? (
@@ -110,12 +133,11 @@ const ChatDetailsScreen = () => {
     );
   };
 
-  const openMenu = () => {
-    setMenuVisible(true);
-  };
-
   return (
-    <Container title="Chat Details" showHeader={false}>
+    <Container
+      title="Chat Details"
+      showHeader={false}
+      showLoader={states?.loadingMessages}>
       <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView
           style={styles.container}
@@ -140,11 +162,8 @@ const ChatDetailsScreen = () => {
             <TouchableOpacity
               style={styles.flex}
               activeOpacity={0.7}
-              // Disable navigation if user is blocked by me
               onPress={() => {
-                if (!states?.isBlockedByThem) {
-                  navigateToProfile();
-                }
+                if (!states?.isBlockedByThem) navigateToProfile();
               }}>
               <Text style={styles.headerName}>{user?.firstName}</Text>
               <Text style={styles.headerEmail}>{user?.email}</Text>
@@ -161,7 +180,6 @@ const ChatDetailsScreen = () => {
             }
             style={styles.flex}
             resizeMode="cover">
-            {/* Chat Content */}
             <ScrollView
               ref={states?.scrollViewRef}
               contentContainerStyle={[
@@ -208,11 +226,12 @@ const ChatDetailsScreen = () => {
                         <Button
                           style={styles.padding}
                           title="Unblock User"
-                          onPress={unblockUser}
+                          onPress={states?.unblockUserInline || (() => {})}
                         />
                       </View>
                     </View>
-                  ) : states?.chatHistory?.length === 0 ? (
+                  ) : states?.chatHistory?.length === 0 &&
+                    !states?.loadingMessages ? (
                     <View style={styles.flexGrow}>
                       <View style={styles.card}>
                         {showImage ? (
@@ -234,49 +253,144 @@ const ChatDetailsScreen = () => {
                       </View>
                     </View>
                   ) : (
-                    states?.chatHistory?.map((chat, index) => (
-                      <View
-                        key={index}
-                        style={[
-                          styles.messageBubble,
-                          chat.fromMe ? styles.myMessage : styles.theirMessage,
-                        ]}>
-                        {chat?.text && (
-                          <Text style={styles.messageText}>{chat.text}</Text>
-                        )}
-                        {chat?.image && (
-                          <TouchableOpacity
-                            onPress={() => openImageModal(chat.image)}>
-                            <Image
-                              source={{ uri: chat.image }}
-                              style={[
-                                styles.chatImage,
-                                { marginTop: chat.text ? 5 : 0 },
-                              ]}
-                              resizeMode="cover"
-                            />
-                          </TouchableOpacity>
-                        )}
-                        {chat?.video && (
-                          <TouchableOpacity
-                            onPress={() => openVideoModal(chat.video)}>
-                            <Video
-                              source={{ uri: chat.video }}
-                              style={styles.chatVideo}
-                              resizeMode="cover"
-                              paused
-                              pointerEvents="none"
-                            />
-                            <View style={styles.playIconOverlay}>
+                    states?.chatHistory?.map((chat, index) => {
+                      // Find the latest active liveShare message from current user
+                      const isLatestLiveShareMine =
+                        chat.liveShare?.active &&
+                        chat.fromMe &&
+                        isLiveSharingMine &&
+                        index ===
+                          states.chatHistory
+                            .map((m, i) =>
+                              m.liveShare?.active && m.fromMe ? i : -1,
+                            )
+                            .filter(i => i !== -1)
+                            .pop();
+
+                      // Support both {latitude, longitude} and {lat, lng}
+                      const latitude =
+                        chat?.location?.latitude ?? chat?.location?.lat;
+                      const longitude =
+                        chat?.location?.longitude ?? chat?.location?.lng;
+
+                      const openMaps = () => {
+                        if (latitude && longitude) {
+                          openInGoogleMaps(latitude, longitude);
+                        }
+                      };
+
+                      return (
+                        <View
+                          key={index}
+                          style={[
+                            styles.messageBubble,
+                            chat.fromMe
+                              ? styles.myMessage
+                              : styles.theirMessage,
+                          ]}>
+                          {/* Text */}
+                          {chat?.text && (
+                            <Text style={styles.messageText}>{chat.text}</Text>
+                          )}
+                          {/* Image */}
+                          {chat?.image && (
+                            <TouchableOpacity
+                              onPress={() => openImageModal(chat.image!)}>
                               <Image
-                                source={ICONS.VideoPlay}
-                                style={styles.playBtn}
+                                source={{ uri: chat.image! }}
+                                style={[
+                                  styles.chatImage,
+                                  { marginTop: chat.text ? 5 : 0 },
+                                ]}
+                                resizeMode="cover"
                               />
-                            </View>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    ))
+                            </TouchableOpacity>
+                          )}
+                          {/* Video */}
+                          {chat?.video && (
+                            <TouchableOpacity
+                              onPress={() => openVideoModal(chat.video!)}>
+                              <Video
+                                source={{ uri: chat.video! }}
+                                style={styles.chatVideo}
+                                resizeMode="cover"
+                                paused
+                                pointerEvents="none"
+                              />
+                              <View style={styles.playIconOverlay}>
+                                <Image
+                                  source={ICONS.VideoPlay}
+                                  style={styles.playBtn}
+                                />
+                              </View>
+                            </TouchableOpacity>
+                          )}
+                          {(latitude && longitude) || chat?.liveShare ? (
+                            <TouchableOpacity
+                              style={{
+                                marginTop:
+                                  chat.text || chat.image || chat.video ? 8 : 0,
+                              }}
+                              activeOpacity={0.9}
+                              onPress={openMaps}
+                              disabled={!latitude || !longitude}>
+                              <View style={{ gap: 10 }}>
+                                <MapView
+                                  style={styles.mapView}
+                                  initialRegion={{
+                                    latitude: latitude || 0,
+                                    longitude: longitude || 0,
+                                    latitudeDelta: 0.01,
+                                    longitudeDelta: 0.01,
+                                  }}
+                                  region={
+                                    latitude && longitude
+                                      ? {
+                                          latitude,
+                                          longitude,
+                                          latitudeDelta: 0.01,
+                                          longitudeDelta: 0.01,
+                                        }
+                                      : undefined
+                                  }
+                                  pointerEvents="none">
+                                  {latitude && longitude && (
+                                    <Marker
+                                      coordinate={{
+                                        latitude,
+                                        longitude,
+                                      }}
+                                      title={
+                                        chat?.liveShare?.active
+                                          ? 'Live Location'
+                                          : 'Shared Location'
+                                      }
+                                    />
+                                  )}
+                                </MapView>
+                              </View>
+
+                              <View>
+                                <Text type="semibold">
+                                  {chat?.liveShare?.active
+                                    ? 'Live location • updating'
+                                    : 'Shared location • tap to open'}
+                                </Text>
+                                {isLatestLiveShareMine && (
+                                  <View>
+                                    <Button
+                                      title="Stop live location"
+                                      onPress={stopLiveLocationShare}
+                                      style={styles.stoplivebutton}
+                                    />
+                                  </View>
+                                )}
+                              </View>
+                            </TouchableOpacity>
+                          ) : null}
+                        </View>
+                      );
+                    })
                   )}
                 </>
               )}
@@ -297,7 +411,6 @@ const ChatDetailsScreen = () => {
             </View>
           )}
 
-          {/* Image Modal */}
           <CustomModal
             visible={states?.imageModalVisible}
             title="Image"
@@ -311,7 +424,6 @@ const ChatDetailsScreen = () => {
             )}
           </CustomModal>
 
-          {/* Video Modal */}
           <CustomModal
             visible={states?.videoModalVisible}
             title="Video"
@@ -328,7 +440,7 @@ const ChatDetailsScreen = () => {
           </CustomModal>
 
           <Modal
-            visible={menuVisible}
+            visible={states?.menuVisible}
             transparent
             animationType="fade"
             onRequestClose={() => setMenuVisible(false)}>
@@ -347,6 +459,7 @@ const ChatDetailsScreen = () => {
                     {states?.isBlockedByMe ? 'Unblock User' : 'Block User'}
                   </Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                   onPress={() => {
                     setMenuVisible(false);
@@ -357,6 +470,7 @@ const ChatDetailsScreen = () => {
                     Clear Chat
                   </Text>
                 </TouchableOpacity>
+
                 <TouchableOpacity
                   onPress={() => {
                     setMenuVisible(false);
@@ -367,10 +481,28 @@ const ChatDetailsScreen = () => {
                     Theme
                   </Text>
                 </TouchableOpacity>
+
+                {/* NEW: Share Location */}
+                <TouchableOpacity
+                  onPress={async () => {
+                    setMenuVisible(false);
+                    const ok = await ensureLocationReady();
+                    if (ok) {
+                      openLocationFullModal();
+                    } else {
+                      states?.setLocationPromptVisible?.(true);
+                    }
+                  }}
+                  style={styles.padding}>
+                  <Text type="semibold" style={styles.menuText}>
+                    Share Location
+                  </Text>
+                </TouchableOpacity>
               </View>
             </TouchableOpacity>
           </Modal>
 
+          {/* Theme Modal */}
           <CustomModal
             visible={states?.themeModalVisible}
             title="Select Chat Theme"
@@ -408,21 +540,167 @@ const ChatDetailsScreen = () => {
             <Button
               title="Apply"
               loading={states?.loding}
-              onPress={() => {
-                selectTheme(states?.selecturl);
-              }}
+              onPress={() => selectTheme(states?.selecturl)}
             />
 
-            {/* Remove Theme Button */}
             {states?.selectedTheme && (
               <Button
                 title="Remove Theme"
                 outlineColor={colors.primary}
-                onPress={() => {
-                  removeTheme();
-                }}
+                onPress={removeTheme}
               />
             )}
+          </CustomModal>
+
+          <Modal
+            visible={states?.locationFullVisible}
+            onRequestClose={closeLocationFullModal}
+            animationType="slide"
+            presentationStyle="fullScreen">
+            <View style={styles.flex}>
+              <View style={styles.mapheader}>
+                <TouchableOpacity onPress={closeLocationFullModal}>
+                  <Image source={ICONS.BackArrow} style={styles.backIcon} />
+                </TouchableOpacity>
+                <Text type="semibold" style={styles.headerText}>
+                  Share Location
+                </Text>
+              </View>
+
+              <View style={styles.flex}>
+                <MapView
+                  style={styles.map}
+                  showsUserLocation
+                  key={'AIzaSyD9kG5DM7T14xn7BUjKuAtVGGHn33Lk60k'}
+                  followsUserLocation
+                  provider="google"
+                  initialRegion={
+                    states?.currentCoords
+                      ? {
+                          latitude: states.currentCoords.latitude,
+                          longitude: states.currentCoords.longitude,
+                          latitudeDelta: 0.01,
+                          longitudeDelta: 0.01,
+                        }
+                      : {
+                          latitude: 20.5937,
+                          longitude: 78.9629,
+                          latitudeDelta: 10,
+                          longitudeDelta: 10,
+                        }
+                  }
+                  region={
+                    states?.currentCoords
+                      ? {
+                          latitude: states.currentCoords.latitude,
+                          longitude: states.currentCoords.longitude,
+                          latitudeDelta: 0.01,
+                          longitudeDelta: 0.01,
+                        }
+                      : undefined
+                  }>
+                  {states?.currentCoords && (
+                    <Marker
+                      coordinate={{
+                        latitude: states.currentCoords.latitude,
+                        longitude: states.currentCoords.longitude,
+                      }}
+                      title="You"
+                      description="Current location"
+                    />
+                  )}
+                </MapView>
+              </View>
+
+              <View style={styles.bottomSheet}>
+                <View style={styles.bottomSheetHeader}>
+                  <Text type="semibold" style={styles.bottomSheetTitle}>
+                    Choose what to share
+                  </Text>
+
+                  <View style={styles.durationChips}>
+                    {[15, 30, 60].map(min => {
+                      const selected = liveDurationMin === min;
+                      return (
+                        <TouchableOpacity
+                          key={min}
+                          onPress={() => setLiveDurationMin(min)}
+                          style={[
+                            styles.durationChip,
+                            selected && styles.durationChipSelected,
+                          ]}>
+                          <Text
+                            type="semibold"
+                            style={[
+                              styles.durationChipText,
+                              selected && styles.durationChipTextSelected,
+                            ]}>
+                            {min}m
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </View>
+
+                <View style={styles.buttonGroup}>
+                  <Button
+                    title={
+                      states?.currentCoords
+                        ? 'Send current location'
+                        : 'Finding your location...'
+                    }
+                    disabled={!states?.currentCoords}
+                    onPress={async () => {
+                      const ok = await ensureLocationReady(true);
+                      if (ok) {
+                        await shareCurrentLocation();
+                        closeLocationFullModal();
+                      }
+                    }}
+                  />
+
+                  {!states?.isLiveSharingMine ? (
+                    <Button
+                      title={`Share live location (${liveDurationMin} min)`}
+                      onPress={async () => {
+                        const ok = await ensureLocationReady(true);
+                        if (ok) {
+                          await startLiveLocationShare(liveDurationMin);
+                          closeLocationFullModal();
+                        }
+                      }}
+                    />
+                  ) : (
+                    <Button
+                      title="Stop live location"
+                      outlineColor={colors.error}
+                      onPress={async () => {
+                        await stopLiveLocationShare();
+                        closeLocationFullModal();
+                      }}
+                    />
+                  )}
+                </View>
+              </View>
+            </View>
+          </Modal>
+
+          <CustomModal
+            visible={states?.locationPromptVisible}
+            title="Turn on Location"
+            onClose={dismissLocationPrompt}>
+            <Text style={styles.promptText}>
+              To share your location, please turn on Location Services and grant
+              permission.
+            </Text>
+            <View style={styles.buttonGroup}>
+              <Button
+                title="Open Settings"
+                onPress={openSystemLocationSettings}
+              />
+              <Button title="Try Again" onPress={retryLocationPreparation} />
+            </View>
           </CustomModal>
         </KeyboardAvoidingView>
       </SafeAreaView>
