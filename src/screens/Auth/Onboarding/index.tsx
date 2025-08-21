@@ -71,7 +71,6 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
   return (
     <Container
       showHeader={false}
-      auth
       keyboardAvoiding
       showLoader={false}
       statusBarColor={String(colors.lightyellow)}>
