@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
-import { requestUserPermission } from '@utils/helper';
+import { requestNotificationPermission } from '@utils/helper';
 
 const useHome = () => {
   useEffect(() => {
-    // Call this after MPIN is verified
-    requestUserPermission();
+    const timeoutId = setTimeout(async () => {
+      await requestNotificationPermission();
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   return {};
 };
-
 export default useHome;

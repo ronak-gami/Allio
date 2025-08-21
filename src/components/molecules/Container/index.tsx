@@ -17,6 +17,7 @@ interface PageLayoutProps {
   showHeader?: boolean;
   onProfilePress?: () => void;
   showLoader?: boolean;
+  statusBarColor?: string;
   loaderText?: string;
   keyboardAvoiding?: boolean;
   style?: ViewStyle;
@@ -32,6 +33,7 @@ const Container: React.FC<PageLayoutProps> = ({
   showHeader = true,
   onProfilePress,
   showLoader = false,
+  statusBarColor,
   loaderText = 'Loading...',
   keyboardAvoiding = false,
   style,
@@ -47,7 +49,10 @@ const Container: React.FC<PageLayoutProps> = ({
   return (
     <View style={[styles.flex, { backgroundColor: colors.background }]}>
       <StatusBar
-        backgroundColor={auth ? colors.background : colors.primary}
+        // backgroundColor={auth ? colors.background : colors.primary}
+        backgroundColor={
+          statusBarColor ?? (auth ? colors.background : colors.primary)
+        }
         barStyle={auth && dark ? 'light-content' : 'dark-content'}
       />
       {showHeader && (
