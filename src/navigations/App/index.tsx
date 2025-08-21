@@ -12,19 +12,11 @@ import MyFriends from '@screens/App/MyFriends';
 import Profile from '@screens/App/Profile';
 import { CustomStatusBar } from '@components/index';
 import ChatDetailsScreen from '@screens/App/ChatDetails';
-import { requestNotificationPermission } from '@utils/helper';
 import LocationPicker from '@screens/App/LocationPicker';
+
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeNavigator: React.FC = () => {
-  useEffect(() => {
-    const timeoutId = setTimeout(async () => {
-      await requestNotificationPermission();
-    }, 2000);
-
-    return () => clearTimeout(timeoutId);
-  }, []);
-
   return (
     <>
       <CustomStatusBar

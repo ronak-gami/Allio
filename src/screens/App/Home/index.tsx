@@ -9,6 +9,7 @@ import { FeaturesDataItem } from '@utils/constant';
 import { HOME } from '@utils/constant';
 import { HomeTabsNavigationProp } from '@types/navigations';
 import { ContactUsSection, Container } from '@components/index';
+import useHome from './useHome';
 
 const promoImages = [
   IMAGES.OnboardingThree,
@@ -25,6 +26,7 @@ const promoImages = [
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeTabsNavigationProp>();
+  const {} = useHome();
   const handleProfilePress = () => {
     navigation.navigate(HOME.Profile);
   };
