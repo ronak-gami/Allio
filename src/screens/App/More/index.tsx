@@ -120,7 +120,7 @@ const More: React.FC<Props> = ({ navigation }) => {
             openBottomSheet({
               title: capitalizeFirst(t('bottomSheet.selectTheme')),
               content: <ThemeOrganism />,
-              snapPoints: ['40%'],
+              snapPoints: ['35%'],
               showCloseButton: true,
             });
             break;
@@ -158,7 +158,7 @@ const More: React.FC<Props> = ({ navigation }) => {
               title: capitalizeFirst(t('bottomSheet.confirmLogout')),
               content: <LogoutOrganism onConfirm={handleLogout} />,
               showCloseButton: true,
-              snapPoints: ['40%'],
+              snapPoints: ['50%'],
               buttons: [
                 {
                   title: capitalizeFirst(t('bottomSheet.confirmLogout')),

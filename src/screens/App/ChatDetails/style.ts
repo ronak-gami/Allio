@@ -66,10 +66,22 @@ const useStyle = () => {
       paddingHorizontal: width * 0.06,
       borderRadius: height * 0.03,
     },
+    messageRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: scale(4),
+    },
+    checkboxContainer: {
+      marginRight: scale(10),
+      width: scale(24),
+      justifyContent: 'center',
+    },
+    messageBubbleContainer: {
+      flex: 1,
+    },
     messageBubble: {
       padding: height * 0.015,
       borderRadius: height * 0.02,
-      marginVertical: height * 0.005,
       maxWidth: '80%',
     },
     myMessage: {
@@ -86,12 +98,7 @@ const useStyle = () => {
     },
     messagesContainer: {
       flex: 1,
-      justifyContent: 'flex-end',
-      paddingVertical: height * 0.01,
-    },
-    messagesWrapper: {
       flexDirection: 'column',
-      justifyContent: 'flex-end',
       minHeight: '100%',
     },
     emptyMessageContainer: {
@@ -281,6 +288,30 @@ const useStyle = () => {
     locationPreview: {
       width: '100%',
       height: '100%',
+    },
+    selectedMessage: {
+      backgroundColor: colors.error,
+    },
+    selectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: scale(16),
+      paddingVertical: scale(10),
+      backgroundColor: colors.modelbg,
+    },
+    selectionCount: {
+      fontSize: scale(16),
+      color: colors.text,
+    },
+    selectionActions: {
+      flexDirection: 'row',
+      gap: width * 0.1,
+    },
+    actionIcon: {
+      width: width * 0.05,
+      height: width * 0.05,
+      tintColor: colors.primary,
     },
   });
 };

@@ -11,9 +11,9 @@ const useStyle = () => {
       marginVertical: scale(5),
     },
     circle: {
-      width: scale(18),
-      height: scale(18),
-      borderRadius: 4,
+      width: scale(20),
+      height: scale(20),
+      borderRadius: scale(3),
       borderWidth: 1,
       borderColor: colors.gray,
       alignItems: 'center',

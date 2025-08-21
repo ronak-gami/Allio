@@ -7,9 +7,9 @@ import Text from '../Text';
 import useStyle from './style';
 
 interface CustomCheckBoxProps {
-  label: string;
-  checked: boolean;
-  onPress: () => void;
+  label?: string;
+  checked?: boolean;
+  onPress?: () => void;
 }
 
 const CustomCheckBox: React.FC<CustomCheckBoxProps> = ({

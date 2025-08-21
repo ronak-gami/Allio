@@ -10,10 +10,8 @@ const callbacks = new Map<string, LocationCallback>();
 export const registerLocationCallback = (
   callback: LocationCallback,
 ): string => {
-  console.log('🎯 Registering new location callback');
   const callbackId = Math.random().toString(36).substring(7);
   callbacks.set(callbackId, callback);
-  console.log('✅ Callback registered with ID:', callbackId);
   return callbackId;
 };
 

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Image, ScrollView, Linking, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
-import { showSuccess, showError } from '@utils/toast';
+import { showSuccess, showError, showInfo } from '@utils/toast';
 import { useUserCard } from '@components/cards/UserCard/useUserCard';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
@@ -12,6 +12,7 @@ import { checkLocationPermission, uploadToCloudinary } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
 import { registerLocationCallback } from '@utils/LocationCallbackManager';
+import Geolocation from '@react-native-community/geolocation';
 
 export const useChatDetails = (targetUser: any) => {
   const myEmail = useSelector(
@@ -23,6 +24,7 @@ export const useChatDetails = (targetUser: any) => {
   const navigation = useNavigation<HomeNavigationProp>();
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const [message, setMessage] = useState('');
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -47,6 +49,8 @@ export const useChatDetails = (targetUser: any) => {
       timestamp?: any;
     }[]
   >([]);
+  const [selectedMessages, setSelectedMessages] = useState<Message[]>([]);
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
 
   const scrollViewRef = useRef<ScrollView | null>(null);
   const isAutoScroll = useRef(true);
@@ -75,6 +79,10 @@ export const useChatDetails = (targetUser: any) => {
     setselecturl,
     selecturl,
     loding,
+    selectedMessage,
+    setSelectedMessage,
+    selectedMessages,
+    isSelectionMode,
   };
 
   const handleScroll = (e: any) => {
@@ -105,7 +113,9 @@ export const useChatDetails = (targetUser: any) => {
   };
 
   useEffect(() => {
-    if (!myEmail || !targetUser?.email) return;
+    if (!myEmail || !targetUser?.email) {
+      return;
+    }
 
     const sortedEmails = [myEmail, targetUser.email].sort();
     const relationId = `${sortedEmails[0]}_${sortedEmails[1]}`;
@@ -122,20 +132,30 @@ export const useChatDetails = (targetUser: any) => {
 
     const unsubMessages = relationRef
       .collection('messages')
-      .orderBy('timestamp', 'asc') // Changed to asc for normal order with map
+      .orderBy('timestamp', 'asc')
       .onSnapshot(snapshot => {
         const messages = snapshot.docs
           .map(doc => ({
+            ...doc.data(),
             text: doc.data()?.text || '',
             image: doc.data()?.image || null,
             video: doc.data()?.video || null,
             location: doc.data()?.location || null,
             fromMe: doc.data()?.from === myEmail,
             timestamp: doc.data()?.timestamp,
+            deletedForMe: doc.data()?.deletedForMe,
           }))
           .filter(msg => {
-            if (!clearTime) return true;
-            return msg.timestamp?.toDate?.() > clearTime.toDate?.();
+            if (
+              clearTime &&
+              msg.timestamp?.toDate?.() <= clearTime.toDate?.()
+            ) {
+              return false;
+            }
+            if (msg.deletedForMe === myEmail) {
+              return false;
+            }
+            return true;
           });
 
         setChatHistory(messages);
@@ -149,13 +169,14 @@ export const useChatDetails = (targetUser: any) => {
 
   useEffect(() => {
     if (chatHistory.length > 0) {
-      // Always scroll to bottom when new messages arrive
       scrollToBottom(true);
     }
   }, [chatHistory, scrollToBottom]);
 
   const handleSendMessage = async () => {
-    if (!message.trim()) return;
+    if (!message.trim()) {
+      return;
+    }
     try {
       const messageToSend = message.trim();
       const timestamp = firestore.FieldValue.serverTimestamp();
@@ -248,7 +269,9 @@ export const useChatDetails = (targetUser: any) => {
   };
 
   useEffect(() => {
-    if (!myEmail || !targetUser?.email) return;
+    if (!myEmail || !targetUser?.email) {
+      return;
+    }
 
     const sortedEmails = [myEmail, targetUser.email].sort();
     const chatId = `${sortedEmails[0]}_${sortedEmails[1]}`;
@@ -346,9 +369,6 @@ export const useChatDetails = (targetUser: any) => {
         to: targetUser?.email,
         fromMe: true,
         timestamp: firestore.FieldValue.serverTimestamp(),
-        text: '',
-        image: null,
-        video: null,
         location: {
           latitude: location.latitude,
           longitude: location.longitude,
@@ -360,8 +380,21 @@ export const useChatDetails = (targetUser: any) => {
     }
   };
 
+  const checkIfLocationEnabled = async (): Promise<boolean> => {
+    return new Promise(resolve => {
+      Geolocation.getCurrentPosition(
+        () => {
+          resolve(true);
+        },
+        error => {
+          console.log('Location error:', error);
+          resolve(false);
+        },
+      );
+    });
+  };
+
   const handleAttachLocation = async () => {
-    console.log('🚀 Starting handleAttachLocation');
     try {
       // Validate user data
       if (!myEmail || !targetUser?.email) {
@@ -378,18 +411,26 @@ export const useChatDetails = (targetUser: any) => {
       if (!hasPermission) {
         console.error('❌ Location permission denied');
         showError('Location permission is required');
+        navigation.goBack();
         return;
       }
 
-      const callbackId = registerLocationCallback(sendLocationToFirestore);
-      console.log('📝 Generated callbackId:', callbackId);
-
-      // Navigate immediately after registering callback
-      navigation.navigate(HOME.LocationPicker, { callbackId });
-      console.log('✅ Navigation successful');
+      const locationEnabled = await checkIfLocationEnabled();
+      console.log('locationEnabled: ', locationEnabled);
+      if (locationEnabled) {
+        const callbackId = registerLocationCallback(sendLocationToFirestore);
+        navigation.navigate(HOME.LocationPicker, { callbackId });
+      } else {
+        showInfo('Please enable GPS/Location Services');
+        if (Platform.OS === 'ios') {
+          await Linking.openURL('App-Prefs:Privacy&path=LOCATION');
+        } else {
+          // Corrected Android intent
+          await Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS');
+        }
+      }
     } catch (error) {
       console.error('❌ Error in handleAttachLocation:', error);
-      showError('Failed to open location picker');
     }
   };
 
@@ -418,6 +459,68 @@ export const useChatDetails = (targetUser: any) => {
 
   const openMenu = () => {
     setMenuVisible(true);
+  };
+
+  const handleLongPress = (message: Message) => {
+    // Remove fromMe check to allow selecting any message
+    setIsSelectionMode(true);
+    setSelectedMessages([message]);
+  };
+
+  const handleMessageSelect = (message: Message) => {
+    if (isSelectionMode) {
+      setSelectedMessages(prev => {
+        const isSelected = prev.some(
+          msg => msg.timestamp === message.timestamp,
+        );
+        if (isSelected) {
+          const newMessages = prev.filter(
+            msg => msg.timestamp !== message.timestamp,
+          );
+          if (newMessages.length === 0) {
+            setIsSelectionMode(false);
+          }
+          return newMessages;
+        }
+        return [...prev, message];
+      });
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    try {
+      const sortedEmails = [myEmail, targetUser.email].sort();
+      const relationId = `${sortedEmails[0]}_${sortedEmails[1]}`;
+      const batch = firestore().batch();
+
+      for (const message of selectedMessages) {
+        const messageRef = await firestore()
+          .collection('relation')
+          .doc(relationId)
+          .collection('messages')
+          .where('timestamp', '==', message.timestamp)
+          .get();
+
+        if (!messageRef.empty) {
+          const docRef = messageRef.docs[0].ref;
+          // Add deletedForMe flag with current user's email
+          batch.update(docRef, { deletedForMe: myEmail });
+        }
+      }
+
+      await batch.commit();
+      setSelectedMessages([]);
+      setIsSelectionMode(false);
+      showSuccess('Messages deleted from your chat');
+    } catch (error) {
+      console.error('Error deleting messages:', error);
+      showError('Failed to delete messages');
+    }
+  };
+
+  const cancelSelection = () => {
+    setSelectedMessages([]);
+    setIsSelectionMode(false);
   };
 
   return {
@@ -468,5 +571,9 @@ export const useChatDetails = (targetUser: any) => {
     handleAttachLocation,
     handleLocationPress,
     openMenu,
+    handleLongPress,
+    handleMessageSelect,
+    handleBulkDelete,
+    cancelSelection,
   };
 };

@@ -8,7 +8,6 @@ import {
   ScrollView,
   Modal,
   ImageBackground,
-  VirtualizedList,
 } from 'react-native';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '@types/navigations';
@@ -20,11 +19,9 @@ import { Button, Container, CustomModal, Input, Text } from '@components/index';
 import useStyle from './style';
 import { useChatDetails } from './useChatDetails';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import CustomCheckBox from '@components/atoms/CheckBox';
 
 type ChatDetailsRouteProp = RouteProp<HomeStackParamList, 'ChatDetailsScreen'>;
-
-const getItemCount = (data: any[]) => data.length;
-const getItem = (data: any[], index: number) => data[index];
 
 const ChatDetailsScreen = () => {
   const styles = useStyle();
@@ -55,6 +52,10 @@ const ChatDetailsScreen = () => {
     handleAttachLocation,
     handleLocationPress,
     openMenu,
+    handleLongPress,
+    handleMessageSelect,
+    handleBulkDelete,
+    cancelSelection,
   } = useChatDetails(user);
 
   const showImage = user?.profile && user?.profile !== '';
@@ -116,15 +117,25 @@ const ChatDetailsScreen = () => {
     );
   };
 
-  const renderMessage = (chat: any, index: number) => {
-    return (
-      <View
-        key={index}
-        style={[
-          styles.messageBubble,
-          chat.fromMe ? styles.myMessage : styles.theirMessage,
-        ]}>
+  const renderMessage = ({
+    item: chat,
+    index,
+  }: {
+    item: any;
+    index: number;
+  }) => {
+    if (!chat) {
+      return null;
+    }
+
+    const isSelected = states.selectedMessages.some(
+      msg => msg.timestamp === chat.timestamp,
+    );
+
+    const renderMessageContent = () => (
+      <>
         {chat?.text && <Text style={styles.messageText}>{chat.text}</Text>}
+
         {chat?.image && (
           <TouchableOpacity onPress={() => openImageModal(chat.image)}>
             <Image
@@ -134,6 +145,7 @@ const ChatDetailsScreen = () => {
             />
           </TouchableOpacity>
         )}
+
         {chat?.video && (
           <TouchableOpacity onPress={() => openVideoModal(chat.video)}>
             <Video
@@ -148,6 +160,7 @@ const ChatDetailsScreen = () => {
             </View>
           </TouchableOpacity>
         )}
+
         {chat?.location && (
           <TouchableOpacity
             onPress={() => handleLocationPress(chat.location)}
@@ -174,15 +187,51 @@ const ChatDetailsScreen = () => {
             </MapView>
           </TouchableOpacity>
         )}
-      </View>
+      </>
+    );
+
+    return (
+      <TouchableOpacity
+        key={index}
+        onLongPress={() => handleLongPress(chat)}
+        onPress={() => {
+          if (states.isSelectionMode) {
+            handleMessageSelect(chat);
+          }
+        }}
+        delayLongPress={500}
+        activeOpacity={0.7}
+        style={styles.messageRow}>
+        {states.isSelectionMode && (
+          <View style={styles.checkboxContainer}>
+            <CustomCheckBox checked={isSelected} />
+          </View>
+        )}
+        <View style={styles.messageBubbleContainer}>
+          <View
+            style={[
+              styles.messageBubble,
+              chat.fromMe ? styles.myMessage : styles.theirMessage,
+              isSelected && styles.selectedMessage,
+            ]}>
+            {renderMessageContent()}
+          </View>
+        </View>
+      </TouchableOpacity>
     );
   };
 
   const renderChatMessages = () => {
-    // Limit messages for better performance (show last 100 messages)
-    const displayMessages = states?.chatHistory?.slice(0, 100) || [];
-
-    return displayMessages.map((chat, index) => renderMessage(chat, index));
+    if (!states?.chatHistory?.length) {
+      return null;
+    }
+    const displayMessages = states.chatHistory.slice(0, 100);
+    return displayMessages.map((chat, index) => {
+      if (!chat) {
+        return null;
+      }
+      return renderMessage({ item: chat, index });
+    });
   };
 
   return (
@@ -224,6 +273,21 @@ const ChatDetailsScreen = () => {
               <Image source={ICONS.menu} style={styles.menuIcon} />
             </TouchableOpacity>
           </View>
+          {states.isSelectionMode && (
+            <View style={styles.selectionHeader}>
+              <Text style={styles.selectionCount}>
+                {states.selectedMessages.length} Selected
+              </Text>
+              <View style={styles.selectionActions}>
+                <TouchableOpacity onPress={handleBulkDelete}>
+                  <Image source={ICONS.delete} style={styles.actionIcon} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={cancelSelection}>
+                  <Image source={ICONS.Clear} style={styles.actionIcon} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
 
           <ImageBackground
             source={
@@ -233,7 +297,7 @@ const ChatDetailsScreen = () => {
             resizeMode="cover">
             {/* Chat Content */}
             <ScrollView
-              ref={states?.scrollViewRef}
+              // ref={states?.scrollViewRef}
               contentContainerStyle={[
                 styles.scrollContainer,
                 states?.selectedTheme ? { backgroundColor: 'transparent' } : {},
@@ -246,10 +310,9 @@ const ChatDetailsScreen = () => {
                     : colors.background,
                 },
               ]}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
               onScroll={handleScroll}
-              scrollEventThrottle={16}>
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}>
               {relationStatus !== 'accepted' && (
                 <View style={styles.renderFriendStatusCard}>
                   {renderFriendStatusCard()}
@@ -307,9 +370,7 @@ const ChatDetailsScreen = () => {
                     </View>
                   ) : (
                     <View style={styles.messagesContainer}>
-                      <View style={styles.messagesWrapper}>
-                        {renderChatMessages()}
-                      </View>
+                      {renderChatMessages()}
                     </View>
                   )}
                 </>

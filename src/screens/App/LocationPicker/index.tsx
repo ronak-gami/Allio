@@ -38,19 +38,6 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
     }
   };
 
-  // Don't render the map until we have current location
-  if (isLoading || !currentLocation) {
-    return (
-      <Container
-        showHeader
-        title="Share Location"
-        showBackArrow
-        showLoader={isLoading}>
-        <View style={styles.container}>{/* Loading... */}</View>
-      </Container>
-    );
-  }
-
   return (
     <Container
       showHeader
@@ -62,8 +49,8 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           initialRegion={{
-            latitude: currentLocation.latitude,
-            longitude: currentLocation.longitude,
+            latitude: currentLocation?.latitude,
+            longitude: currentLocation?.longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
