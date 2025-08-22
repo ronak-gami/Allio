@@ -22,14 +22,6 @@
           }
         },
         {
-          "client_id": "299086233123-hmu3in2pbjhp99thfuip6kq605q459ii.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.allio",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
           "client_id": "299086233123-40u7rfe1tdb4q5m7341rtdqo5qabf7eu.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -53,3 +45,4 @@
   ],
   "configuration_version": "1"
 }
+ 
