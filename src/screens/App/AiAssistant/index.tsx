@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import useStyle from './style';
 import useAiAssistant from './useAiAssistant';
 import { Container, Input, Text, CustomFlatList } from '@components/index';
 import { Animated, Image, TouchableOpacity, View } from 'react-native';
 import { ICONS } from '@assets/index';
 
-// Animated Bubble Loader Component (No changes here)
+// Animated Bubble Loader Component
 const AnimatedBubbles = ({ styles }) => {
   const bubble1 = useRef(new Animated.Value(0)).current;
   const bubble2 = useRef(new Animated.Value(0)).current;
@@ -64,54 +64,121 @@ const AnimatedBubbles = ({ styles }) => {
   );
 };
 
-const AiAssistant = () => {
-  const styles = useStyle();
-  const {
-    messages,
-    inputText,
-    isLoading,
-    typingMessageId,
-    showPrintOption, // Import new state
-    flatListRef,
-    setInputText,
-    sendMessage,
-    printFullMessage, // Import new function
-  } = useAiAssistant();
-
-  const renderMessage = ({ item }) => {
+// NEW: Animated MessageItem Component
+const MessageItem = memo(
+  ({
+    item,
+    styles,
+    isTyping,
+    showPrintOption,
+    printFullMessage,
+    handleCopy,
+    copiedMessageId,
+  }) => {
     const isUser = item.isUser;
-    const isTyping = typingMessageId === item.id;
+
+    // Animations for fade-in + slide-up
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const slideAnim = useRef(new Animated.Value(10)).current;
+
+    useEffect(() => {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, [fadeAnim, slideAnim]);
 
     return (
-      <View
+      <Animated.View
         style={[
-          styles.messageContainer,
-          isUser ? styles.userMessageContainer : styles.aiMessageContainer,
+          {
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+          },
         ]}>
         <View
           style={[
-            styles.messageBubble,
-            isUser ? styles.userBubble : styles.aiBubble,
+            styles.messageContainer,
+            isUser ? styles.userMessageContainer : styles.aiMessageContainer,
           ]}>
-          <Text
+          <View
             style={[
-              styles.messageText,
-              isUser ? styles.userText : styles.aiText,
+              styles.messageBubble,
+              isUser ? styles.userBubble : styles.aiBubble,
             ]}>
-            {item.text}
-            {isTyping && '|'}
-          </Text>
-          {/* ---- NEW: Conditionally render the "Print All" button ---- */}
-          {showPrintOption === item.id && (
-            <TouchableOpacity
-              style={styles.printButton}
-              onPress={() => printFullMessage(item.id)}
-              activeOpacity={0.7}>
-              <Text style={styles.printButtonText}>⚡ Print All</Text>
-            </TouchableOpacity>
-          )}
+            {/* main content */}
+            <View style={styles.mainContentContainer}>
+              <Text style={styles.messageText}>
+                {item.text}
+                {isTyping && '|'}
+              </Text>
+
+              {/* print option */}
+              {showPrintOption === item.id && (
+                <TouchableOpacity
+                  style={styles.printButton}
+                  onPress={() => printFullMessage(item.id)}
+                  activeOpacity={0.7}>
+                  <Text type="BOLD" style={styles.printButtonText}>
+                    Fast Forward
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {/* copy button (AI only) */}
+            {!isUser && !isTyping && item.text.length > 0 && (
+              <TouchableOpacity
+                style={styles.copyButton}
+                onPress={() => handleCopy(item.text, item.id)}>
+                <Image
+                  source={
+                    copiedMessageId === item.id ? ICONS.check : ICONS.copy
+                  }
+                  style={styles.copyIcon}
+                />
+                <Text style={styles.copyText}>
+                  {copiedMessageId === item.id ? 'Copied' : 'Copy'}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
-      </View>
+      </Animated.View>
+    );
+  },
+);
+
+const AiAssistant = () => {
+  const styles = useStyle();
+  const {
+    states,
+    flatListRef,
+    sendMessage,
+    printFullMessage,
+    stopTyping,
+    handleCopy,
+  } = useAiAssistant();
+
+  const renderMessage = ({ item }) => {
+    return (
+      <MessageItem
+        item={item}
+        styles={styles}
+        isTyping={states.typingMessageId === item.id}
+        showPrintOption={states.showPrintOption}
+        printFullMessage={printFullMessage}
+        handleCopy={handleCopy}
+        copiedMessageId={states.copiedMessageId}
+      />
     );
   };
 
@@ -130,7 +197,8 @@ const AiAssistant = () => {
     </View>
   );
 
-  const canSend = inputText.trim().length > 0 && !isLoading;
+  const isTypingInProgress = states.typingMessageId !== null;
+  const canSend = states.inputText.trim().length > 0 && !states.isLoading;
 
   return (
     <Container title="AI Assistant" showBackArrow>
@@ -138,32 +206,39 @@ const AiAssistant = () => {
         <View style={styles.chatContainer}>
           <CustomFlatList
             ref={flatListRef}
-            data={messages}
+            data={states.messages}
             renderItem={renderMessage}
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={renderEmpty}
-            ListFooterComponent={isLoading ? renderLoader : null}
+            ListFooterComponent={states.isLoading ? renderLoader : null}
+            onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
           />
         </View>
 
         <View style={styles.inputContainer}>
           <Input
             containerStyle={styles.inputField}
-            value={inputText}
-            onChangeText={setInputText}
+            value={states.inputText}
+            onChangeText={states.setInputText}
             placeholder="Type a message..."
             multiline
-            onSubmitEditing={sendMessage}
+            onSubmitEditing={isTypingInProgress ? stopTyping : sendMessage}
             returnKeyType="send"
             blurOnSubmit={false}
           />
           <TouchableOpacity
-            style={[styles.sendButton, !canSend && styles.disabledButton]}
-            onPress={sendMessage}
-            disabled={!canSend}
+            style={[
+              styles.sendButton,
+              !canSend && !isTypingInProgress && styles.disabledButton,
+            ]}
+            onPress={isTypingInProgress ? stopTyping : sendMessage}
+            disabled={!canSend && !isTypingInProgress}
             activeOpacity={0.7}>
-            <Image source={ICONS.Send} style={styles.sendIcon} />
+            <Image
+              source={isTypingInProgress ? ICONS.stop : ICONS.Send}
+              style={styles.sendIcon}
+            />
           </TouchableOpacity>
         </View>
       </View>
