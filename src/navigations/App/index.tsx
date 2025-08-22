@@ -34,6 +34,7 @@ const HomeNavigator: React.FC = () => {
         />
         <Stack.Screen name={HOME.AiAssistant} component={AiAssistant} />
         <Stack.Screen name={HOME.Profile} component={Profile} />
+        {/* <Stack.Screen name={HOME.LocationScreen} component={LocationScreen} /> */}
         <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />
       </Stack.Navigator>
     </>

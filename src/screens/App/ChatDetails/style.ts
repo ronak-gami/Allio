@@ -346,6 +346,184 @@ const useStyle = () => {
     menuText: {
       color: colors.primary,
     },
+
+    mapheader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: height * 0.01,
+      paddingVertical: 8,
+    },
+
+    headerText: {
+      marginLeft: height * 0.02,
+      fontSize: scale(18),
+    },
+
+    map: {
+      width,
+      height,
+    },
+    bottomSheet: {
+      paddingTop: 12,
+      paddingBottom: height * 0.02,
+      paddingHorizontal: height * 0.02,
+      backgroundColor: colors.background,
+      borderTopLeftRadius: height * 0.02,
+      borderTopRightRadius: height * 0.02,
+      shadowColor: colors.modelbg,
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 8,
+    },
+    bottomSheetHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: height * 0.01,
+    },
+    bottomSheetTitle: {
+      fontSize: scale(16),
+      color: colors.text,
+    },
+    durationChips: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    durationChip: {
+      paddingHorizontal: height * 0.01,
+      paddingVertical: 6,
+      borderRadius: height * 0.02,
+      borderWidth: 1,
+      backgroundColor: 'transparent',
+    },
+    durationChipSelected: {
+      backgroundColor: colors.primary,
+    },
+    durationChipText: {
+      fontSize: scale(12),
+      color: colors.text,
+    },
+    durationChipTextSelected: {
+      color: colors.text,
+    },
+    buttonGroup: {
+      gap: height * 0.01,
+    },
+    promptText: {
+      marginBottom: height * 0.01,
+    },
+    mapView: {
+      height: height * 0.2,
+      width: height * 0.2,
+    },
+    stoplivebutton: {
+      paddingVertical: 7,
+      paddingHorizontal: height * 0.02,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 10,
+      backgroundColor: colors.primary,
+      color: colors.text,
+    },
+
+    menuPopup: {
+      position: 'absolute',
+
+      backgroundColor: colors.background,
+      borderRadius: 10,
+      elevation: 4,
+      shadowOffset: { width: 5, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      padding: 10,
+      zIndex: 10,
+      gap: 10,
+      width: width * 0.4,
+    },
+    menuPopupSender: {
+      bottom: -10,
+      right: 20,
+    },
+    menuPopupReceiver: {
+      bottom: -10,
+      left: 20,
+    },
+    menuItem: {
+      paddingVertical: 6,
+    },
+    menuItemText: {
+      fontSize: scale(15),
+    },
+    menuItemPrimary: {
+      color: colors.primary,
+    },
+    menuItemDanger: {
+      color: colors.error,
+    },
+
+    selecteddMessageContainer: {
+      backgroundColor: colors.bgchat,
+      marginHorizontal: 10,
+      marginTop: 6,
+      borderRadius: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 10,
+      justifyContent: 'space-between',
+    },
+
+    selecteddMessageview: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+
+    pinnedMessageIcon: {
+      width: height * 0.02,
+      height: height * 0.02,
+      tintColor: colors.black,
+      marginRight: 8,
+    },
+
+    selectedMessageIcon: {
+      width: height * 0.02,
+      height: height * 0.02,
+      tintColor: colors.primary,
+      marginRight: 8,
+    },
+    pinnedMessageText: {
+      color: colors.primary,
+      fontWeight: 'bold',
+    },
+
+    pinnedMessageContainer: {
+      backgroundColor: colors.bgchat,
+      padding: height * 0.015,
+      marginHorizontal: 10,
+      marginTop: 6,
+      borderRadius: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+
+    selectedItem: {
+      backgroundColor: colors.skyBlue, 
+      elevation: 2,
+      shadowColor: colors.iceBlue,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+    },
+
+    editedtext: {
+      fontSize: scale(11),
+      color: colors.text,
+      marginTop: 2,
+      textAlign: 'right',
+    },
   });
 };
 

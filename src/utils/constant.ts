@@ -75,6 +75,7 @@ const HOME = {
   MyFriends: 'MyFriends',
   ChatDetailsScreen: 'ChatDetailsScreen',
   AiAssistant: 'AiAssistant',
+  LocationScreen: 'LocationScreen',
 } as const;
 
 const LICENSE_KEY =
