@@ -9,9 +9,9 @@ import analytics from '@react-native-firebase/analytics';
 import { onboardingData } from '@utils/constant';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { AuthStackParamList } from '@types/navigations';
-import { CustomFlatList, CustomOnboarding } from '@components/index';
+import { Container, CustomFlatList, CustomOnboarding } from '@components/index';
 import { width } from '@utils/helper';
-
+import { useTheme } from '@react-navigation/native';
 import useStyle from './style';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Onboarding'>;
@@ -19,6 +19,7 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'Onboarding'>;
 const Onboarding: React.FC<Props> = ({ navigation }) => {
   const styles = useStyle();
   const dispatch = useDispatch();
+  const { colors } = useTheme();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const flatListRef = useRef<any>(undefined);
 
@@ -68,7 +69,13 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
   });
 
   return (
-    <View style={styles.container}>
+    // <View style={styles.container}>
+    <Container
+      showHeader={false}
+      auth
+      keyboardAvoiding
+      showLoader={false}
+      statusBarColor={String(colors.lightyellow)}>
       <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
@@ -114,7 +121,7 @@ const Onboarding: React.FC<Props> = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </Container>
   );
 };
 

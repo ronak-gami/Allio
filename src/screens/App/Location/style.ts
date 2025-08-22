@@ -8,7 +8,7 @@ const useStyle = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.error,
+      backgroundColor: colors.background,
     },
     map: {
       flex: 1,
@@ -46,7 +46,7 @@ const useStyle = () => {
       marginBottom: 10,
     },
     retryButtonText: {
-      color: '#fff',
+      color: colors.text,
       fontSize: 16,
       fontWeight: '600',
     },
@@ -89,6 +89,27 @@ const useStyle = () => {
       color: colors.text,
       fontSize: 16,
       fontWeight: '600',
+    },
+    settingsButton: {
+      backgroundColor: colors.primary,
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      marginVertical: 8,
+      alignItems: 'center',
+    },
+    settingsButtonText: {
+      color: colors.text,
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    helpText: {
+      fontSize: 14,
+      color: '#666666',
+      textAlign: 'center',
+      marginVertical: 10,
+      paddingHorizontal: 20,
+      lineHeight: 20,
     },
   });
 };

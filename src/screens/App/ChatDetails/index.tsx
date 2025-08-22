@@ -10,15 +10,16 @@ import {
   ImageBackground,
   Linking,
 } from 'react-native';
+import { useTheme } from '@react-navigation/native';
+import Video from 'react-native-video';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '@types/navigations';
 import { ICONS, IMAGES } from '@assets/index';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '@react-navigation/native';
-import Video from 'react-native-video';
 import { Button, Container, CustomModal, Input, Text } from '@components/index';
-import useStyle from './style';
 import { useChatDetails } from './useChatDetails';
+import MapView, { Marker } from 'react-native-maps';
+import useStyle from './style';
 
 type ChatDetailsRouteProp = RouteProp<HomeStackParamList, 'ChatDetailsScreen'>;
 
@@ -28,6 +29,7 @@ const ChatDetailsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute<ChatDetailsRouteProp>();
   const { user } = route.params || {};
+
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
   const {
@@ -50,6 +52,7 @@ const ChatDetailsScreen = () => {
     removeTheme,
     navigateToProfile,
     handleShareLocation,
+    handleShareLiveLocation,
   } = useChatDetails(user);
 
   const showImage = user?.profile && user?.profile !== '';
@@ -277,7 +280,7 @@ const ChatDetailsScreen = () => {
                           </TouchableOpacity>
                         )}
                         {/* Location message rendering */}
-                        {chat?.type === 'location' && chat?.location && (
+                        {chat?.location && (
                           <TouchableOpacity
                             style={[
                               styles.locationCard,
@@ -296,19 +299,27 @@ const ChatDetailsScreen = () => {
                               </Text>
                             </View>
 
-                            <View style={styles.locationMapPlaceholder}>
-                              <View style={styles.mapPlaceholderContent}>
-                                <Image
-                                  source={IMAGES.Home}
-                                  style={styles.mapPlaceholderIcon}
-                                />
-                                <Text style={styles.mapPlaceholderText}>
-                                  Location Preview
-                                </Text>
-                                <View
-                                  style={styles.coordinatesContainer}></View>
-                              </View>
-                            </View>
+                            <MapView
+                              style={styles.locationMapPreview}
+                              initialRegion={{
+                                latitude: chat.location.latitude,
+                                longitude: chat.location.longitude,
+                                latitudeDelta: 0.005,
+                                longitudeDelta: 0.005,
+                              }}
+                              scrollEnabled={false}
+                              zoomEnabled={false}
+                              rotateEnabled={false}
+                              pitchEnabled={false}>
+                              <Marker
+                                coordinate={{
+                                  latitude: chat.location.latitude,
+                                  longitude: chat.location.longitude,
+                                }}
+                                title="Shared Location"
+                                pinColor="red"
+                              />
+                            </MapView>
 
                             <View style={styles.locationFooter}>
                               <Text style={styles.viewMapText}>
@@ -317,39 +328,6 @@ const ChatDetailsScreen = () => {
                             </View>
                           </TouchableOpacity>
                         )}
-                        {/* {chat?.type === 'location' && chat?.location && (
-                          <TouchableOpacity
-                            style={[
-                              styles.locationCard,
-                              { marginTop: chat.text ? 8 : 0 },
-                            ]}
-                            onPress={() => {
-                              const url = `https://www.google.com/maps/search/?api=1&query=${chat.location.latitude},${chat.location.longitude}`;
-                              Linking.openURL(url);
-                            }}>
-                            <View style={styles.locationHeader}>
-                              <View style={styles.locationIcon}>
-                                <Text style={styles.locationIconText}>📍</Text>
-                              </View>
-                              <Text style={styles.locationTitle}>Location</Text>
-                            </View>
-
-                            <Image
-                              style={styles.locationMapPreview}
-                              defaultSource={IMAGES.Mobile} // Add a placeholder image
-                            />
-
-                            <View style={styles.locationFooter}>
-                              <Text style={styles.locationCoords}>
-                                {chat.location.latitude.toFixed(4)},{' '}
-                                {chat.location.longitude.toFixed(4)}
-                              </Text>
-                              <Text style={styles.viewMapText}>
-                                Tap to view on map
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                        )} */}
                       </View>
                     ))
                   )}
@@ -516,7 +494,6 @@ const ChatDetailsScreen = () => {
     </Container>
   );
 };
-
 export default ChatDetailsScreen;
 // import React, { useState } from 'react';
 // import {
