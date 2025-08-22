@@ -9,7 +9,6 @@ const useStyle = () => {
       flex: 1,
       paddingHorizontal: scale(16),
     },
-
     title: {
       fontSize: scale(22),
       fontWeight: 'bold',

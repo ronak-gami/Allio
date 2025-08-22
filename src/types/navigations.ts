@@ -26,6 +26,7 @@ export type HomeStackParamList = {
   ChatDetailsScreen: undefined;
   HomeTabs: NavigatorScreenParams<TabParamList> | undefined;
   Profile: { email?: string };
+  AiAssistant: undefined;
 };
 
 export type TabParamList = {

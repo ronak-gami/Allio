@@ -57,6 +57,8 @@ export const ICONS = {
   true: require('./icons/true.png'),
   false: require('./icons/false.png'),
   menu: require('./icons/menu.png'),
+  stop: require('./icons/stop.png'),
+  copy: require('./icons/copy.png'),
 };
 
 export const FONTS = {
