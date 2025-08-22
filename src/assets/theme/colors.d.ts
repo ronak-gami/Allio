@@ -33,6 +33,7 @@ export type Theme = {
     heromain: Color;
     green: Color;
     accepted: Color;
+    bgchat: Color;
   };
 };
 
