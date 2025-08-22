@@ -426,6 +426,104 @@ const useStyle = () => {
       backgroundColor: colors.primary,
       color: colors.text,
     },
+
+    menuPopup: {
+      position: 'absolute',
+
+      backgroundColor: colors.background,
+      borderRadius: 10,
+      elevation: 4,
+      shadowOffset: { width: 5, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      padding: 10,
+      zIndex: 10,
+      gap: 10,
+      width: width * 0.4,
+    },
+    menuPopupSender: {
+      bottom: -10,
+      right: 20,
+    },
+    menuPopupReceiver: {
+      bottom: -10,
+      left: 20,
+    },
+    menuItem: {
+      paddingVertical: 6,
+    },
+    menuItemText: {
+      fontSize: scale(15),
+    },
+    menuItemPrimary: {
+      color: colors.primary,
+    },
+    menuItemDanger: {
+      color: colors.error,
+    },
+
+    selecteddMessageContainer: {
+      backgroundColor: colors.bgchat,
+      marginHorizontal: 10,
+      marginTop: 6,
+      borderRadius: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 10,
+      justifyContent: 'space-between',
+    },
+
+    selecteddMessageview: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+
+    pinnedMessageIcon: {
+      width: height * 0.02,
+      height: height * 0.02,
+      tintColor: colors.black,
+      marginRight: 8,
+    },
+
+    selectedMessageIcon: {
+      width: height * 0.02,
+      height: height * 0.02,
+      tintColor: colors.primary,
+      marginRight: 8,
+    },
+    pinnedMessageText: {
+      color: colors.primary,
+      fontWeight: 'bold',
+    },
+
+    pinnedMessageContainer: {
+      backgroundColor: colors.bgchat,
+      padding: height * 0.015,
+      marginHorizontal: 10,
+      marginTop: 6,
+      borderRadius: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+
+    selectedItem: {
+      backgroundColor: colors.skyBlue, 
+      elevation: 2,
+      shadowColor: colors.iceBlue,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+    },
+
+    editedtext: {
+      fontSize: scale(11),
+      color: colors.text,
+      marginTop: 2,
+      textAlign: 'right',
+    },
   });
 };
 

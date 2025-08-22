@@ -11,19 +11,14 @@ import { uploadToCloudinary } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
 
-import {
-  check,
-  PERMISSIONS,
-  request,
-  RESULTS,
-  openSettings,
-} from 'react-native-permissions';
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
 import { Linking } from 'react-native';
 
 type ChatMsg = {
+  id: string;
   text?: string;
   image?: string | null;
   video?: string | null;
@@ -31,6 +26,8 @@ type ChatMsg = {
   timestamp?: any;
   location?: { latitude: number; longitude: number } | null;
   liveShare?: { id: string; active: boolean } | null;
+  deletedFor?: { [email: string]: boolean };
+  edited?: boolean;
 };
 
 type LatLng = { latitude: number; longitude: number };
@@ -77,7 +74,25 @@ export const useChatDetails = (targetUser: any) => {
   const liveEndTimer = useRef<NodeJS.Timeout | null>(null);
 
   const scrollViewRef = useRef<ScrollView | null>(null);
-  const [loadingMessages, setLoadingMessages] = useState(true);
+  const [loadingMessages, setLoadingMessages] = useState<boolean>(true);
+
+  const [selectedMessages, setSelectedMessages] = useState<string[]>([]);
+  const [actionModalVisible, setActionModalVisible] = useState(false);
+
+  const [replyToMsg, setReplyToMsg] = useState<ChatMsg | null>(null);
+
+  const [pinnedMsg, setPinnedMsg] = useState<string | null>(null);
+
+  const [actionMsgId, setActionMsgId] = useState<string | null>(null);
+  const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const [editText, setEditText] = useState('');
+
+  const [editMsgId, setEditMsgId] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [highlightedMsgId, setHighlightedMsgId] = useState<string | null>(null);
+
+  const setReplyMessage = (msg: ChatMsg) => setReplyToMsg(msg);
+  const clearReplyMessage = () => setReplyToMsg(null);
 
   const isAutoScroll = useRef(true);
 
@@ -106,12 +121,23 @@ export const useChatDetails = (targetUser: any) => {
     loadingMessages,
 
     menuVisible,
+    selectedMessages,
 
     locationFullVisible,
     locationPromptVisible,
     currentCoords,
     isLiveSharingMine,
     setLocationPromptVisible,
+
+    editModalVisible,
+    editText,
+    actionMsgId,
+    pinnedMsg,
+    isEditing,
+
+    highlightedMsgId,
+    setHighlightedMsgId,
+
     unblockUserInline: () => unblockUser(),
   };
 
@@ -162,7 +188,8 @@ export const useChatDetails = (targetUser: any) => {
       }
     });
 
-    // 🔹 Messages listener
+   
+
     const unsubMessages = relationRef
       .collection('messages')
       .orderBy('timestamp', 'asc')
@@ -171,6 +198,7 @@ export const useChatDetails = (targetUser: any) => {
           .map(doc => {
             const d = doc.data() || {};
             return {
+              id: doc.id,
               text: d.text || '',
               image: d.image || null,
               video: d.video || null,
@@ -178,9 +206,13 @@ export const useChatDetails = (targetUser: any) => {
               liveShare: d.liveShare || null,
               fromMe: d.from === myEmail,
               timestamp: d.timestamp,
+              deletedFor: d.deletedFor || {},
+              edited: d.edited || false,
             } as ChatMsg;
           })
           .filter(msg => {
+            // Exclude messages deleted for me
+            if (msg.deletedFor && msg.deletedFor[myEmail]) return false;
             if (!clearTime) return true;
             return msg.timestamp?.toDate?.() > clearTime.toDate?.();
           });
@@ -203,6 +235,7 @@ export const useChatDetails = (targetUser: any) => {
 
   const handleSendMessage = async () => {
     if (!message.trim() || !relationId) return;
+
     try {
       const timestamp = firestore.FieldValue.serverTimestamp();
       const relationRef = firestore().collection('relation').doc(relationId);
@@ -568,6 +601,65 @@ export const useChatDetails = (targetUser: any) => {
     }
   };
 
+  const toggleSelectMessage = (msgId: string) => {
+    setSelectedMessages(prev =>
+      prev.includes(msgId) ? prev.filter(id => id !== msgId) : [...prev, msgId],
+    );
+  };
+
+  const clearSelectedMessages = () => setSelectedMessages([]);
+
+  const openActionModal = () => setActionModalVisible(true);
+  const closeActionModal = () => setActionModalVisible(false);
+
+  // Delete selected messages for me
+  const deleteMessagesForMe = async () => {
+    if (!relationId || selectedMessages.length === 0) return;
+
+    // Mark messages as deleted for me (e.g. add a field in Firestore)
+    const relationRef = firestore().collection('relation').doc(relationId);
+
+    for (const msgId of selectedMessages) {
+      await relationRef
+        .collection('messages')
+        .doc(msgId)
+        .set({ deletedFor: { [myEmail]: true } }, { merge: true });
+    }
+    clearSelectedMessages();
+    closeActionModal();
+    showSuccess('Deleted for you');
+  };
+
+  // Delete selected messages for everyone
+  const deleteMessagesForEveryone = async () => {
+    if (!relationId || selectedMessages.length === 0) return;
+    const relationRef = firestore().collection('relation').doc(relationId);
+    for (const msgId of selectedMessages) {
+      await relationRef.collection('messages').doc(msgId).delete();
+    }
+    clearSelectedMessages();
+    closeActionModal();
+    showSuccess('Deleted for everyone');
+  };
+
+  // Pin selected message (only first selected)
+  const pinMessage = async (msgId: string) => {
+    if (!relationId || !msgId) return;
+    const relationRef = firestore().collection('relation').doc(relationId);
+    await relationRef.set({ pinnedMsg: msgId }, { merge: true });
+    showSuccess('Message pinned');
+  };
+
+  useEffect(() => {
+    if (!relationId) return;
+    const relationRef = firestore().collection('relation').doc(relationId);
+    const unsub = relationRef.onSnapshot(doc => {
+      const data = doc.data();
+      setPinnedMsg(data?.pinnedMsg || null);
+    });
+    return () => unsub();
+  }, [relationId]);
+
   useEffect(() => {
     if (!relationId) return;
 
@@ -614,6 +706,18 @@ export const useChatDetails = (targetUser: any) => {
 
     syncLiveLocations();
   }, [relationId, myEmail]);
+
+  const handleEditMessage = async () => {
+    if (!editMsgId || !editText.trim()) return;
+    const relationRef = firestore().collection('relation').doc(relationId);
+    await relationRef
+      .collection('messages')
+      .doc(editMsgId)
+      .set({ text: editText.trim(), edited: true }, { merge: true });
+    setEditText('');
+    setEditMsgId(null);
+    setIsEditing(false);
+  };
 
   useEffect(() => {
     return () => {
@@ -687,5 +791,27 @@ export const useChatDetails = (targetUser: any) => {
     openSystemLocationSettings,
     retryLocationPreparation,
     dismissLocationPrompt,
+
+    selectedMessages,
+    toggleSelectMessage,
+    clearSelectedMessages,
+    actionModalVisible,
+    openActionModal,
+    closeActionModal,
+    deleteMessagesForMe,
+    deleteMessagesForEveryone,
+    pinMessage,
+
+    replyToMsg,
+    setReplyMessage,
+    clearReplyMessage,
+
+    handleEditMessage,
+    setEditText,
+    setEditModalVisible,
+    setActionMsgId,
+
+    setIsEditing,
+    setEditMsgId,
   };
 };
