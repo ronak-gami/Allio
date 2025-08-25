@@ -58,6 +58,7 @@ export const ICONS = {
   false: require('./icons/false.png'),
   menu: require('./icons/menu.png'),
   Attach: require('./icons/attach.png'),
+  Edit: require('./icons/edit.png'),
 };
 
 export const FONTS = {

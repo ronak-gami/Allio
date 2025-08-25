@@ -18,6 +18,7 @@ const useStyle = () => {
     profileImage: {
       height: height * 0.065,
       width: height * 0.065,
+      resizeMode: 'contain',
       borderRadius: height * 0.0325,
       marginRight: height * 0.015,
     },
