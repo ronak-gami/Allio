@@ -49,7 +49,6 @@ const Container: React.FC<PageLayoutProps> = ({
   return (
     <View style={[styles.flex, { backgroundColor: colors.background }]}>
       <StatusBar
-        // backgroundColor={auth ? colors.background : colors.primary}
         backgroundColor={
           statusBarColor ?? (auth ? colors.background : colors.primary)
         }

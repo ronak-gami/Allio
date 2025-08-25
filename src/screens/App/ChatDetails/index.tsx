@@ -1,5 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   TouchableOpacity,

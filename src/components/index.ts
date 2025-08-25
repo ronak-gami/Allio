@@ -29,9 +29,6 @@ export { default as ThemeOrganism } from './organisms/ThemeOrganism';
 export { default as LanguageOrganism } from './organisms/LanguageOrganism';
 export { default as DeleteProfileOrganism } from './organisms/DeleteProfileOrganism';
 
-//molecules
-export { default as Container } from './molecules/Container';
-
 // cards
 export { default as VideoCard } from './cards/VideoCard';
 

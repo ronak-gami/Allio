@@ -6,6 +6,7 @@ import {
   getAuth,
   signInWithCredential,
 } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import SocialButton from '../socialButton';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { checkUserExistsByEmail } from '@utils/helper';
@@ -63,11 +64,6 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
         provider: 'facebook',
         createdAt: new Date().toISOString(),
       };
-
-      // Step 5: Save token & user data in Redux
-      if (!userExists) {
-        await firestore().collection('users').doc(user.uid).set(userData);
-      }
       if (user) {
         const fcmToken = await messaging()?.getToken();
         if (fcmToken) {

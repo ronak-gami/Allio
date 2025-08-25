@@ -1,6 +1,3 @@
-import HomeHeader from '@components/atoms/CustomHeader';
-import { logout } from '@redux/slices/AuthSlice';
-
 export const IMAGES = {
   First: require('./images/firstScreen.png'),
   SecondOnboarding: require('./images/onboardingSecond.png'),
@@ -57,7 +54,10 @@ export const ICONS = {
   true: require('./icons/true.png'),
   false: require('./icons/false.png'),
   menu: require('./icons/menu.png'),
+  stop: require('./icons/stop.png'),
+  copy: require('./icons/copy.png'),
   Attach: require('./icons/attach.png'),
+  gemini: require('./icons/Geminiai.png'),
   Edit: require('./icons/edit.png'),
 };
 

@@ -51,11 +51,21 @@ const api = {
         data,
       }),
   },
+
   NOTIFICATION: {
     sendNotification: ({ data }: { data: any }) =>
       client({
         method: 'post',
         url: '/user/send-notification',
+        data,
+      }),
+  },
+
+  AI: {
+    getAiResponse: ({ data }: { data: { prompt: string } }) =>
+      client({
+        method: 'post',
+        url: '/ai/gemini',
         data,
       }),
   },
