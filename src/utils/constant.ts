@@ -76,7 +76,6 @@ const HOME = {
   ChatDetailsScreen: 'ChatDetailsScreen',
   AiAssistant: 'AiAssistant',
   LocationScreen: 'LocationScreen',
-  ChipInputComponent: 'ChipInputComponent',
   UpdateProfile: 'UpdateProfile',
 } as const;
 
