@@ -100,8 +100,8 @@ const useStyle = () => {
     loaderBubble: {
       paddingHorizontal: scale(16),
       paddingVertical: scale(16),
-      borderRadius: scale(20),
-      borderBottomLeftRadius: scale(8),
+      borderBottomLeftRadius: scale(0),
+      borderTopRightRadius: scale(0),
       backgroundColor: 'rgba(75, 85, 99, 0.4)',
       flexDirection: 'row',
       alignItems: 'center',
