@@ -110,7 +110,7 @@ const ChatDetailsScreen = () => {
       <View style={styles.card}>
         {showImage ? (
           <Image
-            source={{ uri: user?.profile }}
+            source={{ uri: user?.profileImage }}
             style={styles.cardImageCentered}
           />
         ) : (
