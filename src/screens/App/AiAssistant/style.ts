@@ -102,6 +102,7 @@ const useStyle = () => {
       paddingVertical: scale(16),
       borderBottomLeftRadius: scale(0),
       borderTopRightRadius: scale(0),
+      borderRadius: scale(12),
       backgroundColor: 'rgba(75, 85, 99, 0.4)',
       flexDirection: 'row',
       alignItems: 'center',
