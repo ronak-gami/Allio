@@ -31,6 +31,10 @@ export type HomeStackParamList = {
     location?: { lat: number; lng: number };
     liveShareId?: string;
   };
+  UpdateProfile: {
+    email?: string;
+  };
+  NewsApp: undefined;
 };
 
 export type TabParamList = {

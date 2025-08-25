@@ -76,6 +76,8 @@ const HOME = {
   ChatDetailsScreen: 'ChatDetailsScreen',
   AiAssistant: 'AiAssistant',
   LocationScreen: 'LocationScreen',
+  UpdateProfile: 'UpdateProfile',
+  NewsApp: 'NewsApp',
 } as const;
 
 const LICENSE_KEY =

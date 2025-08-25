@@ -108,6 +108,12 @@ export const useMore = () => {
         title: 'settings.Logout',
         type: 'bottomSheet' as const,
       },
+      {
+        key: 'News App',
+        title: 'News App',
+        type: 'navigation' as const,
+        screenName: HOME.NewsApp,
+      },
     ],
     [], // ✅ dependencies
   );
