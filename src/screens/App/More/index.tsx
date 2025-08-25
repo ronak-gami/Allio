@@ -17,7 +17,7 @@ import useStyle from './style';
 
 type Props = BottomTabScreenProps<TabParamList, 'More'>;
 
-const More: React.FC<Props> = ({ navigation }) => {
+const More: React.FC<Props> = () => {
   const styles = useStyle();
   const {
     settingsConfig,
@@ -36,7 +36,7 @@ const More: React.FC<Props> = ({ navigation }) => {
     },
     language: {
       title: getTranslation('bottomSheet.selectLanguage'),
-      snapPoints: ['40%'],
+      snapPoints: ['42%'],
       content: <LanguageOrganism />,
       showCloseButton: true,
     },

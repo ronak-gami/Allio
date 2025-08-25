@@ -108,12 +108,6 @@ export const useMore = () => {
         title: 'settings.Logout',
         type: 'bottomSheet' as const,
       },
-      {
-        key: 'ChipInput',
-        title: 'ChipInput',
-        type: 'navigation' as const,
-        screenName: HOME.ChipInputComponent,
-      },
     ],
     [],
   );

@@ -175,7 +175,7 @@ const useStyle = () => {
       height: scale(120),
       borderRadius: scale(60),
       backgroundColor: 'rgba(251, 192, 45, 0.45)',
-      shadowColor: '#FBC02D',
+      shadowColor: colors.primary,
       shadowOffset: {
         width: 0,
         height: 0,
