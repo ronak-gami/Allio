@@ -27,6 +27,7 @@ export type HomeStackParamList = {
   HomeTabs: NavigatorScreenParams<TabParamList> | undefined;
   Profile: { email?: string };
   AiAssistant: undefined;
+  ChipInputComponent: undefined;
   LocationScreen: {
     location?: { lat: number; lng: number };
     liveShareId?: string;

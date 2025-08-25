@@ -32,7 +32,9 @@ const MPINForm: React.FC<MPINFormProps> = ({ resetMpin = false, email }) => {
     handleSubmit,
   } = useMPINForm({ email, resetMpin });
 
-  if (loading) return null;
+  if (loading) {
+    return null;
+  }
 
   const showConfirmField = resetMpin || !isExistingUser;
 

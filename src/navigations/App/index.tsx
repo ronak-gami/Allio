@@ -13,6 +13,7 @@ import Profile from '@screens/App/Profile';
 import { CustomStatusBar } from '@components/index';
 import ChatDetailsScreen from '@screens/App/ChatDetails';
 import AiAssistant from '@screens/App/AiAssistant';
+import ChipInputScreen from '@screens/App/ChipInputScreen';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
@@ -33,6 +34,10 @@ const HomeNavigator: React.FC = () => {
           component={ChatDetailsScreen}
         />
         <Stack.Screen name={HOME.AiAssistant} component={AiAssistant} />
+        <Stack.Screen
+          name={HOME.ChipInputComponent}
+          component={ChipInputScreen}
+        />
         <Stack.Screen name={HOME.Profile} component={Profile} />
         {/* <Stack.Screen name={HOME.LocationScreen} component={LocationScreen} /> */}
         <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />

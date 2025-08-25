@@ -98,6 +98,7 @@ const Input: React.FC<InputProps> = ({
           isFocused && styles.inputContainerFocused,
           hasError && styles.inputContainerError,
           !editable && styles.inputContainerDisabled,
+          containerStyle,
         ]}>
         <TextInput
           style={[

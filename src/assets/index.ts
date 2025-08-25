@@ -60,6 +60,7 @@ export const ICONS = {
   stop: require('./icons/stop.png'),
   copy: require('./icons/copy.png'),
   Attach: require('./icons/attach.png'),
+  gemini: require('./icons/Geminiai.png'),
 };
 
 export const FONTS = {

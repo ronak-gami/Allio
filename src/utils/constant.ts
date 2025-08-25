@@ -76,6 +76,7 @@ const HOME = {
   ChatDetailsScreen: 'ChatDetailsScreen',
   AiAssistant: 'AiAssistant',
   LocationScreen: 'LocationScreen',
+  ChipInputComponent: 'ChipInputComponent',
 } as const;
 
 const LICENSE_KEY =
