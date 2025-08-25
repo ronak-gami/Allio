@@ -422,9 +422,7 @@ const useStyle = () => {
 
     selecteddMessageContainer: {
       backgroundColor: colors.bgchat,
-      marginHorizontal: 10,
-      marginTop: 6,
-      borderRadius: 10,
+      marginTop:5,
       flexDirection: 'row',
       alignItems: 'center',
       padding: 10,
