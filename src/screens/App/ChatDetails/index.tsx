@@ -91,7 +91,7 @@ const ChatDetailsScreen = () => {
     setEditMsgId,
   } = useChatDetails(user);
 
-  const showImage = user?.profile && user?.profile !== '';
+  const showImage = user?.profileImage && user?.profileImage.trim() !== '';
   const firstLetter = user?.firstName?.charAt(0)?.toUpperCase() || '?';
 
   if (!user) {
@@ -109,8 +109,8 @@ const ChatDetailsScreen = () => {
       <View style={styles.card}>
         {showImage ? (
           <Image
-            source={{ uri: user?.profile }}
-            style={styles.cardImageCentered}
+            source={{ uri: user?.profileImage }}
+            style={styles.profileImage}
           />
         ) : (
           <View style={styles.cardPlaceholderCentered}>
@@ -167,7 +167,7 @@ const ChatDetailsScreen = () => {
 
             {showImage ? (
               <Image
-                source={{ uri: user?.profile }}
+                source={{ uri: user?.profileImage }}
                 style={styles.headerImage}
               />
             ) : (
@@ -302,8 +302,8 @@ const ChatDetailsScreen = () => {
                       <View style={styles.card}>
                         {showImage ? (
                           <Image
-                            source={{ uri: user?.profile }}
-                            style={styles.cardImageCentered}
+                            source={{ uri: user?.profileImage }}
+                            style={styles.profileImage}
                           />
                         ) : (
                           <View style={styles.cardPlaceholderCentered}>
@@ -329,8 +329,8 @@ const ChatDetailsScreen = () => {
                       <View style={styles.card}>
                         {showImage ? (
                           <Image
-                            source={{ uri: user?.profile }}
-                            style={styles.cardImageCentered}
+                            source={{ uri: user?.profileImage }}
+                            style={styles.profileImage}
                           />
                         ) : (
                           <View style={styles.cardPlaceholderCentered}>

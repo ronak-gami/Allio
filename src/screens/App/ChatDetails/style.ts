@@ -202,14 +202,13 @@ const useStyle = () => {
       gap: width * 0.04,
     },
 
-    cardImageCentered: {
-      width: width * 0.2,
-      height: width * 0.2,
-      borderRadius: width * 0.1,
-      marginBottom: height * 0.02,
-      alignSelf: 'center',
+    profileImage: {
+      height: height * 0.065,
+      width: height * 0.065,
+      resizeMode: 'contain',
+      borderRadius: height * 0.0325,
+      marginRight: height * 0.015,
     },
-
     cardPlaceholderCentered: {
       width: width * 0.2,
       height: width * 0.2,
@@ -422,7 +421,7 @@ const useStyle = () => {
 
     selecteddMessageContainer: {
       backgroundColor: colors.bgchat,
-      marginTop:5,
+      marginTop: 5,
       flexDirection: 'row',
       alignItems: 'center',
       padding: 10,
