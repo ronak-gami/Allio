@@ -92,7 +92,7 @@ const ChatDetailsScreen = () => {
     setEditMsgId,
   } = useChatDetails(user);
 
-  const showImage = user?.profile && user?.profile !== '';
+  const showImage = user?.profileImage && user?.profileImage.trim() !== '';
   const firstLetter = user?.firstName?.charAt(0)?.toUpperCase() || '?';
 
   if (!user) {
