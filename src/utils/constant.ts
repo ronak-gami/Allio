@@ -77,6 +77,7 @@ const HOME = {
   AiAssistant: 'AiAssistant',
   LocationScreen: 'LocationScreen',
   ChipInputComponent: 'ChipInputComponent',
+  UpdateProfile: 'UpdateProfile',
 } as const;
 
 const LICENSE_KEY =

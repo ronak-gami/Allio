@@ -171,6 +171,21 @@ const useStyle = () => {
     buttonbg: {
       backgroundColor: colors.error,
     },
+
+    editButton: {
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      backgroundColor: colors.white,
+      borderRadius: 20,
+      padding: 6,
+      elevation: 4,
+    },
+    editIcon: {
+      width: height * 0.02,
+      height: height * 0.02,
+      tintColor: colors.primary,
+    },
   });
 };
 

@@ -347,18 +347,6 @@ const useStyle = () => {
       color: colors.primary,
     },
 
-    mapheader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: height * 0.01,
-      paddingVertical: 8,
-    },
-
-    headerText: {
-      marginLeft: height * 0.02,
-      fontSize: scale(18),
-    },
-
     map: {
       width,
       height,
@@ -414,7 +402,8 @@ const useStyle = () => {
     },
     mapView: {
       height: height * 0.2,
-      width: height * 0.2,
+      width: height * 0.25,
+      alignSelf: 'center',
     },
     stoplivebutton: {
       paddingVertical: 7,
@@ -427,49 +416,13 @@ const useStyle = () => {
       color: colors.text,
     },
 
-    menuPopup: {
-      position: 'absolute',
-
-      backgroundColor: colors.background,
-      borderRadius: 10,
-      elevation: 4,
-      shadowOffset: { width: 5, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
-      padding: 10,
-      zIndex: 10,
-      gap: 10,
-      width: width * 0.4,
-    },
-    menuPopupSender: {
-      bottom: -10,
-      right: 20,
-    },
-    menuPopupReceiver: {
-      bottom: -10,
-      left: 20,
-    },
-    menuItem: {
-      paddingVertical: 6,
-    },
-    menuItemText: {
-      fontSize: scale(15),
-    },
-    menuItemPrimary: {
-      color: colors.primary,
-    },
     menuItemDanger: {
       color: colors.error,
     },
 
     selecteddMessageContainer: {
       backgroundColor: colors.bgchat,
-      marginHorizontal: 10,
-      marginTop: 6,
-      borderRadius: 10,
+      marginTop:5,
       flexDirection: 'row',
       alignItems: 'center',
       padding: 10,
@@ -494,23 +447,26 @@ const useStyle = () => {
       tintColor: colors.primary,
       marginRight: 8,
     },
-    pinnedMessageText: {
+    selecteddMessageText: {
       color: colors.primary,
-      fontWeight: 'bold',
+    },
+
+    pinnedMsgText: {
+      color: colors.black,
+      fontSize: scale(14),
+      flex: 1,
     },
 
     pinnedMessageContainer: {
       backgroundColor: colors.bgchat,
       padding: height * 0.015,
-      marginHorizontal: 10,
-      marginTop: 6,
-      borderRadius: 10,
       flexDirection: 'row',
       alignItems: 'center',
+      width: '100%',
     },
 
     selectedItem: {
-      backgroundColor: colors.skyBlue, 
+      backgroundColor: colors.skyBlue,
       elevation: 2,
       shadowColor: colors.iceBlue,
       shadowOffset: { width: 0, height: 2 },

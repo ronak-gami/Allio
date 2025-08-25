@@ -34,6 +34,7 @@ const ProfileHeader: React.FC<{
   handleSend?: () => void;
   handleAccept?: () => void;
   handleReject?: () => void;
+  onEditProfile?: () => void;
   states: object;
 }> = ({
   email,
@@ -48,6 +49,8 @@ const ProfileHeader: React.FC<{
   handleSend,
   handleAccept,
   handleReject,
+  onEditProfile, 
+
   states,
 }) => {
   const displayName =
@@ -71,6 +74,16 @@ const ProfileHeader: React.FC<{
             defaultSource={IMAGES.Dummy_Profile}
           />
           <View style={styles.onlineIndicator} />
+
+          {!isExternalProfile && (
+            <TouchableOpacity style={styles.editButton} onPress={onEditProfile}>
+              <Image
+                source={ICONS.Edit} 
+                style={styles.editIcon}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={styles.nameAndStatsContainer}>
@@ -263,6 +276,7 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
     handleAccept,
     handleReject,
     onRefresh,
+    onEditProfile,
   } = useProfile({
     userEmail: route.params?.email,
   });
@@ -286,6 +300,7 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
           handleSend={handleSend}
           handleAccept={handleAccept}
           handleReject={handleReject}
+          onEditProfile={onEditProfile}
           states={states}
         />
         <TabBar

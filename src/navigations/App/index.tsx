@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeStackParamList } from '@types/navigations';
 import MPINSetupScreen from '@screens/App/MPIN';
 import ForgetMPIN from '@screens/App/ForgetMPIN';
 import { HOME } from '@utils/constant';
-
 import TabNavigator from './TabNavigator';
 import { COLORS } from '@utils/color';
 import MyQR from '@screens/App/MyOR';
@@ -14,6 +13,7 @@ import { CustomStatusBar } from '@components/index';
 import ChatDetailsScreen from '@screens/App/ChatDetails';
 import AiAssistant from '@screens/App/AiAssistant';
 import ChipInputScreen from '@screens/App/ChipInputScreen';
+import UpdateProfile from '@screens/App/UpdateProfile';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
@@ -39,7 +39,7 @@ const HomeNavigator: React.FC = () => {
           component={ChipInputScreen}
         />
         <Stack.Screen name={HOME.Profile} component={Profile} />
-        {/* <Stack.Screen name={HOME.LocationScreen} component={LocationScreen} /> */}
+        <Stack.Screen name={HOME.UpdateProfile} component={UpdateProfile} />
         <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />
       </Stack.Navigator>
     </>
