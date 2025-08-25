@@ -17,10 +17,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 import Video from 'react-native-video';
 import MapView, { Marker } from 'react-native-maps';
-import { Button, Container, CustomModal, Input, Text } from '@components/index';
+import {
+  Button,
+  Container,
+  CustomHeader,
+  CustomModal,
+  Input,
+  Text,
+} from '@components/index';
 import useStyle from './style';
 import { useChatDetails } from './useChatDetails';
-import { scale } from 'react-native-size-matters';
 
 type ChatDetailsRouteProp = RouteProp<HomeStackParamList, 'ChatDetailsScreen'>;
 
@@ -220,12 +226,7 @@ const ChatDetailsScreen = () => {
                     source={ICONS.Attach}
                     style={styles.pinnedMessageIcon}
                   />
-                  <Text
-                    style={{
-                      color: colors.black,
-                      fontSize: scale(14),
-                      flex: 1,
-                    }}>
+                  <Text style={styles.pinnedMsgText}>
                     {pinnedMsg.text || '[Pinned message]'}
                   </Text>
                   <TouchableOpacity onPress={() => pinMessage('null')}>
@@ -246,7 +247,7 @@ const ChatDetailsScreen = () => {
                   source={ICONS.check}
                   style={styles.selectedMessageIcon}
                 />
-                <Text style={styles.pinnedMessageText}>
+                <Text style={styles.selecteddMessageText}>
                   {states?.selectedMessages.length} selected
                 </Text>
               </View>
@@ -351,7 +352,6 @@ const ChatDetailsScreen = () => {
                       const isSelected =
                         states?.selectedMessages.includes(msgId);
 
-                      // Find the latest active liveShare message from current user
                       const isLatestLiveShareMine =
                         chat.liveShare?.active &&
                         chat.fromMe &&
@@ -364,7 +364,6 @@ const ChatDetailsScreen = () => {
                             .filter(i => i !== -1)
                             .pop();
 
-                      // Support both {latitude, longitude} and {lat, lng}
                       const latitude =
                         chat?.location?.latitude ?? chat?.location?.lat;
                       const longitude =
@@ -516,66 +515,39 @@ const ChatDetailsScreen = () => {
                               </TouchableOpacity>
                             ) : null}
 
-                            {/* Small vertical action menu at bottom of message */}
                             {showActionMenu && (
-                              <View
-                                style={[
-                                  styles.menuPopup,
-                                  chat.fromMe
-                                    ? styles.menuPopupSender
-                                    : styles.menuPopupReceiver,
-                                ]}>
+                              <CustomModal
+                                visible={showActionMenu}
+                                title="Message Actions"
+                                onClose={() => setActionMsgId(null)}>
                                 {chat.fromMe && (
-                                  <TouchableOpacity
-                                    style={styles.menuItem}
+                                  <Button
+                                    title="Edit Message"
                                     onPress={() => {
                                       setEditText(chat.text || '');
                                       setEditMsgId(msgId);
                                       setActionMsgId(null);
                                       setIsEditing(true);
-                                    }}>
-                                    <Text
-                                      type="semibold"
-                                      style={[
-                                        styles.menuItemText,
-                                        styles.menuItemPrimary,
-                                      ]}>
-                                      Edit Message
-                                    </Text>
-                                  </TouchableOpacity>
+                                    }}
+                                  />
                                 )}
 
-                                {/* Pin for any message */}
-                                <TouchableOpacity
-                                  style={styles.menuItem}
+                                <Button
+                                  title="Pin Message"
                                   onPress={async () => {
                                     await pinMessage(msgId);
                                     setActionMsgId(null);
-                                  }}>
-                                  <Text
-                                    type="semibold"
-                                    style={[
-                                      styles.menuItemText,
-                                      styles.menuItemPrimary,
-                                    ]}>
-                                    Pin Message
-                                  </Text>
-                                </TouchableOpacity>
+                                  }}
+                                />
 
-                                {/* Close menu */}
-                                <TouchableOpacity
-                                  style={styles.menuItem}
-                                  onPress={() => setActionMsgId(null)}>
-                                  <Text
-                                    type="semibold"
-                                    style={[
-                                      styles.menuItemText,
-                                      styles.menuItemDanger,
-                                    ]}>
-                                    Cancel
-                                  </Text>
-                                </TouchableOpacity>
-                              </View>
+                                <Button
+                                  title="Cancel"
+                                  outlineColor={
+                                    styles.menuItemDanger?.color || undefined
+                                  }
+                                  onPress={() => setActionMsgId(null)}
+                                />
+                              </CustomModal>
                             )}
                           </TouchableOpacity>
                         </View>
@@ -766,14 +738,14 @@ const ChatDetailsScreen = () => {
             animationType="slide"
             presentationStyle="fullScreen">
             <View style={styles.flex}>
-              <View style={styles.mapheader}>
-                <TouchableOpacity onPress={closeLocationFullModal}>
-                  <Image source={ICONS.BackArrow} style={styles.backIcon} />
-                </TouchableOpacity>
-                <Text type="semibold" style={styles.headerText}>
-                  Share Location
-                </Text>
-              </View>
+              <CustomHeader
+                showProfileLogo={false}
+                showAppLogo={false}
+                showBackArrow={true}
+                title="Share Location"
+                onProfilePress={() => {}}
+                onBackPress={closeLocationFullModal}
+              />
 
               <View style={styles.flex}>
                 <MapView

@@ -172,6 +172,10 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
       setRefreshing(false);
     }
   };
+  const onEditProfile = () => {
+    navigation.navigate(HOME.UpdateProfile, { email: email }); 
+  };
+
 
   return {
     states: {
@@ -206,6 +210,7 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
     handleAccept,
     handleReject,
     onRefresh,
+    onEditProfile,
   };
 };
 

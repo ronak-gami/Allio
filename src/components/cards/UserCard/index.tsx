@@ -19,7 +19,8 @@ const UserCard = ({ user }: { user: any }) => {
     (state: RootState) => state.auth?.userData?.email,
   );
 
-  const showImage = user?.profile && user?.profile !== '';
+  const showImage = user?.profileImage && user?.profileImage.trim() !== '';
+
   const firstLetter: string = user?.firstName?.charAt(0)?.toUpperCase() || '?';
 
   const { relationStatus, handleAccept, handleReject, handleSend } =
@@ -72,7 +73,14 @@ const UserCard = ({ user }: { user: any }) => {
       <View style={styles.card}>
         <View style={styles.row}>
           {showImage ? (
-            <Image source={{ uri: user?.profile }} style={styles.profileImage} />
+            <Image
+              source={{ uri: user.profileImage }}
+              style={styles.profileImage}
+              resizeMode="cover"
+              onError={e =>
+                console.warn('Image load failed:', e.nativeEvent.error)
+              }
+            />
           ) : (
             <View style={styles.placeholder}>
               <Text style={styles.placeholderText}>{firstLetter}</Text>

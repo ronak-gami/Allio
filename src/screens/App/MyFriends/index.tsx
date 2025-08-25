@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -14,6 +14,17 @@ const MyFriends = () => {
   const styles = useStyle();
   const navigation = useNavigation();
   const { activeTab, setActiveTab, users, states, onRefresh } = useMyFriends();
+
+  const sortedUsers = useMemo(() => {
+    if (activeTab !== 'all') return users;
+
+    return [...users].sort((a, b) => {
+      const order = { accepted: 1, sent: 1 };
+      const aOrder = order[a.relationStatus] || 0;
+      const bOrder = order[b.relationStatus] || 0;
+      return aOrder - bOrder;
+    });
+  }, [users, activeTab]);
 
   const renderUser = ({ item, index }: { item: any; index: number }) => (
     <UserCard user={item} index={index} />
@@ -71,7 +82,7 @@ const MyFriends = () => {
           <CustomLoader visible={states?.loading} />
         ) : (
           <CustomFlatList
-            data={users}
+            data={sortedUsers}
             renderItem={renderUser}
             ListEmptyComponent={renderEmptyState}
             refreshing={states?.refreshing}
