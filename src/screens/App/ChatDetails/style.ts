@@ -483,7 +483,7 @@ const useStyle = () => {
     },
     headerStatus: {
       fontSize: 13,
-      color: colors.text,
+      color: colors.black,
       opacity: 0.7,
       marginTop: 2,
     },
@@ -503,15 +503,14 @@ const useStyle = () => {
     dateLabelContainer: {
       alignSelf: 'center',
       marginVertical: 10,
-      backgroundColor: colors.card,
+      backgroundColor: colors.text,
       borderRadius: 10,
-      paddingHorizontal: 12,
-      paddingVertical: 3,
+      paddingHorizontal: 15,
+      paddingVertical: 7,
     },
     dateLabelText: {
-      fontSize: 13,
-      color: colors.text,
-      opacity: 0.7,
+      fontSize: scale(12),
+      color: colors.background,
     },
   });
 };

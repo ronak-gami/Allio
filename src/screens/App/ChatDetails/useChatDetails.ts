@@ -7,7 +7,7 @@ import { useUserCard } from '@components/cards/UserCard/useUserCard';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import api from '@api/index';
-import { getAllUsers } from '@utils/helper';
+import { formatLastSeen, getAllUsers } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
 
@@ -86,13 +86,13 @@ export const useChatDetails = (targetUser: any) => {
 
   const [actionMsgId, setActionMsgId] = useState<string | null>(null);
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
-  const [editText, setEditText] = useState <string>('');
+  const [editText, setEditText] = useState<string>('');
 
   const [editMsgId, setEditMsgId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [highlightedMsgId, setHighlightedMsgId] = useState<string | null>(null);
 
-  const [lastSeen, setLastSeen] = useState<Date | null>(null);
+  const [lastSeen, setLastSeen] = useState<string>('');
 
   const [isOnline, setIsOnline] = useState<string>('');
 
@@ -258,12 +258,13 @@ export const useChatDetails = (targetUser: any) => {
 
       if (target) {
         if (target.lastSeen) {
-          setLastSeen(
-            target.lastSeen.toDate
-              ? target.lastSeen.toDate()
-              : new Date(target.lastSeen),
-          );
+          const lastSeenDate = target.lastSeen.toDate
+            ? target.lastSeen.toDate()
+            : new Date(target.lastSeen);
+
+          setLastSeen(formatLastSeen(lastSeenDate)); // 👈 format using helper
         }
+
         if (typeof target.online === 'boolean') {
           setIsOnline(target.online);
         }
@@ -273,7 +274,6 @@ export const useChatDetails = (targetUser: any) => {
     fetchTargetUser();
 
     const intervalId = setInterval(fetchTargetUser, 30000);
-
     return () => clearInterval(intervalId);
   }, [myEmail, targetUser.email]);
 
@@ -395,43 +395,6 @@ export const useChatDetails = (targetUser: any) => {
     return () => unsub();
   }, [myEmail, targetUser?.email, relationId]);
 
-  // const selectTheme = async (localImage: any) => {
-  //   if (!relationId || !localImage) return;
-  //   setloding(true);
-  //   try {
-  //     const themesRef = firestore().collection('themes').doc(relationId);
-  //     const existingDoc = await themesRef.get();
-
-  //     if (existingDoc.exists && existingDoc.data()?.themeUrl) {
-  //       if (existingDoc.data().localKey === localImage) {
-
-  //         setSelectedTheme(existingDoc.data().themeUrl);
-  //         setThemeModalVisible(false);
-  //         return;
-  //       }
-  //     }
-  //     const fileUri = Image.resolveAssetSource(localImage).uri;
-  //     const uploadedUrl = await uploadToCloudinary({
-  //       uri: fileUri,
-  //       type: 'image/png',
-  //       fileName: `${relationId}_${Date.now()}.png`,
-  //     });
-  //     await themesRef.set({
-  //       themeUrl: uploadedUrl,
-  //       localKey: localImage,
-  //       updatedAt: new Date(),
-  //     });
-  //     setSelectedTheme(uploadedUrl);
-  //     showSuccess('Theme applied successfully!');
-  //   } catch (err) {
-  //     console.error(err);
-  //     showError('Failed to apply theme');
-  //   } finally {
-  //     setloding(false);
-  //     setThemeModalVisible(false);
-  //   }
-  // };
-
   const selectTheme = async (fileKey: string | null) => {
     if (!relationId || !fileKey) return;
     setloding(true);
@@ -475,22 +438,6 @@ export const useChatDetails = (targetUser: any) => {
       setloding(false);
     }
   };
-
-  useEffect(() => {
-    if (!targetUser?.email) return;
-    const unsub = firestore()
-      .collection('users')
-      .doc(targetUser.email)
-      .onSnapshot(doc => {
-        const data = doc.data();
-        if (data?.lastSeen) {
-          const seenDate = data.lastSeen.toDate();
-          // setLastSeen(seenDate);
-          // setIsOnline(Date.now() - seenDate.getTime() < 2 * 60 * 1000);
-        }
-      });
-    return () => unsub();
-  }, [targetUser?.email]);
 
   const removeTheme = async () => {
     try {
