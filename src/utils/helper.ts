@@ -1,4 +1,11 @@
-import { Dimensions, PermissionsAndroid, Platform, View } from 'react-native';
+import {
+  AppState,
+  AppStateStatus,
+  Dimensions,
+  PermissionsAndroid,
+  Platform,
+  View,
+} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {
   PERMISSIONS,
@@ -12,8 +19,11 @@ import messaging from '@react-native-firebase/messaging';
 import RNFS from 'react-native-fs';
 import axios from 'axios';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import moment from 'moment'; // Add this import
+
 import Share from 'react-native-share';
 import { showError, showSuccess } from './toast';
+import { useEffect, useRef } from 'react';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -406,6 +416,99 @@ const uploadToCloudinary = async file => {
   }
 };
 
+const formatTime = (timestamp: any) => {
+  if (!timestamp) return '';
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  return moment(date).format('h:mm A');
+};
+
+const formatDateLabel = (timestamp: any) => {
+  if (!timestamp) return '';
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  if (moment(date).isSame(moment(), 'day')) return 'Today';
+  if (moment(date).isSame(moment().subtract(1, 'day'), 'day'))
+    return 'Yesterday';
+  return moment(date).format('DD MMM YYYY');
+};
+
+const monitorOnlineStatus = (email?: string) => {
+  if (!email) return;
+
+  const updateStatus = async (isOnline: boolean) => {
+    try {
+      // Update the user doc directly by email
+      const userSnapshot = await firestore()
+        .collection('users')
+        .where('email', '==', email)
+        .get();
+
+      if (!userSnapshot.empty) {
+        const userDoc = userSnapshot.docs[0];
+        await userDoc.ref.set(
+          {
+            online: isOnline,
+            lastSeen: new Date().toISOString(),
+          },
+          { merge: true },
+        );
+      }
+    } catch (error) {
+      console.error('Error updating online status:', error);
+    }
+  };
+
+  updateStatus(true);
+
+  const listener = (nextState: AppStateStatus) => {
+    if (nextState === 'active') {
+      updateStatus(true);
+    } else {
+      updateStatus(false);
+    }
+  };
+
+  AppState.addEventListener('change', listener);
+
+  const cleanup = () => {
+    updateStatus(false);
+  };
+
+  return cleanup;
+};
+
+const formatLastSeen = timestamp => {
+  if (!timestamp) return '';
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  const diffMs = now - date;
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHours = Math.floor(diffMin / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  // Today
+  if (diffDays === 0) {
+    if (diffHours > 0)
+      return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffMin > 0) return `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
+    return 'just now';
+  }
+
+  // Yesterday
+  if (diffDays === 1) {
+    return 'Yesterday';
+  }
+
+  // Everything else → formatted date (e.g. "21 May 2025")
+  return date.toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+};
+
+
 export {
   height,
   width,
@@ -423,4 +526,9 @@ export {
   capitalizeFirst,
   requestNotificationPermission,
   uploadToCloudinary,
+  formatDateLabel,
+  formatTime,
+  monitorOnlineStatus,
+  // useMonitorOnlineStatus,
+  formatLastSeen,
 };

@@ -6,7 +6,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import perf from '@react-native-firebase/perf';
 import CustomNotification, {
   CustomToastRef,
 } from '@components/atoms/CustomNotification';
