@@ -8,7 +8,6 @@ import {
   ScrollView,
   Modal,
   ImageBackground,
-  AppState,
 } from 'react-native';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '@types/navigations';
@@ -118,7 +117,7 @@ const ChatDetailsScreen = () => {
         {showImage ? (
           <Image
             source={{ uri: user?.profileImage }}
-            style={styles.profileImage}
+            style={styles.headerImage}
           />
         ) : (
           <View style={styles.cardPlaceholderCentered}>
@@ -321,7 +320,7 @@ const ChatDetailsScreen = () => {
                         {showImage ? (
                           <Image
                             source={{ uri: user?.profileImage }}
-                            style={styles.profileImage}
+                            style={styles.headerImage}
                           />
                         ) : (
                           <View style={styles.cardPlaceholderCentered}>
@@ -348,7 +347,7 @@ const ChatDetailsScreen = () => {
                         {showImage ? (
                           <Image
                             source={{ uri: user?.profileImage }}
-                            style={styles.profileImage}
+                            style={styles.headerImage}
                           />
                         ) : (
                           <View style={styles.cardPlaceholderCentered}>
@@ -717,56 +716,6 @@ const ChatDetailsScreen = () => {
               </View>
             </TouchableOpacity>
           </Modal>
-
-          {/* Theme Modal */}
-          {/* <CustomModal
-            visible={states?.themeModalVisible}
-            title="Select Chat Theme"
-            onClose={() => setThemeModalVisible(false)}>
-            <View style={styles.themeGrid}>
-              {['Chattheme1', 'Chattheme2', 'Chattheme3', 'Chattheme4'].map(
-                key => {
-                  const themeUri = IMAGES[key];
-                  const isSelected = states?.selectedTheme === themeUri;
-
-                  return (
-                    <TouchableOpacity
-                      key={key}
-                      // onPress={() => states?.setselecturl(themeUri)}
-                      onPress={() => states?.setselecturl(key)} // ✅ pass fileKey
-                      style={[
-                        styles.themeOption,
-                        isSelected && {
-                          borderWidth: 5,
-                          borderColor: colors.primary,
-                        },
-                      ]}>
-                      <Image
-                        source={themeUri}
-                        style={styles.themeImage}
-                        resizeMode="cover"
-                      />
-                    </TouchableOpacity>
-                  );
-                },
-              )}
-            </View>
-
-            <Button
-              title="Apply"
-              loading={states?.loding}
-              // onPress={() => selectTheme(states?.selecturl)}
-              onPress={() => selectTheme(states?.selecturl)} 
-            />
-
-            {states?.selectedTheme && (
-              <Button
-                title="Remove Theme"
-                outlineColor={colors.primary}
-                onPress={removeTheme}
-              />
-            )}
-          </CustomModal> */}
 
           <CustomModal
             visible={states?.themeModalVisible}

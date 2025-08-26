@@ -7,7 +7,7 @@ import { useUserCard } from '@components/cards/UserCard/useUserCard';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import api from '@api/index';
-import { getAllUsers, uploadToCloudinary } from '@utils/helper';
+import { getAllUsers } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
 
@@ -16,7 +16,6 @@ import Geolocation, {
   GeolocationResponse,
 } from '@react-native-community/geolocation';
 import { Linking } from 'react-native';
-import { ICONS, IMAGES } from '@assets/index';
 
 type ChatMsg = {
   id: string;
@@ -48,8 +47,8 @@ export const useChatDetails = (targetUser: any) => {
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
-  const [isBlockedByMe, setIsBlockedByMe] = useState(false);
-  const [isBlockedByThem, setIsBlockedByThem] = useState(false);
+  const [isBlockedByMe, setIsBlockedByMe] = useState<boolean>(false);
+  const [isBlockedByThem, setIsBlockedByThem] = useState<boolean>(false);
   const [clearTime, setClearTime] = useState<any>(null);
 
   const [themeModalVisible, setThemeModalVisible] = useState<boolean>(false);
@@ -79,7 +78,7 @@ export const useChatDetails = (targetUser: any) => {
   const [loadingMessages, setLoadingMessages] = useState<boolean>(true);
 
   const [selectedMessages, setSelectedMessages] = useState<string[]>([]);
-  const [actionModalVisible, setActionModalVisible] = useState(false);
+  const [actionModalVisible, setActionModalVisible] = useState<boolean>(false);
 
   const [replyToMsg, setReplyToMsg] = useState<ChatMsg | null>(null);
 
@@ -87,17 +86,15 @@ export const useChatDetails = (targetUser: any) => {
 
   const [actionMsgId, setActionMsgId] = useState<string | null>(null);
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
-  const [editText, setEditText] = useState('');
+  const [editText, setEditText] = useState <string>('');
 
   const [editMsgId, setEditMsgId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [highlightedMsgId, setHighlightedMsgId] = useState<string | null>(null);
 
   const [lastSeen, setLastSeen] = useState<Date | null>(null);
-  // const [isOnline, setIsOnline] = useState('');
 
-  const [appState, setAppState] = useState(AppState.currentState); // ✅ direct current state
-  const [isOnline, setIsOnline] = useState(appState === 'active');
+  const [isOnline, setIsOnline] = useState<string>('');
 
   const [allThemes, setAllThemes] = useState<
     { fileKey: string; url: string }[]
@@ -252,33 +249,33 @@ export const useChatDetails = (targetUser: any) => {
     return () => unsub();
   }, []);
 
-
-useEffect(() => {
-  const fetchTargetUser = async () => {
+  useEffect(() => {
     if (!targetUser?.email) return;
 
-    const allUsers = await getAllUsers(myEmail);
-    const target = allUsers.find(u => u.email === targetUser.email);
+    const fetchTargetUser = async () => {
+      const allUsers = await getAllUsers(myEmail);
+      const target = allUsers.find(u => u.email === targetUser.email);
 
-    console.log(target)
-
-    if (target) {
-      if (target.lastSeen) {
-        setLastSeen(
-          target.lastSeen.toDate
-            ? target.lastSeen.toDate()
-            : new Date(target.lastSeen),
-        );
+      if (target) {
+        if (target.lastSeen) {
+          setLastSeen(
+            target.lastSeen.toDate
+              ? target.lastSeen.toDate()
+              : new Date(target.lastSeen),
+          );
+        }
+        if (typeof target.online === 'boolean') {
+          setIsOnline(target.online);
+        }
       }
-      if (typeof target.online === 'boolean') {
-        setIsOnline(target.online);
-      }
-    }
-  };
+    };
 
-  fetchTargetUser();
-}, [targetUser?.email]);
+    fetchTargetUser();
 
+    const intervalId = setInterval(fetchTargetUser, 30000);
+
+    return () => clearInterval(intervalId);
+  }, [myEmail, targetUser.email]);
 
   useEffect(() => {
     if (states?.chatHistory?.length > 0) {

@@ -7,7 +7,7 @@ import CustomNotification, {
 import { useNotification } from '@hooks/index';
 
 import Splash from '@screens/Auth/Splash';
-import { AppState, useColorScheme } from 'react-native';
+import { useColorScheme } from 'react-native';
 import { setDarkMode } from '../redux/slices/ThemeSlice';
 import i18n from '../assets/i18n';
 import { DefaultTheme } from '@react-navigation/native';
@@ -19,7 +19,6 @@ import HomeNavigator from './App';
 import { RootState } from '../redux/store';
 import { BottomSheetProvider } from '../context/BottomSheetContext';
 import { monitorOnlineStatus } from '@utils/helper';
-// import { monitorOnlineStatus } from '@utils/helper';
 
 const lightTheme = {
   ...DefaultTheme,
@@ -54,7 +53,6 @@ const StackNavigator: React.FC = () => {
   const [splashVisible, setSplashVisible] = useState<boolean>(true);
   const navigationRef = useRef<any>(null);
   const routeNameRef = useRef<string>();
-  const appStateRef = useRef(AppState.currentState);
 
   // Add notification hook
   useNotification(customToastRef);
@@ -75,21 +73,9 @@ const StackNavigator: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Call monitorOnlineStatus passing current AppState
-    const cleanup = monitorOnlineStatus(myEmail, appStateRef.current);
-
-    const subscription = AppState.addEventListener('change', nextState => {
-      appStateRef.current = nextState;
-      monitorOnlineStatus(myEmail, nextState); // update status on every change
-    });
-
-    return () => {
-      cleanup?.();
-      subscription.remove();
-    };
+    monitorOnlineStatus(myEmail);
   }, [myEmail]);
 
-  // ✅ Correct place for return
   const appTheme = isDarkMode ? darkTheme : lightTheme;
 
   return (
@@ -121,6 +107,6 @@ const StackNavigator: React.FC = () => {
       </BottomSheetProvider>
     </NavigationContainer>
   );
-}; // <-- Correctly closes the component here
+};
 
 export default StackNavigator;

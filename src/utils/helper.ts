@@ -465,31 +465,26 @@ const monitorOnlineStatus = (email?: string) => {
           },
           { merge: true },
         );
-        console.log(`Updated ${email} online: ${isOnline}`);
       }
     } catch (error) {
       console.error('Error updating online status:', error);
     }
   };
 
-  // Initial update to active
   updateStatus(true);
 
   const listener = (nextState: AppStateStatus) => {
     if (nextState === 'active') {
       updateStatus(true);
     } else {
-      // App is backgrounded or inactive
       updateStatus(false);
     }
   };
 
   AppState.addEventListener('change', listener);
 
-  // Handle app being killed (cleanup)
   const cleanup = () => {
     updateStatus(false);
-    // AppState.removeEventListener('change', listener);
   };
 
   return cleanup;

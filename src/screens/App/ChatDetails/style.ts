@@ -204,11 +204,10 @@ const useStyle = () => {
     },
 
     profileImage: {
-      height: height * 0.065,
-      width: height * 0.065,
+      height: height * 0.080,
+      width: height * 0.060,
       resizeMode: 'contain',
       borderRadius: height * 0.0325,
-      marginRight: height * 0.015,
     },
     cardPlaceholderCentered: {
       width: width * 0.2,
@@ -475,10 +474,12 @@ const useStyle = () => {
     },
 
     editedtext: {
-      fontSize: scale(11),
+      fontSize: scale(10),
       color: colors.text,
-      marginTop: 2,
-      textAlign: 'right',
+      marginTop: 1,
+      top: 11,
+      right:5,
+      textAlign: 'left',
     },
     headerStatus: {
       fontSize: 13,
