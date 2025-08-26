@@ -7,7 +7,6 @@ export const IMAGES = {
   Mobile: require('./images/mobile.png'),
   Notification: require('./images/notification.jpg'),
   Deleteimage: require('./images/icondelete.png'),
-  Logout: require('./images/logoutimag.png'),
   Nodata: require('./images/Nodata.png'),
   Chattheme1: require('./images/chattheme1.jpg'),
   Chattheme2: require('./images/chattheme2.jpg'),
