@@ -7,7 +7,7 @@ import CustomNotification, {
 import { useNotification } from '@hooks/index';
 
 import Splash from '@screens/Auth/Splash';
-import { useColorScheme } from 'react-native';
+import { AppState, useColorScheme } from 'react-native';
 import { setDarkMode } from '../redux/slices/ThemeSlice';
 import i18n from '../assets/i18n';
 import { DefaultTheme } from '@react-navigation/native';
@@ -18,6 +18,8 @@ import AuthNavigator from './Auth';
 import HomeNavigator from './App';
 import { RootState } from '../redux/store';
 import { BottomSheetProvider } from '../context/BottomSheetContext';
+import { monitorOnlineStatus } from '@utils/helper';
+// import { monitorOnlineStatus } from '@utils/helper';
 
 const lightTheme = {
   ...DefaultTheme,
@@ -41,6 +43,10 @@ const StackNavigator: React.FC = () => {
   const token = useSelector((s: RootState) => s.auth.token);
   const isDarkMode = useSelector((s: RootState) => s.theme.isDarkMode);
   const language = useSelector((s: RootState) => s.language.language);
+  const myEmail = useSelector(
+    (state: RootState) => state.auth?.userData?.email,
+  );
+
   const dispatch = useDispatch();
   const systemColorScheme = useColorScheme();
   const customToastRef = useRef<CustomToastRef>(null);
@@ -48,6 +54,7 @@ const StackNavigator: React.FC = () => {
   const [splashVisible, setSplashVisible] = useState<boolean>(true);
   const navigationRef = useRef<any>(null);
   const routeNameRef = useRef<string>();
+  const appStateRef = useRef(AppState.currentState);
 
   // Add notification hook
   useNotification(customToastRef);
@@ -67,40 +74,53 @@ const StackNavigator: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    // Call monitorOnlineStatus passing current AppState
+    const cleanup = monitorOnlineStatus(myEmail, appStateRef.current);
+
+    const subscription = AppState.addEventListener('change', nextState => {
+      appStateRef.current = nextState;
+      monitorOnlineStatus(myEmail, nextState); // update status on every change
+    });
+
+    return () => {
+      cleanup?.();
+      subscription.remove();
+    };
+  }, [myEmail]);
+
+  // ✅ Correct place for return
   const appTheme = isDarkMode ? darkTheme : lightTheme;
 
   return (
-    <>
-      <NavigationContainer
-        theme={appTheme}
-        ref={navigationRef}
-        onReady={() => {
-          routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
-        }}
-        onStateChange={async () => {
-          const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
-          if (routeNameRef.current !== currentRoute && currentRoute) {
-            await analytics().logScreenView({
-              screen_name: currentRoute,
-              screen_class: currentRoute,
-            });
-            routeNameRef.current = currentRoute;
-          }
-        }}>
-        <CustomNotification ref={customToastRef} />
-        <BottomSheetProvider>
-          {splashVisible ? (
-            <Splash />
-          ) : token ? (
-            <HomeNavigator />
-          ) : (
-            <AuthNavigator />
-          )}
-        </BottomSheetProvider>
-        {/* <CustomNotification ref={customToastRef} /> */}
-      </NavigationContainer>
-    </>
+    <NavigationContainer
+      theme={appTheme}
+      ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+      }}
+      onStateChange={async () => {
+        const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
+        if (routeNameRef.current !== currentRoute && currentRoute) {
+          await analytics().logScreenView({
+            screen_name: currentRoute,
+            screen_class: currentRoute,
+          });
+          routeNameRef.current = currentRoute;
+        }
+      }}>
+      <CustomNotification ref={customToastRef} />
+      <BottomSheetProvider>
+        {splashVisible ? (
+          <Splash />
+        ) : token ? (
+          <HomeNavigator />
+        ) : (
+          <AuthNavigator />
+        )}
+      </BottomSheetProvider>
+    </NavigationContainer>
   );
-};
+}; // <-- Correctly closes the component here
 
 export default StackNavigator;

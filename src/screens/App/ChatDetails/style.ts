@@ -99,7 +99,8 @@ const useStyle = () => {
     },
     messageText: {
       color: colors.white,
-      fontSize: scale(14),
+      fontSize: scale(18),
+      marginRight: 50,
     },
     inputContainer: {
       flexDirection: 'row',
@@ -478,6 +479,38 @@ const useStyle = () => {
       color: colors.text,
       marginTop: 2,
       textAlign: 'right',
+    },
+    headerStatus: {
+      fontSize: 13,
+      color: colors.text,
+      opacity: 0.7,
+      marginTop: 2,
+    },
+
+    timeContainer: {
+      marginTop: 4,
+      position: 'absolute',
+      right: 10,
+      bottom: 3,
+    },
+
+    timeText: {
+      fontSize: scale(11),
+      color: colors.text,
+      opacity: 0.6,
+    },
+    dateLabelContainer: {
+      alignSelf: 'center',
+      marginVertical: 10,
+      backgroundColor: colors.card,
+      borderRadius: 10,
+      paddingHorizontal: 12,
+      paddingVertical: 3,
+    },
+    dateLabelText: {
+      fontSize: 13,
+      color: colors.text,
+      opacity: 0.7,
     },
   });
 };
