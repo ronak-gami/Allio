@@ -10,6 +10,11 @@ const useStyle = () => {
     container: {
       flex: 1,
       backgroundColor: colors.background,
+      paddingHorizontal: scale(12),
+    },
+    contentContainer: {
+      flex: 1,
+      // padding: 20,
     },
     headerContainer: {
       flexDirection: 'row',

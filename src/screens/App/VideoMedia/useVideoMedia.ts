@@ -29,6 +29,7 @@ interface VideoAsset {
 
 const useVideoMedia = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const [activeTab, setActiveTab] = useState<number>(0);
   const [videoUri, setVideoUri] = useState<string | undefined>(undefined);
   const [videoAsset, setVideoAsset] = useState<VideoAsset | undefined>(
     undefined,
@@ -66,6 +67,7 @@ const useVideoMedia = () => {
     setSaveVisible,
     previewVideoTitle,
     refreshing,
+    activeTab,
   };
 
   const formatFileSize = (bytes?: number): string => {
@@ -172,7 +174,7 @@ const useVideoMedia = () => {
 
       const cameraOptions = {
         mediaType: 'video' as MediaType,
-        videoQuality: 'high' as const,
+        videoQuality: 'high',
         durationLimit: 120,
         saveToPhotos: true,
       };
@@ -254,6 +256,9 @@ const useVideoMedia = () => {
     }
   };
 
+  const onTabChange = (index: number) => {
+    setActiveTab(index);
+  };
 
   return {
     Videos_data,
@@ -273,6 +278,7 @@ const useVideoMedia = () => {
     handleSelectStoredVideo,
     isPreviewModalOpen,
     onRefresh,
+    onTabChange,
   };
 };
 

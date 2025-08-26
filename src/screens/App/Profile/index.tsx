@@ -6,8 +6,8 @@ import {
   CustomFlatList,
   Button,
   Container,
+  CustomSimpleTab,
 } from '@components/index';
-import { useTranslation } from 'react-i18next';
 
 import useStyle from './style';
 import { IMAGES, ICONS } from '@assets/index';
@@ -49,7 +49,7 @@ const ProfileHeader: React.FC<{
   handleSend,
   handleAccept,
   handleReject,
-  onEditProfile, 
+  onEditProfile,
 
   states,
 }) => {
@@ -63,7 +63,6 @@ const ProfileHeader: React.FC<{
     : IMAGES.Dummy_Profile;
 
   const { colors } = useTheme();
-  const { t } = useTranslation();
   return (
     <View style={styles.profileHeaderContainer}>
       <View style={styles.topSectionContainer}>
@@ -78,7 +77,7 @@ const ProfileHeader: React.FC<{
           {!isExternalProfile && (
             <TouchableOpacity style={styles.editButton} onPress={onEditProfile}>
               <Image
-                source={ICONS.Edit} 
+                source={ICONS.Edit}
                 style={styles.editIcon}
                 resizeMode="contain"
               />
@@ -168,37 +167,27 @@ const ProfileHeader: React.FC<{
   );
 };
 
+// ONLY CHANGED: Replaced TabBar with CustomSimpleTab
 const TabBar: React.FC<{
   onTabChange: (tab: string) => void;
   states: object;
   styles: ReturnType<typeof useStyle>;
-}> = ({ onTabChange, styles, states }) => (
-  <View style={styles.contentHeader}>
-    <TouchableOpacity
-      style={[styles.tab, states?.activeTab === 'images' && styles.activeTab]}
-      onPress={() => onTabChange('images')}>
-      <Text
-        style={[
-          styles.tabText,
-          states?.activeTab === 'images' && styles.activeTabText,
-        ]}>
-        Images
-      </Text>
-    </TouchableOpacity>
-    <TouchableOpacity
-      style={[styles.tab, states?.activeTab === 'videos' && styles.activeTab]}
-      onPress={() => onTabChange('videos')}>
-      <Text
-        style={[
-          styles.tabText,
-          states?.activeTab === 'videos' && styles.activeTabText,
-        ]}>
-        Videos
-      </Text>
-    </TouchableOpacity>
-  </View>
-);
+}> = ({ onTabChange, styles, states }) => {
+  const tabsData = [
+    { id: 'images', title: 'Images' },
+    { id: 'videos', title: 'Videos' },
+  ];
 
+  return (
+    <CustomSimpleTab
+      tabs={tabsData}
+      activeTab={states?.activeTab}
+      onTabChange={onTabChange}
+    />
+  );
+};
+
+// ONLY CHANGED: Added reels case in MediaContent
 const MediaContent: React.FC<{
   images: any[];
   videos: any[];
@@ -232,6 +221,20 @@ const MediaContent: React.FC<{
     </View>
   );
 
+  // ADDED: Reels empty state
+  const renderEmptyReelsState = () => (
+    <View style={styles.emptyGridContainer}>
+      <Image
+        source={ICONS.NoVideo}
+        style={styles.emptyGridIcon}
+        resizeMode="contain"
+      />
+      <Text type="BOLD" style={styles.emptyGridTitle}>
+        No Reels Yet
+      </Text>
+    </View>
+  );
+
   if (activeTab === 'videos') {
     return (
       <CustomFlatList
@@ -242,6 +245,21 @@ const MediaContent: React.FC<{
         columnWrapperStyle={styles.gridRow}
         contentContainerStyle={styles.gridContent}
         ListEmptyComponent={renderEmptyVideoState()}
+      />
+    );
+  }
+
+  // ADDED: Reels case
+  if (activeTab === 'reels') {
+    return (
+      <CustomFlatList
+        key="reels"
+        data={[]} // Empty for now
+        renderItem={({ item }) => <VideoCard item={item} />}
+        numColumns={2}
+        columnWrapperStyle={styles.gridRow}
+        contentContainerStyle={styles.gridContent}
+        ListEmptyComponent={renderEmptyReelsState()}
       />
     );
   }

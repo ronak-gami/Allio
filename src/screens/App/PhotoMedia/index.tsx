@@ -61,7 +61,7 @@ const PhotoMedia: React.FC<Props> = () => {
   );
 
   return (
-    <Container showLoader={states.loading} title="Photo Media">
+    <>
       {!states.loading && (
         <View style={styles.scrollcontainer}>
           <View style={styles.container}>
@@ -164,7 +164,7 @@ const PhotoMedia: React.FC<Props> = () => {
           </View>
         </View>
       )}
-    </Container>
+    </>
   );
 };
 

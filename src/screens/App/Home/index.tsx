@@ -51,7 +51,6 @@ const HomeScreen: React.FC = () => {
   return (
     <Container
       onProfilePress={handleProfilePress}
-      title="Home.Home"
       showAppLogo
       showProfileLogo
       keyboardAvoiding>

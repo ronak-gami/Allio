@@ -230,20 +230,6 @@ const handlePermissions = async (
   }
 };
 
-const requestUserPermission = async () => {
-  try {
-    const granted: 'granted' | 'denied' | 'never_ask_again' =
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-    } else {
-    }
-  } catch (error: any) {
-    console.error('Failed to request notification permission:', error);
-  }
-};
-
 const checkIfMPINExists = async (email: string): Promise<boolean> => {
   try {
     const normalizedEmail = email.trim().toLowerCase();
@@ -528,7 +514,6 @@ export {
   width,
   getAllUsers,
   checkUserExistsByEmail,
-  requestUserPermission,
   updateUserInFirestore,
   handlePermissions,
   languages,

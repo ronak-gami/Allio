@@ -12,7 +12,7 @@ import CustomLoader from '@components/atoms/CustomLoader';
 import ForgetMPINForm from '@components/organisms/ForgetMPINForm';
 
 const ForgetMPIN: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const styles = useStyle();
   return (
