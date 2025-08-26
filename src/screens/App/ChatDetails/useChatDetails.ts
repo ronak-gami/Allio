@@ -86,7 +86,7 @@ export const useChatDetails = (targetUser: any) => {
 
   const [actionMsgId, setActionMsgId] = useState<string | null>(null);
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
-  const [editText, setEditText] = useState <string>('');
+  const [editText, setEditText] = useState<string>('');
 
   const [editMsgId, setEditMsgId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -249,35 +249,6 @@ export const useChatDetails = (targetUser: any) => {
     return () => unsub();
   }, []);
 
-  // useEffect(() => {
-  //   if (!targetUser?.email) return;
-
-  //   const fetchTargetUser = async () => {
-  //     const allUsers = await getAllUsers(myEmail);
-  //     const target = allUsers.find(u => u.email === targetUser.email);
-
-  //     if (target) {
-  //       if (target.lastSeen) {
-  //         setLastSeen(
-  //           target.lastSeen.toDate
-  //             ? target.lastSeen.toDate()
-  //             : new Date(target.lastSeen),
-  //         );
-  //       }
-  //       if (typeof target.online === 'boolean') {
-  //         setIsOnline(target.online);
-  //       }
-  //     }
-  //   };
-
-  //   fetchTargetUser();
-
-  //   const intervalId = setInterval(fetchTargetUser, 30000);
-
-  //   return () => clearInterval(intervalId);
-  // }, [myEmail, targetUser.email]);
-
-
   useEffect(() => {
     if (!targetUser?.email) return;
 
@@ -305,7 +276,6 @@ export const useChatDetails = (targetUser: any) => {
     const intervalId = setInterval(fetchTargetUser, 30000);
     return () => clearInterval(intervalId);
   }, [myEmail, targetUser.email]);
-
 
   useEffect(() => {
     if (states?.chatHistory?.length > 0) {
@@ -425,7 +395,6 @@ export const useChatDetails = (targetUser: any) => {
     return () => unsub();
   }, [myEmail, targetUser?.email, relationId]);
 
-  
   const selectTheme = async (fileKey: string | null) => {
     if (!relationId || !fileKey) return;
     setloding(true);
@@ -469,7 +438,6 @@ export const useChatDetails = (targetUser: any) => {
       setloding(false);
     }
   };
-
 
   const removeTheme = async () => {
     try {
