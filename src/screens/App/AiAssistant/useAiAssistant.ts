@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
+import { Clipboard } from 'react-native';
 import api from '@api/index';
-import Clipboard from '@react-native-clipboard/clipboard';
 
 const useAiAssistant = () => {
   const [messages, setMessages] = useState([]);

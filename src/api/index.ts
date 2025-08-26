@@ -69,6 +69,14 @@ const api = {
         data,
       }),
   },
+
+  NEWS: {
+    getNewsResponse: () =>
+      client({
+        method: 'get',
+        url: '/news',
+      }),
+  },
 };
 
 export default api;

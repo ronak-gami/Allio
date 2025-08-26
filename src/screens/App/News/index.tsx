@@ -2,12 +2,14 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { Container } from '@components/index';
 import useStyle from './styles';
+import useNews from './useNews';
 
 const News = () => {
   const [activeTab, setActiveTab] = useState<'News List' | 'Add List'>(
     'News List',
   );
   const styles = useStyle();
+  const { newsList } = useNews();
 
   return (
     <Container showBackArrow title="News">
