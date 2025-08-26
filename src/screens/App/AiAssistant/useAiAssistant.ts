@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import api from '@api/index';
 import { Clipboard } from 'react-native';
+import api from '@api/index';
+import { WORD_COUNT_THRESHOLD } from '@utils/constant';
 
 interface Message {
   id: string;
@@ -34,8 +35,6 @@ const useAiAssistant = () => {
     copiedMessageId,
     setCopiedMessageId,
   };
-
-  const WORD_COUNT_THRESHOLD = 20;
 
   // Function to clear any active typing intervals
   const clearTypingInterval = () => {

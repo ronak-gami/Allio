@@ -99,7 +99,8 @@ const useStyle = () => {
     },
     messageText: {
       color: colors.white,
-      fontSize: scale(14),
+      fontSize: scale(18),
+      marginRight: 50,
     },
     inputContainer: {
       flexDirection: 'row',
@@ -203,11 +204,10 @@ const useStyle = () => {
     },
 
     profileImage: {
-      height: height * 0.065,
-      width: height * 0.065,
+      height: height * 0.080,
+      width: height * 0.060,
       resizeMode: 'contain',
       borderRadius: height * 0.0325,
-      marginRight: height * 0.015,
     },
     cardPlaceholderCentered: {
       width: width * 0.2,
@@ -474,10 +474,44 @@ const useStyle = () => {
     },
 
     editedtext: {
+      fontSize: scale(10),
+      color: colors.text,
+      marginTop: 1,
+      top: 11,
+      right:5,
+      textAlign: 'left',
+    },
+    headerStatus: {
+      fontSize: 13,
+      color: colors.text,
+      opacity: 0.7,
+      marginTop: 2,
+    },
+
+    timeContainer: {
+      marginTop: 4,
+      position: 'absolute',
+      right: 10,
+      bottom: 3,
+    },
+
+    timeText: {
       fontSize: scale(11),
       color: colors.text,
-      marginTop: 2,
-      textAlign: 'right',
+      opacity: 0.6,
+    },
+    dateLabelContainer: {
+      alignSelf: 'center',
+      marginVertical: 10,
+      backgroundColor: colors.card,
+      borderRadius: 10,
+      paddingHorizontal: 12,
+      paddingVertical: 3,
+    },
+    dateLabelText: {
+      fontSize: 13,
+      color: colors.text,
+      opacity: 0.7,
     },
   });
 };

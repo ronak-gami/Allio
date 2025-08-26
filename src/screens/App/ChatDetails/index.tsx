@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -26,6 +26,8 @@ import {
 } from '@components/index';
 import useStyle from './style';
 import { useChatDetails } from './useChatDetails';
+import moment from 'moment';
+import { formatDateLabel, formatTime } from '@utils/helper';
 
 type ChatDetailsRouteProp = RouteProp<HomeStackParamList, 'ChatDetailsScreen'>;
 
@@ -89,10 +91,15 @@ const ChatDetailsScreen = () => {
 
     setIsEditing,
     setEditMsgId,
+    lastSeen,
+    isOnline,
+
+    allThemes,
   } = useChatDetails(user);
 
   const showImage = user?.profileImage && user?.profileImage.trim() !== '';
   const firstLetter = user?.firstName?.charAt(0)?.toUpperCase() || '?';
+  let lastDateLabel = '';
 
   if (!user) {
     return (
@@ -110,7 +117,7 @@ const ChatDetailsScreen = () => {
         {showImage ? (
           <Image
             source={{ uri: user?.profileImage }}
-            style={styles.profileImage}
+            style={styles.headerImage}
           />
         ) : (
           <View style={styles.cardPlaceholderCentered}>
@@ -183,7 +190,17 @@ const ChatDetailsScreen = () => {
                 if (!states?.isBlockedByThem) navigateToProfile();
               }}>
               <Text style={styles.headerName}>{user?.firstName}</Text>
-              <Text style={styles.headerEmail}>{user?.email}</Text>
+              {/* <Text style={styles.headerEmail}>{user?.email}</Text>
+               */}
+              {relationStatus === 'accepted' && (
+                <Text style={styles.headerStatus}>
+                  {isOnline
+                    ? 'Online'
+                    : lastSeen
+                    ? `Last seen ${moment(lastSeen).fromNow()}`
+                    : ''}
+                </Text>
+              )}
             </TouchableOpacity>
 
             <TouchableOpacity onPress={openMenu}>
@@ -303,7 +320,7 @@ const ChatDetailsScreen = () => {
                         {showImage ? (
                           <Image
                             source={{ uri: user?.profileImage }}
-                            style={styles.profileImage}
+                            style={styles.headerImage}
                           />
                         ) : (
                           <View style={styles.cardPlaceholderCentered}>
@@ -330,7 +347,7 @@ const ChatDetailsScreen = () => {
                         {showImage ? (
                           <Image
                             source={{ uri: user?.profileImage }}
-                            style={styles.profileImage}
+                            style={styles.headerImage}
                           />
                         ) : (
                           <View style={styles.cardPlaceholderCentered}>
@@ -350,6 +367,10 @@ const ChatDetailsScreen = () => {
                       const msgId = chat.id;
                       const isSelected =
                         states?.selectedMessages.includes(msgId);
+                      const dateLabel = formatDateLabel(chat.timestamp);
+
+                      const showDateLabel = dateLabel !== lastDateLabel;
+                      lastDateLabel = dateLabel;
 
                       const isLatestLiveShareMine =
                         chat.liveShare?.active &&
@@ -378,178 +399,193 @@ const ChatDetailsScreen = () => {
                       const showActionMenu = states.actionMsgId === msgId;
 
                       return (
-                        <View key={msgId} style={{ position: 'relative' }}>
-                          {/* Message bubble with selection logic */}
-                          <TouchableOpacity
-                            onLongPress={() => {
-                              toggleSelectMessage(msgId);
-                              setActionMsgId(null);
-                              setIsEditing(false);
-                            }}
-                            onPress={() => {
-                              if (states?.selectedMessages.length > 0) {
+                        <React.Fragment key={msgId}>
+                          {showDateLabel && (
+                            <View style={styles.dateLabelContainer}>
+                              <Text style={styles.dateLabelText}>
+                                {dateLabel}
+                              </Text>
+                            </View>
+                          )}
+                          <View key={msgId} style={{ position: 'relative' }}>
+                            {/* Message bubble with selection logic */}
+                            <TouchableOpacity
+                              onLongPress={() => {
                                 toggleSelectMessage(msgId);
-                              } else {
-                                setActionMsgId(msgId);
-                              }
-                            }}
-                            style={[
-                              styles.messageBubble,
-                              chat.fromMe
-                                ? styles.myMessage
-                                : styles.theirMessage,
-                              isSelected && styles.selectedItem,
-                              states.highlightedMsgId === chat.id &&
-                                styles.selectedItem, // Use selected color for highlight
-                            ]}
-                            activeOpacity={0.95}>
-                            {/* Text */}
-                            {chat?.text && (
-                              <Text style={styles.messageText}>
-                                {chat.text}
-                              </Text>
-                            )}
-                            {/* Show "edit" below the message if edited */}
-                            {chat.edited && (
-                              <Text type="semibold" style={styles.editedtext}>
-                                edited
-                              </Text>
-                            )}
-                            {/* Image */}
-                            {chat?.image && (
-                              <TouchableOpacity
-                                onPress={() => openImageModal(chat.image!)}>
-                                <Image
-                                  source={{ uri: chat.image! }}
-                                  style={[
-                                    styles.chatImage,
-                                    { marginTop: chat.text ? 5 : 0 },
-                                  ]}
-                                  resizeMode="cover"
-                                />
-                              </TouchableOpacity>
-                            )}
-                            {/* Video */}
-                            {chat?.video && (
-                              <TouchableOpacity
-                                onPress={() => openVideoModal(chat.video!)}>
-                                <Video
-                                  source={{ uri: chat.video! }}
-                                  style={styles.chatVideo}
-                                  resizeMode="cover"
-                                  paused
-                                  pointerEvents="none"
-                                />
-                                <View style={styles.playIconOverlay}>
+                                setActionMsgId(null);
+                                setIsEditing(false);
+                              }}
+                              onPress={() => {
+                                if (states?.selectedMessages.length > 0) {
+                                  toggleSelectMessage(msgId);
+                                } else {
+                                  setActionMsgId(msgId);
+                                }
+                              }}
+                              style={[
+                                styles.messageBubble,
+                                chat.fromMe
+                                  ? styles.myMessage
+                                  : styles.theirMessage,
+                                isSelected && styles.selectedItem,
+                                states.highlightedMsgId === chat.id &&
+                                  styles.selectedItem, // Use selected color for highlight
+                              ]}
+                              activeOpacity={0.95}>
+                              {/* Text */}
+                              {chat?.text && (
+                                <Text style={styles.messageText}>
+                                  {chat.text}
+                                </Text>
+                              )}
+                              {/* Show "edit" below the message if edited */}
+                              {chat.edited && (
+                                <Text type="semibold" style={styles.editedtext}>
+                                  edited
+                                </Text>
+                              )}
+                              {/* Image */}
+                              {chat?.image && (
+                                <TouchableOpacity
+                                  onPress={() => openImageModal(chat.image!)}>
                                   <Image
-                                    source={ICONS.VideoPlay}
-                                    style={styles.playBtn}
+                                    source={{ uri: chat.image! }}
+                                    style={[
+                                      styles.chatImage,
+                                      { marginTop: chat.text ? 5 : 0 },
+                                    ]}
+                                    resizeMode="cover"
                                   />
-                                </View>
-                              </TouchableOpacity>
-                            )}
-                            {(latitude && longitude) || chat?.liveShare ? (
-                              <TouchableOpacity
-                                style={{
-                                  marginTop:
-                                    chat.text || chat.image || chat.video
-                                      ? 8
-                                      : 0,
-                                }}
-                                activeOpacity={0.9}
-                                onPress={openMaps}
-                                disabled={!latitude || !longitude}>
-                                <View style={{ gap: 10 }}>
-                                  <MapView
-                                    style={styles.mapView}
-                                    initialRegion={{
-                                      latitude: latitude || 0,
-                                      longitude: longitude || 0,
-                                      latitudeDelta: 0.01,
-                                      longitudeDelta: 0.01,
-                                    }}
-                                    region={
-                                      latitude && longitude
-                                        ? {
+                                </TouchableOpacity>
+                              )}
+                              {/* Video */}
+                              {chat?.video && (
+                                <TouchableOpacity
+                                  onPress={() => openVideoModal(chat.video!)}>
+                                  <Video
+                                    source={{ uri: chat.video! }}
+                                    style={styles.chatVideo}
+                                    resizeMode="cover"
+                                    paused
+                                    pointerEvents="none"
+                                  />
+                                  <View style={styles.playIconOverlay}>
+                                    <Image
+                                      source={ICONS.VideoPlay}
+                                      style={styles.playBtn}
+                                    />
+                                  </View>
+                                </TouchableOpacity>
+                              )}
+                              {(latitude && longitude) || chat?.liveShare ? (
+                                <TouchableOpacity
+                                  style={{
+                                    marginTop:
+                                      chat.text || chat.image || chat.video
+                                        ? 8
+                                        : 0,
+                                  }}
+                                  activeOpacity={0.9}
+                                  onPress={openMaps}
+                                  disabled={!latitude || !longitude}>
+                                  <View style={{ gap: 10 }}>
+                                    <MapView
+                                      style={styles.mapView}
+                                      initialRegion={{
+                                        latitude: latitude || 0,
+                                        longitude: longitude || 0,
+                                        latitudeDelta: 0.01,
+                                        longitudeDelta: 0.01,
+                                      }}
+                                      region={
+                                        latitude && longitude
+                                          ? {
+                                              latitude,
+                                              longitude,
+                                              latitudeDelta: 0.01,
+                                              longitudeDelta: 0.01,
+                                            }
+                                          : undefined
+                                      }
+                                      pointerEvents="none">
+                                      {latitude && longitude && (
+                                        <Marker
+                                          coordinate={{
                                             latitude,
                                             longitude,
-                                            latitudeDelta: 0.01,
-                                            longitudeDelta: 0.01,
+                                          }}
+                                          title={
+                                            chat?.liveShare?.active
+                                              ? 'Live Location'
+                                              : 'Shared Location'
                                           }
-                                        : undefined
-                                    }
-                                    pointerEvents="none">
-                                    {latitude && longitude && (
-                                      <Marker
-                                        coordinate={{
-                                          latitude,
-                                          longitude,
-                                        }}
-                                        title={
-                                          chat?.liveShare?.active
-                                            ? 'Live Location'
-                                            : 'Shared Location'
-                                        }
-                                      />
+                                        />
+                                      )}
+                                    </MapView>
+                                  </View>
+
+                                  <View>
+                                    <Text type="semibold">
+                                      {chat?.liveShare?.active
+                                        ? 'Live location • updating'
+                                        : 'Shared location • tap to open'}
+                                    </Text>
+                                    {isLatestLiveShareMine && (
+                                      <View>
+                                        <Button
+                                          title="Stop live location"
+                                          onPress={stopLiveLocationShare}
+                                          style={styles.stoplivebutton}
+                                        />
+                                      </View>
                                     )}
-                                  </MapView>
-                                </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : null}
 
-                                <View>
-                                  <Text type="semibold">
-                                    {chat?.liveShare?.active
-                                      ? 'Live location • updating'
-                                      : 'Shared location • tap to open'}
-                                  </Text>
-                                  {isLatestLiveShareMine && (
-                                    <View>
-                                      <Button
-                                        title="Stop live location"
-                                        onPress={stopLiveLocationShare}
-                                        style={styles.stoplivebutton}
-                                      />
-                                    </View>
+                              {showActionMenu && (
+                                <CustomModal
+                                  visible={showActionMenu}
+                                  title="Message Actions"
+                                  onClose={() => setActionMsgId(null)}>
+                                  {chat.fromMe && (
+                                    <Button
+                                      title="Edit Message"
+                                      onPress={() => {
+                                        setEditText(chat.text || '');
+                                        setEditMsgId(msgId);
+                                        setActionMsgId(null);
+                                        setIsEditing(true);
+                                      }}
+                                    />
                                   )}
-                                </View>
-                              </TouchableOpacity>
-                            ) : null}
 
-                            {showActionMenu && (
-                              <CustomModal
-                                visible={showActionMenu}
-                                title="Message Actions"
-                                onClose={() => setActionMsgId(null)}>
-                                {chat.fromMe && (
                                   <Button
-                                    title="Edit Message"
-                                    onPress={() => {
-                                      setEditText(chat.text || '');
-                                      setEditMsgId(msgId);
+                                    title="Pin Message"
+                                    onPress={async () => {
+                                      await pinMessage(msgId);
                                       setActionMsgId(null);
-                                      setIsEditing(true);
                                     }}
                                   />
-                                )}
 
-                                <Button
-                                  title="Pin Message"
-                                  onPress={async () => {
-                                    await pinMessage(msgId);
-                                    setActionMsgId(null);
-                                  }}
-                                />
+                                  <Button
+                                    title="Cancel"
+                                    outlineColor={
+                                      styles.menuItemDanger?.color || undefined
+                                    }
+                                    onPress={() => setActionMsgId(null)}
+                                  />
+                                </CustomModal>
+                              )}
 
-                                <Button
-                                  title="Cancel"
-                                  outlineColor={
-                                    styles.menuItemDanger?.color || undefined
-                                  }
-                                  onPress={() => setActionMsgId(null)}
-                                />
-                              </CustomModal>
-                            )}
-                          </TouchableOpacity>
-                        </View>
+                              <View style={styles.timeContainer}>
+                                <Text style={styles.timeText}>
+                                  {formatTime(chat.timestamp)}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                        </React.Fragment>
                       );
                     })
                   )}
@@ -681,39 +717,35 @@ const ChatDetailsScreen = () => {
             </TouchableOpacity>
           </Modal>
 
-          {/* Theme Modal */}
           <CustomModal
             visible={states?.themeModalVisible}
             title="Select Chat Theme"
             onClose={() => setThemeModalVisible(false)}>
             <View style={styles.themeGrid}>
-              {['Chattheme1', 'Chattheme2', 'Chattheme3', 'Chattheme4'].map(
-                key => {
-                  const themeUri = IMAGES[key];
-                  const isSelected =
-                    states?.selectedTheme === themeUri ||
-                    states?.selecturl === themeUri;
+              {allThemes.map(theme => {
+                const isSelected = states?.selecturl === theme.fileKey;
 
-                  return (
-                    <TouchableOpacity
-                      key={key}
-                      onPress={() => states?.setselecturl(themeUri)}
-                      style={[
-                        styles.themeOption,
-                        isSelected && {
-                          borderWidth: 5,
-                          borderColor: colors.primary,
-                        },
-                      ]}>
-                      <Image
-                        source={themeUri}
-                        style={styles.themeImage}
-                        resizeMode="cover"
-                      />
-                    </TouchableOpacity>
-                  );
-                },
-              )}
+                return (
+                  <TouchableOpacity
+                    key={theme.fileKey}
+                    onPress={() => {
+                      states?.setselecturl(theme.fileKey);
+                    }}
+                    style={[
+                      styles.themeOption,
+                      isSelected && {
+                        borderWidth: 5,
+                        borderColor: colors.primary,
+                      },
+                    ]}>
+                    <Image
+                      source={{ uri: theme.url }}
+                      style={styles.themeImage}
+                      resizeMode="cover"
+                    />
+                  </TouchableOpacity>
+                );
+              })}
             </View>
 
             <Button

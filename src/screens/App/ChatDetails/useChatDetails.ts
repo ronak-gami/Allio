@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Image, ScrollView, Platform } from 'react-native';
+import { Image, ScrollView, Platform, AppState } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
 import { showSuccess, showError } from '@utils/toast';
@@ -7,7 +7,7 @@ import { useUserCard } from '@components/cards/UserCard/useUserCard';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import api from '@api/index';
-import { uploadToCloudinary } from '@utils/helper';
+import { getAllUsers } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
 
@@ -47,14 +47,15 @@ export const useChatDetails = (targetUser: any) => {
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
-  const [isBlockedByMe, setIsBlockedByMe] = useState(false);
-  const [isBlockedByThem, setIsBlockedByThem] = useState(false);
+  const [isBlockedByMe, setIsBlockedByMe] = useState<boolean>(false);
+  const [isBlockedByThem, setIsBlockedByThem] = useState<boolean>(false);
   const [clearTime, setClearTime] = useState<any>(null);
 
   const [themeModalVisible, setThemeModalVisible] = useState<boolean>(false);
   const [loding, setloding] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
   const [selecturl, setselecturl] = useState<string | null>(null);
+  const [selectedThemeKey, setSelectedThemeKey] = useState<string | null>(null); // fileKey
 
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
@@ -77,7 +78,7 @@ export const useChatDetails = (targetUser: any) => {
   const [loadingMessages, setLoadingMessages] = useState<boolean>(true);
 
   const [selectedMessages, setSelectedMessages] = useState<string[]>([]);
-  const [actionModalVisible, setActionModalVisible] = useState(false);
+  const [actionModalVisible, setActionModalVisible] = useState<boolean>(false);
 
   const [replyToMsg, setReplyToMsg] = useState<ChatMsg | null>(null);
 
@@ -85,11 +86,19 @@ export const useChatDetails = (targetUser: any) => {
 
   const [actionMsgId, setActionMsgId] = useState<string | null>(null);
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
-  const [editText, setEditText] = useState('');
+  const [editText, setEditText] = useState <string>('');
 
   const [editMsgId, setEditMsgId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [highlightedMsgId, setHighlightedMsgId] = useState<string | null>(null);
+
+  const [lastSeen, setLastSeen] = useState<Date | null>(null);
+
+  const [isOnline, setIsOnline] = useState<string>('');
+
+  const [allThemes, setAllThemes] = useState<
+    { fileKey: string; url: string }[]
+  >([]);
 
   const setReplyMessage = (msg: ChatMsg) => setReplyToMsg(msg);
   const clearReplyMessage = () => setReplyToMsg(null);
@@ -119,6 +128,7 @@ export const useChatDetails = (targetUser: any) => {
     selecturl,
     loding,
     loadingMessages,
+    selectedThemeKey,
 
     menuVisible,
     selectedMessages,
@@ -188,8 +198,6 @@ export const useChatDetails = (targetUser: any) => {
       }
     });
 
-   
-
     const unsubMessages = relationRef
       .collection('messages')
       .orderBy('timestamp', 'asc')
@@ -226,6 +234,48 @@ export const useChatDetails = (targetUser: any) => {
       unsubMessages();
     };
   }, [myEmail, targetUser?.email, relationId, clearTime]);
+
+  useEffect(() => {
+    const unsub = firestore()
+      .collection('themeImages')
+      .onSnapshot(snapshot => {
+        const themes = snapshot.docs.map(doc => doc.data()) as {
+          fileKey: string;
+          url: string;
+        }[];
+        setAllThemes(themes);
+      });
+
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    if (!targetUser?.email) return;
+
+    const fetchTargetUser = async () => {
+      const allUsers = await getAllUsers(myEmail);
+      const target = allUsers.find(u => u.email === targetUser.email);
+
+      if (target) {
+        if (target.lastSeen) {
+          setLastSeen(
+            target.lastSeen.toDate
+              ? target.lastSeen.toDate()
+              : new Date(target.lastSeen),
+          );
+        }
+        if (typeof target.online === 'boolean') {
+          setIsOnline(target.online);
+        }
+      }
+    };
+
+    fetchTargetUser();
+
+    const intervalId = setInterval(fetchTargetUser, 30000);
+
+    return () => clearInterval(intervalId);
+  }, [myEmail, targetUser.email]);
 
   useEffect(() => {
     if (states?.chatHistory?.length > 0) {
@@ -294,6 +344,26 @@ export const useChatDetails = (targetUser: any) => {
     showSuccess('User unblocked');
   };
 
+  useEffect(() => {
+    if (!relationId) return;
+
+    const unsub = firestore()
+      .collection('relation')
+      .doc(relationId)
+      .onSnapshot(doc => {
+        const data = doc.data();
+        if (data?.themeUrl) {
+          setSelectedTheme(data.themeUrl);
+          setSelectedThemeKey(data.themeKey || null);
+        } else {
+          setSelectedTheme(null);
+          setSelectedThemeKey(null);
+        }
+      });
+
+    return () => unsub();
+  }, [relationId]);
+
   const clearChat = async () => {
     try {
       if (!relationId) return;
@@ -325,48 +395,118 @@ export const useChatDetails = (targetUser: any) => {
     return () => unsub();
   }, [myEmail, targetUser?.email, relationId]);
 
-  const selectTheme = async (localImage: any) => {
-    if (!relationId || !localImage) return;
+  // const selectTheme = async (localImage: any) => {
+  //   if (!relationId || !localImage) return;
+  //   setloding(true);
+  //   try {
+  //     const themesRef = firestore().collection('themes').doc(relationId);
+  //     const existingDoc = await themesRef.get();
+
+  //     if (existingDoc.exists && existingDoc.data()?.themeUrl) {
+  //       if (existingDoc.data().localKey === localImage) {
+
+  //         setSelectedTheme(existingDoc.data().themeUrl);
+  //         setThemeModalVisible(false);
+  //         return;
+  //       }
+  //     }
+  //     const fileUri = Image.resolveAssetSource(localImage).uri;
+  //     const uploadedUrl = await uploadToCloudinary({
+  //       uri: fileUri,
+  //       type: 'image/png',
+  //       fileName: `${relationId}_${Date.now()}.png`,
+  //     });
+  //     await themesRef.set({
+  //       themeUrl: uploadedUrl,
+  //       localKey: localImage,
+  //       updatedAt: new Date(),
+  //     });
+  //     setSelectedTheme(uploadedUrl);
+  //     showSuccess('Theme applied successfully!');
+  //   } catch (err) {
+  //     console.error(err);
+  //     showError('Failed to apply theme');
+  //   } finally {
+  //     setloding(false);
+  //     setThemeModalVisible(false);
+  //   }
+  // };
+
+  const selectTheme = async (fileKey: string | null) => {
+    if (!relationId || !fileKey) return;
     setloding(true);
+
     try {
-      const themesRef = firestore().collection('themes').doc(relationId);
-      const existingDoc = await themesRef.get();
-      if (existingDoc.exists && existingDoc.data()?.themeUrl) {
-        if (existingDoc.data().localKey === localImage) {
-          setSelectedTheme(existingDoc.data().themeUrl);
-          setThemeModalVisible(false);
-          return;
-        }
+      // 1. Get theme from "themeImages"
+      const themeSnap = await firestore()
+        .collection('themeImages')
+        .where('fileKey', '==', fileKey)
+        .limit(1)
+        .get();
+
+      if (themeSnap.empty) {
+        showError('Theme not found');
+        setloding(false);
+        return;
       }
-      const fileUri = Image.resolveAssetSource(localImage).uri;
-      const uploadedUrl = await uploadToCloudinary({
-        uri: fileUri,
-        type: 'image/png',
-        fileName: `${relationId}_${Date.now()}.png`,
-      });
-      await themesRef.set({
-        themeUrl: uploadedUrl,
-        localKey: localImage,
-        updatedAt: new Date(),
-      });
-      setSelectedTheme(uploadedUrl);
+
+      const themeData = themeSnap.docs[0].data();
+      const themeUrl = themeData.url;
+
+      // 2. Save theme in relation doc
+      await firestore().collection('relation').doc(relationId).set(
+        {
+          themeUrl,
+          themeKey: fileKey,
+          updatedAt: new Date(),
+        },
+        { merge: true },
+      );
+
+      // 3. Update local state
+      setSelectedTheme(themeUrl);
+      setSelectedThemeKey(fileKey);
+      setThemeModalVisible(false);
       showSuccess('Theme applied successfully!');
     } catch (err) {
       console.error(err);
       showError('Failed to apply theme');
     } finally {
       setloding(false);
-      setThemeModalVisible(false);
     }
   };
+
+  useEffect(() => {
+    if (!targetUser?.email) return;
+    const unsub = firestore()
+      .collection('users')
+      .doc(targetUser.email)
+      .onSnapshot(doc => {
+        const data = doc.data();
+        if (data?.lastSeen) {
+          const seenDate = data.lastSeen.toDate();
+          // setLastSeen(seenDate);
+          // setIsOnline(Date.now() - seenDate.getTime() < 2 * 60 * 1000);
+        }
+      });
+    return () => unsub();
+  }, [targetUser?.email]);
 
   const removeTheme = async () => {
     try {
       if (!relationId) return;
-      const themesRef = firestore().collection('themes').doc(relationId);
-      await themesRef.delete();
+      await firestore().collection('relation').doc(relationId).set(
+        {
+          themeUrl: firestore.FieldValue.delete(),
+          themeKey: firestore.FieldValue.delete(),
+        },
+        { merge: true },
+      );
+
       setSelectedTheme(null);
+      setSelectedThemeKey(null);
       setselecturl(null);
+
       showSuccess('Theme removed, default background applied');
     } catch (err) {
       console.error(err);
@@ -813,5 +953,10 @@ export const useChatDetails = (targetUser: any) => {
 
     setIsEditing,
     setEditMsgId,
+
+    lastSeen,
+    isOnline,
+
+    allThemes,
   };
 };

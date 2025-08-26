@@ -13,7 +13,7 @@ const WEB_CLIENT_ID =
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
-const BASE_URL = 'https://de36b6b88db5.ngrok-free.app/api' as const;
+const BASE_URL = 'https://de36b6b88db5.ngrok-free.app/api';
 
 const onboardingData: OnboardingItem[] = [
   {
@@ -59,7 +59,7 @@ const AUTH = {
   Login: 'Login',
   Register: 'Register',
   ForgotPassword: 'ForgotPassword',
-} as const;
+};
 
 const HOME = {
   HomeTabs: 'HomeTabs',
@@ -77,10 +77,12 @@ const HOME = {
   AiAssistant: 'AiAssistant',
   LocationScreen: 'LocationScreen',
   UpdateProfile: 'UpdateProfile',
-} as const;
+};
 
 const LICENSE_KEY =
   'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
+
+const WORD_COUNT_THRESHOLD = 20;
 
 const FeaturesDataItem = [
   {
@@ -113,4 +115,5 @@ export {
   CARD_WIDTH,
   SPACING,
   FeaturesDataItem,
+  WORD_COUNT_THRESHOLD,
 };

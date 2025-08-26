@@ -73,40 +73,40 @@ export const useMore = () => {
     () => [
       {
         title: 'settings.profile',
-        type: 'navigation' as const,
+        type: 'navigation',
         screenName: HOME.Profile,
       },
       {
         key: 'friends',
         title: 'settings.My Friends',
-        type: 'navigation' as const,
+        type: 'navigation',
         screenName: HOME.MyFriends,
       },
       {
         key: 'AI Assistant',
         title: 'AI Assistant',
-        type: 'navigation' as const,
+        type: 'navigation',
         screenName: HOME.AiAssistant,
       },
       {
         key: 'theme',
         title: 'settings.Theme',
-        type: 'bottomSheet' as const,
+        type: 'bottomSheet',
       },
       {
         key: 'language',
         title: 'settings.Language',
-        type: 'bottomSheet' as const,
+        type: 'bottomSheet',
       },
       {
         key: 'delete',
         title: 'settings.Delete Account',
-        type: 'bottomSheet' as const,
+        type: 'bottomSheet',
       },
       {
         key: 'logout',
         title: 'settings.Logout',
-        type: 'bottomSheet' as const,
+        type: 'bottomSheet',
       },
     ],
     [],

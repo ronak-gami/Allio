@@ -174,7 +174,7 @@ const useVideoMedia = () => {
 
       const cameraOptions = {
         mediaType: 'video' as MediaType,
-        videoQuality: 'high' as const,
+        videoQuality: 'high',
         durationLimit: 120,
         saveToPhotos: true,
       };
