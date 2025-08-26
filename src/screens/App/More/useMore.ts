@@ -77,12 +77,6 @@ export const useMore = () => {
         screenName: HOME.Profile,
       },
       {
-        key: 'friends',
-        title: 'settings.My Friends',
-        type: 'navigation',
-        screenName: HOME.MyFriends,
-      },
-      {
         key: 'AI Assistant',
         title: 'AI Assistant',
         type: 'navigation',
