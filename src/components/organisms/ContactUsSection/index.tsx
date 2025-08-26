@@ -4,7 +4,6 @@ import Button from '@components/atoms/Button';
 import ContactFormModal from '@components/molecules/ContactForm';
 import useStyle from './style';
 import Text from '@components/atoms/Text';
-// Assuming this is the correct import path for the validation schema
 
 const ContactUsSection: React.FC = () => {
   const styles = useStyle();
@@ -22,12 +21,6 @@ const ContactUsSection: React.FC = () => {
     console.log('hello');
     // Handle form submission (e.g., send to backend, show toast, etc.)
   };
-  interface ContactFormFields {
-    name: string;
-    mobileNo: string;
-    email: string;
-    message: string;
-  }
 
   return (
     <View style={styles.sectionContainer}>

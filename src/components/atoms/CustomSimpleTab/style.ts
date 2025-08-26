@@ -25,7 +25,7 @@ const useStyle = ({ iconSize = scale(20), disabled = false } = {}) => {
       borderBottomColor: colors.primary,
     },
     tabText: {
-      fontSize: scale(14),
+      fontSize: scale(16),
       color: colors.text,
       textAlign: 'center',
     },

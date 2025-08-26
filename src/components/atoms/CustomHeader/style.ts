@@ -54,8 +54,8 @@ const useStyle = () => {
       textAlign: 'center',
     },
     logoStyle: {
-      width: scale(50),
-      height: scale(50),
+      width: scale(56),
+      height: scale(56),
     },
   });
 };
