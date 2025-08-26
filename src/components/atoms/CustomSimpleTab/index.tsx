@@ -35,10 +35,9 @@ const CustomSimpleTab = ({
     const hasIcon = !!tab.icon;
     const hasTitle = !!tab.title;
 
-    if (hasIcon && hasTitle) {
-      // Icon + Text variant (Icon above text)
-      return (
-        <>
+    return (
+      <>
+        {hasIcon && (
           <Image
             source={tab.icon}
             style={[
@@ -48,6 +47,8 @@ const CustomSimpleTab = ({
             ]}
             resizeMode="contain"
           />
+        )}
+        {hasTitle && (
           <Text
             type={isActive ? activeTextType : textType}
             style={[
@@ -57,37 +58,9 @@ const CustomSimpleTab = ({
             ]}>
             {tab.title}
           </Text>
-        </>
-      );
-    } else if (hasIcon) {
-      // Icon-only variant
-      return (
-        <Image
-          source={tab.icon}
-          style={[
-            styles.tabIcon,
-            tabIconStyle,
-            isActive && { ...styles.activeTabIcon, ...activeTabIconStyle },
-          ]}
-          resizeMode="contain"
-        />
-      );
-    } else if (hasTitle) {
-      // Text-only variant
-      return (
-        <Text
-          type={isActive ? activeTextType : textType}
-          style={[
-            styles.tabText,
-            tabTextStyle,
-            isActive && { ...styles.activeTabText, ...activeTabTextStyle },
-          ]}>
-          {tab.title}
-        </Text>
-      );
-    }
-
-    return null;
+        )}
+      </>
+    );
   };
 
   if (!tabs || tabs.length === 0) {
