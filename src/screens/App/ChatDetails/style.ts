@@ -86,20 +86,23 @@ const useStyle = () => {
     },
     messageBubble: {
       padding: height * 0.015,
-      borderRadius: height * 0.02,
       marginVertical: height * 0.01,
     },
     myMessage: {
       alignSelf: 'flex-end',
+      borderTopRightRadius: scale(12),
+      borderBottomLeftRadius: scale(12),
       backgroundColor: colors.primary,
     },
     theirMessage: {
       alignSelf: 'flex-start',
+      borderTopLeftRadius: scale(12),
+      borderBottomRightRadius: scale(12),
       backgroundColor: colors.lightBlue,
     },
     messageText: {
       color: colors.white,
-      fontSize: scale(18),
+      fontSize: scale(14),
       marginRight: 50,
     },
     inputContainer: {
@@ -204,8 +207,8 @@ const useStyle = () => {
     },
 
     profileImage: {
-      height: height * 0.080,
-      width: height * 0.060,
+      height: height * 0.08,
+      width: height * 0.06,
       resizeMode: 'contain',
       borderRadius: height * 0.0325,
     },
@@ -465,7 +468,7 @@ const useStyle = () => {
     },
 
     selectedItem: {
-      backgroundColor: colors.skyBlue,
+      backgroundColor: colors.error,
       elevation: 2,
       shadowColor: colors.iceBlue,
       shadowOffset: { width: 0, height: 2 },
@@ -478,13 +481,12 @@ const useStyle = () => {
       color: colors.text,
       marginTop: 1,
       top: 11,
-      right:5,
+      right: 5,
       textAlign: 'left',
     },
     headerStatus: {
-      fontSize: 13,
+      fontSize: scale(12),
       color: colors.black,
-      opacity: 0.7,
       marginTop: 2,
     },
 
@@ -497,8 +499,7 @@ const useStyle = () => {
 
     timeText: {
       fontSize: scale(11),
-      color: colors.text,
-      opacity: 0.6,
+      color: colors.black,
     },
     dateLabelContainer: {
       alignSelf: 'center',
