@@ -7,7 +7,7 @@ import { useUserCard } from '@components/cards/UserCard/useUserCard';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import api from '@api/index';
-import { getAllUsers } from '@utils/helper';
+import { formatLastSeen, getAllUsers } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
 
@@ -92,7 +92,7 @@ export const useChatDetails = (targetUser: any) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [highlightedMsgId, setHighlightedMsgId] = useState<string | null>(null);
 
-  const [lastSeen, setLastSeen] = useState<Date | null>(null);
+  const [lastSeen, setLastSeen] = useState<string>('');
 
   const [isOnline, setIsOnline] = useState<string>('');
 
@@ -249,6 +249,35 @@ export const useChatDetails = (targetUser: any) => {
     return () => unsub();
   }, []);
 
+  // useEffect(() => {
+  //   if (!targetUser?.email) return;
+
+  //   const fetchTargetUser = async () => {
+  //     const allUsers = await getAllUsers(myEmail);
+  //     const target = allUsers.find(u => u.email === targetUser.email);
+
+  //     if (target) {
+  //       if (target.lastSeen) {
+  //         setLastSeen(
+  //           target.lastSeen.toDate
+  //             ? target.lastSeen.toDate()
+  //             : new Date(target.lastSeen),
+  //         );
+  //       }
+  //       if (typeof target.online === 'boolean') {
+  //         setIsOnline(target.online);
+  //       }
+  //     }
+  //   };
+
+  //   fetchTargetUser();
+
+  //   const intervalId = setInterval(fetchTargetUser, 30000);
+
+  //   return () => clearInterval(intervalId);
+  // }, [myEmail, targetUser.email]);
+
+
   useEffect(() => {
     if (!targetUser?.email) return;
 
@@ -258,12 +287,13 @@ export const useChatDetails = (targetUser: any) => {
 
       if (target) {
         if (target.lastSeen) {
-          setLastSeen(
-            target.lastSeen.toDate
-              ? target.lastSeen.toDate()
-              : new Date(target.lastSeen),
-          );
+          const lastSeenDate = target.lastSeen.toDate
+            ? target.lastSeen.toDate()
+            : new Date(target.lastSeen);
+
+          setLastSeen(formatLastSeen(lastSeenDate)); // 👈 format using helper
         }
+
         if (typeof target.online === 'boolean') {
           setIsOnline(target.online);
         }
@@ -273,9 +303,9 @@ export const useChatDetails = (targetUser: any) => {
     fetchTargetUser();
 
     const intervalId = setInterval(fetchTargetUser, 30000);
-
     return () => clearInterval(intervalId);
   }, [myEmail, targetUser.email]);
+
 
   useEffect(() => {
     if (states?.chatHistory?.length > 0) {

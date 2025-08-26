@@ -490,6 +490,39 @@ const monitorOnlineStatus = (email?: string) => {
   return cleanup;
 };
 
+const formatLastSeen = timestamp => {
+  if (!timestamp) return '';
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  const diffMs = now - date;
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHours = Math.floor(diffMin / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  // Today
+  if (diffDays === 0) {
+    if (diffHours > 0)
+      return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffMin > 0) return `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
+    return 'just now';
+  }
+
+  // Yesterday
+  if (diffDays === 1) {
+    return 'Yesterday';
+  }
+
+  // Everything else → formatted date (e.g. "21 May 2025")
+  return date.toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+};
+
+
 export {
   height,
   width,
@@ -512,4 +545,5 @@ export {
   formatTime,
   monitorOnlineStatus,
   // useMonitorOnlineStatus,
+  formatLastSeen,
 };

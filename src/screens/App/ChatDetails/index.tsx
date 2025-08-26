@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   View,
   TouchableOpacity,
@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '@types/navigations';
-import { ICONS, IMAGES } from '@assets/index';
+import { ICONS } from '@assets/index';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 import Video from 'react-native-video';
@@ -193,11 +193,11 @@ const ChatDetailsScreen = () => {
               {/* <Text style={styles.headerEmail}>{user?.email}</Text>
                */}
               {relationStatus === 'accepted' && (
-                <Text style={styles.headerStatus}>
+                <Text style={styles.headerStatus} type="bold">
                   {isOnline
                     ? 'Online'
                     : lastSeen
-                    ? `Last seen ${moment(lastSeen).fromNow()}`
+                    ? `Last seen ${lastSeen.toString()}`
                     : ''}
                 </Text>
               )}
