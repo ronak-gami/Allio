@@ -402,7 +402,9 @@ const ChatDetailsScreen = () => {
                         <React.Fragment key={msgId}>
                           {showDateLabel && (
                             <View style={styles.dateLabelContainer}>
-                              <Text style={styles.dateLabelText}>
+                              <Text
+                                style={styles.dateLabelText}
+                                type="semibold">
                                 {dateLabel}
                               </Text>
                             </View>

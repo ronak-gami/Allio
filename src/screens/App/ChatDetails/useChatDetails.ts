@@ -395,43 +395,7 @@ export const useChatDetails = (targetUser: any) => {
     return () => unsub();
   }, [myEmail, targetUser?.email, relationId]);
 
-  // const selectTheme = async (localImage: any) => {
-  //   if (!relationId || !localImage) return;
-  //   setloding(true);
-  //   try {
-  //     const themesRef = firestore().collection('themes').doc(relationId);
-  //     const existingDoc = await themesRef.get();
-
-  //     if (existingDoc.exists && existingDoc.data()?.themeUrl) {
-  //       if (existingDoc.data().localKey === localImage) {
-
-  //         setSelectedTheme(existingDoc.data().themeUrl);
-  //         setThemeModalVisible(false);
-  //         return;
-  //       }
-  //     }
-  //     const fileUri = Image.resolveAssetSource(localImage).uri;
-  //     const uploadedUrl = await uploadToCloudinary({
-  //       uri: fileUri,
-  //       type: 'image/png',
-  //       fileName: `${relationId}_${Date.now()}.png`,
-  //     });
-  //     await themesRef.set({
-  //       themeUrl: uploadedUrl,
-  //       localKey: localImage,
-  //       updatedAt: new Date(),
-  //     });
-  //     setSelectedTheme(uploadedUrl);
-  //     showSuccess('Theme applied successfully!');
-  //   } catch (err) {
-  //     console.error(err);
-  //     showError('Failed to apply theme');
-  //   } finally {
-  //     setloding(false);
-  //     setThemeModalVisible(false);
-  //   }
-  // };
-
+  
   const selectTheme = async (fileKey: string | null) => {
     if (!relationId || !fileKey) return;
     setloding(true);
@@ -476,21 +440,6 @@ export const useChatDetails = (targetUser: any) => {
     }
   };
 
-  useEffect(() => {
-    if (!targetUser?.email) return;
-    const unsub = firestore()
-      .collection('users')
-      .doc(targetUser.email)
-      .onSnapshot(doc => {
-        const data = doc.data();
-        if (data?.lastSeen) {
-          const seenDate = data.lastSeen.toDate();
-          // setLastSeen(seenDate);
-          // setIsOnline(Date.now() - seenDate.getTime() < 2 * 60 * 1000);
-        }
-      });
-    return () => unsub();
-  }, [targetUser?.email]);
 
   const removeTheme = async () => {
     try {
