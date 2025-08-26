@@ -2,12 +2,20 @@ import { useState, useRef, useEffect } from 'react';
 import api from '@api/index';
 import { Clipboard } from 'react-native';
 
+interface Message {
+  id: string;
+  text: string;
+  isUser: boolean;
+  timestamp: Date;
+  fullText?: string;
+}
+
 const useAiAssistant = () => {
-  const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [typingMessageId, setTypingMessageId] = useState(null);
-  const [showPrintOption, setShowPrintOption] = useState(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
+  const [showPrintOption, setShowPrintOption] = useState<string | null>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const flatListRef = useRef(null);
   const typingIntervalRef = useRef(null);

@@ -7,7 +7,7 @@ import Text from '@components/atoms/Text';
 
 const ContactUsSection: React.FC = () => {
   const styles = useStyle();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const handleOpen = () => setModalVisible(true);
   const handleClose = () => setModalVisible(false);
