@@ -5,7 +5,9 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
+import { getAuth } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 import {
   PERMISSIONS,
   RESULTS,
@@ -25,7 +27,6 @@ import notifee, {
   AndroidVisibility,
   AuthorizationStatus,
 } from '@notifee/react-native';
-import messaging from '@react-native-firebase/messaging';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -161,9 +162,7 @@ const handlePermissions = async (
     const has = (permission: Permission) =>
       statuses[permission] === RESULTS.GRANTED;
 
-    const calculateCapabilities = (
-      currentStatuses: Record<string, PermissionStatus>,
-    ) => ({
+    const calculateCapabilities = () => ({
       canRecordVideo:
         has(PERMISSIONS.ANDROID.CAMERA) &&
         has(PERMISSIONS.ANDROID.RECORD_AUDIO),
@@ -184,7 +183,7 @@ const handlePermissions = async (
       return {
         granted: allCurrentlyGranted,
         results: statuses,
-        ...calculateCapabilities(statuses),
+        ...calculateCapabilities(),
       };
     }
 
@@ -204,7 +203,7 @@ const handlePermissions = async (
     return {
       granted: allFinallyGranted,
       results: finalStatuses,
-      ...calculateCapabilities(finalStatuses),
+      ...calculateCapabilities(),
     };
   } catch (error) {
     console.error('Android video permissions error:', error);
@@ -220,7 +219,7 @@ const handlePermissions = async (
   }
 };
 
-const checkIfMPINExists = async (email: string): Promise<boolean> => {
+const checkIfMPINExists = async (email: string) => {
   try {
     const normalizedEmail = email.trim().toLowerCase();
     const snapshot = await firestore()
@@ -357,6 +356,40 @@ const getCurrentTimestamp = () => {
   return now.toISOString();
 };
 
+const saveFCMTokenToFirestore = async () => {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      const fcmToken = await messaging().getToken();
+      if (fcmToken) {
+        await firestore()
+          .collection('users')
+          .doc(user.uid)
+          .set({ fcmToken }, { merge: true });
+      }
+    }
+  } catch (error) {
+    console.error('Error saving FCM token:', error);
+  }
+};
+
+const removeFCMTokenFromFirestore = async () => {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      await firestore().collection('users').doc(user.uid).update({
+        fcmToken: firestore.FieldValue.delete(),
+      });
+    }
+  } catch (error) {
+    console.error('Error removing FCM token:', error);
+  }
+};
+
 const requestNotificationPermission = async (): Promise<boolean> => {
   try {
     if (Platform.OS === 'ios') {
@@ -376,11 +409,17 @@ const requestNotificationPermission = async (): Promise<boolean> => {
       // Also request Notifee permission
       const notifeePermission = await notifee.requestPermission();
 
-      // Use the directly imported AuthorizationStatus
-      return (
+      const permissionGranted =
         enabled &&
-        notifeePermission.authorizationStatus === AuthorizationStatus.AUTHORIZED
-      );
+        notifeePermission.authorizationStatus ===
+          AuthorizationStatus.AUTHORIZED;
+
+      // Save FCM token only if permission granted
+      if (permissionGranted) {
+        await saveFCMTokenToFirestore();
+      }
+
+      return permissionGranted;
     } else if (Platform.OS === 'android') {
       // Request Firebase permission
       const authStatus = await messaging().requestPermission();
@@ -389,24 +428,32 @@ const requestNotificationPermission = async (): Promise<boolean> => {
       // Request Notifee permission
       const notifeePermission = await notifee.requestPermission();
 
+      let permissionGranted = false;
+
       // Android 13+ notification permission
       if (Platform.Version >= 33) {
         const result = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
         );
         const granted = result === PermissionsAndroid.RESULTS.GRANTED;
-        return (
+        permissionGranted =
           enabled &&
           granted &&
           notifeePermission.authorizationStatus ===
-            AuthorizationStatus.AUTHORIZED
-        );
+            AuthorizationStatus.AUTHORIZED;
+      } else {
+        permissionGranted =
+          enabled &&
+          notifeePermission.authorizationStatus ===
+            AuthorizationStatus.AUTHORIZED;
       }
 
-      return (
-        enabled &&
-        notifeePermission.authorizationStatus === AuthorizationStatus.AUTHORIZED
-      );
+      // Save FCM token only if permission granted
+      if (permissionGranted) {
+        await saveFCMTokenToFirestore();
+      }
+
+      return permissionGranted;
     }
     return false;
   } catch (error) {
@@ -415,7 +462,11 @@ const requestNotificationPermission = async (): Promise<boolean> => {
   }
 };
 
-const uploadToCloudinary = async file => {
+const uploadToCloudinary = async (file: {
+  uri: any;
+  type: any;
+  fileName: any;
+}) => {
   const formData = new FormData();
   formData.append('file', {
     uri: file.uri,
@@ -507,7 +558,7 @@ const monitorOnlineStatus = (email?: string) => {
   return cleanup;
 };
 
-const formatLastSeen = timestamp => {
+const formatLastSeen = (timestamp: string | number | Date) => {
   if (!timestamp) {
     return '';
   }
@@ -611,4 +662,6 @@ export {
   monitorOnlineStatus,
   onDisplayNotification,
   formatLastSeen,
+  saveFCMTokenToFirestore,
+  removeFCMTokenFromFirestore,
 };

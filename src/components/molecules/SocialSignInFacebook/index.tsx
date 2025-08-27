@@ -12,7 +12,6 @@ import { setStateKey } from '@redux/slices/AuthSlice';
 import { checkUserExistsByEmail } from '@utils/helper';
 import { ICONS } from '@assets/index';
 import { showError } from '@utils/toast';
-import messaging from '@react-native-firebase/messaging';
 
 interface SignInWithFacebookProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -62,28 +61,14 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
         email: user.email,
         profileImage: user.photoURL || '',
         provider: 'facebook',
-        createdAt: new Date().toISOString(),
       };
-      if (user) {
-        const fcmToken = await messaging()?.getToken();
-        if (fcmToken) {
-          await firestore().collection('users').doc(user.uid).set(
-            {
-              fcmToken,
-              fcmUpdatedAt: firestore.FieldValue.serverTimestamp(),
-            },
-            { merge: true },
-          );
-        } else {
-          console.warn('FCM token not available after login.');
-        }
-      }
+
       dispatch(setStateKey({ key: 'token', value: token }));
       dispatch(setStateKey({ key: 'userData', value: userData }));
     } catch (error: any) {
       console.error('Facebook Login Error:', error);
 
-      // ✅ Specific error handling
+      // Specific error handling
       if (error.code === 'auth/account-exists-with-different-credential') {
         // This happens when the email is already linked to another provider (e.g., Google)
         showError(

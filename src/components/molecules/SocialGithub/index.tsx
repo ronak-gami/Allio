@@ -6,7 +6,6 @@ import {
   signInWithCredential,
   getAuth,
 } from '@react-native-firebase/auth';
-import messaging from '@react-native-firebase/messaging';
 import firestore from '@react-native-firebase/firestore';
 import { ICONS } from '@assets/index';
 import SocialButton from '../socialButton';
@@ -17,7 +16,7 @@ const GITHUB_CLIENT_ID = 'Ov23liBFofdatcwtoX8i';
 const GITHUB_CLIENT_SECRET = 'd45c27ce041a53adf538d3c786e044c7f1c96637';
 const REDIRECT_URI = 'https://allio-cd2b5.firebaseapp.com/__/auth/handler';
 
-const SignInWithGitHub = () => {
+const SignInWithGitHub = ({ setLoading }) => {
   const dispatch = useDispatch();
 
   const fetchGitHubOAuthCode = async (
@@ -46,6 +45,7 @@ const SignInWithGitHub = () => {
   };
 
   const handleGitHubLogin = async () => {
+    setLoading(true);
     try {
       const authUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(
         REDIRECT_URI,
@@ -91,24 +91,14 @@ const SignInWithGitHub = () => {
       }
 
       if (user) {
-        const fcmToken = await messaging()?.getToken();
-        if (fcmToken) {
-          await firestore().collection('users').doc(user.uid).set(
-            {
-              fcmToken,
-              fcmUpdatedAt: firestore.FieldValue.serverTimestamp(),
-            },
-            { merge: true },
-          );
-        } else {
-          console.warn('FCM token not available after login.');
-        }
+        const token = await user?.getIdToken();
+        dispatch(setStateKey({ key: 'token', value: token }));
+        dispatch(setStateKey({ key: 'userData', value: userData }));
       }
-      const token = await user?.getIdToken();
-      dispatch(setStateKey({ key: 'token', value: token }));
-      dispatch(setStateKey({ key: 'userData', value: userData }));
     } catch (err) {
       console.error('GitHub login error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
