@@ -86,20 +86,24 @@ const useStyle = () => {
     },
     messageBubble: {
       padding: height * 0.015,
-      borderRadius: height * 0.02,
       marginVertical: height * 0.01,
     },
     myMessage: {
       alignSelf: 'flex-end',
+      borderTopRightRadius: scale(12),
+      borderBottomLeftRadius: scale(12),
       backgroundColor: colors.primary,
     },
     theirMessage: {
       alignSelf: 'flex-start',
+      borderTopLeftRadius: scale(12),
+      borderBottomRightRadius: scale(12),
       backgroundColor: colors.lightBlue,
     },
     messageText: {
       color: colors.white,
       fontSize: scale(14),
+      marginRight: 50,
     },
     inputContainer: {
       flexDirection: 'row',
@@ -203,11 +207,10 @@ const useStyle = () => {
     },
 
     profileImage: {
-      height: height * 0.065,
-      width: height * 0.065,
+      height: height * 0.08,
+      width: height * 0.06,
       resizeMode: 'contain',
       borderRadius: height * 0.0325,
-      marginRight: height * 0.015,
     },
     cardPlaceholderCentered: {
       width: width * 0.2,
@@ -465,7 +468,7 @@ const useStyle = () => {
     },
 
     selectedItem: {
-      backgroundColor: colors.skyBlue,
+      backgroundColor: colors.error,
       elevation: 2,
       shadowColor: colors.iceBlue,
       shadowOffset: { width: 0, height: 2 },
@@ -474,10 +477,41 @@ const useStyle = () => {
     },
 
     editedtext: {
-      fontSize: scale(11),
+      fontSize: scale(10),
       color: colors.text,
+      marginTop: 1,
+      top: 11,
+      right: 5,
+      textAlign: 'left',
+    },
+    headerStatus: {
+      fontSize: scale(12),
+      color: colors.black,
       marginTop: 2,
-      textAlign: 'right',
+    },
+
+    timeContainer: {
+      marginTop: 4,
+      position: 'absolute',
+      right: 10,
+      bottom: 3,
+    },
+
+    timeText: {
+      fontSize: scale(11),
+      color: colors.black,
+    },
+    dateLabelContainer: {
+      alignSelf: 'center',
+      marginVertical: 10,
+      backgroundColor: colors.text,
+      borderRadius: 10,
+      paddingHorizontal: 15,
+      paddingVertical: 7,
+    },
+    dateLabelText: {
+      fontSize: scale(12),
+      color: colors.background,
     },
   });
 };

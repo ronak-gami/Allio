@@ -13,7 +13,7 @@ import { setStateKey } from '@redux/slices/AuthSlice';
 import useStyle from './style';
 
 const FacebookButton = ({ onLoginSuccess }: any) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const styles = useStyle();
 

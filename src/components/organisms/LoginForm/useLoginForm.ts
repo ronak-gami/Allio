@@ -77,9 +77,7 @@ export const useLoginForm = () => {
         await analytics().logEvent('login', { method: 'email', email });
         crashlytics().log('User login successful');
         crashlytics().setAttribute('email', email);
-
         showSuccess('Login Successful!');
-        await requestUserPermission();
       }
     } catch (error) {
       console.error('Error into handleLogin :- ', error);

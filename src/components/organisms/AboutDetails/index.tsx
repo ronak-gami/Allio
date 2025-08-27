@@ -4,9 +4,9 @@ import HeroSection from '@components/molecules/HeroSection';
 import CustomModal from '@components/atoms/CustomModel';
 
 const AboutOrganism: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [modalDescription, setModalDescription] = useState('');
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>('');
+  const [modalDescription, setModalDescription] = useState<string>('');
 
   const handleCloseModal = () => {
     setModalVisible(false);

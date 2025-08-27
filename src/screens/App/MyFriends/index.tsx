@@ -1,22 +1,30 @@
 import React, { useMemo } from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-
-import { CustomFlatList, CustomLoader, Text } from '@components/index';
+import { View, Image } from 'react-native';
+import {
+  Container,
+  CustomFlatList,
+  Text,
+  CustomSimpleTab,
+} from '@components/index';
 import UserCard from '@components/cards/UserCard';
-import CustomHeader from '@components/atoms/CustomHeader';
 import { IMAGES } from '@assets/index';
-
 import { useMyFriends } from './useMyFriends';
 import useStyle from './style';
 
 const MyFriends = () => {
   const styles = useStyle();
-  const navigation = useNavigation();
   const { activeTab, setActiveTab, users, states, onRefresh } = useMyFriends();
 
+  const tabs = [
+    { id: 'friends', title: 'Friends' },
+    { id: 'pending', title: 'Pending' },
+    { id: 'all', title: 'All' },
+  ];
+
   const sortedUsers = useMemo(() => {
-    if (activeTab !== 'all') return users;
+    if (activeTab !== 'all') {
+      return users;
+    }
 
     return [...users].sort((a, b) => {
       const order = { accepted: 1, sent: 1 };
@@ -48,49 +56,22 @@ const MyFriends = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <CustomHeader
-        title="My Friends"
-        showBackArrow
-        onBackPress={navigation.goBack}
-        showProfile={false}
-      />
-
-      <View style={styles.headerContainer}>
-        {['friends', 'pending', 'all'].map(tab => (
-          <TouchableOpacity
-            key={tab}
-            style={[
-              styles.tabButton,
-              activeTab === tab && styles.activeTabButton,
-            ]}
-            onPress={() => setActiveTab(tab as any)}>
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === tab && styles.activeTabText,
-              ]}>
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </Text>
-            {activeTab === tab && <View style={styles.bottomLine} />}
-          </TouchableOpacity>
-        ))}
+    <Container title="My Friends" showLoader={states?.loading}>
+      <View style={styles.container}>
+        <CustomSimpleTab
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={tabId => setActiveTab(tabId)}
+        />
+        <CustomFlatList
+          data={sortedUsers}
+          renderItem={renderUser}
+          ListEmptyComponent={renderEmptyState}
+          refreshing={states?.refreshing}
+          onRefresh={onRefresh}
+        />
       </View>
-
-      <View style={styles.contentContainer}>
-        {states?.loading ? (
-          <CustomLoader visible={states?.loading} />
-        ) : (
-          <CustomFlatList
-            data={sortedUsers}
-            renderItem={renderUser}
-            ListEmptyComponent={renderEmptyState}
-            refreshing={states?.refreshing}
-            onRefresh={onRefresh}
-          />
-        )}
-      </View>
-    </View>
+    </Container>
   );
 };
 

@@ -1,14 +1,13 @@
-import React, { useImperativeHandle, useRef } from 'react';
-import { Platform, Image, ImageSourcePropType, Animated } from 'react-native';
+import React from 'react';
+import { Platform, Image, ImageSourcePropType } from 'react-native';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import { IMAGES } from '@assets/index';
+import { ICONS } from '@assets/index';
 import { height, width } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import HomeScreen from '@screens/App/Home';
-import PhotoMedia from '@screens/App/PhotoMedia';
 import ScanQR from '@screens/App/ScanQR';
 import VideoMedia from '@screens/App/VideoMedia';
 import More from '@screens/App/More';
@@ -16,7 +15,7 @@ import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
 import { TabParamList } from '@types/navigations';
 import GlobalBottomSheet from '@components/atoms/GlobalBottomSheet';
-import { useBottomSheet } from '../../../context/BottomSheetContext';
+import MyFriends from '@screens/App/MyFriends';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -25,11 +24,11 @@ const TabNavigator: React.FC = () => {
   const { colors } = useTheme();
 
   const icons: Record<keyof TabParamList, ImageSourcePropType> = {
-    Home: IMAGES.Home,
-    Photo: IMAGES.ImageMedia,
-    ScanQR: IMAGES.ScanQR,
-    Video: IMAGES.VideoMedia,
-    More: IMAGES.Setting,
+    Home: ICONS.Home,
+    MyFriends: ICONS.Chat,
+    ScanQR: ICONS.ScanQR,
+    Video: ICONS.Social,
+    More: ICONS.More,
   };
 
   const getIconByRouteName = (name: keyof TabParamList): ImageSourcePropType =>
@@ -70,7 +69,7 @@ const TabNavigator: React.FC = () => {
     <GlobalBottomSheet>
       <Tab.Navigator screenOptions={screenOptions}>
         <Tab.Screen name={HOME.Home} component={HomeScreen} />
-        <Tab.Screen name={HOME.Photo} component={PhotoMedia} />
+        <Tab.Screen name={HOME.MyFriends} component={MyFriends} />
         <Tab.Screen name={HOME.ScanQR} component={ScanQR} />
         <Tab.Screen name={HOME.Video} component={VideoMedia} />
         <Tab.Screen name={HOME.More} component={More} />

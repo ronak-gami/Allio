@@ -4,6 +4,11 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
 import { getAllUsers } from '@utils/helper';
 
+interface User {
+  email: string;
+  relationStatus: 'none' | 'accepted' | 'sent' | 'received' | 'pending';
+}
+
 export const useMyFriends = () => {
   const currentUserEmail = useSelector(
     (state: RootState) => state.auth.userData.email,
@@ -12,7 +17,7 @@ export const useMyFriends = () => {
   const [activeTab, setActiveTab] = useState<'friends' | 'pending' | 'all'>(
     'friends',
   );
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 

@@ -228,20 +228,6 @@ const handlePermissions = async (
   }
 };
 
-const requestUserPermission = async () => {
-  try {
-    const granted: 'granted' | 'denied' | 'never_ask_again' =
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-    } else {
-    }
-  } catch (error: any) {
-    console.error('Failed to request notification permission:', error);
-  }
-};
-
 const checkIfMPINExists = async (email: string): Promise<boolean> => {
   try {
     const normalizedEmail = email.trim().toLowerCase();
@@ -421,7 +407,7 @@ const uploadToCloudinary = async file => {
       { headers: { 'Content-Type': 'multipart/form-data' } },
     );
 
-    return res.data.secure_url; // Cloudinary URL
+    return res.data.secure_url;
   } catch (error) {
     console.error('Cloudinary Upload Error:', error);
     throw error;
@@ -566,7 +552,6 @@ export {
   width,
   getAllUsers,
   checkUserExistsByEmail,
-  requestUserPermission,
   updateUserInFirestore,
   handlePermissions,
   languages,
