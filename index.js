@@ -1,12 +1,17 @@
 /**
  * @format
  */
+
 globalThis.RNFB_SILENCE_MODULAR_DEPRECATION_WARNINGS = true;
 import { AppRegistry } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 import App from './App';
 import { name as appName } from './app.json';
-import messaging from '@react-native-firebase/messaging';
+import { onDisplayNotification } from '@utils/helper';
 
-messaging().setBackgroundMessageHandler(async remoteMessage => { });
-
+// Register background handler
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+  onDisplayNotification(remoteMessage.data);
+});
 AppRegistry.registerComponent(appName, () => App);

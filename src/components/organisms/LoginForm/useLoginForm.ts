@@ -17,7 +17,6 @@ import { showError, showSuccess } from '@utils/toast';
 import useValidation from '@utils/validationSchema';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
-import { requestUserPermission } from '@utils/helper';
 
 export const useLoginForm = () => {
   const [remember, setRemember] = useState<boolean>(false);

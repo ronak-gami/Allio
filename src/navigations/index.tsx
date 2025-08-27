@@ -1,10 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
-import CustomNotification, {
-  CustomToastRef,
-} from '@components/atoms/CustomNotification';
-import { useNotification } from '@hooks/index';
 
 import Splash from '@screens/Auth/Splash';
 import { useColorScheme } from 'react-native';
@@ -43,14 +39,10 @@ const StackNavigator: React.FC = () => {
   const language = useSelector((s: RootState) => s.language.language);
   const dispatch = useDispatch();
   const systemColorScheme = useColorScheme();
-  const customToastRef = useRef<CustomToastRef>(null);
 
   const [splashVisible, setSplashVisible] = useState<boolean>(true);
   const navigationRef = useRef<any>(null);
   const routeNameRef = useRef<string>();
-
-  // Add notification hook
-  useNotification(customToastRef);
 
   useEffect(() => {
     dispatch(setDarkMode(systemColorScheme === 'dark'));
@@ -70,36 +62,32 @@ const StackNavigator: React.FC = () => {
   const appTheme = isDarkMode ? darkTheme : lightTheme;
 
   return (
-    <>
-      <NavigationContainer
-        theme={appTheme}
-        ref={navigationRef}
-        onReady={() => {
-          routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
-        }}
-        onStateChange={async () => {
-          const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
-          if (routeNameRef.current !== currentRoute && currentRoute) {
-            await analytics().logScreenView({
-              screen_name: currentRoute,
-              screen_class: currentRoute,
-            });
-            routeNameRef.current = currentRoute;
-          }
-        }}>
-        <CustomNotification ref={customToastRef} />
-        <BottomSheetProvider>
-          {splashVisible ? (
-            <Splash />
-          ) : token ? (
-            <HomeNavigator />
-          ) : (
-            <AuthNavigator />
-          )}
-        </BottomSheetProvider>
-        {/* <CustomNotification ref={customToastRef} /> */}
-      </NavigationContainer>
-    </>
+    <NavigationContainer
+      theme={appTheme}
+      ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+      }}
+      onStateChange={async () => {
+        const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
+        if (routeNameRef.current !== currentRoute && currentRoute) {
+          await analytics().logScreenView({
+            screen_name: currentRoute,
+            screen_class: currentRoute,
+          });
+          routeNameRef.current = currentRoute;
+        }
+      }}>
+      <BottomSheetProvider>
+        {splashVisible ? (
+          <Splash />
+        ) : token ? (
+          <HomeNavigator />
+        ) : (
+          <AuthNavigator />
+        )}
+      </BottomSheetProvider>
+    </NavigationContainer>
   );
 };
 
