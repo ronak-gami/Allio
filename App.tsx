@@ -19,27 +19,31 @@ const App = () => {
       offlineAccess: true,
     });
 
-    // 1. Get the FCM token
-    const getFcmToken = async () => {
-      const fcmToken = await messaging().getToken();
-      if (fcmToken) {
-        console.log('Your Firebase Token is:', fcmToken);
-        // This token is what you'd send to your server to target this device
-      } else {
-        console.log('Failed to get FCM token');
-      }
-    };
-
-    getFcmToken();
-
-    // 2. Listen for foreground messages
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('A new FCM message arrived in foreground!', remoteMessage);
-      // Here we use the same handler to display the notification
-      onDisplayNotification(remoteMessage?.data);
+    // Handle foreground messages
+    const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
+      await onDisplayNotification(
+        remoteMessage?.data || {
+          title: remoteMessage?.notification?.title || 'New Message',
+          body: remoteMessage?.notification?.body || 'You have a new message',
+        },
+      );
     });
 
-    return unsubscribe;
+    // Handle notification taps when app is in background
+    const unsubscribeBackground = messaging().onNotificationOpenedApp(
+      remoteMessage => {
+        console.log('Notification opened app from background:', remoteMessage);
+        // Handle navigation here if needed
+      },
+    );
+
+    // Handle notification when app is killed/closed
+    messaging().getInitialNotification();
+
+    return () => {
+      unsubscribeForeground();
+      unsubscribeBackground();
+    };
   }, []);
   return (
     <GestureHandlerRootView style={styles.container}>

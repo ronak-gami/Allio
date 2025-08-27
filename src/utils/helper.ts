@@ -14,14 +14,18 @@ import {
   PermissionStatus,
   checkMultiple,
 } from 'react-native-permissions';
-import messaging from '@react-native-firebase/messaging';
 import RNFS from 'react-native-fs';
 import axios from 'axios';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import moment from 'moment';
 import Share from 'react-native-share';
 import { showError, showSuccess } from './toast';
-import notifee, { AndroidImportance } from '@notifee/react-native';
+import notifee, {
+  AndroidImportance,
+  AndroidVisibility,
+  AuthorizationStatus,
+} from '@notifee/react-native';
+import messaging from '@react-native-firebase/messaging';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -44,18 +48,6 @@ interface UserProfileData {
 
 const height = Dimensions.get('screen').height;
 const width = Dimensions.get('screen').width;
-
-const FONTS: Record<string, string> = {
-  black: 'Montserrat-Black',
-  bold: 'Montserrat-Bold',
-  extraBold: 'Montserrat-ExtraBold',
-  light: 'Montserrat-Light',
-  extraLight: 'Montserrat-ExtraLight',
-  medium: 'Montserrat-Medium',
-  regular: 'Montserrat-Regular',
-  semiBold: 'Montserrat-SemiBold',
-  thin: 'Montserrat-Thin',
-};
 
 interface FirestoreUser {
   id: string;
@@ -364,25 +356,57 @@ const getCurrentTimestamp = () => {
   const now = new Date();
   return now.toISOString();
 };
+
 const requestNotificationPermission = async (): Promise<boolean> => {
   try {
     if (Platform.OS === 'ios') {
-      const authStatus = await messaging().requestPermission();
+      const authStatus = await messaging().requestPermission({
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: true,
+        provisional: false,
+        sound: true,
+      });
+
       const enabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-      return enabled;
+      // Also request Notifee permission
+      const notifeePermission = await notifee.requestPermission();
+
+      // Use the directly imported AuthorizationStatus
+      return (
+        enabled &&
+        notifeePermission.authorizationStatus === AuthorizationStatus.AUTHORIZED
+      );
     } else if (Platform.OS === 'android') {
+      // Request Firebase permission
+      const authStatus = await messaging().requestPermission();
+      const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED;
+
+      // Request Notifee permission
+      const notifeePermission = await notifee.requestPermission();
+
+      // Android 13+ notification permission
       if (Platform.Version >= 33) {
         const result = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
         );
         const granted = result === PermissionsAndroid.RESULTS.GRANTED;
-
-        return granted;
+        return (
+          enabled &&
+          granted &&
+          notifeePermission.authorizationStatus ===
+            AuthorizationStatus.AUTHORIZED
+        );
       }
-      return true;
+
+      return (
+        enabled &&
+        notifeePermission.authorizationStatus === AuthorizationStatus.AUTHORIZED
+      );
     }
     return false;
   } catch (error) {
@@ -520,31 +544,50 @@ const formatLastSeen = timestamp => {
   });
 };
 
-const onDisplayNotification = async (data: { title: any; body: any }) => {
-  await notifee.requestPermission();
+const onDisplayNotification = async (data: { title?: any; body?: any }) => {
+  try {
+    // Request permission first
+    await notifee.requestPermission();
 
-  // Create a channel (required for Android)
-  const channelId = await notifee.createChannel({
-    id: 'default',
-    name: 'Default Channel',
-    importance: AndroidImportance.HIGH,
-  });
-
-  // Display a notification
-  await notifee.displayNotification({
-    title: data.title,
-    body: data.body,
-    android: {
-      channelId,
+    // Create a channel with high importance (required for Android)
+    const channelId = await notifee.createChannel({
+      id: 'chat_messages',
+      name: 'Chat Messages',
       importance: AndroidImportance.HIGH,
-      fullScreenAction: {
-        id: 'default',
+      visibility: AndroidVisibility.PUBLIC,
+      sound: 'default',
+    });
+
+    const notificationConfig = {
+      title: data.title || 'New Message',
+      body: data.body || 'You have a new message',
+      android: {
+        channelId,
+        importance: AndroidImportance.HIGH,
+        visibility: AndroidVisibility.PUBLIC,
+        pressAction: {
+          id: 'default',
+          launchActivity: 'default',
+        },
+        smallIcon: 'ic_launcher',
+        sound: 'default',
+        vibrationPattern: [300, 500],
+        showWhen: true,
+        when: Date.now(),
       },
-      pressAction: {
-        id: 'default',
+      ios: {
+        sound: 'default',
+        foregroundPresentationOptions: {
+          alert: true,
+          badge: true,
+          sound: true,
+        },
       },
-    },
-  });
+    };
+    await notifee.displayNotification(notificationConfig);
+  } catch (error) {
+    console.error('Display notification error:', error);
+  }
 };
 
 export {
@@ -555,7 +598,6 @@ export {
   updateUserInFirestore,
   handlePermissions,
   languages,
-  FONTS,
   checkIfMPINExists,
   handleMediaDownload,
   handleMediaShare,

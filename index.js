@@ -9,9 +9,19 @@ import App from './App';
 import { name as appName } from './app.json';
 import { onDisplayNotification } from '@utils/helper';
 
-// Register background handler
+// Register background handler - This handles notifications when app is in background/killed
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
-  onDisplayNotification(remoteMessage.data);
+  try {
+    // Handle data-only messages
+    if (remoteMessage.data) {
+      await onDisplayNotification({
+        title: remoteMessage.data.title || 'New Message',
+        body: remoteMessage.data.body || 'You have a new message',
+      });
+    }
+  } catch (error) {
+    console.error('Background notification error:', error);
+  }
 });
+
 AppRegistry.registerComponent(appName, () => App);
