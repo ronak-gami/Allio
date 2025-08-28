@@ -31,7 +31,6 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({
       validationSchema={contetUsValidationSchema}
       onSubmit={(values, { resetForm }) => {
         // This will only run if validation passes
-        console.log('Form submitted with values:', values);
         onSubmit(values);
         resetForm();
         onClose();

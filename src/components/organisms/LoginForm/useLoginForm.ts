@@ -6,7 +6,6 @@ import {
 } from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
-import messaging from '@react-native-firebase/messaging';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import perf from '@react-native-firebase/perf';
@@ -17,7 +16,6 @@ import { showError, showSuccess } from '@utils/toast';
 import useValidation from '@utils/validationSchema';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
-import { requestUserPermission } from '@utils/helper';
 
 export const useLoginForm = () => {
   const [remember, setRemember] = useState<boolean>(false);
@@ -32,9 +30,8 @@ export const useLoginForm = () => {
   };
 
   const handleLogin = async (values: typeof initialValues) => {
+    const trace = await perf().startTrace('login');
     setLoading(true);
-    const trace = perf().newTrace('login_flow');
-    await trace.start();
 
     try {
       const email = values.email.trim().toLowerCase();
@@ -52,27 +49,26 @@ export const useLoginForm = () => {
         password,
       );
 
-      // Dispatch user data (use normalized email)
-      dispatch(setStateKey({ key: 'userData', value: { ...values, email } }));
-
       const user = userCredential.user;
-      if (user) {
-        const token = await user.getIdToken();
-        dispatch(setStateKey({ key: 'token', value: token }));
 
-        // Handle FCM Token
-        const fcmToken = await messaging().getToken();
-        if (fcmToken) {
-          await firestore().collection('users').doc(user.uid).set(
-            {
-              fcmToken,
-              fcmUpdatedAt: firestore.FieldValue.serverTimestamp(),
-            },
-            { merge: true },
-          );
-        } else {
-          console.warn('FCM token not available after login.');
-        }
+      if (user) {
+        const idToken = await user.getIdToken();
+        dispatch(setStateKey({ key: 'token', value: idToken }));
+
+        const userDocRef = firestore().collection('users').doc(user.uid);
+        const userDoc = await userDocRef.get();
+        const userData = userDoc.data();
+
+        // Store only essential user data
+        const essentialUserData = {
+          email: userData?.email || email,
+          firstName: userData?.firstName || '',
+          lastName: userData?.lastName || '',
+          mobileNo: userData?.mobileNo || '',
+          profileImage: userData?.profileImage || '',
+        };
+
+        dispatch(setStateKey({ key: 'userData', value: essentialUserData }));
 
         // Analytics & Crashlytics
         await analytics().logEvent('login', { method: 'email', email });

@@ -9,6 +9,7 @@ import {
   DeleteProfileOrganism,
   LogoutOrganism,
   Container,
+  CustomToggleSwitch,
 } from '@components/index';
 
 import { TabParamList } from '@types/navigations';
@@ -25,6 +26,8 @@ const More: React.FC<Props> = () => {
     handleLogout,
     handleDeleteProfile,
     getTranslation,
+    handleNotificationToggle,
+    notificationsEnabled,
   } = useMore();
 
   const bottomSheetConfigs = {
@@ -36,8 +39,8 @@ const More: React.FC<Props> = () => {
     },
     language: {
       title: getTranslation('bottomSheet.selectLanguage'),
-      snapPoints: ['42%'],
       content: <LanguageOrganism />,
+      snapPoints: ['40%'],
       showCloseButton: true,
     },
     delete: {
@@ -76,6 +79,12 @@ const More: React.FC<Props> = () => {
         <Text style={styles.itemText} type="semibold">
           {item.title}
         </Text>
+        {item.key === 'notifications' && (
+          <CustomToggleSwitch
+            isOn={notificationsEnabled}
+            onToggle={handleNotificationToggle}
+          />
+        )}
       </TouchableOpacity>
       <View style={styles.separator} />
     </>

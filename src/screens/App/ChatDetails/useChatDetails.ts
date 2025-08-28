@@ -220,8 +220,12 @@ export const useChatDetails = (targetUser: any) => {
           })
           .filter(msg => {
             // Exclude messages deleted for me
-            if (msg.deletedFor && msg.deletedFor[myEmail]) {return false;}
-            if (!clearTime) {return true;}
+            if (msg.deletedFor && msg.deletedFor[myEmail]) {
+              return false;
+            }
+            if (!clearTime) {
+              return true;
+            }
             return msg.timestamp?.toDate?.() > clearTime.toDate?.();
           });
 
@@ -290,6 +294,7 @@ export const useChatDetails = (targetUser: any) => {
       const timestamp = firestore.FieldValue.serverTimestamp();
       const relationRef = firestore().collection('relation').doc(relationId);
       const docSnapshot = await relationRef.get();
+
       if (!docSnapshot.exists) {
         await relationRef.set({
           from: myEmail,
@@ -527,8 +532,11 @@ export const useChatDetails = (targetUser: any) => {
     const granted = await askLocationPermission();
 
     if (!granted) {
-      if (!silent) {setLocationPromptVisible(true);}
-      else {setLocationPromptVisible(false);}
+      if (!silent) {
+        setLocationPromptVisible(true);
+      } else {
+        setLocationPromptVisible(false);
+      }
       return false;
     }
     const ok = await warmUpCurrentLocation();

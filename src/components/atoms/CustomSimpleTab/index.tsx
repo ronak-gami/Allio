@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
 import { Text } from '@components/index';
 import useStyle from './style';
@@ -95,4 +95,4 @@ const CustomSimpleTab = ({
   );
 };
 
-export default CustomSimpleTab;
+export default memo(CustomSimpleTab);

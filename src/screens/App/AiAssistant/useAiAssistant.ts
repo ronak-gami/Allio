@@ -113,7 +113,7 @@ const useAiAssistant = () => {
       setTypingMessageId(aiMessageId);
       setTimeout(() => typeWriterEffect(aiResponseText, aiMessageId), 300);
     } catch (error) {
-      console.log('AI Response Error:', error);
+      console.error('AI Response Error:', error);
       setIsLoading(false);
       setTypingMessageId(null);
     }
