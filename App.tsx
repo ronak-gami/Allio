@@ -11,6 +11,7 @@ import { WEB_CLIENT_ID } from '@utils/constant';
 import { StyleSheet } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import { onDisplayNotification } from '@utils/helper';
+import { initNotifications } from '@utils/notification';
 
 const App = () => {
   useEffect(() => {
@@ -19,29 +20,19 @@ const App = () => {
       offlineAccess: true,
     });
 
-    // Handle foreground messages
-    const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
-      await onDisplayNotification(
-        remoteMessage?.data || {
-          title: remoteMessage?.notification?.title || 'New Message',
-          body: remoteMessage?.notification?.body || 'You have a new message',
-        },
-      );
-    });
+    (async () => {
+      await initNotifications();
+    })();
 
-    // Handle notification taps when app is in background
     const unsubscribeBackground = messaging().onNotificationOpenedApp(
       remoteMessage => {
         console.log('Notification opened app from background:', remoteMessage);
-        // Handle navigation here if needed
       },
     );
 
-    // Handle notification when app is killed/closed
     messaging().getInitialNotification();
 
     return () => {
-      unsubscribeForeground();
       unsubscribeBackground();
     };
   }, []);

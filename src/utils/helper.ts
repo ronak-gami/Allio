@@ -27,6 +27,7 @@ import notifee, {
   AndroidVisibility,
   AuthorizationStatus,
 } from '@notifee/react-native';
+import { store } from '@redux/store';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -390,78 +391,6 @@ const removeFCMTokenFromFirestore = async () => {
   }
 };
 
-const requestNotificationPermission = async (): Promise<boolean> => {
-  try {
-    if (Platform.OS === 'ios') {
-      const authStatus = await messaging().requestPermission({
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: true,
-        provisional: false,
-        sound: true,
-      });
-
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-      // Also request Notifee permission
-      const notifeePermission = await notifee.requestPermission();
-
-      const permissionGranted =
-        enabled &&
-        notifeePermission.authorizationStatus ===
-          AuthorizationStatus.AUTHORIZED;
-
-      // Save FCM token only if permission granted
-      if (permissionGranted) {
-        await saveFCMTokenToFirestore();
-      }
-
-      return permissionGranted;
-    } else if (Platform.OS === 'android') {
-      // Request Firebase permission
-      const authStatus = await messaging().requestPermission();
-      const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED;
-
-      // Request Notifee permission
-      const notifeePermission = await notifee.requestPermission();
-
-      let permissionGranted = false;
-
-      // Android 13+ notification permission
-      if (Platform.Version >= 33) {
-        const result = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        );
-        const granted = result === PermissionsAndroid.RESULTS.GRANTED;
-        permissionGranted =
-          enabled &&
-          granted &&
-          notifeePermission.authorizationStatus ===
-            AuthorizationStatus.AUTHORIZED;
-      } else {
-        permissionGranted =
-          enabled &&
-          notifeePermission.authorizationStatus ===
-            AuthorizationStatus.AUTHORIZED;
-      }
-
-      // Save FCM token only if permission granted
-      if (permissionGranted) {
-        await saveFCMTokenToFirestore();
-      }
-
-      return permissionGranted;
-    }
-    return false;
-  } catch (error) {
-    console.error('Error requesting notification permission:', error);
-    return false;
-  }
-};
-
 const uploadToCloudinary = async (file: {
   uri: any;
   type: any;
@@ -595,19 +524,178 @@ const formatLastSeen = (timestamp: string | number | Date) => {
   });
 };
 
+const checkSystemNotificationPermission = async (): Promise<boolean> => {
+  console.log('Checking system notification permission...');
+  try {
+    if (Platform.OS === 'ios') {
+      const authStatus = await messaging().hasPermission();
+      const firebaseEnabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      const notifeeSettings = await notifee.getNotificationSettings();
+      const notifeeEnabled =
+        notifeeSettings.authorizationStatus === AuthorizationStatus.AUTHORIZED;
+
+      return firebaseEnabled && notifeeEnabled;
+    } else if (Platform.OS === 'android') {
+      const authStatus = await messaging().hasPermission();
+      const firebaseEnabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED;
+
+      const notifeeSettings = await notifee.getNotificationSettings();
+      const notifeeEnabled =
+        notifeeSettings.authorizationStatus === AuthorizationStatus.AUTHORIZED;
+
+      // For Android 13+
+      if (Platform.Version >= 33) {
+        const postNotificationPermission = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+        return firebaseEnabled && notifeeEnabled && postNotificationPermission;
+      }
+
+      return firebaseEnabled && notifeeEnabled;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error checking system notification permission:', error);
+    return false;
+  }
+};
+
+// NEW: Request system permission only (no token saving)
+const requestSystemNotificationPermission = async (): Promise<boolean> => {
+  console.log('Requesting system notification permission...');
+  try {
+    if (Platform.OS === 'ios') {
+      const authStatus = await messaging().requestPermission({
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: true,
+        provisional: false,
+        sound: true,
+      });
+
+      const firebaseEnabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      const notifeePermission = await notifee.requestPermission();
+      const notifeeEnabled =
+        notifeePermission.authorizationStatus ===
+        AuthorizationStatus.AUTHORIZED;
+
+      return firebaseEnabled && notifeeEnabled;
+    } else if (Platform.OS === 'android') {
+      const authStatus = await messaging().requestPermission();
+      const firebaseEnabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED;
+
+      const notifeePermission = await notifee.requestPermission();
+      const notifeeEnabled =
+        notifeePermission.authorizationStatus ===
+        AuthorizationStatus.AUTHORIZED;
+
+      // For Android 13+
+      if (Platform.Version >= 33) {
+        const result = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+        const postNotificationGranted =
+          result === PermissionsAndroid.RESULTS.GRANTED;
+        return firebaseEnabled && notifeeEnabled && postNotificationGranted;
+      }
+
+      return firebaseEnabled && notifeeEnabled;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error requesting system notification permission:', error);
+    return false;
+  }
+};
+
+// NEW: Apply user's notification settings (check both system + user preference)
+const applyNotificationSettings = async (): Promise<void> => {
+  console.log('Applying notification settings...');
+  try {
+    // Get user's notification preference from Redux
+    const state = store.getState();
+    const userWantsNotifications = state.auth.notificationsEnabled;
+
+    console.log('User notification preference:', userWantsNotifications);
+
+    if (userWantsNotifications) {
+      // User wants notifications - check if system permission is granted
+      const hasSystemPermission = await checkSystemNotificationPermission();
+      console.log('System permission status:', hasSystemPermission);
+
+      if (hasSystemPermission) {
+        // Both user wants it AND system permission granted → Save FCM token
+        await saveFCMTokenToFirestore();
+        console.log(
+          '✅ FCM token saved - user wants notifications & system permission granted',
+        );
+      } else {
+        // User wants notifications but no system permission → Don't save token
+        console.log('❌ FCM token not saved - no system permission');
+      }
+    } else {
+      // User doesn't want notifications → Remove FCM token
+      await removeFCMTokenFromFirestore();
+      console.log('🔕 FCM token removed - user disabled notifications');
+    }
+  } catch (error) {
+    console.error('Error applying notification settings:', error);
+  }
+};
+
+// NEW: Request permission and apply settings (for use in Settings toggle)
+const requestAndApplyNotificationSettings = async (): Promise<boolean> => {
+  console.log('Requesting permission and applying settings...');
+  try {
+    // First request system permission
+    const permissionGranted = await requestSystemNotificationPermission();
+    console.log('System permission granted:', permissionGranted);
+
+    if (permissionGranted) {
+      // Permission granted → Save FCM token
+      await saveFCMTokenToFirestore();
+      console.log('✅ FCM token saved after permission grant');
+      return true;
+    } else {
+      // Permission denied → Don't save token
+      console.log('❌ Permission denied - FCM token not saved');
+      return false;
+    }
+  } catch (error) {
+    console.error(
+      'Error requesting and applying notification settings:',
+      error,
+    );
+    return false;
+  }
+};
+
 const onDisplayNotification = async (data: { title?: any; body?: any }) => {
   try {
-    // Request permission first
     await notifee.requestPermission();
 
-    // Create a channel with high importance (required for Android)
-    const channelId = await notifee.createChannel({
-      id: 'chat_messages',
-      name: 'Chat Messages',
-      importance: AndroidImportance.HIGH,
-      visibility: AndroidVisibility.PUBLIC,
-      sound: 'default',
-    });
+    const channelId = 'chat_messages';
+
+    // Ensure channel exists even if initNotifications not yet run (headless case)
+    const channels = await notifee.getChannels();
+    if (!channels.find(c => c.id === channelId)) {
+      await notifee.createChannel({
+        id: channelId,
+        name: 'Chat Messages',
+        importance: AndroidImportance.HIGH,
+        visibility: AndroidVisibility.PUBLIC,
+        sound: 'default',
+      });
+    }
 
     const notificationConfig = {
       title: data.title || 'New Message',
@@ -655,7 +743,10 @@ export {
   getUserData,
   getCurrentTimestamp,
   capitalizeFirst,
-  requestNotificationPermission,
+  checkSystemNotificationPermission,
+  requestSystemNotificationPermission,
+  applyNotificationSettings,
+  requestAndApplyNotificationSettings,
   uploadToCloudinary,
   formatDateLabel,
   formatTime,
