@@ -1,29 +1,31 @@
 import { newsService } from '../realm/services';
 import client from './Client';
-import {
-  addGenericResponse,
-  deleteGenericResponse,
-  syncAndFetchGeneric,
-  SyncAndFetchParams,
-  editGenericResponse,
-} from '@utils/apiHelper';
+import manageGenericReponse from '@utils/apiHelper';
 
-const getGenericResponse = async ({
-  endpoint,
-  realmService,
-  forceRefresh,
-  deletedFlagKey,
-  dataKey,
-  mapToApi,
-}: SyncAndFetchParams) =>
-  syncAndFetchGeneric({
-    endpoint,
-    realmService,
-    deletedFlagKey,
-    forceRefresh,
-    dataKey,
-    mapToApi,
-  });
+// import {
+//   addGenericResponse,
+//   deleteGenericResponse,
+//   syncAndFetchGeneric,
+//   SyncAndFetchParams,
+//   editGenericResponse,
+// } from '@utils/apiHelper';
+
+// const getGenericResponse = async ({
+//   endpoint,
+//   realmService,
+//   forceRefresh,
+//   deletedFlagKey,
+//   dataKey,
+//   mapToApi,
+// }: SyncAndFetchParams) =>
+//   syncAndFetchGeneric({
+//     endpoint,
+//     realmService,
+//     deletedFlagKey,
+//     forceRefresh,
+//     dataKey,
+//     mapToApi,
+//   });
 
 const api = {
   MEDIA: {
@@ -95,9 +97,61 @@ const api = {
       }),
   },
 
+  //  NEWS: {
+  //   getNews: (forceRefresh = false) =>
+  //     getGenericResponse({
+  //       endpoint: '/news',
+  //       realmService: newsService,
+  //       forceRefresh,
+  //       dataKey: 'data',
+  //       mapToApi: item => ({
+  //         name: item?.name,
+  //         description: item?.description,
+  //       }),
+  //     }),
+
+  //   addNews: (values: {
+  //     name: string;
+  //     description: string;
+  //     imageUrl?: string;
+  //   }) =>
+  //     addGenericResponse({
+  //       endpoint: '/news',
+  //       realmService: newsService,
+  //       values,
+  //       mapToApi: item => ({
+  //         name: item?.name,
+  //         description: item?.description,
+  //       }),
+  //     }),
+
+  //   deleteNews: (id: string) =>
+  //     deleteGenericResponse({
+  //       endpoint: '/news',
+  //       realmService: newsService,
+  //       id,
+  //     }),
+
+  //   editNews: (values: {
+  //     name: string;
+  //     description: string;
+  //     imageUrl?: string;
+  //   }) =>
+  //     editGenericResponse({
+  //       endpoint: '/news',
+  //       realmService: newsService,
+  //       values,
+  //       mapToApi: item => ({
+  //         name: item?.name,
+  //         description: item?.description,
+  //       }),
+  //     }),
+  // },
+
   NEWS: {
     getNews: (forceRefresh = false) =>
-      getGenericResponse({
+      manageGenericReponse({
+        method: 'get',
         endpoint: '/news',
         realmService: newsService,
         forceRefresh,
@@ -113,7 +167,8 @@ const api = {
       description: string;
       imageUrl?: string;
     }) =>
-      addGenericResponse({
+      manageGenericReponse({
+        method: 'post',
         endpoint: '/news',
         realmService: newsService,
         values,
@@ -124,18 +179,21 @@ const api = {
       }),
 
     deleteNews: (id: string) =>
-      deleteGenericResponse({
+      manageGenericReponse({
+        method: 'delete',
         endpoint: '/news',
         realmService: newsService,
         id,
       }),
 
     editNews: (values: {
+      id: string;
       name: string;
       description: string;
       imageUrl?: string;
     }) =>
-      editGenericResponse({
+      manageGenericReponse({
+        method: 'put',
         endpoint: '/news',
         realmService: newsService,
         values,
