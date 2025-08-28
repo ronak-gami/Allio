@@ -530,7 +530,7 @@ const ChatDetailsScreen = () => {
                                     <Text type="semibold">
                                       {chat?.liveShare?.active
                                         ? 'Live location • updating'
-                                        : 'Shared location • tap to open'}
+                                        : 'Current location • Tap to open'}
                                     </Text>
                                     {isLatestLiveShareMine && (
                                       <View>
