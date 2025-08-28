@@ -92,58 +92,40 @@ const News = () => {
         <View style={styles.form}>
           <Formik
             initialValues={initialFormValues}
+            enableReinitialize={true}
             onSubmit={(values, { resetForm }) => {
               onSubmit(values);
               resetForm();
             }}>
-            {({
-              handleChange,
-              handleSubmit,
-              values,
-              errors,
-              touched,
-              isSubmitting,
-            }) => (
-              <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={100}>
-                <Input
-                  label="Name"
-                  placeholder="e.g., pn"
-                  value={values.name}
-                  onChangeText={handleChange('name')}
-                  error={touched.name ? errors.name : undefined}
-                  touched={touched.name}
-                />
-                <Input
-                  label="Description"
-                  placeholder="description"
-                  value={values.description}
-                  onChangeText={handleChange('description')}
-                  error={touched.description ? errors.description : undefined}
-                  touched={touched.description}
-                />
-
-                {/* <TouchableOpacity
-                  style={styles.avatarWrapper}
-                  onPress={handlePickImage}>
-                  <Image
-                    source={
-                      userData.uri
-                        ? { uri: userData.uri }
-                        : IMAGES.Dummy_Profile
-                    }
-                    style={styles.avatar}
+            {({ handleChange, handleSubmit, values, errors, touched }) => {
+              return (
+                <KeyboardAvoidingView
+                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                  keyboardVerticalOffset={100}>
+                  <Input
+                    label="Name"
+                    placeholder="e.g., pn"
+                    value={values.name}
+                    onChangeText={handleChange('name')}
+                    error={touched.name ? errors.name : undefined}
+                    touched={touched.name}
                   />
-                </TouchableOpacity> */}
-
-                <Button
-                  title={'Submit'}
-                  style={styles.button}
-                  onPress={handleSubmit}
-                />
-              </KeyboardAvoidingView>
-            )}
+                  <Input
+                    label="Description"
+                    placeholder="description"
+                    value={values.description}
+                    onChangeText={handleChange('description')}
+                    error={touched.description ? errors.description : undefined}
+                    touched={touched.description}
+                  />
+                  <Button
+                    title={'Submit'}
+                    style={styles.button}
+                    onPress={handleSubmit}
+                  />
+                </KeyboardAvoidingView>
+              );
+            }}
           </Formik>
         </View>
       )}
