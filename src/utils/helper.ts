@@ -525,7 +525,6 @@ const formatLastSeen = (timestamp: string | number | Date) => {
 };
 
 const checkSystemNotificationPermission = async (): Promise<boolean> => {
-  console.log('Checking system notification permission...');
   try {
     if (Platform.OS === 'ios') {
       const authStatus = await messaging().hasPermission();
@@ -566,7 +565,6 @@ const checkSystemNotificationPermission = async (): Promise<boolean> => {
 
 // NEW: Request system permission only (no token saving)
 const requestSystemNotificationPermission = async (): Promise<boolean> => {
-  console.log('Requesting system notification permission...');
   try {
     if (Platform.OS === 'ios') {
       const authStatus = await messaging().requestPermission({
@@ -619,33 +617,19 @@ const requestSystemNotificationPermission = async (): Promise<boolean> => {
 
 // NEW: Apply user's notification settings (check both system + user preference)
 const applyNotificationSettings = async (): Promise<void> => {
-  console.log('Applying notification settings...');
   try {
     // Get user's notification preference from Redux
     const state = store.getState();
     const userWantsNotifications = state.auth.notificationsEnabled;
 
-    console.log('User notification preference:', userWantsNotifications);
-
     if (userWantsNotifications) {
-      // User wants notifications - check if system permission is granted
       const hasSystemPermission = await checkSystemNotificationPermission();
-      console.log('System permission status:', hasSystemPermission);
 
       if (hasSystemPermission) {
-        // Both user wants it AND system permission granted → Save FCM token
         await saveFCMTokenToFirestore();
-        console.log(
-          '✅ FCM token saved - user wants notifications & system permission granted',
-        );
-      } else {
-        // User wants notifications but no system permission → Don't save token
-        console.log('❌ FCM token not saved - no system permission');
       }
     } else {
-      // User doesn't want notifications → Remove FCM token
       await removeFCMTokenFromFirestore();
-      console.log('🔕 FCM token removed - user disabled notifications');
     }
   } catch (error) {
     console.error('Error applying notification settings:', error);
@@ -654,20 +638,13 @@ const applyNotificationSettings = async (): Promise<void> => {
 
 // NEW: Request permission and apply settings (for use in Settings toggle)
 const requestAndApplyNotificationSettings = async (): Promise<boolean> => {
-  console.log('Requesting permission and applying settings...');
   try {
-    // First request system permission
     const permissionGranted = await requestSystemNotificationPermission();
-    console.log('System permission granted:', permissionGranted);
 
     if (permissionGranted) {
-      // Permission granted → Save FCM token
       await saveFCMTokenToFirestore();
-      console.log('✅ FCM token saved after permission grant');
       return true;
     } else {
-      // Permission denied → Don't save token
-      console.log('❌ Permission denied - FCM token not saved');
       return false;
     }
   } catch (error) {
