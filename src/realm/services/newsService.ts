@@ -4,7 +4,7 @@ import { ensureValidRealm, realm } from '../reamlConfiguration';
 const SchemaName = 'News';
 const OfflineSchemaName = 'OfflineNews';
 
-const saveAllNews = news => {
+const saveAllOnlineData = news => {
   ensureValidRealm(() => {
     news?.forEach?.(user => {
       realm.create(SchemaName, user, UpdateMode.Modified);
@@ -12,13 +12,13 @@ const saveAllNews = news => {
   });
 };
 
-const addNews = news => {
+const addOnlineData = news => {
   ensureValidRealm(() => {
     realm.create(SchemaName, news, UpdateMode.Modified);
   });
 };
 
-const getNews = () => {
+const getOnlineData = () => {
   const news = realm.objects(SchemaName);
   if (news.isValid()) {
     return Array.from(news);
@@ -27,7 +27,7 @@ const getNews = () => {
   }
 };
 
-const removeNews = newsId => {
+const removeOnlineData = newsId => {
   ensureValidRealm(() => {
     const user = realm.objectForPrimaryKey(SchemaName, newsId);
     if (user && user.isValid()) {
@@ -50,7 +50,7 @@ const addNewsListener = callback => {
   };
 };
 
-const deleteAllNews = () => {
+const deleteAllOnlineData = () => {
   ensureValidRealm(() => {
     const all = realm.objects(SchemaName);
     realm.delete(all);
@@ -58,13 +58,13 @@ const deleteAllNews = () => {
 };
 
 //Offline News Handling
-const addOfflineNews = news => {
+const addOfflineData = news => {
   ensureValidRealm(() => {
     realm.create(OfflineSchemaName, news, UpdateMode.Modified);
   });
 };
 
-const getOfflineNews = () => {
+const getOfflineData = () => {
   const news = realm.objects(OfflineSchemaName);
   if (news.isValid()) {
     return Array.from(news);
@@ -73,7 +73,7 @@ const getOfflineNews = () => {
   }
 };
 
-const deleteAllOfflineNews = () => {
+const deleteAllOfflineData = () => {
   ensureValidRealm(() => {
     const all = realm.objects(OfflineSchemaName);
     realm.delete(all);
@@ -81,14 +81,14 @@ const deleteAllOfflineNews = () => {
 };
 
 export default {
-  saveAllNews,
-  addNews,
-  getNews,
-  removeNews,
+  saveAllOnlineData,
+  addOnlineData,
+  getOnlineData,
+  removeOnlineData,
   addNewsListener,
-  deleteAllNews,
+  deleteAllOnlineData,
 
-  addOfflineNews,
-  getOfflineNews,
-  deleteAllOfflineNews,
+  addOfflineData,
+  getOfflineData,
+  deleteAllOfflineData,
 };

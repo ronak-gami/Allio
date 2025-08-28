@@ -41,10 +41,10 @@ const manageGenericReponse = async <T>({
 
   if (method === 'get') {
     // Local online status and data
-    const localData = await realmService.getNews();
+    const localData = await realmService.getOnlineData();
 
     // Local offline changes
-    const offline = await realmService.getOfflineNews();
+    const offline = await realmService.getOfflineData();
 
     if (hasFetchedOnceMap[endpoint] === undefined)
       hasFetchedOnceMap[endpoint] = false;
@@ -85,11 +85,11 @@ const manageGenericReponse = async <T>({
         const apiData = response?.data?.[dataKey] || [];
 
         // Clear and save fresh data
-        realmService.deleteAllNews();
+        realmService.deleteAllOnlineData();
         // Clear offline table too as all synced
-        realmService.deleteAllOfflineNews();
+        realmService.deleteAllOfflineData();
         // Save new data from API
-        realmService.saveAllNews(apiData);
+        realmService.saveAllOnlineData(apiData);
 
         hasFetchedOnceMap[endpoint] = true;
         showSuccess('Synced and fetched successfully');
@@ -111,11 +111,11 @@ const manageGenericReponse = async <T>({
     };
 
     // Always add to local DB
-    realmService.addNews(newItem);
+    realmService.addOnlineData(newItem);
 
     // If offline, also add to offline table
     if (!online) {
-      realmService.addOfflineNews(newItem);
+      realmService.addOfflineData(newItem);
     }
 
     // If online, call API
@@ -140,11 +140,11 @@ const manageGenericReponse = async <T>({
     };
 
     // Always add/update in local DB
-    realmService.addNews(newItem);
+    realmService.addOnlineData(newItem);
 
     // If offline, also add to offline table with editedFlag
     if (!online) {
-      realmService.addOfflineNews(newItem);
+      realmService.addOfflineData(newItem);
       showSuccess('Changes saved offline');
     }
 
@@ -173,12 +173,12 @@ const manageGenericReponse = async <T>({
       showSuccess(response?.data?.message);
     } else {
       // If offline, add to offline table with deletedFlag
-      realmService.addOfflineNews({ id, [deletedFlagKey]: true });
+      realmService.addOfflineData({ id, [deletedFlagKey]: true });
       showSuccess('Deleted successfully');
     }
 
     // Always remove from local DB
-    realmService.removeNews(id);
+    realmService.removeOnlineData(id);
 
     return { data: { id } };
   }
@@ -222,8 +222,8 @@ export default manageGenericReponse;
 //   mapToApi = item => item,
 // }: SyncAndFetchParams) => {
 //   const online = await isOnline();
-//   const localData = await realmService.getNews();
-//   const offline = await realmService.getOfflineNews();
+//   const localData = await realmService.getOnlineData();
+//   const offline = await realmService.getOfflineData();
 
 //   // Track fetch per endpoint
 //   if (hasFetchedOnceMap[endpoint] === undefined)
@@ -280,9 +280,9 @@ export default manageGenericReponse;
 //         url: endpoint,
 //       });
 //       const apiData = response?.data?.[dataKey] || [];
-//       realmService.deleteAllNews();
-//       realmService.deleteAllOfflineNews();
-//       realmService.saveAllNews(apiData);
+//       realmService.deleteAllOnlineData();
+//       realmService.deleteAllOfflineData();
+//       realmService.saveAllOnlineData(apiData);
 //       hasFetchedOnceMap[endpoint] = true;
 //       showSuccess('Synced and fetched successfully');
 //       return { data: { [dataKey]: apiData } };
@@ -309,11 +309,11 @@ export default manageGenericReponse;
 //     ...values,
 //   };
 
-//   realmService.addNews(newItem);
+//   realmService.addOnlineData(newItem);
 
 //   // If offline, also add to offline table
 //   if (!online) {
-//     realmService.addOfflineNews(newItem);
+//     realmService.addOfflineData(newItem);
 //   }
 
 //   if (online) {
@@ -348,10 +348,10 @@ export default manageGenericReponse;
 //     });
 //     showSuccess(response?.data?.message);
 //   } else {
-//     realmService.addOfflineNews({ id, [deletedFlagKey]: true });
+//     realmService.addOfflineData({ id, [deletedFlagKey]: true });
 //     showSuccess('Deleted successfully');
 //   }
-//   realmService.removeNews(id);
+//   realmService.removeOnlineData(id);
 // };
 
 // const editGenericResponse = async <T>({
@@ -368,11 +368,11 @@ export default manageGenericReponse;
 //     editedFlag: !online, // Set flag only if offline
 //   };
 
-//   realmService.addNews(newItem);
+//   realmService.addOnlineData(newItem);
 
 //   // If offline, also add to offline table with editedFlag
 //   if (!online) {
-//     realmService.addOfflineNews(newItem);
+//     realmService.addOfflineData(newItem);
 //     showSuccess('Changes saved offline');
 //   }
 
