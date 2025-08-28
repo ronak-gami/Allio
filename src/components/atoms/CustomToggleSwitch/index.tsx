@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useEffect } from 'react';
 import { TouchableOpacity, Animated } from 'react-native';
 import useStyle from './style';
 import { useTheme } from '@react-navigation/native';
@@ -32,7 +32,7 @@ const CustomToggleSwitch: React.FC<ToggleSwitchProps> = ({
   const finalInactiveColor = inactiveColor || colors.gray;
   const finalThumbColor = thumbColor || colors.white;
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.timing(animatedValue, {
       toValue: isOn ? 1 : 0,
       duration: 200,
@@ -109,4 +109,4 @@ const CustomToggleSwitch: React.FC<ToggleSwitchProps> = ({
   );
 };
 
-export default CustomToggleSwitch;
+export default memo(CustomToggleSwitch);

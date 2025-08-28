@@ -9,8 +9,8 @@ import {
   DeleteProfileOrganism,
   LogoutOrganism,
   Container,
+  CustomToggleSwitch,
 } from '@components/index';
-import CustomToggleSwitch from '@components/atoms/CustomToggleSwitch'; // Import the toggle switch
 
 import { TabParamList } from '@types/navigations';
 import { useMore } from './useMore';

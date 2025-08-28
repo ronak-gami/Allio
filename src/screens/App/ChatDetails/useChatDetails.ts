@@ -563,7 +563,7 @@ export const useChatDetails = (targetUser: any) => {
       if (!silent) {
         setLocationPromptVisible(true);
       } else {
-        setLocationPromptVisible(true);
+        setLocationPromptVisible(false);
       }
       return false;
     }
