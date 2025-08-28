@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Image, RefreshControl } from 'react-native';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 import {
   Container,
   Text,
@@ -9,7 +10,6 @@ import {
 import UserCard from '@components/cards/UserCard';
 import { IMAGES } from '@assets/index';
 import useStyle from './style';
-import DraggableFlatList from 'react-native-draggable-flatlist';
 import { useMyFriends } from './useMyFriends';
 
 const MyFriends = () => {
@@ -104,12 +104,11 @@ const MyFriends = () => {
                 />
               )}
               onDragBegin={index => {
-                const user = nonPinnedUsers[index];
+                nonPinnedUsers[index];
               }}
               onDragEnd={({ data, from, to }) => {
                 if (from !== to) {
                   handleDragEnd({ data, from, to });
-                } else {
                 }
               }}
               activationDistance={50}
@@ -138,7 +137,6 @@ const MyFriends = () => {
             ListEmptyComponent={renderEmptyState}
             refreshing={states?.refreshing}
             onRefresh={onRefresh}
-            scrollEnabled={true}
           />
         )}
       </View>

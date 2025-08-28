@@ -153,9 +153,7 @@ const UserCard: React.FC<UserCardProps> = ({
             )}
           </View>
 
-          {!isFriendTab && (
-            <View style={{ marginLeft: 8 }}>{renderAction()}</View>
-          )}
+          {!isFriendTab && <View>{renderAction()}</View>}
         </View>
       </View>
     </TouchableWithoutFeedback>

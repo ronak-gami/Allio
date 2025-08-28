@@ -84,6 +84,9 @@ const LICENSE_KEY =
 
 const WORD_COUNT_THRESHOLD = 20;
 
+const THRESHOLD = 50;
+
+
 const FeaturesDataItem = [
   {
     image: IMAGES.Notification,
@@ -116,4 +119,5 @@ export {
   SPACING,
   FeaturesDataItem,
   WORD_COUNT_THRESHOLD,
+  THRESHOLD,
 };

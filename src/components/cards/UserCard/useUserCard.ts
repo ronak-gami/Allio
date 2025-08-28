@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import {
-  PanResponder,
-} from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { PanResponder } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import moment from 'moment';
+
 import { getCurrentTimestamp } from '@utils/helper';
 import { showError, showSuccess } from '@utils/toast';
 import api from '@api/index';
 import { useNavigation } from '@react-navigation/native';
-import { HOME } from '@utils/constant';
+import { HOME, THRESHOLD } from '@utils/constant';
 
 export type RelationStatus =
   | 'none'
@@ -16,8 +16,6 @@ export type RelationStatus =
   | 'received'
   | 'accepted'
   | 'notsent';
-
-const THRESHOLD = 50;
 
 export const useUserCard = (
   myEmail: string | null | undefined,
@@ -35,18 +33,11 @@ export const useUserCard = (
   const [lastMessage, setLastMessage] = useState<string>('');
   const [lastMessageDate, setLastMessageDate] = useState<string>('');
   const [menuVisible, setMenuVisible] = useState(false);
-  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
 
   // 👇 new drag states
-  const [dragVisible, setDragVisible] = useState(false);
-  const [dragDistance, setDragDistance] = useState(0);
+  const [dragVisible, setDragVisible] = useState<boolean>(false);
+  const [dragDistance, setDragDistance] = useState<number>(0);
 
-  // -------------------------
-  // Relation / Friend request logic
-  // -------------------------
   useEffect(() => {
     if (!myEmail || !userEmail) return;
     const email1 = myEmail.trim().toLowerCase();
@@ -74,12 +65,11 @@ export const useUserCard = (
   useEffect(() => {
     if (!myEmail || !user?.email) return;
 
-    const fetchLastMessage = async () => {
-      const email1 = myEmail.toLowerCase();
-      const email2 = user.email.toLowerCase();
-      const key =
-        email1 < email2 ? `${email1}_${email2}` : `${email2}_${email1}`;
+    const email1 = myEmail.toLowerCase();
+    const email2 = user.email.toLowerCase();
+    const key = email1 < email2 ? `${email1}_${email2}` : `${email2}_${email1}`;
 
+    const fetchLastMessage = async () => {
       try {
         const roomSnap = await firestore()
           .collection('relation')
@@ -89,55 +79,39 @@ export const useUserCard = (
           .limit(1)
           .get();
 
-        if (!roomSnap.empty) {
-          const last = roomSnap.docs[0].data();
+        if (roomSnap.empty) return;
 
-          if (last.liveShare) {
-            setLastMessage('Live Share');
-          } else if (last.location) {
-            setLastMessage('location');
-          } else {
-            setLastMessage(last.text || '');
-          }
+        const last = roomSnap.docs[0].data();
 
-          const msgDate = last.timestamp?.toDate?.() || new Date();
-          const today = new Date();
-          const yesterday = new Date();
-          yesterday.setDate(today.getDate() - 1);
+        // Set last message text
+        if (last.liveShare) setLastMessage('Live Share');
+        else if (last.location) setLastMessage('Location');
+        else setLastMessage(last.text || '');
 
-          if (
-            msgDate.getDate() === today.getDate() &&
-            msgDate.getMonth() === today.getMonth() &&
-            msgDate.getFullYear() === today.getFullYear()
-          ) {
-            setLastMessageDate('Today');
-          } else if (
-            msgDate.getDate() === yesterday.getDate() &&
-            msgDate.getMonth() === yesterday.getMonth() &&
-            msgDate.getFullYear() === yesterday.getFullYear()
-          ) {
-            setLastMessageDate('Yesterday');
-          } else {
-            setLastMessageDate(msgDate.toLocaleDateString());
-          }
+        // Set last message date/time using moment
+        const msgDate = last.timestamp?.toDate?.() || new Date();
+        const msgMoment = moment(msgDate);
+        const now = moment();
+
+        if (msgMoment.isSame(now, 'day')) {
+          // Today → show time
+          setLastMessageDate(msgMoment.format('h:mm A')); // e.g., 3:45 PM
+        } else if (msgMoment.isSame(moment().subtract(1, 'day'), 'day')) {
+          setLastMessageDate('Yesterday');
+        } else {
+          setLastMessageDate(msgMoment.format('L')); // Localized date
         }
       } catch (err) {
         console.log('Error fetching last message:', err);
       }
     };
 
-    // Initial fetch
-    fetchLastMessage();
-
-    // Set interval to fetch every 1 second
-    const interval = setInterval(fetchLastMessage, 1000);
+    fetchLastMessage(); // Initial fetch
+    const interval = setInterval(fetchLastMessage, 1000); // Poll every second
 
     return () => clearInterval(interval);
   }, [myEmail, user]);
 
-  // -------------------------
-  // Drag logic
-  // -------------------------
   useEffect(() => {
     setDragVisible(selectedUser?.email === user?.email && !isPinned);
   }, [selectedUser, user?.email, isPinned]);
@@ -253,8 +227,8 @@ export const useUserCard = (
       lastMessage,
       lastMessageDate,
       menuVisible,
-      menuPosition,
       setMenuVisible,
+      dragDistance,
     },
     relationStatus,
     dragVisible,

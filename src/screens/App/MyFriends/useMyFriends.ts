@@ -52,81 +52,95 @@ export const useMyFriends = () => {
     }
   };
 
-  // ------------------- Fetch Users -------------------
-  const fetchAllUsersWithRelation = async () => {
-    try {
-      setLoading(true);
+  
 
-      const allUsers = await getAllUsers(currentUserEmail);
-      const relationSnapshot = await firestore().collection('relation').get();
+const fetchAllUsersWithRelation = async () => {
+  try {
+    setLoading(true);
 
-      const userDocSnapshot = await firestore()
-        .collection('users')
-        .where('email', '==', currentUserEmail)
-        .get();
+    const allUsers = await getAllUsers(currentUserEmail);
+    const relationSnapshot = await firestore().collection('relation').get();
 
-      let savedOrder: Record<string, number> = {};
-      let savedPinned: string[] = [];
-      if (!userDocSnapshot.empty) {
-        const data = userDocSnapshot.docs[0].data();
-        savedOrder = data?.order ?? {};
-        savedPinned = data?.pinned ?? [];
-        setPinnedUsers(savedPinned);
-      }
+    const userDocSnapshot = await firestore()
+      .collection('users')
+      .where('email', '==', currentUserEmail)
+      .get();
 
-      const relationMap: Record<
-        string,
-        { from: string; to: string; isAccept: boolean }
-      > = {};
-      relationSnapshot.forEach(doc => {
-        const data = doc.data();
-        const from = data?.from?.toLowerCase();
-        const to = data?.to?.toLowerCase();
-        const isAccept = data?.isAccept;
-        const key = from < to ? `${from}_${to}` : `${to}_${from}`;
-        relationMap[key] = { from, to, isAccept };
-      });
-
-      const email1 = currentUserEmail.toLowerCase();
-
-      const filteredUsers = allUsers
-        .map(user => {
-          const email2 = user.email?.toLowerCase();
-          const key =
-            email1 < email2 ? `${email1}_${email2}` : `${email2}_${email1}`;
-          const relation = relationMap[key];
-
-          let relationStatus: User['relationStatus'] = 'none';
-          if (!relation) relationStatus = 'none';
-          else if (relation.isAccept) relationStatus = 'accepted';
-          else if (relation.from === email1) relationStatus = 'sent';
-          else if (relation.to === email1) relationStatus = 'received';
-          else relationStatus = 'pending';
-
-          return {
-            ...user,
-            relationStatus,
-            order: savedPinned.includes(user.email)
-              ? undefined
-              : savedOrder[user.email] ?? 9999,
-          };
-        })
-        .filter(user => {
-          if (activeTab === 'all') return !savedPinned.includes(user.email);
-          if (activeTab === 'friends')
-            return user.relationStatus === 'accepted';
-          if (activeTab === 'pending') return user.relationStatus === 'sent';
-        })
-        .sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
-
-      setUsers(filteredUsers);
-      setLoading(false);
-      setSelectedUser(false);
-    } catch (err) {
-      console.error('Error fetching users with relation:', err);
-      setLoading(false);
+    let savedOrder: Record<string, number> = {};
+    let savedPinned: string[] = [];
+    if (!userDocSnapshot.empty) {
+      const data = userDocSnapshot.docs[0].data();
+      savedOrder = data?.order ?? {};
+      savedPinned = data?.pinned ?? [];
+      setPinnedUsers(savedPinned);
     }
-  };
+
+    const relationMap: Record<
+      string,
+      { from: string; to: string; isAccept: boolean }
+    > = {};
+    relationSnapshot.forEach(doc => {
+      const data = doc.data();
+      const from = data?.from?.toLowerCase();
+      const to = data?.to?.toLowerCase();
+      const isAccept = data?.isAccept;
+      const key = from < to ? `${from}_${to}` : `${to}_${from}`;
+      relationMap[key] = { from, to, isAccept };
+    });
+
+    const email1 = currentUserEmail.toLowerCase();
+
+    const mappedUsers = allUsers.map(user => {
+      const email2 = user.email?.toLowerCase();
+      const key =
+        email1 < email2 ? `${email1}_${email2}` : `${email2}_${email1}`;
+      const relation = relationMap[key];
+
+      let relationStatus: User['relationStatus'] = 'none';
+      if (!relation) relationStatus = 'none';
+      else if (relation.isAccept) relationStatus = 'accepted';
+      else if (relation.from === email1) relationStatus = 'sent';
+      else if (relation.to === email1) relationStatus = 'received';
+      else relationStatus = 'pending';
+
+      return {
+        ...user,
+        relationStatus,
+        order: savedPinned.includes(user.email)
+          ? undefined
+          : savedOrder[user.email],
+      };
+    });
+
+    // Filter users based on active tab
+    const filteredUsers = mappedUsers.filter(user => {
+      if (activeTab === 'all') return !savedPinned.includes(user.email);
+      if (activeTab === 'friends') return user.relationStatus === 'accepted';
+      if (activeTab === 'pending') return user.relationStatus === 'sent';
+      return true;
+    });
+
+    // Separate users with order and without order
+    const orderedUsers = filteredUsers
+      .filter(u => u.order !== undefined)
+      .sort((a, b) => a.order! - b.order!); // Non-null assertion because we filtered undefined
+
+    const unorderedUsers = filteredUsers.filter(u => u.order === undefined);
+
+    // Combine: ordered first, unordered last
+    const finalUsers = [...orderedUsers, ...unorderedUsers];
+
+    setUsers(finalUsers);
+    setLoading(false);
+    setSelectedUser(false);
+  } catch (err) {
+    console.error('Error fetching users with relation:', err);
+    setLoading(false);
+  }
+};
+
+
+
 
   const saveUserOrder = async (updatedUsers: User[]) => {
     try {
