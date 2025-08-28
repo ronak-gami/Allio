@@ -1,1 +1,1 @@
-export { default as blockedUsers } from './blockedUsers';
+export { default as newsService } from './newsService';

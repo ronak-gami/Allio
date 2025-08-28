@@ -12,6 +12,7 @@ import messaging from '@react-native-firebase/messaging';
 import RNFS from 'react-native-fs';
 import axios from 'axios';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import NetInfo from '@react-native-community/netinfo';
 import Share from 'react-native-share';
 import { showError, showSuccess } from './toast';
 
@@ -420,6 +421,11 @@ const uploadToCloudinary = async file => {
   }
 };
 
+const isOnline = async (): Promise<boolean> => {
+  const state = await NetInfo.fetch();
+  return state.isConnected && state.isInternetReachable !== false;
+};
+
 export {
   height,
   width,
@@ -438,4 +444,5 @@ export {
   capitalizeFirst,
   requestNotificationPermission,
   uploadToCloudinary,
+  isOnline,
 };

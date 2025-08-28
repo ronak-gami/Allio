@@ -33,37 +33,38 @@ const useStyle = () => {
     activeTabText: {
       color: colors.primary,
     },
+    form: {
+      paddingHorizontal: width * 0.05,
+      marginTop: width * 0.05,
+    },
+    button: {
+      marginTop: scale(8),
+    },
+    avatarWrapper: {
+      width: height * 0.15,
+      height: height * 0.15,
+      position: 'relative',
+      borderRadius: 100,
+    },
+    avatar: {
+      width: height * 0.15,
+      height: height * 0.15,
+      borderRadius: 100,
+    },
+    editBadge: {
+      position: 'absolute',
+      bottom: 5,
+      right: 5,
+      backgroundColor: colors.white,
+      borderRadius: height * 0.02,
+      padding: 6,
+      elevation: 3,
+    },
 
-    contentContainer: {
-      padding: 20,
-      marginBottom: height * 0.12,
-      height: height * 0.8,
-    },
-    contentText: {
-      fontSize: 18,
-      color: '#333',
-    },
-    emptyStateContainer: {
-      alignItems: 'center',
-      paddingVertical: height * 0.08,
-    },
-    noGalleryIcon: {
-      width: width * 0.35,
-      height: width * 0.35,
-      marginBottom: height * 0.02,
-    },
-
-    emptyStateTitle: {
-      fontSize: scale(24),
-      marginBottom: height * 0.01,
-      color: colors.primary,
-    },
-    emptyStateSubtitle: {
-      fontSize: scale(16),
-      color: colors.text,
-      textAlign: 'center',
-      lineHeight: scale(24),
-      paddingHorizontal: width * 0.08,
+    editIcon: {
+      width: height * 0.02,
+      height: height * 0.02,
+      tintColor: colors.primary,
     },
   });
 };

@@ -1,72 +1,94 @@
-// import api from '@api/index';
-// import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { launchImageLibrary } from 'react-native-image-picker';
 
-// const useNews = () => {
-//   const [newsList, setNewsList] = useState<object[]>([]);
-//   const [loading, setLoading] = useState(false);
-
-//   const fetchNews = async () => {
-//     try {
-//       setLoading(true);
-//       const response = await api.NEWS.getNewsResponse();
-
-//       console.log('response=>>', response?.data?.data); // ✅ debug here
-//       const newsData = response?.data?.data || [];
-//       setNewsList(newsData);
-//     } catch (error) {
-//       console.error('News Fetch Error:', error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchNews();
-//   }, []);
-
-//   return { newsList, loading };
-// };
-
-// export default useNews;
-import { useEffect, useState, useRef } from 'react';
 import api from '@api/index';
+import { newsService } from '../../../realm/services';
 
 const useNews = () => {
   const [newsList, setNewsList] = useState<object[]>([]);
   const [loading, setLoading] = useState(false);
-  const isFirstLoad = useRef(true);
+  const [userData, setUserData] = useState({});
+
+  const [editItem, setEditItem] = useState<any>(null);
+
+  const fetchNews = async (forceRefresh = false) => {
+    setLoading(true);
+    try {
+      const response = await api.NEWS.getNews(forceRefresh);
+      const newsData = response?.data?.data || [];
+      setNewsList(newsData);
+    } catch (error) {
+      console.error('News Fetch Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchAndStoreNews = async () => {
-      setLoading(true);
-      try {
-        const response = await api.NEWS.getNewsResponse();
-        const newsData = response?.data?.data || [];
-        setNewsList(newsData);
-        blockedUsers.saveAllUser(newsData);
-      } catch (error) {
-        console.error('News Fetch Error:', error);
-      } finally {
-        setLoading(false);
-        // Always get data from Realm after storing
-        // const news = newsServices.getAllNews();
-        // setNewsList(news);
-      }
-    };
-
-    // if (isFirstLoad.current) {
-    //   isFirstLoad.current = false;
-    //   console.log('callled');
-    fetchAndStoreNews();
-    // } else {
-    //   console.log('callled===>');
-    //   // On subsequent renders, just get from Realm
-    //   const news = newsServices.getAllNews();
-    //   setNewsList(news);
-    // }
+    const removeListener = newsService.addNewsListener(setNewsList);
+    fetchNews();
+    return () => removeListener();
   }, []);
 
-  return { newsList, loading };
+  const handleDelete = async item => {
+    try {
+      await api.NEWS.deleteNews(item?.id);
+    } catch (error) {}
+  };
+
+  const handleEdit = async item => {
+    setEditItem(item);
+  };
+
+  const handlePickImage = async () => {
+    try {
+      const result = await launchImageLibrary({ mediaType: 'photo' });
+      if (result.didCancel || !result.assets?.[0]) return;
+      const file = result.assets[0];
+      setUserData(file);
+    } catch (error) {
+      console.error('[useUpdateProfile] Pick image error:', error);
+    }
+  };
+
+  const onSubmit = async values => {
+    const newNews = {
+      id: values?.id ? values?.id : Date.now().toString(),
+      name: values.name,
+      description: values.description,
+      // imageUrl: userData.uri || '',
+    };
+
+    if (editItem) {
+      try {
+        await api.NEWS.editNews(newNews);
+      } catch (error) {}
+      setEditItem(null);
+      setUserData({});
+      return;
+    }
+    try {
+      await api.NEWS.addNews(newNews);
+    } catch (error) {}
+    setUserData({});
+  };
+
+  const onRefresh = () => {
+    fetchNews(true);
+  };
+
+  return {
+    newsList,
+    loading,
+    handleDelete,
+    handlePickImage,
+    userData,
+    onSubmit,
+    onRefresh,
+    handleEdit,
+    editItem,
+    setEditItem,
+  };
 };
 
 export default useNews;

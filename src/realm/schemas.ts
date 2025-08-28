@@ -7,8 +7,10 @@ const newsSchema = (name: string) => {
     properties: {
       id: 'string',
       name: 'string?',
-      imageUrl: 'string?',
+      // imageUrl: 'string?',
       description: 'string?',
+      deletedFlag: 'bool?',
+      editedFlag: 'bool?',
     },
   };
 };
@@ -17,6 +19,10 @@ class News extends Realm.Object {
   static schema = newsSchema('News');
 }
 
-const Schemas = [News];
+class OfflineNews extends Realm.Object {
+  static schema = newsSchema('OfflineNews');
+}
+
+const Schemas = [News, OfflineNews];
 
 export default Schemas;

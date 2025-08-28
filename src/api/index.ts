@@ -1,4 +1,29 @@
+import { newsService } from '../realm/services';
 import client from './Client';
+import {
+  addGenericResponse,
+  deleteGenericResponse,
+  syncAndFetchGeneric,
+  SyncAndFetchParams,
+  editGenericResponse,
+} from '@utils/apiHelper';
+
+const getGenericResponse = async ({
+  endpoint,
+  realmService,
+  forceRefresh,
+  deletedFlagKey,
+  dataKey,
+  mapToApi,
+}: SyncAndFetchParams) =>
+  syncAndFetchGeneric({
+    endpoint,
+    realmService,
+    deletedFlagKey,
+    forceRefresh,
+    dataKey,
+    mapToApi,
+  });
 
 const api = {
   MEDIA: {
@@ -71,10 +96,53 @@ const api = {
   },
 
   NEWS: {
-    getNewsResponse: () =>
-      client({
-        method: 'get',
-        url: '/news',
+    getNews: (forceRefresh = false) =>
+      getGenericResponse({
+        endpoint: '/news',
+        realmService: newsService,
+        forceRefresh,
+        dataKey: 'data',
+        mapToApi: item => ({
+          name: item?.name,
+          description: item?.description,
+        }),
+      }),
+
+    addNews: (values: {
+      name: string;
+      description: string;
+      imageUrl?: string;
+    }) =>
+      addGenericResponse({
+        endpoint: '/news',
+        realmService: newsService,
+        values,
+        mapToApi: item => ({
+          name: item?.name,
+          description: item?.description,
+        }),
+      }),
+
+    deleteNews: (id: string) =>
+      deleteGenericResponse({
+        endpoint: '/news',
+        realmService: newsService,
+        id,
+      }),
+
+    editNews: (values: {
+      name: string;
+      description: string;
+      imageUrl?: string;
+    }) =>
+      editGenericResponse({
+        endpoint: '/news',
+        realmService: newsService,
+        values,
+        mapToApi: item => ({
+          name: item?.name,
+          description: item?.description,
+        }),
       }),
   },
 };
