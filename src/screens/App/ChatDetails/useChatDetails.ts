@@ -306,17 +306,21 @@ export const useChatDetails = (targetUser: any) => {
         timestamp,
       });
 
-      const email1 = (myEmail || '').trim().toLowerCase();
-      const email2 = (targetUser?.email || '').trim().toLowerCase();
-      const data = {
-        emails: [email2],
-        title: 'Message Sent',
-        body: `${email1} has sent a message to you.`,
-      };
-      const response = await api?.NOTIFICATION.sendNotification({ data });
-      if (response?.data?.success)
-        showSuccess(response?.data?.message || 'Notification sent!');
+      if (!isBlockedByMe && !isBlockedByThem && !isOnline) {
+        const email1 = (myEmail || '').trim().toLowerCase();
+        const email2 = (targetUser?.email || '').trim().toLowerCase();
 
+        const data = {
+          emails: [email2],
+          title: 'Message Sent',
+          body: `${email1} has sent a message to you.`,
+        };
+
+        const response = await api?.NOTIFICATION.sendNotification({ data });
+        if (response?.data?.success) {
+          showSuccess(response?.data?.message || 'Notification sent!');
+        }
+      }
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
