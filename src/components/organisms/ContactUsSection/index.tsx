@@ -17,10 +17,7 @@ const ContactUsSection: React.FC = () => {
     mobileNo: string;
     email: string;
     message: string;
-  }) => {
-    console.log('hello');
-    // Handle form submission (e.g., send to backend, show toast, etc.)
-  };
+  }) => {};
 
   return (
     <View style={styles.sectionContainer}>

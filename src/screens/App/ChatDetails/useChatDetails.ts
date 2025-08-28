@@ -179,13 +179,17 @@ export const useChatDetails = (targetUser: any) => {
 
   /** Firestore paths */
   const relationId = (() => {
-    if (!myEmail || !targetUser?.email) return null;
+    if (!myEmail || !targetUser?.email) {
+      return null;
+    }
     const sorted = [myEmail, targetUser.email].sort();
     return `${sorted[0]}_${sorted[1]}`;
   })();
 
   useEffect(() => {
-    if (!myEmail || !targetUser?.email || !relationId) return;
+    if (!myEmail || !targetUser?.email || !relationId) {
+      return;
+    }
 
     const relationRef = firestore().collection('relation').doc(relationId);
     // 🔹 Relation listener
@@ -220,8 +224,12 @@ export const useChatDetails = (targetUser: any) => {
           })
           .filter(msg => {
             // Exclude messages deleted for me
-            if (msg.deletedFor && msg.deletedFor[myEmail]) return false;
-            if (!clearTime) return true;
+            if (msg.deletedFor && msg.deletedFor[myEmail]) {
+              return false;
+            }
+            if (!clearTime) {
+              return true;
+            }
             return msg.timestamp?.toDate?.() > clearTime.toDate?.();
           });
 
@@ -250,7 +258,9 @@ export const useChatDetails = (targetUser: any) => {
   }, []);
 
   useEffect(() => {
-    if (!targetUser?.email) return;
+    if (!targetUser?.email) {
+      return;
+    }
 
     const fetchTargetUser = async () => {
       const allUsers = await getAllUsers(myEmail);
@@ -284,12 +294,15 @@ export const useChatDetails = (targetUser: any) => {
   }, [states?.chatHistory?.length, scrollToBottom]);
 
   const handleSendMessage = async () => {
-    if (!message.trim() || !relationId) return;
+    if (!message.trim() || !relationId) {
+      return;
+    }
 
     try {
       const timestamp = firestore.FieldValue.serverTimestamp();
       const relationRef = firestore().collection('relation').doc(relationId);
       const docSnapshot = await relationRef.get();
+
       if (!docSnapshot.exists) {
         await relationRef.set({
           from: myEmail,
@@ -308,14 +321,18 @@ export const useChatDetails = (targetUser: any) => {
 
       const email1 = (myEmail || '').trim().toLowerCase();
       const email2 = (targetUser?.email || '').trim().toLowerCase();
+
+      // Correct notification data structure for your API
       const data = {
         emails: [email2],
-        title: 'Message Sent',
-        body: `${email1} has sent a message to you.`,
+        title: 'New Message',
+        body: `${email1}: ${message.trim()}`,
       };
+
       const response = await api?.NOTIFICATION.sendNotification({ data });
-      if (response?.data?.success)
-        showSuccess(response?.data?.message || 'Notification sent!');
+      if (response?.data?.status) {
+        showSuccess(response?.data?.message || 'Message sent!');
+      }
 
       setMessage('');
     } catch (error) {
@@ -325,7 +342,9 @@ export const useChatDetails = (targetUser: any) => {
 
   /** Block / Unblock / Clear */
   const blockUser = async () => {
-    if (!relationId) return;
+    if (!relationId) {
+      return;
+    }
     await firestore()
       .collection('relation')
       .doc(relationId)
@@ -335,7 +354,9 @@ export const useChatDetails = (targetUser: any) => {
   };
 
   const unblockUser = async () => {
-    if (!relationId) return;
+    if (!relationId) {
+      return;
+    }
     await firestore()
       .collection('relation')
       .doc(relationId)
@@ -345,7 +366,9 @@ export const useChatDetails = (targetUser: any) => {
   };
 
   useEffect(() => {
-    if (!relationId) return;
+    if (!relationId) {
+      return;
+    }
 
     const unsub = firestore()
       .collection('relation')
@@ -366,7 +389,9 @@ export const useChatDetails = (targetUser: any) => {
 
   const clearChat = async () => {
     try {
-      if (!relationId) return;
+      if (!relationId) {
+        return;
+      }
       const now = new Date();
       await firestore()
         .collection('relation')
@@ -385,18 +410,24 @@ export const useChatDetails = (targetUser: any) => {
 
   /** Theme */
   useEffect(() => {
-    if (!myEmail || !targetUser?.email || !relationId) return;
+    if (!myEmail || !targetUser?.email || !relationId) {
+      return;
+    }
     const unsub = firestore()
       .collection('themes')
       .doc(relationId)
       .onSnapshot(doc => {
-        if (doc.exists) setSelectedTheme(doc.data()?.themeUrl || null);
+        if (doc.exists) {
+          setSelectedTheme(doc.data()?.themeUrl || null);
+        }
       });
     return () => unsub();
   }, [myEmail, targetUser?.email, relationId]);
 
   const selectTheme = async (fileKey: string | null) => {
-    if (!relationId || !fileKey) return;
+    if (!relationId || !fileKey) {
+      return;
+    }
     setloding(true);
 
     try {
@@ -441,7 +472,9 @@ export const useChatDetails = (targetUser: any) => {
 
   const removeTheme = async () => {
     try {
-      if (!relationId) return;
+      if (!relationId) {
+        return;
+      }
       await firestore().collection('relation').doc(relationId).set(
         {
           themeUrl: firestore.FieldValue.delete(),
@@ -474,10 +507,14 @@ export const useChatDetails = (targetUser: any) => {
           : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
 
       let result = await check(perm);
-      if (result === RESULTS.GRANTED) return true;
+      if (result === RESULTS.GRANTED) {
+        return true;
+      }
 
       result = await request(perm);
-      if (result === RESULTS.GRANTED) return true;
+      if (result === RESULTS.GRANTED) {
+        return true;
+      }
 
       return false;
     } catch (e) {
@@ -523,8 +560,11 @@ export const useChatDetails = (targetUser: any) => {
     const granted = await askLocationPermission();
 
     if (!granted) {
-      if (!silent) setLocationPromptVisible(true);
-      else setLocationPromptVisible(true);
+      if (!silent) {
+        setLocationPromptVisible(true);
+      } else {
+        setLocationPromptVisible(false);
+      }
       return false;
     }
     const ok = await warmUpCurrentLocation();
@@ -556,14 +596,20 @@ export const useChatDetails = (targetUser: any) => {
 
   const shareCurrentLocation = async () => {
     try {
-      if (!relationId) return;
+      if (!relationId) {
+        return;
+      }
       let latlng = currentCoords;
       if (!latlng) {
         const ok = await ensureLocationReady(true);
-        if (!ok) return;
+        if (!ok) {
+          return;
+        }
         latlng = currentCoords;
       }
-      if (!latlng) return;
+      if (!latlng) {
+        return;
+      }
 
       const timestamp = firestore.FieldValue.serverTimestamp();
       const relationRef = firestore().collection('relation').doc(relationId);
@@ -583,9 +629,13 @@ export const useChatDetails = (targetUser: any) => {
 
   const startLiveLocationShare = async (minutes = 15) => {
     try {
-      if (!relationId) return;
+      if (!relationId) {
+        return;
+      }
       const ok = await ensureLocationReady(true);
-      if (!ok) return;
+      if (!ok) {
+        return;
+      }
 
       const liveRef = firestore().collection('live_shares').doc();
       const expiresAt = new Date(Date.now() + minutes * 60 * 1000);
@@ -635,7 +685,9 @@ export const useChatDetails = (targetUser: any) => {
         // { enableHighAccuracy: true, distanceFilter: 10 },
       );
 
-      if (liveEndTimer.current) clearTimeout(liveEndTimer.current);
+      if (liveEndTimer.current) {
+        clearTimeout(liveEndTimer.current);
+      }
       liveEndTimer.current = setTimeout(() => {
         stopLiveLocationShare();
       }, minutes * 60 * 1000);
@@ -701,7 +753,9 @@ export const useChatDetails = (targetUser: any) => {
 
   // Delete selected messages for me
   const deleteMessagesForMe = async () => {
-    if (!relationId || selectedMessages.length === 0) return;
+    if (!relationId || selectedMessages.length === 0) {
+      return;
+    }
 
     // Mark messages as deleted for me (e.g. add a field in Firestore)
     const relationRef = firestore().collection('relation').doc(relationId);
@@ -719,7 +773,9 @@ export const useChatDetails = (targetUser: any) => {
 
   // Delete selected messages for everyone
   const deleteMessagesForEveryone = async () => {
-    if (!relationId || selectedMessages.length === 0) return;
+    if (!relationId || selectedMessages.length === 0) {
+      return;
+    }
     const relationRef = firestore().collection('relation').doc(relationId);
     for (const msgId of selectedMessages) {
       await relationRef.collection('messages').doc(msgId).delete();
@@ -731,14 +787,18 @@ export const useChatDetails = (targetUser: any) => {
 
   // Pin selected message (only first selected)
   const pinMessage = async (msgId: string) => {
-    if (!relationId || !msgId) return;
+    if (!relationId || !msgId) {
+      return;
+    }
     const relationRef = firestore().collection('relation').doc(relationId);
     await relationRef.set({ pinnedMsg: msgId }, { merge: true });
     showSuccess('Message pinned');
   };
 
   useEffect(() => {
-    if (!relationId) return;
+    if (!relationId) {
+      return;
+    }
     const relationRef = firestore().collection('relation').doc(relationId);
     const unsub = relationRef.onSnapshot(doc => {
       const data = doc.data();
@@ -748,7 +808,9 @@ export const useChatDetails = (targetUser: any) => {
   }, [relationId]);
 
   useEffect(() => {
-    if (!relationId) return;
+    if (!relationId) {
+      return;
+    }
 
     const syncLiveLocations = async () => {
       const snap = await firestore()
@@ -795,7 +857,9 @@ export const useChatDetails = (targetUser: any) => {
   }, [relationId, myEmail]);
 
   const handleEditMessage = async () => {
-    if (!editMsgId || !editText.trim()) return;
+    if (!editMsgId || !editText.trim()) {
+      return;
+    }
     const relationRef = firestore().collection('relation').doc(relationId);
     await relationRef
       .collection('messages')
@@ -808,9 +872,12 @@ export const useChatDetails = (targetUser: any) => {
 
   useEffect(() => {
     return () => {
-      if (liveWatchId.current != null)
+      if (liveWatchId.current != null) {
         Geolocation.clearWatch(liveWatchId.current);
-      if (liveEndTimer.current) clearTimeout(liveEndTimer.current);
+      }
+      if (liveEndTimer.current) {
+        clearTimeout(liveEndTimer.current);
+      }
     };
   }, []);
 

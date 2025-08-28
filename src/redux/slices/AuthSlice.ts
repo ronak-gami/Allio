@@ -1,9 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface UserData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  mobileNo: string;
+  profileImage: string;
+}
+
 interface AuthState {
-  userData: Object;
+  userData: UserData;
   token: string | null;
   onboardingCompleted: boolean;
+  notificationsEnabled: boolean;
 }
 
 interface SetStateKeyPayload {
@@ -15,6 +24,7 @@ const initialState: AuthState = {
   userData: {},
   token: null,
   onboardingCompleted: true,
+  notificationsEnabled: false,
 };
 
 export const authSlice = createSlice({
