@@ -32,7 +32,7 @@ export const useUserCard = (
   const [documentId, setDocumentId] = useState<string>('');
   const [lastMessage, setLastMessage] = useState<string>('');
   const [lastMessageDate, setLastMessageDate] = useState<string>('');
-  const [menuVisible, setMenuVisible] = useState(false);
+  const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
   // 👇 new drag states
   const [dragVisible, setDragVisible] = useState<boolean>(false);
