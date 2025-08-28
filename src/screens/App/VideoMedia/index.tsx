@@ -116,13 +116,20 @@ const VideoMedia: React.FC<Props> = () => {
                 <View style={styles.content}>
                   <View style={styles.headerView}>
                     {/* `states` is used only for local state variables */}
-                    <CustomChip
-                      label={states.saveVisible ? 'Save' : 'Edit'}
-                      bgColor={colors.primary}
-                      onPress={
-                        states.saveVisible ? handleSaveMedia : handleEdit
-                      }
-                    />
+                    <View style={styles.leftButtons}>
+                      <CustomChip
+                        label={states.saveVisible ? 'Save' : 'Edit'}
+                        bgColor={colors.primary}
+                        onPress={
+                          states.saveVisible ? handleSaveMedia : handleEdit
+                        }
+                      />
+                      <CustomChip
+                        label="Save"
+                        bgColor={colors.primary}
+                        onPress={handleSaveMedia}
+                      />
+                    </View>
                     <CustomChip
                       label="Cancel"
                       outline

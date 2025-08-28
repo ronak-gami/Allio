@@ -224,6 +224,44 @@ const usePhotoMedia = () => {
     }, []),
   );
 
+  const handleSave = async () => {
+    if (!PhotoUri) {
+      showError('No photo selected to save.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('fileType', 'image');
+      formData.append('file', {
+        uri: PhotoUri,
+        type: 'image/jpeg',
+        name: `image_${Date.now()}.jpg`,
+      } as any);
+
+      const response = await api?.MEDIA?.upload?.({ data: formData });
+
+      if (response?.data?.success) {
+        showSuccess(response?.data?.message || 'Image saved successfully!');
+        dispatch(fetchImages(email));
+      } else {
+        showError('Failed to save image.');
+      }
+    } catch (error: any) {
+      const apiError =
+        error?.response?.data?.message ||
+        error?.message ||
+        'Something went wrong while saving.';
+      console.error('Save error:', apiError);
+      showError(apiError);
+    } finally {
+      setLoading(false);
+      handleClear();
+    }
+  };
+
   const onRefresh = useCallback(async () => {
     if (!email) return;
 
@@ -257,6 +295,7 @@ const usePhotoMedia = () => {
     closeModal,
     states,
     onRefresh,
+    handleSave,
   };
 };
 

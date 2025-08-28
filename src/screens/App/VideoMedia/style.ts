@@ -73,6 +73,12 @@ const useStyle = () => {
       marginBottom: height * 0.02,
       paddingHorizontal: width * 0.01,
     },
+
+    leftButtons: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: width * 0.02, 
+    },
     videoPlayer: {
       width: '100%',
       height: height * 0.55,

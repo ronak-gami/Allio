@@ -37,6 +37,7 @@ const PhotoMedia: React.FC<Props> = () => {
     closeModal,
     states,
     onRefresh,
+    handleSave,
   } = usePhotoMedia();
 
   const styles = useStyle();
@@ -61,7 +62,7 @@ const PhotoMedia: React.FC<Props> = () => {
   );
 
   return (
-    <>
+    <Container showHeader={false} showLoader={states.loading}>
       {!states.loading && (
         <View style={styles.scrollcontainer}>
           <View style={styles.container}>
@@ -69,11 +70,21 @@ const PhotoMedia: React.FC<Props> = () => {
               {isPhotoLoaded() ? (
                 <ScrollView showsVerticalScrollIndicator={false}>
                   <View style={styles.headerView}>
-                    <CustomChip
-                      label="Edit"
-                      bgColor={colors.primary}
-                      onPress={handleEdit}
-                    />
+                    {/* Left side buttons */}
+                    <View style={styles.leftButtons}>
+                      <CustomChip
+                        label="Edit"
+                        bgColor={colors.primary}
+                        onPress={handleEdit}
+                      />
+                      <CustomChip
+                        label="Save"
+                        bgColor={colors.primary}
+                        onPress={handleSave}
+                      />
+                    </View>
+
+                    {/* Right side button */}
                     <CustomChip
                       label="Cancel"
                       outline
@@ -164,7 +175,7 @@ const PhotoMedia: React.FC<Props> = () => {
           </View>
         </View>
       )}
-    </>
+    </Container>
   );
 };
 

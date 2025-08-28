@@ -51,6 +51,7 @@ export const ICONS = {
   More: require('./icons/more.png'),
   Chat: require('./icons/chat.png'),
   Logout: require('./icons/logoutIcon.png'),
+  drag: require('./icons/drag.png'),
 };
 
 export const FONTS = {

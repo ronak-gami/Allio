@@ -1,41 +1,75 @@
 import React from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { useSelector } from 'react-redux';
-
-import { useUserCard } from './useUserCard';
-
 import { RootState } from '@redux/store';
 import Text from '@components/atoms/Text';
-
 import { ICONS } from '@assets/index';
-import { HOME } from '@utils/constant';
 import useStyle from './style';
+import { useUserCard as useRelationCard } from './useUserCard';
 
-const UserCard = ({ user }: { user: any }) => {
-  const navigation = useNavigation();
+interface UserCardProps {
+  user: any;
+  drag?: () => void;
+  isActive?: boolean;
+  isFriendTab?: boolean;
+  pinnedUsers?: string[];
+  onPin?: (email: string) => void;
+  onUnpin?: (email: string) => void;
+  onLongPressUser?: (user: any) => void;
+  selectedUser?: any;
+  onDragThreshold?: (user: any) => void;
+}
+
+const UserCard: React.FC<UserCardProps> = ({
+  user,
+  drag,
+  isActive,
+  isFriendTab,
+  pinnedUsers,
+  onPin,
+  onUnpin,
+  onLongPressUser,
+  selectedUser,
+  onDragThreshold,
+}) => {
   const styles = useStyle();
-  const myEmail: string | null | undefined = useSelector(
+  const myEmail = useSelector(
     (state: RootState) => state.auth?.userData?.email,
   );
 
   const showImage = user?.profileImage && user?.profileImage.trim() !== '';
-
   const firstLetter: string = user?.firstName?.charAt(0)?.toUpperCase() || '?';
+  const isPinned = pinnedUsers?.includes(user.email);
 
-  const { relationStatus, handleAccept, handleReject, handleSend } =
-    useUserCard(myEmail, user?.email);
+  const {
+    relationStatus,
+    handleSend,
+    handleAccept,
+    handleReject,
+    states,
+    dragVisible,
+    panResponder,
+    handlePress,
+    handlePressPin,
+  } = useRelationCard(
+    myEmail,
+    user?.email,
+    user,
+    isPinned,
+    selectedUser,
+    onDragThreshold,
+    onPin,
+    onUnpin,
+  );
 
   const renderAction = () => {
-    if (relationStatus === 'accepted') {
-      return (
-        <View style={styles.acceptedChip}>
-          <Text style={styles.acceptedText}>Accepted</Text>
-        </View>
-      );
-    }
-
-    if (relationStatus === 'sent') {
+    if (relationStatus === 'accepted') return null;
+    if (relationStatus === 'sent')
       return (
         <View style={styles.pendingChip}>
           <Text style={styles.pendingText} type="semibold">
@@ -43,9 +77,7 @@ const UserCard = ({ user }: { user: any }) => {
           </Text>
         </View>
       );
-    }
-
-    if (relationStatus === 'received') {
+    if (relationStatus === 'received')
       return (
         <View style={styles.actionRow}>
           <TouchableOpacity style={styles.send} onPress={handleAccept}>
@@ -56,44 +88,75 @@ const UserCard = ({ user }: { user: any }) => {
           </TouchableOpacity>
         </View>
       );
-    }
-
     return (
       <TouchableOpacity style={styles.send} onPress={handleSend}>
         <Image source={ICONS.Send} style={styles.iconimage1} />
       </TouchableOpacity>
     );
   };
-  const handlePress = () => {
-    navigation.navigate(HOME.ChatDetailsScreen, { user });
-  };
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
-      <View style={styles.card}>
+    <TouchableWithoutFeedback
+      onPress={handlePress}
+      onLongPress={() => {
+        if (!isPinned && isFriendTab) {
+          onLongPressUser?.(user);
+          drag?.(); // start dragging on long press
+        }
+      }}>
+      <View
+        {...panResponder.panHandlers}
+        style={[styles.card, isActive && { opacity: 0.7 }]}>
         <View style={styles.row}>
+          {dragVisible && isFriendTab && (
+            <View style={styles.dragIconWrapper}>
+              <Image source={ICONS.drag} style={styles.dragIcon} />
+            </View>
+          )}
+
           {showImage ? (
             <Image
               source={{ uri: user.profileImage }}
               style={styles.profileImage}
               resizeMode="cover"
-              onError={e =>
-                console.warn('Image load failed:', e.nativeEvent.error)
-              }
             />
           ) : (
             <View style={styles.placeholder}>
               <Text style={styles.placeholderText}>{firstLetter}</Text>
             </View>
           )}
+
           <View style={styles.userInfo}>
-            <Text style={styles.name}>{user?.firstName || 'Unknown'}</Text>
-            <Text style={styles.email}>{user?.email || 'Unknown'}</Text>
+            <View style={styles.topRow}>
+              <Text style={styles.name}>{user?.firstName || 'Unknown'}</Text>
+
+              {(isPinned || dragVisible) && isFriendTab && (
+                <TouchableOpacity
+                  style={styles.actionIconWrapper}
+                  onPress={handlePressPin}>
+                  <Image source={ICONS.Attach} style={styles.actionIcon} />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {states?.lastMessage && (
+              <View style={styles.bottomRow}>
+                <Text style={styles.lastMessage} numberOfLines={1}>
+                  {states?.lastMessage}
+                </Text>
+                {states?.lastMessageDate && (
+                  <Text style={styles.lastMessageDate}>
+                    {states?.lastMessageDate}
+                  </Text>
+                )}
+              </View>
+            )}
           </View>
-          {renderAction()}
+
+          {!isFriendTab && <View>{renderAction()}</View>}
         </View>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 };
 
