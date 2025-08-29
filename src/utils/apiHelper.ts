@@ -53,7 +53,7 @@ const manageGenericReponse = async <T>({
     let needApiFetch = online && (!hasFetchedOnceMap[endpoint] || forceRefresh);
 
     try {
-      if (online) {
+      if (online && offline?.length > 0) {
         for (const item of offline || []) {
           if (item?.[deletedFlagKey]) {
             // checked for deleted item and call DELETE
@@ -77,8 +77,9 @@ const manageGenericReponse = async <T>({
             // checked for new item and call POST
             await apiRequest('post', endpoint, mapToApi(item));
           }
-          needApiFetch = true;
         }
+        realmService.deleteAllOfflineData();
+        needApiFetch = true;
       }
 
       if (needApiFetch) {
@@ -105,6 +106,7 @@ const manageGenericReponse = async <T>({
       }
 
       // Just return local data if no API fetch needed
+      console.log('📁 Using local data only');
       return { data: { [dataKey]: localData } };
     } catch (error) {
       showError(error?.response?.data?.error || 'Something went wrong');

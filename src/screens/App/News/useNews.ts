@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { launchImageLibrary } from 'react-native-image-picker';
 import moment from 'moment';
 import NetInfo from '@react-native-community/netinfo';
@@ -13,6 +13,9 @@ const useNews = () => {
   const [userData, setUserData] = useState({});
 
   const [editItem, setEditItem] = useState<any>(null);
+  const wasOffline = useRef(false);
+  const didRunInitially = useRef(false);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const time = timeService.getTime('/news');
 
@@ -36,6 +39,11 @@ const useNews = () => {
     }
   };
 
+  const safeFetchNews = (force = false) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => fetchNews(force), 300);
+  };
+
   useEffect(() => {
     const removeListener = newsService.addNewsListener(news => {
       const sortedNews = [...news].sort(
@@ -44,27 +52,37 @@ const useNews = () => {
       );
       setNewsList(sortedNews);
     });
-    // fetchNews();
 
     const unsubscribeNetInfo = NetInfo.addEventListener(state => {
       const online = state.isConnected && state.isInternetReachable !== false;
 
       if (online) {
-        console.log('🔄 Online: syncing news...');
-        fetchNews(true);
+        if (wasOffline.current) {
+          safeFetchNews(true);
+        } else if (!didRunInitially.current) {
+          safeFetchNews();
+          didRunInitially.current = true;
+        }
+        wasOffline.current = false;
       } else {
-        console.log('📴 Offline: showing local data');
+        wasOffline.current = true;
       }
     });
 
     (async () => {
       const online = await isOnline();
-      fetchNews(online);
+      wasOffline.current = !online;
+
+      if (online && !didRunInitially.current) {
+        safeFetchNews();
+        didRunInitially.current = true;
+      }
     })();
 
     return () => {
       removeListener();
       unsubscribeNetInfo();
+      if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, []);
 
@@ -112,7 +130,7 @@ const useNews = () => {
   };
 
   const onRefresh = () => {
-    fetchNews(true);
+    safeFetchNews(true);
   };
 
   return {
