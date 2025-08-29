@@ -159,6 +159,7 @@ const api = {
         mapToApi: item => ({
           name: item?.name,
           description: item?.description,
+          createdAt: item?.createdAt,
         }),
       }),
 
@@ -175,6 +176,7 @@ const api = {
         mapToApi: item => ({
           name: item?.name,
           description: item?.description,
+          createdAt: item?.createdAt,
         }),
       }),
 
@@ -200,6 +202,7 @@ const api = {
         mapToApi: item => ({
           name: item?.name,
           description: item?.description,
+          createdAt: item?.createdAt,
         }),
       }),
   },

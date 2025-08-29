@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { launchImageLibrary } from 'react-native-image-picker';
+import moment from 'moment';
+import NetInfo from '@react-native-community/netinfo';
 
 import api from '@api/index';
-import { newsService } from '../../../realm/services';
+import { newsService, timeService } from '../../../realm/services';
+import { isOnline } from '@utils/helper';
 
 const useNews = () => {
   const [newsList, setNewsList] = useState<object[]>([]);
@@ -11,12 +14,21 @@ const useNews = () => {
 
   const [editItem, setEditItem] = useState<any>(null);
 
+  const time = timeService.getTime('/news');
+
   const fetchNews = async (forceRefresh = false) => {
     setLoading(true);
     try {
       const response = await api.NEWS.getNews(forceRefresh);
       const newsData = response?.data?.data || [];
-      setNewsList(newsData);
+
+      const sortedData = newsData?.sort?.((a, b) => {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      });
+
+      setNewsList(sortedData);
     } catch (error) {
       console.error('News Fetch Error:', error);
     } finally {
@@ -25,9 +37,35 @@ const useNews = () => {
   };
 
   useEffect(() => {
-    const removeListener = newsService.addNewsListener(setNewsList);
-    fetchNews();
-    return () => removeListener();
+    const removeListener = newsService.addNewsListener(news => {
+      const sortedNews = [...news].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
+      setNewsList(sortedNews);
+    });
+    // fetchNews();
+
+    const unsubscribeNetInfo = NetInfo.addEventListener(state => {
+      const online = state.isConnected && state.isInternetReachable !== false;
+
+      if (online) {
+        console.log('🔄 Online: syncing news...');
+        fetchNews(true);
+      } else {
+        console.log('📴 Offline: showing local data');
+      }
+    });
+
+    (async () => {
+      const online = await isOnline();
+      fetchNews(online);
+    })();
+
+    return () => {
+      removeListener();
+      unsubscribeNetInfo();
+    };
   }, []);
 
   const handleDelete = async item => {
@@ -56,7 +94,7 @@ const useNews = () => {
       id: values?.id ? values?.id : Date.now().toString(),
       name: values.name,
       description: values.description,
-      // imageUrl: userData.uri || '',
+      createdAt: values?.id ? values?.createdAt : moment().toISOString(),
     };
 
     if (editItem) {
@@ -88,6 +126,7 @@ const useNews = () => {
     handleEdit,
     editItem,
     setEditItem,
+    time,
   };
 };
 

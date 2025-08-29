@@ -7,10 +7,22 @@ const newsSchema = (name: string) => {
     properties: {
       id: 'string',
       name: 'string?',
+      createdAt: 'string?',
       // imageUrl: 'string?',
       description: 'string?',
       deletedFlag: 'bool?',
       editedFlag: 'bool?',
+    },
+  };
+};
+
+const timestampSchema = (name: string) => {
+  return {
+    name,
+    primaryKey: 'key',
+    properties: {
+      key: 'string',
+      timeStamp: 'string',
     },
   };
 };
@@ -23,6 +35,10 @@ class OfflineNews extends Realm.Object {
   static schema = newsSchema('OfflineNews');
 }
 
-const Schemas = [News, OfflineNews];
+class Timestamp extends Realm.Object {
+  static schema = timestampSchema('Timestamp');
+}
+
+const Schemas = [News, OfflineNews, Timestamp];
 
 export default Schemas;

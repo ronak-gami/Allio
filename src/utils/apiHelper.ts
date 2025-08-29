@@ -2,6 +2,8 @@ import client from '@api/Client';
 import { isOnline } from './helper';
 import { showError, showSuccess } from './toast';
 
+import { timeService } from '../realm/services';
+
 export interface ManageGenericParams<T = any> {
   method: 'get' | 'post' | 'put' | 'delete';
   endpoint: string;
@@ -90,6 +92,12 @@ const manageGenericReponse = async <T>({
         realmService.deleteAllOfflineData();
         // Save new data from API
         realmService.saveAllOnlineData(apiData);
+        // Save timestamp of last successful fetch
+        const time = {
+          key: endpoint,
+          timeStamp: new Date().toISOString(),
+        };
+        timeService.addTime(time);
 
         hasFetchedOnceMap[endpoint] = true;
         showSuccess('Synced and fetched successfully');

@@ -13,7 +13,7 @@ const WEB_CLIENT_ID =
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
-const BASE_URL = 'https://842b8dc4546c.ngrok-free.app/api' as const;
+const BASE_URL = 'https://2a003a7da7eb.ngrok-free.app/api' as const;
 
 const onboardingData: OnboardingItem[] = [
   {

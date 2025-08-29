@@ -13,6 +13,7 @@ import {
   Container,
   CustomFlatList,
   Input,
+  LastUpdatedTime,
   NewsCard,
 } from '@components/index';
 
@@ -32,6 +33,7 @@ const News = () => {
     onRefresh,
     handleEdit,
     editItem,
+    time,
   } = useNews();
 
   const renderNewsCard = ({ item }: { item: any }) => {
@@ -57,7 +59,7 @@ const News = () => {
     : { name: '', description: '', image: '' };
 
   return (
-    <Container showBackArrow title="News" showLoader={loading}>
+    <Container showBackArrow title="News">
       <View style={styles.headerContainer}>
         {['News List', 'Add List'].map(tab => (
           <TouchableOpacity
@@ -80,12 +82,15 @@ const News = () => {
       </View>
 
       {activeTab === 'News List' && (
-        <CustomFlatList
-          data={newsList}
-          removeClippedSubviews={false}
-          renderItem={renderNewsCard}
-          onRefresh={onRefresh}
-        />
+        <View>
+          <LastUpdatedTime time={time} />
+          <CustomFlatList
+            data={newsList}
+            removeClippedSubviews={false}
+            renderItem={renderNewsCard}
+            onRefresh={onRefresh}
+          />
+        </View>
       )}
 
       {activeTab === 'Add List' && (

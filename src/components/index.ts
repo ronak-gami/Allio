@@ -10,6 +10,7 @@ export { default as CustomLoader } from './atoms/CustomLoader';
 export { default as CustomStatusBar } from './atoms/CustomStatusBar';
 export { default as CustomHeader } from './atoms/CustomHeader';
 export { default as BottomModal } from './atoms/BottomModal';
+export { default as LastUpdatedTime } from './atoms/lastUpdatedTime';
 
 // molecules
 export { default as Container } from './molecules/Container';
