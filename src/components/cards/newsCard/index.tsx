@@ -11,11 +11,6 @@ const NewsCard = ({ item, handleDelete, handleEdit }) => {
 
   return (
     <View style={styles.gridItem}>
-      {/* <Image
-        source={{ uri: item?.imageUrl }}
-        style={styles.image}
-        resizeMode="cover"
-      /> */}
       <View style={{ flex: 1 }}>
         <Text type="BOLD">{item?.name}</Text>
         <Text numberOfLines={2}>{item?.description}</Text>

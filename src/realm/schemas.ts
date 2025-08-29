@@ -8,7 +8,6 @@ const newsSchema = (name: string) => {
       id: 'string',
       name: 'string?',
       createdAt: 'string?',
-      // imageUrl: 'string?',
       description: 'string?',
       deletedFlag: 'bool?',
       editedFlag: 'bool?',

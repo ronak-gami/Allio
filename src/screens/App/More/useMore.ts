@@ -153,7 +153,7 @@ export const useMore = () => {
       {
         key: 'News App',
         title: 'News App',
-        type: 'navigation' as const,
+        type: 'navigation',
         screenName: HOME.NewsApp,
       },
     ],

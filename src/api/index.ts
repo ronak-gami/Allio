@@ -113,7 +113,6 @@ const api = {
   //   addNews: (values: {
   //     name: string;
   //     description: string;
-  //     imageUrl?: string;
   //   }) =>
   //     addGenericResponse({
   //       endpoint: '/news',
@@ -135,7 +134,6 @@ const api = {
   //   editNews: (values: {
   //     name: string;
   //     description: string;
-  //     imageUrl?: string;
   //   }) =>
   //     editGenericResponse({
   //       endpoint: '/news',
@@ -163,11 +161,7 @@ const api = {
         }),
       }),
 
-    addNews: (values: {
-      name: string;
-      description: string;
-      imageUrl?: string;
-    }) =>
+    addNews: (values: { name: string; description: string }) =>
       manageGenericReponse({
         method: 'post',
         endpoint: '/news',
@@ -188,12 +182,7 @@ const api = {
         id,
       }),
 
-    editNews: (values: {
-      id: string;
-      name: string;
-      description: string;
-      imageUrl?: string;
-    }) =>
+    editNews: (values: { id: string; name: string; description: string }) =>
       manageGenericReponse({
         method: 'put',
         endpoint: '/news',
