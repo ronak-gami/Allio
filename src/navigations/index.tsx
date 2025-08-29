@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Splash from '@screens/Auth/Splash';
@@ -15,6 +15,26 @@ import HomeNavigator from './App';
 import { RootState } from '../redux/store';
 import { BottomSheetProvider } from '../context/BottomSheetContext';
 import { monitorOnlineStatus } from '@utils/helper';
+import { navigationRef } from './navigationRef';
+
+// Define linking
+const linking: LinkingOptions<any> = {
+  prefixes: ['allio://', 'https://allio-app-bxwta.ondigitalocean.app'],
+  config: {
+    screens: {
+      ChatDetailsScreen: {
+        path: 'm/:sharedMediaId', // query param ?email= is optional
+        parse: {
+          sharedMediaId: (id: string) => id,
+          email: (email: string) => decodeURIComponent(email).toLowerCase(),
+        },
+        stringify: {
+          email: (email: string) => encodeURIComponent(email),
+        },
+      },
+    },
+  },
+};
 
 const lightTheme = {
   ...DefaultTheme,
@@ -46,7 +66,6 @@ const StackNavigator: React.FC = () => {
   const systemColorScheme = useColorScheme();
 
   const [splashVisible, setSplashVisible] = useState<boolean>(true);
-  const navigationRef = useRef<any>(null);
   const routeNameRef = useRef<string>();
 
   useEffect(() => {
@@ -72,13 +91,14 @@ const StackNavigator: React.FC = () => {
 
   return (
     <NavigationContainer
+      linking={linking}
       theme={appTheme}
       ref={navigationRef}
       onReady={() => {
-        routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+        routeNameRef.current = navigationRef.getCurrentRoute()?.name;
       }}
       onStateChange={async () => {
-        const currentRoute = navigationRef.current?.getCurrentRoute()?.name;
+        const currentRoute = navigationRef.getCurrentRoute()?.name;
         if (routeNameRef.current !== currentRoute && currentRoute) {
           await analytics().logScreenView({
             screen_name: currentRoute,

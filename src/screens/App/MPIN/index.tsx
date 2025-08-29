@@ -32,11 +32,6 @@ const MPINSetupScreen = () => {
   const route = useRoute<RouteProp<MPINScreenRouteParams, 'MPIN'>>();
   const { resetMpin, email } = route.params || {};
   const userData = useSelector((state: RootState) => state.auth.userData);
-  const isAuth = useSelector(
-    (s: RootState) => s.biometric.isBiometricAuthenticated,
-  );
-
-
 
   useFocusEffect(
     React.useCallback(() => {

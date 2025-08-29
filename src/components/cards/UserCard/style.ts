@@ -22,6 +22,7 @@ const useStyle = () => {
     dragIcon: {
       width: 24,
       height: 24,
+      tintColor: colors.text,
     },
     profileImage: {
       height: height * 0.065,

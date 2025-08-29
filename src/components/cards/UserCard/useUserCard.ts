@@ -39,7 +39,9 @@ export const useUserCard = (
   const [dragDistance, setDragDistance] = useState<number>(0);
 
   useEffect(() => {
-    if (!myEmail || !userEmail) return;
+    if (!myEmail || !userEmail) {
+      return;
+    }
     const email1 = myEmail.trim().toLowerCase();
     const email2 = userEmail.trim().toLowerCase();
     const docId =
@@ -52,18 +54,27 @@ export const useUserCard = (
       .onSnapshot(doc => {
         if (doc.exists) {
           const data = doc.data();
-          if (data?.isAccept) setRelationStatus('accepted');
-          else if (data?.from === email1) setRelationStatus('sent');
-          else if (data?.to === email1) setRelationStatus('received');
-          else setRelationStatus('notsent');
-        } else setRelationStatus('none');
+          if (data?.isAccept) {
+            setRelationStatus('accepted');
+          } else if (data?.from === email1) {
+            setRelationStatus('sent');
+          } else if (data?.to === email1) {
+            setRelationStatus('received');
+          } else {
+            setRelationStatus('notsent');
+          }
+        } else {
+          setRelationStatus('none');
+        }
       });
 
     return () => unsubscribe();
   }, [myEmail, userEmail]);
 
   useEffect(() => {
-    if (!myEmail || !user?.email) return;
+    if (!myEmail || !user?.email) {
+      return;
+    }
 
     const email1 = myEmail.toLowerCase();
     const email2 = user.email.toLowerCase();
@@ -79,14 +90,20 @@ export const useUserCard = (
           .limit(1)
           .get();
 
-        if (roomSnap.empty) return;
+        if (roomSnap.empty) {
+          return;
+        }
 
         const last = roomSnap.docs[0].data();
 
         // Set last message text
-        if (last.liveShare) setLastMessage('Live Share');
-        else if (last.location) setLastMessage('Location');
-        else setLastMessage(last.text || '');
+        if (last.liveShare) {
+          setLastMessage('Live Share');
+        } else if (last.location) {
+          setLastMessage('Location');
+        } else {
+          setLastMessage(last.text || '');
+        }
 
         // Set last message date/time using moment
         const msgDate = last.timestamp?.toDate?.() || new Date();
@@ -102,7 +119,7 @@ export const useUserCard = (
           setLastMessageDate(msgMoment.format('L')); // Localized date
         }
       } catch (err) {
-        console.log('Error fetching last message:', err);
+        console.error('Error fetching last message:', err);
       }
     };
 
@@ -132,15 +149,20 @@ export const useUserCard = (
   };
 
   const handlePressPin = () => {
-    if (isPinned) onUnpin?.(user.email);
-    else onPin?.(user.email);
+    if (isPinned) {
+      onUnpin?.(user.email);
+    } else {
+      onPin?.(user.email);
+    }
   };
 
   // -------------------------
   // Send / Accept / Reject
   // -------------------------
   const sendRequest = async () => {
-    if (!myEmail || !userEmail || !documentId) return;
+    if (!myEmail || !userEmail || !documentId) {
+      return;
+    }
     const email1 = myEmail.trim().toLowerCase();
     const email2 = userEmail.trim().toLowerCase();
     const timestamp = getCurrentTimestamp
@@ -159,12 +181,15 @@ export const useUserCard = (
 
     const data = { emails: [email2], title, body };
     const response = await api?.NOTIFICATION.sendNotification({ data });
-    if (response?.data?.success)
+    if (response?.data?.success) {
       showSuccess(response?.data?.message || 'Notification sent!');
+    }
   };
 
   const acceptRequest = async () => {
-    if (!documentId) return;
+    if (!documentId) {
+      return;
+    }
     await firestore()
       .collection('relation')
       .doc(documentId)
@@ -176,12 +201,15 @@ export const useUserCard = (
       body: `${myEmail} has accepted your friend request.`,
     };
     const response = await api?.NOTIFICATION.sendNotification({ data });
-    if (response?.data?.success)
+    if (response?.data?.success) {
       showSuccess(response?.data?.message || 'Notification sent!');
+    }
   };
 
   const rejectRequest = async () => {
-    if (!documentId) return;
+    if (!documentId) {
+      return;
+    }
     await firestore().collection('relation').doc(documentId).delete();
     const email2 = userEmail?.trim().toLowerCase();
     const data = {
@@ -190,8 +218,9 @@ export const useUserCard = (
       body: `${myEmail} has rejected your friend request.`,
     };
     const response = await api?.NOTIFICATION.sendNotification({ data });
-    if (response?.data?.success)
+    if (response?.data?.success) {
       showSuccess(response?.data?.message || 'Notification sent!');
+    }
   };
 
   const handleSend = async () => {

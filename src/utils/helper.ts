@@ -28,6 +28,7 @@ import notifee, {
   AuthorizationStatus,
 } from '@notifee/react-native';
 import { store } from '@redux/store';
+import { createSharedMediaLink } from '@utils/deepLinking';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -289,7 +290,6 @@ const handleMediaDownload = async (
 const handleMediaShare = async (
   mediaUri: string,
   mediaType: 'photo' | 'video',
-  userEmail?: string, // name from props (optional)
 ) => {
   try {
     const extension = mediaType === 'photo' ? 'jpg' : 'mp4';
@@ -302,20 +302,40 @@ const handleMediaShare = async (
     }).promise;
 
     if (downloadResult.statusCode === 200) {
+      let linkText = '';
+      try {
+        // Get logged-in user email from Redux
+        const sender =
+          store.getState()?.auth?.userData?.email?.toLowerCase() || 'unknown';
+
+        const dl = await createSharedMediaLink({
+          type: mediaType === 'photo' ? 'image' : 'video',
+          mediaUrl: mediaUri,
+          sender,
+        });
+
+        linkText = `\nView in Allio: ${dl.universal}\nIf it opens in browser: ${dl.scheme}`;
+      } catch (e) {
+        console.warn('createSharedMediaLink failed', e);
+      }
+
+      const senderEmail =
+        store.getState()?.auth?.userData?.email?.toLowerCase() || '';
+
       const shareOptions = {
         title: `Share ${mediaType}`,
         url: `file://${tempPath}`,
         type: mediaType === 'photo' ? 'image/jpeg' : 'video/mp4',
         message:
-          mediaType === 'photo' && userEmail
-            ? `QR code for friend request: ${userEmail}`
-            : undefined,
+          (mediaType === 'photo' && senderEmail
+            ? `Shared from Allio by ${senderEmail}`
+            : 'Shared from Allio') + linkText,
         failOnCancel: false,
       };
 
       await Share.open(shareOptions);
     } else {
-      showError(`Could not download ${mediaType} for sharing.`);
+      showError(`Could not download ${mediaType}.`);
     }
   } catch (error: any) {
     console.error('Share error:', error);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -9,8 +9,7 @@ import {
   Modal,
   ImageBackground,
 } from 'react-native';
-import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
-import { HomeStackParamList } from '@types/navigations';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { ICONS } from '@assets/index';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
@@ -26,18 +25,55 @@ import {
 } from '@components/index';
 import useStyle from './style';
 import { useChatDetails } from './useChatDetails';
-import moment from 'moment';
-import { formatDateLabel, formatTime } from '@utils/helper';
-
-type ChatDetailsRouteProp = RouteProp<HomeStackParamList, 'ChatDetailsScreen'>;
+import { formatDateLabel, formatTime, getUserData } from '@utils/helper';
 
 const ChatDetailsScreen = () => {
   const styles = useStyle();
   const { colors } = useTheme();
   const navigation = useNavigation();
-  const route = useRoute<ChatDetailsRouteProp>();
-  const { user } = route.params || {};
+  const route = useRoute<any>();
+  const {
+    sharedMediaId,
+    mediaUrl,
+    type,
+    user: incomingUser,
+    email: deeplinkEmail,
+  } = route.params ?? {};
 
+  const initialUser =
+    (incomingUser && incomingUser.email && incomingUser) ||
+    (deeplinkEmail ? { email: deeplinkEmail } : undefined);
+
+  const [resolvedUser, setResolvedUser] = React.useState<any>(initialUser);
+  const [userLoading, setUserLoading] = React.useState<boolean>(false);
+
+  // Fetch full user profile if missing name or profileImage
+  useEffect(() => {
+    const load = async () => {
+      if (!initialUser?.email) return;
+      const needsFetch =
+        !initialUser.firstName ||
+        initialUser.firstName === '' ||
+        initialUser.firstName === undefined ||
+        initialUser.profileImage === undefined;
+      if (!needsFetch) return;
+      try {
+        setUserLoading(true);
+        const profile = await getUserData(initialUser.email);
+        if (profile) {
+          setResolvedUser(prev => ({ ...prev, ...profile }));
+        }
+      } catch (e) {
+        console.warn('ChatDetails getUserData failed', e);
+      } finally {
+        setUserLoading(false);
+      }
+    };
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialUser?.email]);
+
+  // use resolvedUser instead of user
   const {
     states,
     relationStatus,
@@ -59,7 +95,6 @@ const ChatDetailsScreen = () => {
     navigateToProfile,
     setMenuVisible,
     openMenu,
-
     openLocationFullModal,
     closeLocationFullModal,
     ensureLocationReady,
@@ -70,11 +105,9 @@ const ChatDetailsScreen = () => {
     openInGoogleMaps,
     setLiveDurationMin,
     liveDurationMin,
-
     dismissLocationPrompt,
     openSystemLocationSettings,
     retryLocationPreparation,
-
     toggleSelectMessage,
     clearSelectedMessages,
     actionModalVisible,
@@ -83,19 +116,32 @@ const ChatDetailsScreen = () => {
     deleteMessagesForMe,
     deleteMessagesForEveryone,
     pinMessage,
-
     handleEditMessage,
     setEditText,
-
     setActionMsgId,
-
     setIsEditing,
     setEditMsgId,
     lastSeen,
     isOnline,
-
     allThemes,
-  } = useChatDetails(user);
+    handleGoBack,
+  } = useChatDetails(resolvedUser, deeplinkEmail);
+
+  const user = resolvedUser; // keep local reference
+
+  useEffect(() => {
+    if (sharedMediaId && mediaUrl) {
+      try {
+        if (type === 'image' && typeof openImageModal === 'function') {
+          openImageModal(mediaUrl);
+        } else if (type === 'video' && typeof openVideoModal === 'function') {
+          openVideoModal(mediaUrl);
+        }
+      } catch (e) {
+        console.warn('Auto-open media failed', e);
+      }
+    }
+  }, [sharedMediaId, mediaUrl, type, openImageModal, openVideoModal]);
 
   const showImage = user?.profileImage && user?.profileImage.trim() !== '';
   const firstLetter = user?.firstName?.charAt(0)?.toUpperCase() || '?';
@@ -108,9 +154,13 @@ const ChatDetailsScreen = () => {
       </SafeAreaView>
     );
   }
+  // Optionally show a subtle loading indicator while enriching user
+  // e.g. userLoading && <Text style={{margin:8}}>Loading profile...</Text>
 
   const renderFriendStatusCard = () => {
-    if (relationStatus === 'accepted') return null;
+    if (relationStatus === 'accepted') {
+      return null;
+    }
 
     return (
       <View style={styles.card}>
@@ -168,7 +218,7 @@ const ChatDetailsScreen = () => {
           keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
           {/* Header */}
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={handleGoBack}>
               <Image source={ICONS.BackArrow} style={styles.backIcon} />
             </TouchableOpacity>
 
@@ -187,7 +237,9 @@ const ChatDetailsScreen = () => {
               style={styles.flex}
               activeOpacity={0.7}
               onPress={() => {
-                if (!states?.isBlockedByThem) navigateToProfile();
+                if (!states?.isBlockedByThem) {
+                  navigateToProfile();
+                }
               }}>
               <Text style={styles.headerName}>{user?.firstName}</Text>
               {/* <Text style={styles.headerEmail}>{user?.email}</Text>

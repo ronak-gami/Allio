@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { memo, useEffect } from 'react';
 import { View, ImageBackground } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -10,11 +10,7 @@ import Text from '@components/atoms/Text';
 import { IMAGES } from '@assets/index';
 import useStyle from './style';
 
-interface Props {
-  description: string;
-}
-
-export default function HeroSection({ description }: Props) {
+const HeroSection = () => {
   const styles = useStyle();
 
   const titleY = useSharedValue(50);
@@ -31,7 +27,7 @@ export default function HeroSection({ description }: Props) {
       easing: Easing.out(Easing.cubic),
     });
     btnOpacity.value = withTiming(1, { duration: 1000 });
-  }, []);
+  }, [btnOpacity, descY, titleY]);
 
   const titleStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: titleY.value }],
@@ -61,9 +57,11 @@ export default function HeroSection({ description }: Props) {
           style={styles.description}
         />
       </Animated.View>
-      <Animated.View style={[styles.buttonRow, btnStyle]}></Animated.View>
+      <Animated.View style={[styles.buttonRow, btnStyle]} />
 
       {/* Decorative floating shape using Lottie or static */}
     </ImageBackground>
   );
-}
+};
+
+export default memo(HeroSection);
