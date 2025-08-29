@@ -11,7 +11,7 @@ export const useFriendsList = (
   onClose: () => void,
 ) => {
   const [friends, setFriends] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [mode, setMode] = useState<'preview' | 'friends'>('preview');
   const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
 

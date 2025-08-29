@@ -1,5 +1,13 @@
-import { Dimensions, PermissionsAndroid, Platform, View } from 'react-native';
+import {
+  AppState,
+  AppStateStatus,
+  Dimensions,
+  PermissionsAndroid,
+  Platform,
+} from 'react-native';
+import { getAuth } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 import {
   PERMISSIONS,
   RESULTS,
@@ -8,7 +16,6 @@ import {
   PermissionStatus,
   checkMultiple,
 } from 'react-native-permissions';
-import messaging from '@react-native-firebase/messaging';
 import RNFS from 'react-native-fs';
 import axios from 'axios';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
@@ -16,6 +23,12 @@ import NetInfo from '@react-native-community/netinfo';
 import Share from 'react-native-share';
 import moment from 'moment';
 import { showError, showSuccess } from './toast';
+import notifee, {
+  AndroidImportance,
+  AndroidVisibility,
+  AuthorizationStatus,
+} from '@notifee/react-native';
+import { store } from '@redux/store';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -38,18 +51,6 @@ interface UserProfileData {
 
 const height = Dimensions.get('screen').height;
 const width = Dimensions.get('screen').width;
-
-const FONTS: Record<string, string> = {
-  black: 'Montserrat-Black',
-  bold: 'Montserrat-Bold',
-  extraBold: 'Montserrat-ExtraBold',
-  light: 'Montserrat-Light',
-  extraLight: 'Montserrat-ExtraLight',
-  medium: 'Montserrat-Medium',
-  regular: 'Montserrat-Regular',
-  semiBold: 'Montserrat-SemiBold',
-  thin: 'Montserrat-Thin',
-};
 
 interface FirestoreUser {
   id: string;
@@ -163,9 +164,7 @@ const handlePermissions = async (
     const has = (permission: Permission) =>
       statuses[permission] === RESULTS.GRANTED;
 
-    const calculateCapabilities = (
-      currentStatuses: Record<string, PermissionStatus>,
-    ) => ({
+    const calculateCapabilities = () => ({
       canRecordVideo:
         has(PERMISSIONS.ANDROID.CAMERA) &&
         has(PERMISSIONS.ANDROID.RECORD_AUDIO),
@@ -186,7 +185,7 @@ const handlePermissions = async (
       return {
         granted: allCurrentlyGranted,
         results: statuses,
-        ...calculateCapabilities(statuses),
+        ...calculateCapabilities(),
       };
     }
 
@@ -206,7 +205,7 @@ const handlePermissions = async (
     return {
       granted: allFinallyGranted,
       results: finalStatuses,
-      ...calculateCapabilities(finalStatuses),
+      ...calculateCapabilities(),
     };
   } catch (error) {
     console.error('Android video permissions error:', error);
@@ -222,21 +221,7 @@ const handlePermissions = async (
   }
 };
 
-const requestUserPermission = async () => {
-  try {
-    const granted: 'granted' | 'denied' | 'never_ask_again' =
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-    } else {
-    }
-  } catch (error: any) {
-    console.error('Failed to request notification permission:', error);
-  }
-};
-
-const checkIfMPINExists = async (email: string): Promise<boolean> => {
+const checkIfMPINExists = async (email: string) => {
   try {
     const normalizedEmail = email.trim().toLowerCase();
     const snapshot = await firestore()
@@ -372,34 +357,46 @@ const getCurrentTimestamp = () => {
   const now = new Date();
   return now.toISOString();
 };
-const requestNotificationPermission = async (): Promise<boolean> => {
+
+const saveFCMTokenToFirestore = async () => {
   try {
-    if (Platform.OS === 'ios') {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    const auth = getAuth();
+    const user = auth.currentUser;
 
-      return enabled;
-    } else if (Platform.OS === 'android') {
-      if (Platform.Version >= 33) {
-        const result = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        );
-        const granted = result === PermissionsAndroid.RESULTS.GRANTED;
-
-        return granted;
+    if (user) {
+      const fcmToken = await messaging().getToken();
+      if (fcmToken) {
+        await firestore()
+          .collection('users')
+          .doc(user.uid)
+          .set({ fcmToken }, { merge: true });
       }
-      return true;
     }
-    return false;
   } catch (error) {
-    console.error('Error requesting notification permission:', error);
-    return false;
+    console.error('Error saving FCM token:', error);
   }
 };
 
-const uploadToCloudinary = async file => {
+const removeFCMTokenFromFirestore = async () => {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      await firestore().collection('users').doc(user.uid).update({
+        fcmToken: firestore.FieldValue.delete(),
+      });
+    }
+  } catch (error) {
+    console.error('Error removing FCM token:', error);
+  }
+};
+
+const uploadToCloudinary = async (file: {
+  uri: any;
+  type: any;
+  fileName: any;
+}) => {
   const formData = new FormData();
   formData.append('file', {
     uri: file.uri,
@@ -415,10 +412,298 @@ const uploadToCloudinary = async file => {
       { headers: { 'Content-Type': 'multipart/form-data' } },
     );
 
-    return res.data.secure_url; // Cloudinary URL
+    return res.data.secure_url;
   } catch (error) {
     console.error('Cloudinary Upload Error:', error);
     throw error;
+  }
+};
+
+const formatTime = (timestamp: any) => {
+  if (!timestamp) {
+    return '';
+  }
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  return moment(date).format('h:mm A');
+};
+
+const formatDateLabel = (timestamp: any) => {
+  if (!timestamp) {
+    return '';
+  }
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  if (moment(date).isSame(moment(), 'day')) {
+    return 'Today';
+  }
+  if (moment(date).isSame(moment().subtract(1, 'day'), 'day')) {
+    return 'Yesterday';
+  }
+  return moment(date).format('DD MMM YYYY');
+};
+
+const monitorOnlineStatus = (email?: string) => {
+  if (!email) {
+    return;
+  }
+
+  const updateStatus = async (isOnline: boolean) => {
+    try {
+      // Update the user doc directly by email
+      const userSnapshot = await firestore()
+        .collection('users')
+        .where('email', '==', email)
+        .get();
+
+      if (!userSnapshot.empty) {
+        const userDoc = userSnapshot.docs[0];
+        await userDoc.ref.set(
+          {
+            online: isOnline,
+            lastSeen: new Date().toISOString(),
+          },
+          { merge: true },
+        );
+      }
+    } catch (error) {
+      console.error('Error updating online status:', error);
+    }
+  };
+
+  updateStatus(true);
+
+  const listener = (nextState: AppStateStatus) => {
+    if (nextState === 'active') {
+      updateStatus(true);
+    } else {
+      updateStatus(false);
+    }
+  };
+
+  AppState.addEventListener('change', listener);
+
+  const cleanup = () => {
+    updateStatus(false);
+  };
+
+  return cleanup;
+};
+
+const formatLastSeen = (timestamp: string | number | Date) => {
+  if (!timestamp) {
+    return '';
+  }
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  const diffMs = now - date;
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHours = Math.floor(diffMin / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  // Today
+  if (diffDays === 0) {
+    if (diffHours > 0) {
+      return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    }
+    if (diffMin > 0) {
+      return `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
+    }
+    return 'just now';
+  }
+
+  // Yesterday
+  if (diffDays === 1) {
+    return 'Yesterday';
+  }
+
+  // Everything else → formatted date (e.g. "21 May 2025")
+  return date.toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+};
+
+const checkSystemNotificationPermission = async (): Promise<boolean> => {
+  try {
+    if (Platform.OS === 'ios') {
+      const authStatus = await messaging().hasPermission();
+      const firebaseEnabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      const notifeeSettings = await notifee.getNotificationSettings();
+      const notifeeEnabled =
+        notifeeSettings.authorizationStatus === AuthorizationStatus.AUTHORIZED;
+
+      return firebaseEnabled && notifeeEnabled;
+    } else if (Platform.OS === 'android') {
+      const authStatus = await messaging().hasPermission();
+      const firebaseEnabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED;
+
+      const notifeeSettings = await notifee.getNotificationSettings();
+      const notifeeEnabled =
+        notifeeSettings.authorizationStatus === AuthorizationStatus.AUTHORIZED;
+
+      // For Android 13+
+      if (Platform.Version >= 33) {
+        const postNotificationPermission = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+        return firebaseEnabled && notifeeEnabled && postNotificationPermission;
+      }
+
+      return firebaseEnabled && notifeeEnabled;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error checking system notification permission:', error);
+    return false;
+  }
+};
+
+// NEW: Request system permission only (no token saving)
+const requestSystemNotificationPermission = async (): Promise<boolean> => {
+  try {
+    if (Platform.OS === 'ios') {
+      const authStatus = await messaging().requestPermission({
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: true,
+        provisional: false,
+        sound: true,
+      });
+
+      const firebaseEnabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      const notifeePermission = await notifee.requestPermission();
+      const notifeeEnabled =
+        notifeePermission.authorizationStatus ===
+        AuthorizationStatus.AUTHORIZED;
+
+      return firebaseEnabled && notifeeEnabled;
+    } else if (Platform.OS === 'android') {
+      const authStatus = await messaging().requestPermission();
+      const firebaseEnabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED;
+
+      const notifeePermission = await notifee.requestPermission();
+      const notifeeEnabled =
+        notifeePermission.authorizationStatus ===
+        AuthorizationStatus.AUTHORIZED;
+
+      // For Android 13+
+      if (Platform.Version >= 33) {
+        const result = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+        const postNotificationGranted =
+          result === PermissionsAndroid.RESULTS.GRANTED;
+        return firebaseEnabled && notifeeEnabled && postNotificationGranted;
+      }
+
+      return firebaseEnabled && notifeeEnabled;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error requesting system notification permission:', error);
+    return false;
+  }
+};
+
+// NEW: Apply user's notification settings (check both system + user preference)
+const applyNotificationSettings = async (): Promise<void> => {
+  try {
+    // Get user's notification preference from Redux
+    const state = store.getState();
+    const userWantsNotifications = state.auth.notificationsEnabled;
+
+    if (userWantsNotifications) {
+      const hasSystemPermission = await checkSystemNotificationPermission();
+
+      if (hasSystemPermission) {
+        await saveFCMTokenToFirestore();
+      }
+    } else {
+      await removeFCMTokenFromFirestore();
+    }
+  } catch (error) {
+    console.error('Error applying notification settings:', error);
+  }
+};
+
+// NEW: Request permission and apply settings (for use in Settings toggle)
+const requestAndApplyNotificationSettings = async (): Promise<boolean> => {
+  try {
+    const permissionGranted = await requestSystemNotificationPermission();
+
+    if (permissionGranted) {
+      await saveFCMTokenToFirestore();
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error(
+      'Error requesting and applying notification settings:',
+      error,
+    );
+    return false;
+  }
+};
+
+const onDisplayNotification = async (data: { title?: any; body?: any }) => {
+  try {
+    await notifee.requestPermission();
+
+    const channelId = 'chat_messages';
+
+    // Ensure channel exists even if initNotifications not yet run (headless case)
+    const channels = await notifee.getChannels();
+    if (!channels.find(c => c.id === channelId)) {
+      await notifee.createChannel({
+        id: channelId,
+        name: 'Chat Messages',
+        importance: AndroidImportance.HIGH,
+        visibility: AndroidVisibility.PUBLIC,
+        sound: 'default',
+      });
+    }
+
+    const notificationConfig = {
+      title: data.title || 'New Message',
+      body: data.body || 'You have a new message',
+      android: {
+        channelId,
+        importance: AndroidImportance.HIGH,
+        visibility: AndroidVisibility.PUBLIC,
+        pressAction: {
+          id: 'default',
+          launchActivity: 'default',
+        },
+        smallIcon: 'ic_launcher',
+        sound: 'default',
+        vibrationPattern: [300, 500],
+        showWhen: true,
+        when: Date.now(),
+      },
+      ios: {
+        sound: 'default',
+        foregroundPresentationOptions: {
+          alert: true,
+          badge: true,
+          sound: true,
+        },
+      },
+    };
+    await notifee.displayNotification(notificationConfig);
+  } catch (error) {
+    console.error('Display notification error:', error);
   }
 };
 
@@ -468,19 +753,27 @@ export {
   width,
   getAllUsers,
   checkUserExistsByEmail,
-  requestUserPermission,
   updateUserInFirestore,
   handlePermissions,
   languages,
-  FONTS,
   checkIfMPINExists,
   handleMediaDownload,
   handleMediaShare,
   getUserData,
   getCurrentTimestamp,
   capitalizeFirst,
-  requestNotificationPermission,
+  checkSystemNotificationPermission,
+  requestSystemNotificationPermission,
+  applyNotificationSettings,
+  requestAndApplyNotificationSettings,
   uploadToCloudinary,
+  formatDateLabel,
+  formatTime,
+  monitorOnlineStatus,
+  onDisplayNotification,
+  formatLastSeen,
+  saveFCMTokenToFirestore,
+  removeFCMTokenFromFirestore,
   isOnline,
   formatLastUpdated,
 };

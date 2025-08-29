@@ -11,6 +11,8 @@ export { default as CustomStatusBar } from './atoms/CustomStatusBar';
 export { default as CustomHeader } from './atoms/CustomHeader';
 export { default as BottomModal } from './atoms/BottomModal';
 export { default as LastUpdatedTime } from './atoms/lastUpdatedTime';
+export { default as CustomSimpleTab } from './atoms/CustomSimpleTab';
+export { default as CustomToggleSwitch } from './atoms/CustomToggleSwitch';
 
 // molecules
 export { default as Container } from './molecules/Container';

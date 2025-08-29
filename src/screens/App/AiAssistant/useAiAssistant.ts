@@ -1,13 +1,22 @@
 import { useState, useRef, useEffect } from 'react';
 import { Clipboard } from 'react-native';
 import api from '@api/index';
+import { WORD_COUNT_THRESHOLD } from '@utils/constant';
+
+interface Message {
+  id: string;
+  text: string;
+  isUser: boolean;
+  timestamp: Date;
+  fullText?: string;
+}
 
 const useAiAssistant = () => {
-  const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [typingMessageId, setTypingMessageId] = useState(null);
-  const [showPrintOption, setShowPrintOption] = useState(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
+  const [showPrintOption, setShowPrintOption] = useState<string | null>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const flatListRef = useRef(null);
   const typingIntervalRef = useRef(null);
@@ -26,8 +35,6 @@ const useAiAssistant = () => {
     copiedMessageId,
     setCopiedMessageId,
   };
-
-  const WORD_COUNT_THRESHOLD = 20;
 
   // Function to clear any active typing intervals
   const clearTypingInterval = () => {
@@ -106,7 +113,7 @@ const useAiAssistant = () => {
       setTypingMessageId(aiMessageId);
       setTimeout(() => typeWriterEffect(aiResponseText, aiMessageId), 300);
     } catch (error) {
-      console.log('AI Response Error:', error);
+      console.error('AI Response Error:', error);
       setIsLoading(false);
       setTypingMessageId(null);
     }

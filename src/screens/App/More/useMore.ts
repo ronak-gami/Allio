@@ -1,18 +1,24 @@
 import { useCallback, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-
-import { logout } from '@redux/slices/AuthSlice';
+import { logout, setStateKey } from '@redux/slices/AuthSlice';
 import { getAuth } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import crashlytics from '@react-native-firebase/crashlytics';
 import { HOME } from '@utils/constant';
 import { TabParamList } from '@types/navigations';
 import { resetMedia } from '@redux/slices/MediaSlice';
-import { capitalizeFirst } from '@utils/helper';
+import {
+  capitalizeFirst,
+  removeFCMTokenFromFirestore,
+  requestAndApplyNotificationSettings,
+  checkSystemNotificationPermission,
+  saveFCMTokenToFirestore,
+} from '@utils/helper';
 import { t } from 'i18next';
 import { useBottomSheet } from '../../../context/BottomSheetContext';
+import { RootState } from '@redux/store';
 
 type Navigation = BottomTabNavigationProp<TabParamList, 'More'>;
 
@@ -32,16 +38,51 @@ export const useMore = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<Navigation>();
   const { openBottomSheet, closeBottomSheet } = useBottomSheet();
+  const { notificationsEnabled } = useSelector(
+    (state: RootState) => state.auth,
+  );
+
+  const handleNotificationToggle = useCallback(
+    async (value: boolean) => {
+      try {
+        if (value) {
+          // Check if system permission already exists
+          const hasSystemPermission = await checkSystemNotificationPermission();
+
+          if (hasSystemPermission) {
+            dispatch(setStateKey({ key: 'notificationsEnabled', value: true }));
+            await saveFCMTokenToFirestore();
+          } else {
+            const permissionGranted =
+              await requestAndApplyNotificationSettings();
+
+            if (permissionGranted) {
+              dispatch(
+                setStateKey({ key: 'notificationsEnabled', value: true }),
+              );
+            }
+          }
+        } else {
+          dispatch(setStateKey({ key: 'notificationsEnabled', value: false }));
+
+          await removeFCMTokenFromFirestore();
+        }
+      } catch (error) {
+        console.error('❌ Error toggling notifications:', error);
+        crashlytics().recordError(error as Error);
+
+        dispatch(setStateKey({ key: 'notificationsEnabled', value: !value }));
+      }
+    },
+    [dispatch],
+  );
 
   const handleLogout = useCallback(async () => {
     try {
       const authInstance = getAuth();
       const currentUser = authInstance.currentUser;
       if (currentUser) {
-        await firestore().collection('users').doc(currentUser.uid).update({
-          fcmToken: firestore.FieldValue.delete(),
-          fcmUpdatedAt: firestore.FieldValue.delete(),
-        });
+        await removeFCMTokenFromFirestore();
         await authInstance.signOut();
         dispatch(resetMedia());
         dispatch(logout());
@@ -73,40 +114,41 @@ export const useMore = () => {
     () => [
       {
         title: 'settings.profile',
-        type: 'navigation' as const,
+        type: 'navigation',
         screenName: HOME.Profile,
-      },
-      {
-        key: 'friends',
-        title: 'settings.My Friends',
-        type: 'navigation' as const,
-        screenName: HOME.MyFriends,
       },
       {
         key: 'AI Assistant',
         title: 'AI Assistant',
-        type: 'navigation' as const,
+        type: 'navigation',
         screenName: HOME.AiAssistant,
+      },
+      {
+        key: 'notifications',
+        title: 'Notifications',
+        type: 'toggle',
+        isEnabled: notificationsEnabled,
+        onToggle: handleNotificationToggle,
       },
       {
         key: 'theme',
         title: 'settings.Theme',
-        type: 'bottomSheet' as const,
+        type: 'bottomSheet',
       },
       {
         key: 'language',
         title: 'settings.Language',
-        type: 'bottomSheet' as const,
+        type: 'bottomSheet',
       },
       {
         key: 'delete',
         title: 'settings.Delete Account',
-        type: 'bottomSheet' as const,
+        type: 'bottomSheet',
       },
       {
         key: 'logout',
         title: 'settings.Logout',
-        type: 'bottomSheet' as const,
+        type: 'bottomSheet',
       },
       {
         key: 'News App',
@@ -115,7 +157,7 @@ export const useMore = () => {
         screenName: HOME.NewsApp,
       },
     ],
-    [], // ✅ dependencies
+    [notificationsEnabled, handleNotificationToggle],
   );
 
   const openBottomSheetWithConfig = useCallback(
@@ -166,5 +208,7 @@ export const useMore = () => {
     handleLogout,
     handleDeleteProfile,
     getTranslation: (key: string) => capitalizeFirst(t(key)),
+    notificationsEnabled,
+    handleNotificationToggle,
   };
 };

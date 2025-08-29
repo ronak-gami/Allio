@@ -6,21 +6,18 @@ import { Button } from '@components/index';
 import { useBottomSheet } from '../../../context/BottomSheetContext';
 import { useTranslation } from 'react-i18next';
 import { capitalizeFirst } from '@utils/helper';
-const { t } = useTranslation();
-import useStyle from './style';
-
-const languageOptions = [
-  { label: t('languages.English'), value: 'en' },
-  { label: t('languages.Hindi'), value: 'hi' },
-  { label: t('languages.Gujarati'), value: 'gu' },
-];
 
 const LanguageOrganism: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>(
     i18n.language || 'en' || 'hi' || 'gu',
   );
-  const styles = useStyle();
+  const { t } = useTranslation();
   const { closeBottomSheet } = useBottomSheet();
+  const languageOptions = [
+    { label: t('languages.English'), value: 'en' },
+    { label: t('languages.Hindi'), value: 'hi' },
+    { label: t('languages.Gujarati'), value: 'gu' },
+  ];
 
   const handleLanguageApply = useCallback(() => {
     i18n.changeLanguage(selectedLanguage);

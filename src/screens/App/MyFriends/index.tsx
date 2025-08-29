@@ -1,22 +1,50 @@
-import React from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-
-import { CustomFlatList, CustomLoader, Text } from '@components/index';
+import React, { useMemo } from 'react';
+import { View, Image, RefreshControl } from 'react-native';
+import DraggableFlatList from 'react-native-draggable-flatlist';
+import {
+  Container,
+  Text,
+  CustomSimpleTab,
+  CustomFlatList,
+} from '@components/index';
 import UserCard from '@components/cards/UserCard';
-import CustomHeader from '@components/atoms/CustomHeader';
 import { IMAGES } from '@assets/index';
-
-import { useMyFriends } from './useMyFriends';
 import useStyle from './style';
+import { useMyFriends } from './useMyFriends';
 
 const MyFriends = () => {
   const styles = useStyle();
-  const navigation = useNavigation();
-  const { activeTab, setActiveTab, users, states, onRefresh } = useMyFriends();
+  const {
+    activeTab,
+    setActiveTab,
+    users,
+    pinnedUsers,
+    states,
+    onRefresh,
+    handlePin,
+    handleUnpin,
+    handleDragEnd,
+    selectedUser,
+    setSelectedUser,
+  } = useMyFriends();
 
-  const renderUser = ({ item, index }: { item: any; index: number }) => (
-    <UserCard user={item} index={index} />
+  const tabs = [
+    { id: 'friends', title: 'Friends' },
+    { id: 'pending', title: 'Pending' },
+    { id: 'all', title: 'All' },
+  ];
+
+  const pinnedUserObjects = useMemo(
+    () => users.filter(u => pinnedUsers.includes(u.email)),
+    [users, pinnedUsers],
+  );
+
+  const nonPinnedUsers = useMemo(
+    () =>
+      users
+        .filter(u => !pinnedUsers.includes(u.email))
+        .sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999)),
+    [users, pinnedUsers],
   );
 
   const renderEmptyState = () => (
@@ -37,49 +65,82 @@ const MyFriends = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <CustomHeader
-        title="My Friends"
-        showBackArrow
-        onBackPress={navigation.goBack}
-        showProfile={false}
-      />
+    <Container title="My Friends" showLoader={states?.loading}>
+      <View style={styles.container}>
+        <CustomSimpleTab
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
 
-      <View style={styles.headerContainer}>
-        {['friends', 'pending', 'all'].map(tab => (
-          <TouchableOpacity
-            key={tab}
-            style={[
-              styles.tabButton,
-              activeTab === tab && styles.activeTabButton,
-            ]}
-            onPress={() => setActiveTab(tab as any)}>
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === tab && styles.activeTabText,
-              ]}>
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            </Text>
-            {activeTab === tab && <View style={styles.bottomLine} />}
-          </TouchableOpacity>
-        ))}
-      </View>
+        {activeTab === 'friends' ? (
+          <View>
+            {pinnedUserObjects.map(user => (
+              <UserCard
+                key={user.id}
+                user={user}
+                isFriendTab={true}
+                pinnedUsers={pinnedUsers}
+                onPin={handlePin}
+                onUnpin={handleUnpin}
+                selectedUser={selectedUser}
+              />
+            ))}
 
-      <View style={styles.contentContainer}>
-        {states?.loading ? (
-          <CustomLoader visible={states?.loading} />
+            <DraggableFlatList
+              data={nonPinnedUsers}
+              keyExtractor={item => item.id}
+              renderItem={({ item, drag, isActive }) => (
+                <UserCard
+                  user={item}
+                  drag={drag}
+                  isActive={isActive}
+                  isFriendTab
+                  pinnedUsers={pinnedUsers}
+                  onPin={handlePin}
+                  onUnpin={handleUnpin}
+                  onLongPressUser={setSelectedUser}
+                  selectedUser={selectedUser}
+                />
+              )}
+              onDragBegin={index => {
+                nonPinnedUsers[index];
+              }}
+              onDragEnd={({ data, from, to }) => {
+                if (from !== to) {
+                  handleDragEnd({ data, from, to });
+                }
+              }}
+              activationDistance={50}
+              ListEmptyComponent={renderEmptyState}
+              refreshControl={
+                <RefreshControl
+                  refreshing={states.refreshing}
+                  onRefresh={onRefresh}
+                />
+              }
+            />
+          </View>
         ) : (
           <CustomFlatList
-            data={users}
-            renderItem={renderUser}
+            data={[...pinnedUserObjects, ...nonPinnedUsers]}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+              <UserCard
+                user={item}
+                pinnedUsers={pinnedUsers}
+                isFriendTab={false}
+                onLongPressUser={setSelectedUser}
+                selectedUser={selectedUser}
+              />
+            )}
             ListEmptyComponent={renderEmptyState}
             refreshing={states?.refreshing}
             onRefresh={onRefresh}
           />
         )}
       </View>
-    </View>
+    </Container>
   );
 };
 

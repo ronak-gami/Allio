@@ -4,11 +4,10 @@ import Button from '@components/atoms/Button';
 import ContactFormModal from '@components/molecules/ContactForm';
 import useStyle from './style';
 import Text from '@components/atoms/Text';
-// Assuming this is the correct import path for the validation schema
 
 const ContactUsSection: React.FC = () => {
   const styles = useStyle();
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const handleOpen = () => setModalVisible(true);
   const handleClose = () => setModalVisible(false);
@@ -18,16 +17,7 @@ const ContactUsSection: React.FC = () => {
     mobileNo: string;
     email: string;
     message: string;
-  }) => {
-    console.log('hello');
-    // Handle form submission (e.g., send to backend, show toast, etc.)
-  };
-  interface ContactFormFields {
-    name: string;
-    mobileNo: string;
-    email: string;
-    message: string;
-  }
+  }) => {};
 
   return (
     <View style={styles.sectionContainer}>

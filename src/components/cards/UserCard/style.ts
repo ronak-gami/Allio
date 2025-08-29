@@ -10,14 +10,23 @@ const useStyle = () => {
       backgroundColor: colors.background,
       paddingVertical: height * 0.015,
       borderBottomWidth: 1,
+      borderBottomColor: colors.border,
     },
     row: {
       flexDirection: 'row',
       alignItems: 'center',
     },
+    dragIconWrapper: {
+      marginRight: 10,
+    },
+    dragIcon: {
+      width: 24,
+      height: 24,
+    },
     profileImage: {
       height: height * 0.065,
       width: height * 0.065,
+      resizeMode: 'cover',
       borderRadius: height * 0.0325,
       marginRight: height * 0.015,
     },
@@ -37,10 +46,46 @@ const useStyle = () => {
     userInfo: {
       flex: 1,
     },
+    topRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    bottomRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+      marginTop: 4,
+    },
     name: {
       fontSize: scale(16),
       color: colors.text,
+      fontWeight: '500',
     },
+    email: {
+      color: colors.text,
+      fontSize: scale(9),
+    },
+    lastMessage: {
+      flex: 1,
+      fontSize: scale(11),
+      color: colors.text,
+    },
+    lastMessageDate: {
+      fontSize: scale(10),
+      color: colors.text,
+      marginLeft: 8,
+    },
+    actionIconWrapper: {
+      marginLeft: 5,
+    },
+    actionIcon: {
+      width: 20,
+      height: 20,
+      resizeMode: 'contain',
+      tintColor: colors.primary,
+    },
+
     actionRow: {
       flexDirection: 'row',
     },
@@ -85,10 +130,6 @@ const useStyle = () => {
     acceptedText: {
       color: colors.text,
       fontSize: scale(10),
-    },
-    email: {
-      color: colors.text,
-      fontSize: scale(9),
     },
   });
 };

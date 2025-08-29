@@ -66,8 +66,8 @@ const Input: React.FC<InputProps> = ({
   errorStyle,
   ...props
 }) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const styles = useStyle();
 
   const handleFocus = () => {
@@ -98,6 +98,7 @@ const Input: React.FC<InputProps> = ({
           isFocused && styles.inputContainerFocused,
           hasError && styles.inputContainerError,
           !editable && styles.inputContainerDisabled,
+          containerStyle,
         ]}>
         <TextInput
           style={[

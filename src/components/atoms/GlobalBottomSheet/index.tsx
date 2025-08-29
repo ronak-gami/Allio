@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, ReactNode } from 'react';
-import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import BottomSheet, {
   BottomSheetView,
   BottomSheetBackdrop,
@@ -123,7 +123,5 @@ const GlobalBottomSheet: React.FC<GlobalBottomSheetProps> = ({ children }) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default GlobalBottomSheet;

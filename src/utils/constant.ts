@@ -59,7 +59,7 @@ const AUTH = {
   Login: 'Login',
   Register: 'Register',
   ForgotPassword: 'ForgotPassword',
-} as const;
+};
 
 const HOME = {
   HomeTabs: 'HomeTabs',
@@ -82,6 +82,10 @@ const HOME = {
 
 const LICENSE_KEY =
   'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
+
+const WORD_COUNT_THRESHOLD = 20;
+
+const THRESHOLD = 50;
 
 const FeaturesDataItem = [
   {
@@ -114,4 +118,6 @@ export {
   CARD_WIDTH,
   SPACING,
   FeaturesDataItem,
+  WORD_COUNT_THRESHOLD,
+  THRESHOLD,
 };

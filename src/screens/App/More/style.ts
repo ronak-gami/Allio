@@ -20,6 +20,9 @@ const useStyle = () => {
       paddingVertical: height * 0.025,
       borderBottomWidth: 1,
       borderColor: colors.text,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
     separator: {
       height: scale(1),

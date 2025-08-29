@@ -5,7 +5,113 @@ import { Container, Input, Text, CustomFlatList } from '@components/index';
 import { Animated, Image, TouchableOpacity, View } from 'react-native';
 import { ICONS } from '@assets/index';
 
-// Animated Bubble Loader Component
+// Enhanced Animated Logo Component
+const AnimatedLogo = ({ styles }) => {
+  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const logoScaleAnim = useRef(new Animated.Value(1)).current;
+  const glowOpacityAnim = useRef(new Animated.Value(0.3)).current;
+  const glowScaleAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    // Continuous rotation
+    const rotateAnimation = Animated.loop(
+      Animated.timing(rotateAnim, {
+        toValue: 1,
+        duration: 8000,
+        useNativeDriver: true,
+      }),
+    );
+
+    // Logo pulsing scale animation
+    const logoScaleAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(logoScaleAnim, {
+          toValue: 1.1,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(logoScaleAnim, {
+          toValue: 1,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    // Glow opacity animation
+    const glowOpacityAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(glowOpacityAnim, {
+          toValue: 0.8,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(glowOpacityAnim, {
+          toValue: 0.3,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    // Glow scale animation
+    const glowScaleAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(glowScaleAnim, {
+          toValue: 1.1,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(glowScaleAnim, {
+          toValue: 1,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    rotateAnimation.start();
+    logoScaleAnimation.start();
+    glowOpacityAnimation.start();
+    glowScaleAnimation.start();
+
+    return () => {
+      rotateAnimation.stop();
+      logoScaleAnimation.stop();
+      glowOpacityAnimation.stop();
+      glowScaleAnimation.stop();
+    };
+  }, [rotateAnim, logoScaleAnim, glowOpacityAnim, glowScaleAnim]);
+
+  const spin = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  return (
+    <View style={styles.logoContainer}>
+      {/* Glow effect background */}
+      <Animated.View
+        style={[
+          styles.logoGlow,
+          {
+            opacity: glowOpacityAnim,
+            transform: [{ scale: glowScaleAnim }],
+          },
+        ]}
+      />
+      {/* Main logo */}
+      <Animated.View
+        style={{
+          transform: [{ rotate: spin }, { scale: logoScaleAnim }],
+        }}>
+        <Image source={ICONS.gemini} style={styles.logoIcon} />
+      </Animated.View>
+    </View>
+  );
+};
+
+// Enhanced Bubble Loader Component
 const AnimatedBubbles = ({ styles }) => {
   const bubble1 = useRef(new Animated.Value(0)).current;
   const bubble2 = useRef(new Animated.Value(0)).current;
@@ -17,13 +123,13 @@ const AnimatedBubbles = ({ styles }) => {
         Animated.sequence([
           Animated.timing(animatedValue, {
             toValue: 1,
-            duration: 600,
+            duration: 800,
             delay,
             useNativeDriver: true,
           }),
           Animated.timing(animatedValue, {
             toValue: 0,
-            duration: 600,
+            duration: 800,
             useNativeDriver: true,
           }),
         ]),
@@ -44,12 +150,15 @@ const AnimatedBubbles = ({ styles }) => {
   }, [bubble1, bubble2, bubble3]);
 
   const getAnimatedStyle = animatedValue => ({
-    opacity: animatedValue,
+    opacity: animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0.4, 1],
+    }),
     transform: [
       {
         scale: animatedValue.interpolate({
           inputRange: [0, 1],
-          outputRange: [0.5, 1],
+          outputRange: [0.6, 1.2],
         }),
       },
     ],
@@ -64,7 +173,7 @@ const AnimatedBubbles = ({ styles }) => {
   );
 };
 
-// NEW: Animated MessageItem Component
+// MessageItem Component (unchanged)
 const MessageItem = memo(
   ({
     item,
@@ -193,7 +302,12 @@ const AiAssistant = () => {
 
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>Hello! How can I help you today?</Text>
+      <AnimatedLogo styles={styles} />
+      <Text style={styles.emptyTitle}>Hello, how can I help?</Text>
+      <Text style={styles.emptySubtitle}>
+        You can ask questions related to{'\n'}studying, science, writing, or
+        {'\n'}anything academic.
+      </Text>
     </View>
   );
 

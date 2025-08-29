@@ -26,11 +26,17 @@ const useStyle = () => {
 
     headerView: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'space-between', // left group + right button
       alignItems: 'center',
       marginBottom: height * 0.02,
       paddingHorizontal: width * 0.01,
     },
+    leftButtons: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: width * 0.02, 
+    },
+
     headerButton: {
       paddingHorizontal: width * 0.04,
       paddingVertical: height * 0.005,

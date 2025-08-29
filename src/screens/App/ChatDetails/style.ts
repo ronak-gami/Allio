@@ -86,20 +86,24 @@ const useStyle = () => {
     },
     messageBubble: {
       padding: height * 0.015,
-      borderRadius: height * 0.02,
       marginVertical: height * 0.01,
     },
     myMessage: {
       alignSelf: 'flex-end',
+      borderTopRightRadius: scale(12),
+      borderBottomLeftRadius: scale(12),
       backgroundColor: colors.primary,
     },
     theirMessage: {
       alignSelf: 'flex-start',
+      borderTopLeftRadius: scale(12),
+      borderBottomRightRadius: scale(12),
       backgroundColor: colors.lightBlue,
     },
     messageText: {
       color: colors.white,
       fontSize: scale(14),
+      marginRight: 50,
     },
     inputContainer: {
       flexDirection: 'row',
@@ -202,14 +206,12 @@ const useStyle = () => {
       gap: width * 0.04,
     },
 
-    cardImageCentered: {
-      width: width * 0.2,
-      height: width * 0.2,
-      borderRadius: width * 0.1,
-      marginBottom: height * 0.02,
-      alignSelf: 'center',
+    profileImage: {
+      height: height * 0.08,
+      width: height * 0.06,
+      resizeMode: 'contain',
+      borderRadius: height * 0.0325,
     },
-
     cardPlaceholderCentered: {
       width: width * 0.2,
       height: width * 0.2,
@@ -347,18 +349,6 @@ const useStyle = () => {
       color: colors.primary,
     },
 
-    mapheader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: height * 0.01,
-      paddingVertical: 8,
-    },
-
-    headerText: {
-      marginLeft: height * 0.02,
-      fontSize: scale(18),
-    },
-
     map: {
       width,
       height,
@@ -414,7 +404,8 @@ const useStyle = () => {
     },
     mapView: {
       height: height * 0.2,
-      width: height * 0.2,
+      width: height * 0.25,
+      alignSelf: 'center',
     },
     stoplivebutton: {
       paddingVertical: 7,
@@ -427,49 +418,13 @@ const useStyle = () => {
       color: colors.text,
     },
 
-    menuPopup: {
-      position: 'absolute',
-
-      backgroundColor: colors.background,
-      borderRadius: 10,
-      elevation: 4,
-      shadowOffset: { width: 5, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
-      padding: 10,
-      zIndex: 10,
-      gap: 10,
-      width: width * 0.4,
-    },
-    menuPopupSender: {
-      bottom: -10,
-      right: 20,
-    },
-    menuPopupReceiver: {
-      bottom: -10,
-      left: 20,
-    },
-    menuItem: {
-      paddingVertical: 6,
-    },
-    menuItemText: {
-      fontSize: scale(15),
-    },
-    menuItemPrimary: {
-      color: colors.primary,
-    },
     menuItemDanger: {
       color: colors.error,
     },
 
     selecteddMessageContainer: {
       backgroundColor: colors.bgchat,
-      marginHorizontal: 10,
-      marginTop: 6,
-      borderRadius: 10,
+      marginTop: 5,
       flexDirection: 'row',
       alignItems: 'center',
       padding: 10,
@@ -494,23 +449,26 @@ const useStyle = () => {
       tintColor: colors.primary,
       marginRight: 8,
     },
-    pinnedMessageText: {
+    selecteddMessageText: {
       color: colors.primary,
-      fontWeight: 'bold',
+    },
+
+    pinnedMsgText: {
+      color: colors.black,
+      fontSize: scale(14),
+      flex: 1,
     },
 
     pinnedMessageContainer: {
       backgroundColor: colors.bgchat,
       padding: height * 0.015,
-      marginHorizontal: 10,
-      marginTop: 6,
-      borderRadius: 10,
       flexDirection: 'row',
       alignItems: 'center',
+      width: '100%',
     },
 
     selectedItem: {
-      backgroundColor: colors.skyBlue, 
+      backgroundColor: colors.error,
       elevation: 2,
       shadowColor: colors.iceBlue,
       shadowOffset: { width: 0, height: 2 },
@@ -519,10 +477,41 @@ const useStyle = () => {
     },
 
     editedtext: {
-      fontSize: scale(11),
+      fontSize: scale(10),
       color: colors.text,
+      marginTop: 1,
+      top: 11,
+      right: 5,
+      textAlign: 'left',
+    },
+    headerStatus: {
+      fontSize: scale(12),
+      color: colors.black,
       marginTop: 2,
-      textAlign: 'right',
+    },
+
+    timeContainer: {
+      marginTop: 4,
+      position: 'absolute',
+      right: 10,
+      bottom: 3,
+    },
+
+    timeText: {
+      fontSize: scale(11),
+      color: colors.black,
+    },
+    dateLabelContainer: {
+      alignSelf: 'center',
+      marginVertical: 10,
+      backgroundColor: colors.text,
+      borderRadius: 10,
+      paddingHorizontal: 15,
+      paddingVertical: 7,
+    },
+    dateLabelText: {
+      fontSize: scale(12),
+      color: colors.background,
     },
   });
 };

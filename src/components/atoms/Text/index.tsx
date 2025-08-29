@@ -7,8 +7,7 @@ import {
   TextProps as RNTextProps,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-
-import { FONTS } from '@utils/helper';
+import { FONTS } from '@assets/index';
 
 interface TextProps extends RNTextProps {
   label?: string;
@@ -45,8 +44,6 @@ const Text: React.FC<TextProps> = ({
         return FONTS.medium;
       case 'semibold':
         return FONTS.semiBold;
-      case 'thin':
-        return FONTS.thin;
       default:
         return FONTS.regular;
     }

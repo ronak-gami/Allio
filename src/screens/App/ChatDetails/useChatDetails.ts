@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Image, ScrollView, Platform } from 'react-native';
+import { Image, ScrollView, Platform, AppState } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
 import { showSuccess, showError } from '@utils/toast';
@@ -7,7 +7,7 @@ import { useUserCard } from '@components/cards/UserCard/useUserCard';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import api from '@api/index';
-import { uploadToCloudinary } from '@utils/helper';
+import { formatLastSeen, getAllUsers } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
 
@@ -47,14 +47,15 @@ export const useChatDetails = (targetUser: any) => {
   const [videoModalVisible, setVideoModalVisible] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
-  const [isBlockedByMe, setIsBlockedByMe] = useState(false);
-  const [isBlockedByThem, setIsBlockedByThem] = useState(false);
+  const [isBlockedByMe, setIsBlockedByMe] = useState<boolean>(false);
+  const [isBlockedByThem, setIsBlockedByThem] = useState<boolean>(false);
   const [clearTime, setClearTime] = useState<any>(null);
 
   const [themeModalVisible, setThemeModalVisible] = useState<boolean>(false);
   const [loding, setloding] = useState<boolean>(false);
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
   const [selecturl, setselecturl] = useState<string | null>(null);
+  const [selectedThemeKey, setSelectedThemeKey] = useState<string | null>(null); // fileKey
 
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
@@ -77,7 +78,7 @@ export const useChatDetails = (targetUser: any) => {
   const [loadingMessages, setLoadingMessages] = useState<boolean>(true);
 
   const [selectedMessages, setSelectedMessages] = useState<string[]>([]);
-  const [actionModalVisible, setActionModalVisible] = useState(false);
+  const [actionModalVisible, setActionModalVisible] = useState<boolean>(false);
 
   const [replyToMsg, setReplyToMsg] = useState<ChatMsg | null>(null);
 
@@ -85,11 +86,19 @@ export const useChatDetails = (targetUser: any) => {
 
   const [actionMsgId, setActionMsgId] = useState<string | null>(null);
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
-  const [editText, setEditText] = useState('');
+  const [editText, setEditText] = useState<string>('');
 
   const [editMsgId, setEditMsgId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [highlightedMsgId, setHighlightedMsgId] = useState<string | null>(null);
+
+  const [lastSeen, setLastSeen] = useState<string>('');
+
+  const [isOnline, setIsOnline] = useState<string>('');
+
+  const [allThemes, setAllThemes] = useState<
+    { fileKey: string; url: string }[]
+  >([]);
 
   const setReplyMessage = (msg: ChatMsg) => setReplyToMsg(msg);
   const clearReplyMessage = () => setReplyToMsg(null);
@@ -119,6 +128,7 @@ export const useChatDetails = (targetUser: any) => {
     selecturl,
     loding,
     loadingMessages,
+    selectedThemeKey,
 
     menuVisible,
     selectedMessages,
@@ -169,13 +179,13 @@ export const useChatDetails = (targetUser: any) => {
 
   /** Firestore paths */
   const relationId = (() => {
-    if (!myEmail || !targetUser?.email) return null;
+    if (!myEmail || !targetUser?.email) {return null;}
     const sorted = [myEmail, targetUser.email].sort();
     return `${sorted[0]}_${sorted[1]}`;
   })();
 
   useEffect(() => {
-    if (!myEmail || !targetUser?.email || !relationId) return;
+    if (!myEmail || !targetUser?.email || !relationId) {return;}
 
     const relationRef = firestore().collection('relation').doc(relationId);
     // 🔹 Relation listener
@@ -187,8 +197,6 @@ export const useChatDetails = (targetUser: any) => {
         setClearTime(data[`clearTime_${myEmail}`] || null);
       }
     });
-
-   
 
     const unsubMessages = relationRef
       .collection('messages')
@@ -212,8 +220,12 @@ export const useChatDetails = (targetUser: any) => {
           })
           .filter(msg => {
             // Exclude messages deleted for me
-            if (msg.deletedFor && msg.deletedFor[myEmail]) return false;
-            if (!clearTime) return true;
+            if (msg.deletedFor && msg.deletedFor[myEmail]) {
+              return false;
+            }
+            if (!clearTime) {
+              return true;
+            }
             return msg.timestamp?.toDate?.() > clearTime.toDate?.();
           });
 
@@ -228,18 +240,61 @@ export const useChatDetails = (targetUser: any) => {
   }, [myEmail, targetUser?.email, relationId, clearTime]);
 
   useEffect(() => {
+    const unsub = firestore()
+      .collection('themeImages')
+      .onSnapshot(snapshot => {
+        const themes = snapshot.docs.map(doc => doc.data()) as {
+          fileKey: string;
+          url: string;
+        }[];
+        setAllThemes(themes);
+      });
+
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    if (!targetUser?.email) {return;}
+
+    const fetchTargetUser = async () => {
+      const allUsers = await getAllUsers(myEmail);
+      const target = allUsers.find(u => u.email === targetUser.email);
+
+      if (target) {
+        if (target.lastSeen) {
+          const lastSeenDate = target.lastSeen.toDate
+            ? target.lastSeen.toDate()
+            : new Date(target.lastSeen);
+
+          setLastSeen(formatLastSeen(lastSeenDate)); // 👈 format using helper
+        }
+
+        if (typeof target.online === 'boolean') {
+          setIsOnline(target.online);
+        }
+      }
+    };
+
+    fetchTargetUser();
+
+    const intervalId = setInterval(fetchTargetUser, 30000);
+    return () => clearInterval(intervalId);
+  }, [myEmail, targetUser.email]);
+
+  useEffect(() => {
     if (states?.chatHistory?.length > 0) {
       scrollToBottom(false);
     }
   }, [states?.chatHistory?.length, scrollToBottom]);
 
   const handleSendMessage = async () => {
-    if (!message.trim() || !relationId) return;
+    if (!message.trim() || !relationId) {return;}
 
     try {
       const timestamp = firestore.FieldValue.serverTimestamp();
       const relationRef = firestore().collection('relation').doc(relationId);
       const docSnapshot = await relationRef.get();
+
       if (!docSnapshot.exists) {
         await relationRef.set({
           from: myEmail,
@@ -256,17 +311,21 @@ export const useChatDetails = (targetUser: any) => {
         timestamp,
       });
 
-      const email1 = (myEmail || '').trim().toLowerCase();
-      const email2 = (targetUser?.email || '').trim().toLowerCase();
-      const data = {
-        emails: [email2],
-        title: 'Message Sent',
-        body: `${email1} has sent a message to you.`,
-      };
-      const response = await api?.NOTIFICATION.sendNotification({ data });
-      if (response?.data?.success)
-        showSuccess(response?.data?.message || 'Notification sent!');
+      if (!isBlockedByMe && !isBlockedByThem && !isOnline) {
+        const email1 = (myEmail || '').trim().toLowerCase();
+        const email2 = (targetUser?.email || '').trim().toLowerCase();
 
+        const data = {
+          emails: [email2],
+          title: 'Message Sent',
+          body: `${email1} has sent a message to you.`,
+        };
+
+        const response = await api?.NOTIFICATION.sendNotification({ data });
+        if (response?.data?.success) {
+          showSuccess(response?.data?.message || 'Notification sent!');
+        }
+      }
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
@@ -275,7 +334,7 @@ export const useChatDetails = (targetUser: any) => {
 
   /** Block / Unblock / Clear */
   const blockUser = async () => {
-    if (!relationId) return;
+    if (!relationId) {return;}
     await firestore()
       .collection('relation')
       .doc(relationId)
@@ -285,7 +344,7 @@ export const useChatDetails = (targetUser: any) => {
   };
 
   const unblockUser = async () => {
-    if (!relationId) return;
+    if (!relationId) {return;}
     await firestore()
       .collection('relation')
       .doc(relationId)
@@ -294,9 +353,29 @@ export const useChatDetails = (targetUser: any) => {
     showSuccess('User unblocked');
   };
 
+  useEffect(() => {
+    if (!relationId) {return;}
+
+    const unsub = firestore()
+      .collection('relation')
+      .doc(relationId)
+      .onSnapshot(doc => {
+        const data = doc.data();
+        if (data?.themeUrl) {
+          setSelectedTheme(data.themeUrl);
+          setSelectedThemeKey(data.themeKey || null);
+        } else {
+          setSelectedTheme(null);
+          setSelectedThemeKey(null);
+        }
+      });
+
+    return () => unsub();
+  }, [relationId]);
+
   const clearChat = async () => {
     try {
-      if (!relationId) return;
+      if (!relationId) {return;}
       const now = new Date();
       await firestore()
         .collection('relation')
@@ -315,58 +394,75 @@ export const useChatDetails = (targetUser: any) => {
 
   /** Theme */
   useEffect(() => {
-    if (!myEmail || !targetUser?.email || !relationId) return;
+    if (!myEmail || !targetUser?.email || !relationId) {return;}
     const unsub = firestore()
       .collection('themes')
       .doc(relationId)
       .onSnapshot(doc => {
-        if (doc.exists) setSelectedTheme(doc.data()?.themeUrl || null);
+        if (doc.exists) {setSelectedTheme(doc.data()?.themeUrl || null);}
       });
     return () => unsub();
   }, [myEmail, targetUser?.email, relationId]);
 
-  const selectTheme = async (localImage: any) => {
-    if (!relationId || !localImage) return;
+  const selectTheme = async (fileKey: string | null) => {
+    if (!relationId || !fileKey) {return;}
     setloding(true);
+
     try {
-      const themesRef = firestore().collection('themes').doc(relationId);
-      const existingDoc = await themesRef.get();
-      if (existingDoc.exists && existingDoc.data()?.themeUrl) {
-        if (existingDoc.data().localKey === localImage) {
-          setSelectedTheme(existingDoc.data().themeUrl);
-          setThemeModalVisible(false);
-          return;
-        }
+      // 1. Get theme from "themeImages"
+      const themeSnap = await firestore()
+        .collection('themeImages')
+        .where('fileKey', '==', fileKey)
+        .limit(1)
+        .get();
+
+      if (themeSnap.empty) {
+        showError('Theme not found');
+        setloding(false);
+        return;
       }
-      const fileUri = Image.resolveAssetSource(localImage).uri;
-      const uploadedUrl = await uploadToCloudinary({
-        uri: fileUri,
-        type: 'image/png',
-        fileName: `${relationId}_${Date.now()}.png`,
-      });
-      await themesRef.set({
-        themeUrl: uploadedUrl,
-        localKey: localImage,
-        updatedAt: new Date(),
-      });
-      setSelectedTheme(uploadedUrl);
+
+      const themeData = themeSnap.docs[0].data();
+      const themeUrl = themeData.url;
+
+      // 2. Save theme in relation doc
+      await firestore().collection('relation').doc(relationId).set(
+        {
+          themeUrl,
+          themeKey: fileKey,
+          updatedAt: new Date(),
+        },
+        { merge: true },
+      );
+
+      // 3. Update local state
+      setSelectedTheme(themeUrl);
+      setSelectedThemeKey(fileKey);
+      setThemeModalVisible(false);
       showSuccess('Theme applied successfully!');
     } catch (err) {
       console.error(err);
       showError('Failed to apply theme');
     } finally {
       setloding(false);
-      setThemeModalVisible(false);
     }
   };
 
   const removeTheme = async () => {
     try {
-      if (!relationId) return;
-      const themesRef = firestore().collection('themes').doc(relationId);
-      await themesRef.delete();
+      if (!relationId) {return;}
+      await firestore().collection('relation').doc(relationId).set(
+        {
+          themeUrl: firestore.FieldValue.delete(),
+          themeKey: firestore.FieldValue.delete(),
+        },
+        { merge: true },
+      );
+
       setSelectedTheme(null);
+      setSelectedThemeKey(null);
       setselecturl(null);
+
       showSuccess('Theme removed, default background applied');
     } catch (err) {
       console.error(err);
@@ -387,10 +483,10 @@ export const useChatDetails = (targetUser: any) => {
           : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
 
       let result = await check(perm);
-      if (result === RESULTS.GRANTED) return true;
+      if (result === RESULTS.GRANTED) {return true;}
 
       result = await request(perm);
-      if (result === RESULTS.GRANTED) return true;
+      if (result === RESULTS.GRANTED) {return true;}
 
       return false;
     } catch (e) {
@@ -436,8 +532,11 @@ export const useChatDetails = (targetUser: any) => {
     const granted = await askLocationPermission();
 
     if (!granted) {
-      if (!silent) setLocationPromptVisible(true);
-      else setLocationPromptVisible(true);
+      if (!silent) {
+        setLocationPromptVisible(true);
+      } else {
+        setLocationPromptVisible(false);
+      }
       return false;
     }
     const ok = await warmUpCurrentLocation();
@@ -469,14 +568,14 @@ export const useChatDetails = (targetUser: any) => {
 
   const shareCurrentLocation = async () => {
     try {
-      if (!relationId) return;
+      if (!relationId) {return;}
       let latlng = currentCoords;
       if (!latlng) {
         const ok = await ensureLocationReady(true);
-        if (!ok) return;
+        if (!ok) {return;}
         latlng = currentCoords;
       }
-      if (!latlng) return;
+      if (!latlng) {return;}
 
       const timestamp = firestore.FieldValue.serverTimestamp();
       const relationRef = firestore().collection('relation').doc(relationId);
@@ -496,9 +595,9 @@ export const useChatDetails = (targetUser: any) => {
 
   const startLiveLocationShare = async (minutes = 15) => {
     try {
-      if (!relationId) return;
+      if (!relationId) {return;}
       const ok = await ensureLocationReady(true);
-      if (!ok) return;
+      if (!ok) {return;}
 
       const liveRef = firestore().collection('live_shares').doc();
       const expiresAt = new Date(Date.now() + minutes * 60 * 1000);
@@ -548,7 +647,7 @@ export const useChatDetails = (targetUser: any) => {
         // { enableHighAccuracy: true, distanceFilter: 10 },
       );
 
-      if (liveEndTimer.current) clearTimeout(liveEndTimer.current);
+      if (liveEndTimer.current) {clearTimeout(liveEndTimer.current);}
       liveEndTimer.current = setTimeout(() => {
         stopLiveLocationShare();
       }, minutes * 60 * 1000);
@@ -614,7 +713,7 @@ export const useChatDetails = (targetUser: any) => {
 
   // Delete selected messages for me
   const deleteMessagesForMe = async () => {
-    if (!relationId || selectedMessages.length === 0) return;
+    if (!relationId || selectedMessages.length === 0) {return;}
 
     // Mark messages as deleted for me (e.g. add a field in Firestore)
     const relationRef = firestore().collection('relation').doc(relationId);
@@ -632,7 +731,7 @@ export const useChatDetails = (targetUser: any) => {
 
   // Delete selected messages for everyone
   const deleteMessagesForEveryone = async () => {
-    if (!relationId || selectedMessages.length === 0) return;
+    if (!relationId || selectedMessages.length === 0) {return;}
     const relationRef = firestore().collection('relation').doc(relationId);
     for (const msgId of selectedMessages) {
       await relationRef.collection('messages').doc(msgId).delete();
@@ -644,14 +743,14 @@ export const useChatDetails = (targetUser: any) => {
 
   // Pin selected message (only first selected)
   const pinMessage = async (msgId: string) => {
-    if (!relationId || !msgId) return;
+    if (!relationId || !msgId) {return;}
     const relationRef = firestore().collection('relation').doc(relationId);
     await relationRef.set({ pinnedMsg: msgId }, { merge: true });
     showSuccess('Message pinned');
   };
 
   useEffect(() => {
-    if (!relationId) return;
+    if (!relationId) {return;}
     const relationRef = firestore().collection('relation').doc(relationId);
     const unsub = relationRef.onSnapshot(doc => {
       const data = doc.data();
@@ -661,7 +760,7 @@ export const useChatDetails = (targetUser: any) => {
   }, [relationId]);
 
   useEffect(() => {
-    if (!relationId) return;
+    if (!relationId) {return;}
 
     const syncLiveLocations = async () => {
       const snap = await firestore()
@@ -708,7 +807,7 @@ export const useChatDetails = (targetUser: any) => {
   }, [relationId, myEmail]);
 
   const handleEditMessage = async () => {
-    if (!editMsgId || !editText.trim()) return;
+    if (!editMsgId || !editText.trim()) {return;}
     const relationRef = firestore().collection('relation').doc(relationId);
     await relationRef
       .collection('messages')
@@ -722,8 +821,8 @@ export const useChatDetails = (targetUser: any) => {
   useEffect(() => {
     return () => {
       if (liveWatchId.current != null)
-        Geolocation.clearWatch(liveWatchId.current);
-      if (liveEndTimer.current) clearTimeout(liveEndTimer.current);
+        {Geolocation.clearWatch(liveWatchId.current);}
+      if (liveEndTimer.current) {clearTimeout(liveEndTimer.current);}
     };
   }, []);
 
@@ -813,5 +912,10 @@ export const useChatDetails = (targetUser: any) => {
 
     setIsEditing,
     setEditMsgId,
+
+    lastSeen,
+    isOnline,
+
+    allThemes,
   };
 };

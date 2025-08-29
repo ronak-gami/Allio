@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native';
-import { FONTS } from '@utils/helper';
-import { height, width } from '@utils/helper';
+import { height } from '@utils/helper';
+import { FONTS } from '@assets/index';
 const useStyle = () => {
   const { colors } = useTheme();
 

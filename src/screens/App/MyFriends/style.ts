@@ -10,6 +10,17 @@ const useStyle = () => {
     container: {
       flex: 1,
       backgroundColor: colors.background,
+      paddingHorizontal: scale(12),
+    },
+    contentContainer: {
+      flex: 1,
+    },
+    overlay: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
     },
     headerContainer: {
       flexDirection: 'row',
