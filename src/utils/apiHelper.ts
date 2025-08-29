@@ -106,7 +106,6 @@ const manageGenericReponse = async <T>({
       }
 
       // Just return local data if no API fetch needed
-      console.log('📁 Using local data only');
       return { data: { [dataKey]: localData } };
     } catch (error) {
       showError(error?.response?.data?.error || 'Something went wrong');
