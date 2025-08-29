@@ -46,15 +46,15 @@ const useNews = () => {
 
   useEffect(() => {
     const removeListener = newsService.addNewsListener(news => {
-      const sortedNews = [...news].sort(
+      const sortedNews = [...news]?.sort?.(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          new Date(b?.createdAt)?.getTime() - new Date(a?.createdAt)?.getTime(),
       );
       setNewsList(sortedNews);
     });
 
     const unsubscribeNetInfo = NetInfo.addEventListener(state => {
-      const online = state.isConnected && state.isInternetReachable !== false;
+      const online = state?.isConnected && state?.isInternetReachable !== false;
 
       if (online) {
         if (wasOffline.current) {
@@ -110,8 +110,8 @@ const useNews = () => {
   const onSubmit = async values => {
     const newNews = {
       id: values?.id ? values?.id : Date.now().toString(),
-      name: values.name,
-      description: values.description,
+      name: values?.name,
+      description: values?.description,
       createdAt: values?.id ? values?.createdAt : moment().toISOString(),
     };
 
