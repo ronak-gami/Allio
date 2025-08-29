@@ -33,6 +33,7 @@ export type HomeStackParamList = {
   UpdateProfile: {
     email?: string;
   };
+  NewsApp: undefined;
 };
 
 export type TabParamList = {

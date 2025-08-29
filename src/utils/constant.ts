@@ -13,7 +13,7 @@ const WEB_CLIENT_ID =
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
-const BASE_URL = 'https://842b8dc4546c.ngrok-free.app/api';
+const BASE_URL = 'https://2a003a7da7eb.ngrok-free.app/api' as const;
 
 const onboardingData: OnboardingItem[] = [
   {
@@ -77,7 +77,8 @@ const HOME = {
   AiAssistant: 'AiAssistant',
   LocationScreen: 'LocationScreen',
   UpdateProfile: 'UpdateProfile',
-};
+  NewsApp: 'NewsApp',
+} as const;
 
 const LICENSE_KEY =
   'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
@@ -85,7 +86,6 @@ const LICENSE_KEY =
 const WORD_COUNT_THRESHOLD = 20;
 
 const THRESHOLD = 50;
-
 
 const FeaturesDataItem = [
   {

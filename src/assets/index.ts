@@ -12,6 +12,7 @@ export const IMAGES = {
   Chattheme2: require('./images/chattheme2.jpg'),
   Chattheme3: require('./images/chattheme3.jpg'),
   Chattheme4: require('./images/chattheme4.jpg'),
+  delete: require('./images/delete.png'),
 };
 
 export const ICONS = {
@@ -41,8 +42,9 @@ export const ICONS = {
   stop: require('./icons/stop.png'),
   copy: require('./icons/copy.png'),
   Attach: require('./icons/attach.png'),
-  gemini: require('./icons/Geminiai.png'),
   Edit: require('./icons/edit.png'),
+  Refresh: require('./icons/refresh.png'),
+  gemini: require('./icons/Geminiai.png'),
   Social: require('./icons/social.png'),
   Home: require('./icons/home.png'),
   ImageMedia: require('./icons/image-media.png'),

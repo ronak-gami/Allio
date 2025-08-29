@@ -19,8 +19,9 @@ import {
 import RNFS from 'react-native-fs';
 import axios from 'axios';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
-import moment from 'moment';
+import NetInfo from '@react-native-community/netinfo';
 import Share from 'react-native-share';
+import moment from 'moment';
 import { showError, showSuccess } from './toast';
 import notifee, {
   AndroidImportance,
@@ -706,6 +707,43 @@ const onDisplayNotification = async (data: { title?: any; body?: any }) => {
   }
 };
 
+const isOnline = async (): Promise<boolean> => {
+  const state = await NetInfo.fetch();
+  return state.isConnected && state.isInternetReachable !== false;
+};
+
+const formatLastUpdated = (timeStamp: string | Date): string => {
+  const now = moment();
+  const updated = moment(timeStamp);
+
+  const diffInSeconds = now.diff(updated, 'seconds');
+  const diffInMinutes = now.diff(updated, 'minutes');
+  const diffInHours = now.diff(updated, 'hours');
+  const diffInDays = now.diff(updated, 'days');
+
+  if (diffInSeconds < 60) {
+    return 'Last updated a few seconds ago';
+  }
+
+  if (diffInMinutes < 60) {
+    return `Last updated ${diffInMinutes} minute${
+      diffInMinutes > 1 ? 's' : ''
+    } ago`;
+  }
+
+  if (diffInHours < 24) {
+    if (diffInHours === 1) return 'Last updated 1 hour ago';
+    return `Last updated ${diffInHours} hours ago`;
+  }
+
+  if (diffInDays === 1) {
+    return 'Last updated yesterday';
+  }
+
+  // Fallback → formatted date
+  return `Last updated ${updated.format('DD MMM, YYYY')}`;
+};
+
 export {
   height,
   width,
@@ -732,4 +770,6 @@ export {
   formatLastSeen,
   saveFCMTokenToFirestore,
   removeFCMTokenFromFirestore,
+  isOnline,
+  formatLastUpdated,
 };
