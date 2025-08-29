@@ -725,14 +725,10 @@ const formatLastUpdated = (timeStamp: string | Date): string => {
     return 'Last updated a few seconds ago';
   }
 
-  if (diffInMinutes < 5) {
+  if (diffInMinutes < 60) {
     return `Last updated ${diffInMinutes} minute${
       diffInMinutes > 1 ? 's' : ''
     } ago`;
-  }
-
-  if (diffInMinutes < 60) {
-    return 'Last updated 5 minutes ago';
   }
 
   if (diffInHours < 24) {
