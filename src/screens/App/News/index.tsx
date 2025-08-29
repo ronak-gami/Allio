@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -5,8 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import React, { useState } from 'react';
-import { Formik } from 'formik';
+import { useFormik } from 'formik';
 
 import {
   Button,
@@ -27,7 +27,6 @@ const News = () => {
   const styles = useStyle();
   const {
     newsList,
-    loading,
     handleDelete,
     onSubmit,
     onRefresh,
@@ -35,6 +34,38 @@ const News = () => {
     editItem,
     time,
   } = useNews();
+
+  const initialFormValues = editItem
+    ? {
+        id: editItem.id || '',
+        name: editItem.name || '',
+        description: editItem.description || '',
+        image: editItem.image || '',
+      }
+    : { name: '', description: '', image: '' };
+
+  const {
+    values,
+    errors,
+    touched,
+    setFieldTouched,
+    handleSubmit,
+    setFieldValue,
+    resetForm,
+  } = useFormik({
+    enableReinitialize: true,
+    initialValues: initialFormValues,
+    onSubmit: (values, { resetForm }) => {
+      onSubmit(values);
+      resetForm();
+    },
+  });
+
+  useEffect(() => {
+    if (activeTab === 'Add List') {
+      resetForm();
+    }
+  }, [activeTab]);
 
   const renderNewsCard = ({ item }: { item: any }) => {
     return (
@@ -48,15 +79,6 @@ const News = () => {
       />
     );
   };
-
-  const initialFormValues = editItem
-    ? {
-        id: editItem.id || '',
-        name: editItem.name || '',
-        description: editItem.description || '',
-        image: editItem.image || '',
-      }
-    : { name: '', description: '', image: '' };
 
   return (
     <Container showBackArrow title="News">
@@ -74,7 +96,7 @@ const News = () => {
                 styles.tabText,
                 activeTab === tab && styles.activeTabText,
               ]}>
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab}
             </Text>
             {activeTab === tab && <View />}
           </TouchableOpacity>
@@ -95,43 +117,33 @@ const News = () => {
 
       {activeTab === 'Add List' && (
         <View style={styles.form}>
-          <Formik
-            initialValues={initialFormValues}
-            enableReinitialize={true}
-            onSubmit={(values, { resetForm }) => {
-              onSubmit(values);
-              resetForm();
-            }}>
-            {({ handleChange, handleSubmit, values, errors, touched }) => {
-              return (
-                <KeyboardAvoidingView
-                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                  keyboardVerticalOffset={100}>
-                  <Input
-                    label="Name"
-                    placeholder="e.g., pn"
-                    value={values.name}
-                    onChangeText={handleChange('name')}
-                    error={touched.name ? errors.name : undefined}
-                    touched={touched.name}
-                  />
-                  <Input
-                    label="Description"
-                    placeholder="description"
-                    value={values.description}
-                    onChangeText={handleChange('description')}
-                    error={touched.description ? errors.description : undefined}
-                    touched={touched.description}
-                  />
-                  <Button
-                    title={'Submit'}
-                    style={styles.button}
-                    onPress={handleSubmit}
-                  />
-                </KeyboardAvoidingView>
-              );
-            }}
-          </Formik>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={100}>
+            <Input
+              label="Name"
+              placeholder="e.g., pn"
+              value={values.name}
+              onChangeText={text => setFieldValue('name', text)}
+              error={touched.name ? errors.name : undefined}
+              touched={touched.name}
+              onBlur={() => setFieldTouched('name')}
+            />
+            <Input
+              label="Description"
+              placeholder="description"
+              value={values.description}
+              onChangeText={text => setFieldValue('description', text)}
+              error={touched.description ? errors.description : undefined}
+              touched={touched.description}
+              onBlur={() => setFieldTouched('description')}
+            />
+            <Button
+              title={'Submit'}
+              style={styles.button}
+              onPress={handleSubmit}
+            />
+          </KeyboardAvoidingView>
         </View>
       )}
     </Container>
