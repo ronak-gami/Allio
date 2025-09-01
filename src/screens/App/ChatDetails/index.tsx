@@ -125,6 +125,7 @@ const ChatDetailsScreen = () => {
     isOnline,
     allThemes,
     handleGoBack,
+    isSelf, // ADDED
   } = useChatDetails(resolvedUser, deeplinkEmail);
 
   const user = resolvedUser; // keep local reference
@@ -144,7 +145,11 @@ const ChatDetailsScreen = () => {
   }, [sharedMediaId, mediaUrl, type, openImageModal, openVideoModal]);
 
   const showImage = user?.profileImage && user?.profileImage.trim() !== '';
-  const firstLetter = user?.firstName?.charAt(0)?.toUpperCase() || '?';
+  const firstLetter = showImage
+    ? ''
+    : isSelf
+    ? 'Y'
+    : user?.firstName?.charAt(0)?.toUpperCase() || '?';
   let lastDateLabel = '';
 
   if (!user) {
@@ -158,7 +163,8 @@ const ChatDetailsScreen = () => {
   // e.g. userLoading && <Text style={{margin:8}}>Loading profile...</Text>
 
   const renderFriendStatusCard = () => {
-    if (relationStatus === 'accepted') {
+    // Hide request UI for self or when already friends
+    if (relationStatus === 'accepted' || isSelf) {
       return null;
     }
 
@@ -241,9 +247,9 @@ const ChatDetailsScreen = () => {
                   navigateToProfile();
                 }
               }}>
-              <Text style={styles.headerName}>{user?.firstName}</Text>
-              {/* <Text style={styles.headerEmail}>{user?.email}</Text>
-               */}
+              <Text style={styles.headerName}>
+                {isSelf ? 'You' : user?.firstName}
+              </Text>
               {relationStatus === 'accepted' && (
                 <Text style={styles.headerStatus} type="bold">
                   {isOnline
@@ -648,7 +654,7 @@ const ChatDetailsScreen = () => {
             </ScrollView>
           </ImageBackground>
 
-          {relationStatus === 'accepted' && (
+          {(relationStatus === 'accepted' || isSelf) && (
             <View style={styles.inputContainer}>
               <Input
                 placeholder={
@@ -718,16 +724,19 @@ const ChatDetailsScreen = () => {
               activeOpacity={1}
               onPress={() => setMenuVisible(false)}>
               <View style={styles.menuContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setMenuVisible(false);
-                    states?.isBlockedByMe ? unblockUser() : blockUser();
-                  }}
-                  style={styles.padding}>
-                  <Text type="semibold" style={styles.menuText}>
-                    {states?.isBlockedByMe ? 'Unblock User' : 'Block User'}
-                  </Text>
-                </TouchableOpacity>
+                {/* Hide Block/Unblock for self chat */}
+                {!isSelf && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setMenuVisible(false);
+                      states?.isBlockedByMe ? unblockUser() : blockUser();
+                    }}
+                    style={styles.padding}>
+                    <Text type="semibold" style={styles.menuText}>
+                      {states?.isBlockedByMe ? 'Unblock User' : 'Block User'}
+                    </Text>
+                  </TouchableOpacity>
+                )}
 
                 <TouchableOpacity
                   onPress={() => {
@@ -751,7 +760,6 @@ const ChatDetailsScreen = () => {
                   </Text>
                 </TouchableOpacity>
 
-                {/* NEW: Share Location */}
                 <TouchableOpacity
                   onPress={async () => {
                     setMenuVisible(false);

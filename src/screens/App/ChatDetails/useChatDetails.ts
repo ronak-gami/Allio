@@ -177,13 +177,18 @@ export const useChatDetails = (targetUser: any, deeplinkEmail: string) => {
     setVideoModalVisible(false);
   };
 
+  // Normalize and detect self chat
+  const myNorm = (myEmail || '').trim().toLowerCase();
+  const otherNorm = (targetUser?.email || '').trim().toLowerCase();
+  const isSelf = !!myNorm && myNorm === otherNorm;
+
   /** Firestore paths */
   const relationId = (() => {
-    if (!myEmail || !targetUser?.email) {
+    if (!myNorm || !otherNorm) {
       return null;
     }
-    const sorted = [myEmail, targetUser.email].sort();
-    return `${sorted[0]}_${sorted[1]}`;
+    // enforce myEmail_otherEmail (no sort, lowercased)
+    return `${myNorm}_${otherNorm}`;
   })();
 
   useEffect(() => {
@@ -305,30 +310,38 @@ export const useChatDetails = (targetUser: any, deeplinkEmail: string) => {
 
       if (!docSnapshot.exists) {
         await relationRef.set({
-          from: myEmail,
-          to: targetUser?.email,
-          isAccept: false,
+          from: myNorm, // store lowercased
+          to: otherNorm,
+          isAccept: true, // ensure it appears in Friends on first message
           timestamp,
         });
+      } else if (docSnapshot.exists && !docSnapshot.data()?.isAccept) {
+        // if relation exists but not accepted, accept it on first message
+        await relationRef.set(
+          {
+            isAccept: true,
+            from: myNorm,
+            to: otherNorm,
+          },
+          { merge: true },
+        );
       }
 
       await relationRef.collection('messages').add({
         text: message.trim(),
-        from: myEmail,
+        from: myEmail, // keep original casing in message fields
         to: targetUser?.email,
         timestamp,
       });
 
-      if (!isBlockedByMe && !isBlockedByThem && !isOnline) {
-        const email1 = (myEmail || '').trim().toLowerCase();
+      // Don't notify on self chat
+      if (!isSelf && !isBlockedByMe && !isBlockedByThem && !isOnline) {
         const email2 = (targetUser?.email || '').trim().toLowerCase();
-
         const data = {
           emails: [email2],
           title: 'Message Sent',
-          body: `${email1} has sent a message to you.`,
+          body: `${myNorm} has sent a message to you.`,
         };
-
         const response = await api?.NOTIFICATION.sendNotification({ data });
         if (response?.data?.success) {
           showSuccess(response?.data?.message || 'Notification sent!');
@@ -981,5 +994,6 @@ export const useChatDetails = (targetUser: any, deeplinkEmail: string) => {
 
     allThemes,
     handleGoBack,
+    isSelf, // expose for UI
   };
 };

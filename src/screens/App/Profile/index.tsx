@@ -36,6 +36,7 @@ const ProfileHeader: React.FC<{
   handleReject?: () => void;
   onEditProfile?: () => void;
   handleShareProfile?: () => void;
+  onChatPress?: () => void; // ADDED
   states: object;
 }> = ({
   email,
@@ -52,6 +53,7 @@ const ProfileHeader: React.FC<{
   handleReject,
   onEditProfile,
   handleShareProfile,
+  onChatPress, // ADDED
   states,
 }) => {
   const displayName =
@@ -138,13 +140,26 @@ const ProfileHeader: React.FC<{
             </Text>
           )}
         </View>
-        <TouchableOpacity onPress={handleShareProfile}>
-          <Image
-            source={ICONS.Share}
-            style={styles.shareIcon}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <TouchableOpacity onPress={handleShareProfile}>
+            <Image
+              source={ICONS.Share}
+              style={styles.shareIcon}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+
+          {!isExternalProfile && (
+            <TouchableOpacity onPress={onChatPress}>
+              <Image
+                source={ICONS.Chat}
+                style={styles.shareIcon}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
       {isExternalProfile && !states?.isFriend && (
@@ -332,6 +347,7 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
           onEditProfile={onEditProfile}
           states={states}
           handleShareProfile={handleShareProfile}
+          onChatPress={navigateToMyFriends} // ADDED: navigate to Chat Details with user prop
         />
         <TabBar
           activeTab={states.activeTab}

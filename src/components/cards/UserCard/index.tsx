@@ -42,8 +42,16 @@ const UserCard: React.FC<UserCardProps> = ({
     (state: RootState) => state.auth?.userData?.email,
   );
 
+  const isSelf =
+    (myEmail || '').trim().toLowerCase() ===
+    (user?.email || '').toString().trim().toLowerCase();
+
   const showImage = user?.profileImage && user?.profileImage.trim() !== '';
-  const firstLetter: string = user?.firstName?.charAt(0)?.toUpperCase() || '?';
+  const firstLetter: string = isSelf
+    ? 'Y'
+    : user?.firstName?.charAt(0)?.toUpperCase() ||
+      user?.email?.charAt(0)?.toUpperCase() ||
+      '?';
   const isPinned = pinnedUsers?.includes(user.email);
 
   const {
@@ -67,7 +75,14 @@ const UserCard: React.FC<UserCardProps> = ({
     onUnpin,
   );
 
+  const displayName = isSelf
+    ? 'You'
+    : user?.firstName || user?.email || 'Unknown';
+
   const renderAction = () => {
+    // Hide actions for self
+    if (isSelf) return null;
+
     if (relationStatus === 'accepted') return null;
     if (relationStatus === 'sent')
       return (
@@ -101,7 +116,7 @@ const UserCard: React.FC<UserCardProps> = ({
       onLongPress={() => {
         if (!isPinned && isFriendTab) {
           onLongPressUser?.(user);
-          drag?.(); // start dragging on long press
+          drag?.();
         }
       }}>
       <View
@@ -128,7 +143,7 @@ const UserCard: React.FC<UserCardProps> = ({
 
           <View style={styles.userInfo}>
             <View style={styles.topRow}>
-              <Text style={styles.name}>{user?.firstName || 'Unknown'}</Text>
+              <Text style={styles.name}>{displayName}</Text>
 
               {(isPinned || dragVisible) && isFriendTab && (
                 <TouchableOpacity
@@ -155,7 +170,16 @@ const UserCard: React.FC<UserCardProps> = ({
               )}
           </View>
 
-          {!isFriendTab && <View>{renderAction()}</View>}
+          {/* All tab right side: self shows share icon; others show request actions */}
+          {!isFriendTab && (
+            <View>
+              {isSelf ? (
+                <Image source={ICONS.share} style={styles.iconimage1} />
+              ) : (
+                <View>{renderAction()}</View>
+              )}
+            </View>
+          )}
         </View>
       </View>
     </TouchableWithoutFeedback>

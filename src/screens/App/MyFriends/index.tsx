@@ -47,6 +47,16 @@ const MyFriends = () => {
     [users, pinnedUsers],
   );
 
+  const combinedUnique = useMemo(() => {
+    const map = new Map<string, any>();
+    [...pinnedUserObjects, ...nonPinnedUsers].forEach(u => {
+      const key = (u?.email || '').toLowerCase();
+      if (!key) return;
+      if (!map.has(key)) map.set(key, u);
+    });
+    return Array.from(map.values());
+  }, [pinnedUserObjects, nonPinnedUsers]);
+
   const renderEmptyState = () => (
     <View style={styles.emptyStateContainer}>
       <Image
@@ -113,17 +123,17 @@ const MyFriends = () => {
               }}
               activationDistance={50}
               ListEmptyComponent={renderEmptyState}
-              // refreshControl={
-              // <RefreshControl
-              //   refreshing={states.refreshing}
-              //   onRefresh={onRefresh}
-              // />
-              // }
+              refreshControl={
+                <RefreshControl
+                  refreshing={states.refreshing}
+                  onRefresh={onRefresh}
+                />
+              }
             />
           </View>
         ) : (
           <CustomFlatList
-            data={[...pinnedUserObjects, ...nonPinnedUsers]}
+            data={combinedUnique}
             keyExtractor={item => item.id}
             renderItem={({ item }) => (
               <UserCard
