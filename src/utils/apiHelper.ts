@@ -1,13 +1,13 @@
 import client from '@api/Client';
 import { isOnline } from './helper';
 import { showError, showSuccess } from './toast';
+import { realmService } from '../realm/services';
 
 import { timeService } from '../realm/services';
 
 export interface ManageGenericParams<T> {
   method: 'get' | 'post' | 'put' | 'delete';
   endpoint: string;
-  realmService: any;
   schemaName: string;
   offlineSchemaName: string;
   data?: T;
@@ -32,7 +32,6 @@ const apiRequest = async (
 const manageGenericReponse = async <T>({
   method,
   endpoint,
-  realmService,
   schemaName,
   offlineSchemaName,
   data,

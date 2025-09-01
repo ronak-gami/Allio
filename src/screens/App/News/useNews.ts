@@ -4,7 +4,7 @@ import moment from 'moment';
 import NetInfo from '@react-native-community/netinfo';
 
 import api from '@api/index';
-import { newsService, timeService } from '../../../realm/services';
+import { realmService, timeService } from '../../../realm/services';
 import { isOnline } from '@utils/helper';
 
 const useNews = () => {
@@ -30,9 +30,12 @@ const useNews = () => {
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       });
+      setLoading(false);
 
       setNewsList(sortedData);
     } catch (error) {
+      setLoading(false);
+
       console.error('News Fetch Error:', error);
     } finally {
       setLoading(false);
@@ -45,7 +48,7 @@ const useNews = () => {
   };
 
   useEffect(() => {
-    const removeListener = newsService.addListener('News', news => {
+    const removeListener = realmService.addListener('News', news => {
       const sortedNews = [...news]?.sort?.(
         (a, b) =>
           new Date(b?.createdAt)?.getTime() - new Date(a?.createdAt)?.getTime(),
@@ -108,7 +111,6 @@ const useNews = () => {
   };
 
   const onSubmit = async values => {
-    setLoading(true);
     const newNews = {
       id: values?.id ? values?.id : Date.now().toString(),
       name: values?.name,

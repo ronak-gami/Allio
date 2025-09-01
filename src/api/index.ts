@@ -1,4 +1,3 @@
-import { newsService } from '../realm/services';
 import client from './Client';
 import manageGenericReponse from '@utils/apiHelper';
 
@@ -151,7 +150,6 @@ const api = {
       manageGenericReponse({
         method: 'get',
         endpoint: '/news',
-        realmService: newsService,
         schemaName: 'News',
         offlineSchemaName: 'OfflineNews',
         forceRefresh,
@@ -162,7 +160,6 @@ const api = {
       manageGenericReponse({
         method: 'post',
         endpoint: '/news',
-        realmService: newsService,
         schemaName: 'News',
         offlineSchemaName: 'OfflineNews',
         data,
@@ -172,7 +169,6 @@ const api = {
       manageGenericReponse({
         method: 'delete',
         endpoint: '/news',
-        realmService: newsService,
         schemaName: 'News',
         offlineSchemaName: 'OfflineNews',
         id,
@@ -187,7 +183,6 @@ const api = {
       manageGenericReponse({
         method: 'put',
         endpoint: '/news',
-        realmService: newsService,
         schemaName: 'News',
         offlineSchemaName: 'OfflineNews',
         data,

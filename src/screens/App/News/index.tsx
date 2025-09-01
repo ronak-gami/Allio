@@ -44,9 +44,9 @@ const News = () => {
         id: editItem.id || '',
         name: editItem.name || '',
         description: editItem.description || '',
-        image: editItem.image || '',
+        createdAt: editItem.createdAt || '',
       }
-    : { name: '', description: '', image: '' };
+    : { name: '', description: '' };
 
   const {
     values,
