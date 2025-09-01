@@ -1,12 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore, PersistConfig } from 'redux-persist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import MMKVStorage from 'react-native-mmkv-storage';
 
 import authReducer from './slices/AuthSlice';
 import languageReducer from './slices/languageSlice';
 import themeReducer from './slices/ThemeSlice';
 import biometricReducer from './slices/BiometricSlice';
 import mediaReducer from './slices/MediaSlice';
+
+const storage = new MMKVStorage.Loader().initialize();
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -20,7 +22,7 @@ type RootReducerType = ReturnType<typeof rootReducer>;
 
 const persistConfig: PersistConfig<RootReducerType> = {
   key: 'Allio_root',
-  storage: AsyncStorage,
+  storage: storage,
   whitelist: ['auth', 'language', 'theme'],
 };
 

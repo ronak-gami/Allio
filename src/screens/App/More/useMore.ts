@@ -150,6 +150,12 @@ export const useMore = () => {
         title: 'settings.Logout',
         type: 'bottomSheet',
       },
+      {
+        key: 'News App',
+        title: 'News App',
+        type: 'navigation',
+        screenName: HOME.NewsApp,
+      },
     ],
     [notificationsEnabled, handleNotificationToggle],
   );

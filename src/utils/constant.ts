@@ -77,7 +77,8 @@ const HOME = {
   AiAssistant: 'AiAssistant',
   LocationScreen: 'LocationScreen',
   UpdateProfile: 'UpdateProfile',
-};
+  NewsApp: 'NewsApp',
+} as const;
 
 const LICENSE_KEY =
   'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
@@ -85,7 +86,6 @@ const LICENSE_KEY =
 const WORD_COUNT_THRESHOLD = 20;
 
 const THRESHOLD = 50;
-
 
 const FeaturesDataItem = [
   {
