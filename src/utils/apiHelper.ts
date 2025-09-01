@@ -4,11 +4,13 @@ import { showError, showSuccess } from './toast';
 
 import { timeService } from '../realm/services';
 
-export interface ManageGenericParams<T = any> {
+export interface ManageGenericParams<T> {
   method: 'get' | 'post' | 'put' | 'delete';
   endpoint: string;
   realmService: any;
-  values?: T;
+  schemaName: string;
+  offlineSchemaName: string;
+  data?: T;
   id?: string;
   forceRefresh?: boolean;
   deletedFlagKey?: string;
@@ -31,22 +33,27 @@ const manageGenericReponse = async <T>({
   method,
   endpoint,
   realmService,
-  values,
+  schemaName,
+  offlineSchemaName,
+  data,
   id,
   forceRefresh = false,
   deletedFlagKey = 'deletedFlag',
   editedFlagKey = 'editedFlag',
   dataKey = 'data',
-  mapToApi = item => item,
+  mapToApi,
 }: ManageGenericParams<T>) => {
   const online = await isOnline();
 
+  // Helper function to apply mapping only if needed
+  const applyMapping = (data: any) => (mapToApi ? mapToApi(data) : data);
+
   if (method === 'get') {
     // Local online status and data
-    const localData = await realmService.getOnlineData();
+    const localData = await realmService.getOnlineData(schemaName);
 
     // Local offline changes
-    const offline = await realmService.getOfflineData();
+    const offline = await realmService.getOfflineData(offlineSchemaName);
 
     if (hasFetchedOnceMap[endpoint] === undefined)
       hasFetchedOnceMap[endpoint] = false;
@@ -64,21 +71,20 @@ const manageGenericReponse = async <T>({
             const { [editedFlagKey]: _, id, ...rest } = item;
             if (isDateId) {
               // checked for new but edited item and call POST
-              await apiRequest('post', endpoint, mapToApi(rest));
+              await apiRequest('post', endpoint, applyMapping(rest));
             } else {
               // checked for edited item and call PUT
               await apiRequest(
                 'put',
                 `${endpoint}/${item?.id}`,
-                mapToApi(rest),
+                applyMapping(rest),
               );
             }
           } else {
             // checked for new item and call POST
-            await apiRequest('post', endpoint, mapToApi(item));
+            await apiRequest('post', endpoint, applyMapping(item));
           }
         }
-        realmService.deleteAllOfflineData();
         needApiFetch = true;
       }
 
@@ -88,11 +94,11 @@ const manageGenericReponse = async <T>({
         const apiData = response?.data?.[dataKey] || [];
 
         // Clear and save fresh data
-        realmService.deleteAllOnlineData();
+        realmService.deleteAllOnlineData(schemaName);
         // Clear offline table too as all synced
-        realmService.deleteAllOfflineData();
+        realmService.deleteAllOfflineData(offlineSchemaName);
         // Save new data from API
-        realmService.saveAllOnlineData(apiData);
+        realmService.saveAllOnlineData(schemaName, apiData);
         // Save timestamp of last successful fetch
         const time = {
           key: endpoint,
@@ -116,45 +122,49 @@ const manageGenericReponse = async <T>({
   if (method === 'post') {
     const newItem: any = {
       id: Date.now().toString(),
-      ...values,
+      ...data,
     };
-
-    // Always add to local DB
-    realmService.addOnlineData(newItem);
 
     // If offline, also add to offline table
     if (!online) {
-      realmService.addOfflineData(newItem);
+      realmService.addOfflineData(offlineSchemaName, newItem);
+      // Always add to local DB
+      realmService.addOnlineData(schemaName, newItem);
+      showSuccess('Changes saved offline');
+      return { data: { data: newItem } }; // return local copy when offline
     }
 
     // If online, call API
     if (online) {
       const { id, ...rest } = newItem;
       try {
-        const response = await apiRequest('post', endpoint, mapToApi(rest));
-        showSuccess(response?.data?.message);
+        const response = await apiRequest('post', endpoint, applyMapping(rest));
+        if (response?.data) {
+          // Always add to local DB
+          realmService.addOnlineData(schemaName, response?.data?.data);
+          showSuccess(response?.data?.message);
+          return { data: { data: response?.data?.data } }; // return API response when online
+        }
       } catch (error) {
         throw error;
       }
     }
-
-    return { data: { data: newItem } };
   }
 
   if (method === 'put') {
     const newItem: any = {
-      id: values?.id || Date.now().toString(),
-      ...values,
+      id: data?.id || Date.now().toString(),
+      ...data,
       editedFlag: !online, // Set flag only if offline
     };
 
-    // Always add/update in local DB
-    realmService.addOnlineData(newItem);
-
     // If offline, also add to offline table with editedFlag
     if (!online) {
-      realmService.addOfflineData(newItem);
+      realmService.addOfflineData(offlineSchemaName, newItem);
+      // Always add/update in local DB
+      realmService.addOnlineData(schemaName, newItem);
       showSuccess('Changes saved offline');
+      return { data: { data: newItem } }; // return local copy when offline
     }
 
     // If online, call API
@@ -164,32 +174,41 @@ const manageGenericReponse = async <T>({
         const response = await apiRequest(
           'put',
           `${endpoint}/${newItem?.id}`,
-          mapToApi(rest),
+          applyMapping(rest),
         );
-        showSuccess(response?.data?.message);
+        if (response?.data) {
+          // Always add/update in local DB
+          realmService.addOnlineData(schemaName, response?.data?.data);
+          showSuccess(response?.data?.message);
+          return { data: { data: response?.data?.data } }; // return API response when online
+        }
       } catch (error) {
         throw error;
       }
     }
-
-    return { data: { data: newItem } };
   }
 
   if (method === 'delete') {
     if (online) {
       // If online, call API
       const response = await apiRequest('delete', `${endpoint}/${id}`);
-      showSuccess(response?.data?.message);
+      if (response?.data) {
+        // Always remove from local DB
+        realmService.removeOnlineData(schemaName, id);
+        showSuccess(response?.data?.message);
+        return { data: { data: response?.data } }; // return API response when online
+      }
     } else {
       // If offline, add to offline table with deletedFlag
-      realmService.addOfflineData({ id, [deletedFlagKey]: true });
-      showSuccess('Deleted successfully');
+      realmService.addOfflineData(offlineSchemaName, {
+        id,
+        [deletedFlagKey]: true,
+      });
+      // Always remove from local DB
+      realmService.removeOnlineData(schemaName, id);
+      showSuccess('Changes saved offline');
+      return { data: { data: { id } } }; // return local copy when offline
     }
-
-    // Always remove from local DB
-    realmService.removeOnlineData(id);
-
-    return { data: { id } };
   }
 
   throw new Error('Invalid method');

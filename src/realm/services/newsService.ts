@@ -1,81 +1,70 @@
 import { UpdateMode } from 'realm';
 import { ensureValidRealm, realm } from '../reamlConfiguration';
 
-const SchemaName = 'News';
-const OfflineSchemaName = 'OfflineNews';
-
-const saveAllOnlineData = news => {
+const saveAllOnlineData = (schemaName: string, data) => {
   ensureValidRealm(() => {
-    news?.forEach?.(user => {
-      realm.create(SchemaName, user, UpdateMode.Modified);
+    data?.forEach?.(item => {
+      realm.create(schemaName, item, UpdateMode.Modified);
     });
   });
 };
 
-const addOnlineData = news => {
+const addOnlineData = (schemaName: string, item) => {
   ensureValidRealm(() => {
-    realm.create(SchemaName, news, UpdateMode.Modified);
+    realm.create(schemaName, item, UpdateMode.Modified);
   });
 };
 
-const getOnlineData = () => {
-  const news = realm.objects(SchemaName);
-  if (news.isValid()) {
-    return Array.from(news);
-  } else {
-    return [];
-  }
+const getOnlineData = (schemaName: string) => {
+  const data = realm.objects(schemaName);
+  return data.isValid() ? Array.from(data) : [];
 };
 
-const removeOnlineData = newsId => {
+const removeOnlineData = (schemaName: string, id) => {
   ensureValidRealm(() => {
-    const user = realm.objectForPrimaryKey(SchemaName, newsId);
-    if (user && user.isValid()) {
-      realm.delete(user);
+    const record = realm.objectForPrimaryKey(schemaName, id);
+    if (record && record.isValid()) {
+      realm.delete(record);
     } else {
-      console.warn('User is already deleted or invalid.');
+      console.warn(`${schemaName} record already deleted or invalid.`);
     }
   });
 };
 
-const addNewsListener = callback => {
-  const newsResults = realm.objects(SchemaName);
-  callback(Array.from(newsResults));
+const addListener = (schemaName: string, callback) => {
+  const results = realm.objects(schemaName);
+  callback(Array.from(results));
   const listener = collection => {
     callback(Array.from(collection));
   };
-  newsResults.addListener(listener);
+  results.addListener(listener);
   return () => {
-    newsResults.removeListener(listener);
+    results.removeListener(listener);
   };
 };
 
-const deleteAllOnlineData = () => {
+const deleteAllOnlineData = (schemaName: string) => {
   ensureValidRealm(() => {
-    const all = realm.objects(SchemaName);
+    const all = realm.objects(schemaName);
     realm.delete(all);
   });
 };
 
-//Offline News Handling
-const addOfflineData = news => {
+// ----- Offline -----
+const addOfflineData = (offlineSchemaName: string, item) => {
   ensureValidRealm(() => {
-    realm.create(OfflineSchemaName, news, UpdateMode.Modified);
+    realm.create(offlineSchemaName, item, UpdateMode.Modified);
   });
 };
 
-const getOfflineData = () => {
-  const news = realm.objects(OfflineSchemaName);
-  if (news.isValid()) {
-    return Array.from(news);
-  } else {
-    return [];
-  }
+const getOfflineData = (offlineSchemaName: string) => {
+  const data = realm.objects(offlineSchemaName);
+  return data.isValid() ? Array.from(data) : [];
 };
 
-const deleteAllOfflineData = () => {
+const deleteAllOfflineData = (offlineSchemaName: string) => {
   ensureValidRealm(() => {
-    const all = realm.objects(OfflineSchemaName);
+    const all = realm.objects(offlineSchemaName);
     realm.delete(all);
   });
 };
@@ -85,7 +74,7 @@ export default {
   addOnlineData,
   getOnlineData,
   removeOnlineData,
-  addNewsListener,
+  addListener,
   deleteAllOnlineData,
 
   addOfflineData,

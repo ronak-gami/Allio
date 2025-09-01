@@ -71,12 +71,25 @@ const useValidation = () => {
       .required(t('field_required', { field: t('message') }))
       .min(5, t('field_min', { field: t('message'), min: 5 })),
   });
+
+  const newsValidationSchema = Yup.object().shape({
+    name: Yup.string()
+      .trim()
+      .required(t('field_required', { field: t('name') }))
+      .min(2, t('field_min', { field: t('name'), min: 2 })),
+    description: Yup.string()
+      .trim()
+      .required(t('field_required', { field: t('description') }))
+      .min(5, t('field_min', { field: t('description'), min: 5 })),
+  });
+
   return {
     loginValidationSchema,
     forgotPasswordSchema,
     registrationValidationSchema,
     contetUsValidationSchema,
     emailOnlyValidationSchema,
+    newsValidationSchema,
   };
 };
 

@@ -16,6 +16,7 @@ import {
   LastUpdatedTime,
   NewsCard,
 } from '@components/index';
+import useValidation from '@utils/validationSchema';
 
 import useNews from './useNews';
 import useStyle from './styles';
@@ -25,6 +26,8 @@ const News = () => {
     'News List',
   );
   const styles = useStyle();
+  const { newsValidationSchema } = useValidation();
+
   const {
     newsList,
     handleDelete,
@@ -33,6 +36,7 @@ const News = () => {
     handleEdit,
     editItem,
     time,
+    loading,
   } = useNews();
 
   const initialFormValues = editItem
@@ -55,9 +59,14 @@ const News = () => {
   } = useFormik({
     enableReinitialize: true,
     initialValues: initialFormValues,
-    onSubmit: (values, { resetForm }) => {
-      onSubmit(values);
-      resetForm();
+    validationSchema: newsValidationSchema,
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        await onSubmit(values);
+        resetForm();
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
@@ -81,7 +90,7 @@ const News = () => {
   };
 
   return (
-    <Container showBackArrow title="News">
+    <Container showBackArrow title="News" showLoader={loading}>
       <View style={styles.headerContainer}>
         {['News List', 'Add List'].map(tab => (
           <TouchableOpacity
@@ -125,18 +134,22 @@ const News = () => {
               placeholder="e.g., pn"
               value={values.name}
               onChangeText={text => setFieldValue('name', text)}
-              error={touched.name ? errors.name : undefined}
-              touched={touched.name}
               onBlur={() => setFieldTouched('name')}
+              error={touched.name && errors.name ? errors.name : undefined}
+              touched={touched.name}
             />
             <Input
               label="Description"
               placeholder="description"
               value={values.description}
               onChangeText={text => setFieldValue('description', text)}
-              error={touched.description ? errors.description : undefined}
-              touched={touched.description}
               onBlur={() => setFieldTouched('description')}
+              error={
+                touched.description && errors.description
+                  ? errors.description
+                  : undefined
+              }
+              touched={touched.description}
             />
             <Button
               title={'Submit'}

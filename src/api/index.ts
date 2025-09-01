@@ -152,26 +152,20 @@ const api = {
         method: 'get',
         endpoint: '/news',
         realmService: newsService,
+        schemaName: 'News',
+        offlineSchemaName: 'OfflineNews',
         forceRefresh,
         dataKey: 'data',
-        mapToApi: item => ({
-          name: item?.name,
-          description: item?.description,
-          createdAt: item?.createdAt,
-        }),
       }),
 
-    addNews: (values: { name: string; description: string }) =>
+    addNews: (data: { name: string; description: string; createdAt: string }) =>
       manageGenericReponse({
         method: 'post',
         endpoint: '/news',
         realmService: newsService,
-        values,
-        mapToApi: item => ({
-          name: item?.name,
-          description: item?.description,
-          createdAt: item?.createdAt,
-        }),
+        schemaName: 'News',
+        offlineSchemaName: 'OfflineNews',
+        data,
       }),
 
     deleteNews: (id: string) =>
@@ -179,20 +173,24 @@ const api = {
         method: 'delete',
         endpoint: '/news',
         realmService: newsService,
+        schemaName: 'News',
+        offlineSchemaName: 'OfflineNews',
         id,
       }),
 
-    editNews: (values: { id: string; name: string; description: string }) =>
+    editNews: (data: {
+      id: string;
+      name: string;
+      description: string;
+      createdAt: string;
+    }) =>
       manageGenericReponse({
         method: 'put',
         endpoint: '/news',
         realmService: newsService,
-        values,
-        mapToApi: item => ({
-          name: item?.name,
-          description: item?.description,
-          createdAt: item?.createdAt,
-        }),
+        schemaName: 'News',
+        offlineSchemaName: 'OfflineNews',
+        data,
       }),
   },
 };

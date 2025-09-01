@@ -20,7 +20,7 @@ const useNews = () => {
   const time = timeService.getTime('/news');
 
   const fetchNews = async (forceRefresh = false) => {
-    setLoading(true);
+    setLoading(forceRefresh);
     try {
       const response = await api.NEWS.getNews(forceRefresh);
       const newsData = response?.data?.data || [];
@@ -45,7 +45,7 @@ const useNews = () => {
   };
 
   useEffect(() => {
-    const removeListener = newsService.addNewsListener(news => {
+    const removeListener = newsService.addListener('News', news => {
       const sortedNews = [...news]?.sort?.(
         (a, b) =>
           new Date(b?.createdAt)?.getTime() - new Date(a?.createdAt)?.getTime(),
@@ -108,6 +108,7 @@ const useNews = () => {
   };
 
   const onSubmit = async values => {
+    setLoading(true);
     const newNews = {
       id: values?.id ? values?.id : Date.now().toString(),
       name: values?.name,
@@ -115,18 +116,18 @@ const useNews = () => {
       createdAt: values?.id ? values?.createdAt : moment().toISOString(),
     };
 
-    if (editItem) {
-      try {
-        await api.NEWS.editNews(newNews);
-      } catch (error) {}
-      setEditItem(null);
-      setUserData({});
-      return;
-    }
     try {
-      await api.NEWS.addNews(newNews);
-    } catch (error) {}
-    setUserData({});
+      if (editItem) {
+        await api.NEWS.editNews(newNews);
+        setEditItem(null);
+      } else {
+        await api.NEWS.addNews(newNews);
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+      setUserData({});
+    }
   };
 
   const onRefresh = () => {
