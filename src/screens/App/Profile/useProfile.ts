@@ -8,6 +8,11 @@ import { useNavigation } from '@react-navigation/native';
 import { getUserData } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { useUserCard } from '@components/cards/UserCard/useUserCard';
+import {
+  createProfileShareLink,
+  extractProfileEmail,
+} from '@utils/deepLinking';
+import Share from 'react-native-share';
 
 interface UseProfileProps {
   userEmail?: string;
@@ -173,9 +178,30 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
     }
   };
   const onEditProfile = () => {
-    navigation.navigate(HOME.UpdateProfile, { email: email }); 
+    navigation.navigate(HOME.UpdateProfile, { email: email });
   };
 
+  const handleShareProfile = async () => {
+    if (!userData.email) return;
+
+    try {
+      const link = createProfileShareLink(userData.email);
+      const displayName =
+        userData.firstName && userData.lastName
+          ? `${userData.firstName} ${userData.lastName}`
+          : userData.email;
+
+      const shareOptions = {
+        title: 'Share Profile',
+        message: `Check out ${displayName}'s profile on Allio!\n${link.universal}`,
+        failOnCancel: false,
+      };
+
+      await Share.open(shareOptions);
+    } catch (error) {
+      console.error('Error sharing profile:', error);
+    }
+  };
 
   return {
     states: {
@@ -211,6 +237,7 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
     handleReject,
     onRefresh,
     onEditProfile,
+    handleShareProfile,
   };
 };
 

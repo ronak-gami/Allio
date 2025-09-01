@@ -139,18 +139,20 @@ const UserCard: React.FC<UserCardProps> = ({
               )}
             </View>
 
-            {states?.lastMessage && (
-              <View style={styles.bottomRow}>
-                <Text style={styles.lastMessage} numberOfLines={1}>
-                  {states?.lastMessage}
-                </Text>
-                {states?.lastMessageDate && (
-                  <Text style={styles.lastMessageDate}>
-                    {states?.lastMessageDate}
+            {isFriendTab &&
+              (states?.lastMessage || states?.lastMessageDate) && (
+                <View style={styles.bottomRow}>
+                  <Text style={styles.lastMessage} numberOfLines={1}>
+                    {states?.lastMessage}
                   </Text>
-                )}
-              </View>
-            )}
+
+                  {states?.lastMessageDate && !dragVisible && (
+                    <Text style={styles.lastMessageDate}>
+                      {states.lastMessageDate}
+                    </Text>
+                  )}
+                </View>
+              )}
           </View>
 
           {!isFriendTab && <View>{renderAction()}</View>}

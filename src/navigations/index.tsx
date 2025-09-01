@@ -32,6 +32,12 @@ const linking: LinkingOptions<any> = {
           email: (email: string) => encodeURIComponent(email),
         },
       },
+      Profile: {
+        path: 'user/:email',
+        parse: {
+          email: (email: string) => decodeURIComponent(email).toLowerCase(),
+        },
+      },
     },
   },
 };

@@ -44,7 +44,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Single https App Link for ngrok (temp) -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -55,12 +54,31 @@
                     android:pathPrefix="/m" />
             </intent-filter>
 
+            <!-- App Link for Profile -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="allio-app-bxwta.ondigitalocean.app"
+                    android:pathPrefix="/user" />
+            </intent-filter>
+
             <!-- Custom scheme fallback -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="allio" android:host="m" />
+            </intent-filter>
+
+            <!-- Custom scheme for Profile -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="allio" android:host="user" />
             </intent-filter>
         </activity>
 

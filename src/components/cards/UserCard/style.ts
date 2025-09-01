@@ -71,15 +71,13 @@ const useStyle = () => {
       flex: 1,
       fontSize: scale(11),
       color: colors.text,
+      marginRight: 8, // Add margin to prevent text overlap
     },
     lastMessageDate: {
       fontSize: scale(10),
       color: colors.text,
-      marginLeft: 8,
     },
-    actionIconWrapper: {
-      marginLeft: 5,
-    },
+    actionIconWrapper: {},
     actionIcon: {
       width: 20,
       height: 20,

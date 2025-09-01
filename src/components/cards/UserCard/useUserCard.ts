@@ -134,7 +134,11 @@ export const useUserCard = (
   }, [selectedUser, user?.email, isPinned]);
 
   const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => dragVisible,
+    onMoveShouldSetPanResponder: (_, gestureState) => {
+      return (
+        dragVisible && Math.abs(gestureState.dy) > Math.abs(gestureState.dx)
+      );
+    },
     onPanResponderMove: (_, gestureState) => {
       setDragDistance(gestureState.dy);
       if (Math.abs(gestureState.dy) > THRESHOLD) {

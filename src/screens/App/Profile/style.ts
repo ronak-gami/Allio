@@ -73,8 +73,13 @@ const useStyle = () => {
       marginTop: scale(4),
     },
     profileInfoContainer: {
-      alignItems: 'flex-start',
-      gap: scale(2),
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    infoContainer: {
+      flexDirection: 'column',
+      gap: scale(4),
     },
     displayName: {
       fontSize: scale(18),
@@ -90,6 +95,11 @@ const useStyle = () => {
       fontSize: scale(13),
       color: colors.text,
       opacity: 0.7,
+    },
+    shareIcon: {
+      width: scale(20),
+      height: scale(20),
+      tintColor: colors.primary,
     },
     contentHeader: {
       flexDirection: 'row',

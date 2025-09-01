@@ -35,6 +35,7 @@ const ProfileHeader: React.FC<{
   handleAccept?: () => void;
   handleReject?: () => void;
   onEditProfile?: () => void;
+  handleShareProfile?: () => void;
   states: object;
 }> = ({
   email,
@@ -50,7 +51,7 @@ const ProfileHeader: React.FC<{
   handleAccept,
   handleReject,
   onEditProfile,
-
+  handleShareProfile,
   states,
 }) => {
   const displayName =
@@ -127,14 +128,23 @@ const ProfileHeader: React.FC<{
       </View>
 
       <View style={styles.profileInfoContainer}>
-        <Text type="SEMIBOLD" style={styles.email}>
-          {email}
-        </Text>
-        {mobileNo && (
-          <Text type="REGULAR" style={styles.mobileNo}>
-            {mobileNo}
+        <View style={styles.infoContainer}>
+          <Text type="SEMIBOLD" style={styles.email}>
+            {email}
           </Text>
-        )}
+          {mobileNo && (
+            <Text type="REGULAR" style={styles.mobileNo}>
+              {mobileNo}
+            </Text>
+          )}
+        </View>
+        <TouchableOpacity onPress={handleShareProfile}>
+          <Image
+            source={ICONS.Share}
+            style={styles.shareIcon}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
       </View>
 
       {isExternalProfile && !states?.isFriend && (
@@ -295,6 +305,7 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
     handleReject,
     onRefresh,
     onEditProfile,
+    handleShareProfile,
   } = useProfile({
     userEmail: route.params?.email,
   });
@@ -320,6 +331,7 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
           handleReject={handleReject}
           onEditProfile={onEditProfile}
           states={states}
+          handleShareProfile={handleShareProfile}
         />
         <TabBar
           activeTab={states.activeTab}

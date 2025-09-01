@@ -113,12 +113,12 @@ const MyFriends = () => {
               }}
               activationDistance={50}
               ListEmptyComponent={renderEmptyState}
-              refreshControl={
-                <RefreshControl
-                  refreshing={states.refreshing}
-                  onRefresh={onRefresh}
-                />
-              }
+              // refreshControl={
+              // <RefreshControl
+              //   refreshing={states.refreshing}
+              //   onRefresh={onRefresh}
+              // />
+              // }
             />
           </View>
         ) : (

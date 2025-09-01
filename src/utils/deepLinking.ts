@@ -56,6 +56,14 @@ export const createSharedMediaLink = async (opts: {
   };
 };
 
+export const createProfileShareLink = (email: string) => {
+  const lowerEmail = email.toLowerCase();
+  return {
+    universal: `${DOMAIN}/user/${encodeURIComponent(lowerEmail)}`,
+    scheme: `allio://user/${encodeURIComponent(lowerEmail)}`,
+  };
+};
+
 // Parse incoming URL -> share id
 export const extractShareId = (url?: string | null) => {
   if (!url) {
@@ -72,6 +80,25 @@ export const extractShareId = (url?: string | null) => {
   } catch {
     const match = url.match(/\/m\/([A-Za-z0-9]+)/);
     return match?.[1] || null;
+  }
+  return null;
+};
+
+export const extractProfileEmail = (url?: string | null) => {
+  if (!url) {
+    return null;
+  }
+  try {
+    const u = new URL(url);
+    if (u.hostname === DOMAIN_HOST && u.pathname.startsWith('/user/')) {
+      return decodeURIComponent(u.pathname.substring(6)); // after /user/
+    }
+    if (u.protocol === 'allio:' && u.pathname.startsWith('/user/')) {
+      return decodeURIComponent(u.pathname.substring(6));
+    }
+  } catch {
+    const match = url.match(/\/user\/([^?]+)/);
+    return match?.[1] ? decodeURIComponent(match[1]) : null;
   }
   return null;
 };

@@ -15,6 +15,7 @@ import {
   extractShareId,
   extractShareEmail,
   resolveSharedMedia,
+  extractProfileEmail,
 } from '@utils/deepLinking';
 import { getUserData } from '@utils/helper';
 import { navigationRef } from '@navigations/navigationRef';
@@ -45,6 +46,14 @@ const App = () => {
 
   useEffect(() => {
     const handleUrl = async (url?: string | null) => {
+      const profileEmail = extractProfileEmail(url);
+      if (profileEmail) {
+        if (navigationRef.isReady()) {
+          navigationRef.navigate('Profile', { email: profileEmail });
+        }
+        return;
+      }
+
       const id = extractShareId(url);
       if (!id) {
         return;

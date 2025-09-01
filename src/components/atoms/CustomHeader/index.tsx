@@ -7,6 +7,7 @@ import Text from '../Text';
 import CustomLogo from '@components/molecules/HeaderLogo';
 import CustomProfileButton from '@components/molecules/ProfileButton';
 import { ICONS } from '@assets/index';
+import { HOME } from '@utils/constant';
 
 import type { HomeTabsNavigationProp } from '@navigation/types';
 import useStyle from './style';
@@ -32,7 +33,13 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   const navigate = useNavigation<HomeTabsNavigationProp>();
 
   const handleBackPress = () => {
-    onBackPress ? onBackPress() : navigate.goBack();
+    if (onBackPress) {
+      onBackPress();
+    } else if (navigate.canGoBack()) {
+      navigate.goBack();
+    } else {
+      navigate.navigate(HOME.HomeTabs);
+    }
   };
 
   const handleProfilePress = () => {

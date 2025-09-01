@@ -55,7 +55,7 @@ export const useMyFriends = () => {
 
   const fetchAllUsersWithRelation = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
 
       const allUsers = await getAllUsers(currentUserEmail);
       const relationSnapshot = await firestore().collection('relation').get();
@@ -130,11 +130,11 @@ export const useMyFriends = () => {
       const finalUsers = [...orderedUsers, ...unorderedUsers];
 
       setUsers(finalUsers);
-      setLoading(false);
       setSelectedUser(false);
     } catch (err) {
       console.error('Error fetching users with relation:', err);
-      setLoading(false);
+    } finally {
+      // setLoading(false);
     }
   };
 
@@ -217,6 +217,8 @@ export const useMyFriends = () => {
       }
     } catch (e) {
       console.error('Error unpinning user:', e);
+    } finally {
+      setSelectedUser(false);
     }
   };
 
