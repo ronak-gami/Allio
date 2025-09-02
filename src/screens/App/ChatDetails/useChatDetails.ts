@@ -694,8 +694,7 @@ export const useChatDetails = (targetUser: any, deeplinkEmail: string) => {
             console.warn('live update error', e);
           }
         },
-        (error: GeoError) => console.warn('watchPosition error', error),
-        // { enableHighAccuracy: true, distanceFilter: 10 },
+        error => console.warn('watchPosition error', error),
       );
 
       if (liveEndTimer.current) {

@@ -16,6 +16,7 @@ import { RootState } from '../redux/store';
 import { BottomSheetProvider } from '../context/BottomSheetContext';
 import { monitorOnlineStatus } from '@utils/helper';
 import { navigationRef } from './navigationRef';
+import DeepLinkManager from '../services/DeepLinkManager';
 
 // Define linking
 const linking: LinkingOptions<any> = {
@@ -23,7 +24,7 @@ const linking: LinkingOptions<any> = {
   config: {
     screens: {
       ChatDetailsScreen: {
-        path: 'm/:sharedMediaId', // query param ?email= is optional
+        path: 'm/:sharedMediaId',
         parse: {
           sharedMediaId: (id: string) => id,
           email: (email: string) => decodeURIComponent(email).toLowerCase(),
@@ -113,6 +114,7 @@ const StackNavigator: React.FC = () => {
           routeNameRef.current = currentRoute;
         }
       }}>
+      <DeepLinkManager />
       <BottomSheetProvider>
         {splashVisible ? (
           <Splash />

@@ -7,6 +7,7 @@ import languageReducer from './slices/languageSlice';
 import themeReducer from './slices/ThemeSlice';
 import biometricReducer from './slices/BiometricSlice';
 import mediaReducer from './slices/MediaSlice';
+import deepLinkReducer from './slices/deepLinkSlice';
 
 const storage = new MMKVStorage.Loader().initialize();
 
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   theme: themeReducer,
   biometric: biometricReducer,
   media: mediaReducer,
+  deepLink: deepLinkReducer,
 });
 
 type RootReducerType = ReturnType<typeof rootReducer>;
