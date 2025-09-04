@@ -1,5 +1,7 @@
-import { useEffect, useState, useCallback } from 'react';
-import firestore from '@react-native-firebase/firestore';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
 import { getAllUsers } from '@utils/helper';
@@ -29,18 +31,47 @@ export const useMyFriends = () => {
 
   const states = { loading, refreshing };
 
+  // Cache the current user's doc ref so we don't re-query by email each time
+  const currentUserDocRefRef =
+    useRef<FirebaseFirestoreTypes.DocumentReference | null>(null);
+
+  const getCurrentUserDocRef = useCallback(async () => {
+    if (!currentUserEmail) return null;
+
+    if (currentUserDocRefRef.current) {
+      return currentUserDocRefRef.current;
+    }
+
+    const snap = await firestore()
+      .collection('users')
+      .where('email', '==', currentUserEmail)
+      .limit(1)
+      .get();
+
+    const ref = !snap.empty
+      ? snap.docs[0].ref
+      : firestore().collection('users').doc();
+
+    currentUserDocRefRef.current = ref;
+    return ref;
+  }, [currentUserEmail]);
+
+  // Invalidate cached ref on email change
+  useEffect(() => {
+    currentUserDocRefRef.current = null;
+  }, [currentUserEmail]);
+
   // ------------------- Fetch Pinned -------------------
   const refreshPinned = useCallback(async () => {
     if (!currentUserEmail) return;
 
     try {
-      const userDocSnapshot = await firestore()
-        .collection('users')
-        .where('email', '==', currentUserEmail)
-        .get();
+      const userDocRef = await getCurrentUserDocRef();
+      if (!userDocRef) return;
 
-      if (!userDocSnapshot.empty) {
-        const data = userDocSnapshot.docs[0].data();
+      const doc = await userDocRef.get();
+      if (doc.exists) {
+        const data = doc.data() || {};
         setPinnedUsers(data?.pinned ?? []);
       } else {
         setPinnedUsers([]);
@@ -48,7 +79,7 @@ export const useMyFriends = () => {
     } catch (e) {
       console.error('Error fetching pinned users:', e);
     }
-  }, [currentUserEmail]);
+  }, [currentUserEmail, getCurrentUserDocRef]);
 
   // ------------------- Ensure Self Relation -------------------
   const ensureSelfRelation = useCallback(async () => {
@@ -76,15 +107,14 @@ export const useMyFriends = () => {
       const allUsers = await getAllUsers(currentUserEmail);
       const relationSnapshot = await firestore().collection('relation').get();
 
-      const userDocSnapshot = await firestore()
-        .collection('users')
-        .where('email', '==', currentUserEmail)
-        .get();
+      // Use cached user doc ref here
+      const userDocRef = await getCurrentUserDocRef();
+      const userDocSnapshot = userDocRef ? await userDocRef.get() : undefined;
 
       let savedOrder: Record<string, number> = {};
       let savedPinned: string[] = [];
-      if (!userDocSnapshot.empty) {
-        const data = userDocSnapshot.docs[0].data();
+      if (userDocSnapshot?.exists) {
+        const data = userDocSnapshot.data() || {};
         savedOrder = data?.order ?? {};
         savedPinned = data?.pinned ?? [];
         setPinnedUsers(savedPinned);
@@ -183,7 +213,7 @@ export const useMyFriends = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentUserEmail, activeTab, ensureSelfRelation]);
+  }, [currentUserEmail, activeTab, ensureSelfRelation, getCurrentUserDocRef]);
 
   // ------------------- Pin / Unpin -------------------
   const handlePin = useCallback(
@@ -193,13 +223,9 @@ export const useMyFriends = () => {
         return;
       }
       try {
-        const userSnapshot = await firestore()
-          .collection('users')
-          .where('email', '==', currentUserEmail)
-          .get();
-        const userDocRef = !userSnapshot.empty
-          ? userSnapshot.docs[0].ref
-          : firestore().collection('users').doc();
+        const userDocRef = await getCurrentUserDocRef();
+        if (!userDocRef) return;
+
         const newPinned = [...pinnedUsers, email];
         await userDocRef.set({ pinned: newPinned }, { merge: true });
         await refreshPinned();
@@ -207,19 +233,18 @@ export const useMyFriends = () => {
         console.error('Error pinning user:', e);
       }
     },
-    [currentUserEmail, pinnedUsers, refreshPinned],
+    [pinnedUsers, getCurrentUserDocRef, refreshPinned],
   );
 
   const handleUnpin = useCallback(
     async (email: string) => {
       try {
-        const userSnapshot = await firestore()
-          .collection('users')
-          .where('email', '==', currentUserEmail)
-          .get();
-        if (!userSnapshot.empty) {
-          const userDocRef = userSnapshot.docs[0].ref;
-          const data = userSnapshot.docs[0].data() || {};
+        const userDocRef = await getCurrentUserDocRef();
+        if (!userDocRef) return;
+
+        const doc = await userDocRef.get();
+        if (doc.exists) {
+          const data = doc.data() || {};
           const savedOrder: Record<string, number> = data?.order ?? {};
           const newPinned = pinnedUsers.filter(e => e !== email);
 
@@ -244,20 +269,21 @@ export const useMyFriends = () => {
         setSelectedUser(false);
       }
     },
-    [currentUserEmail, pinnedUsers, refreshPinned, fetchAllUsersWithRelation],
+    [
+      pinnedUsers,
+      getCurrentUserDocRef,
+      refreshPinned,
+      fetchAllUsersWithRelation,
+    ],
   );
 
   // ------------------- Save Order -------------------
   const saveUserOrder = useCallback(
     async (updatedUsers: User[]) => {
       try {
-        const userSnapshot = await firestore()
-          .collection('users')
-          .where('email', '==', currentUserEmail)
-          .get();
-        const userDocRef = !userSnapshot.empty
-          ? userSnapshot.docs[0].ref
-          : firestore().collection('users').doc();
+        const userDocRef = await getCurrentUserDocRef();
+        if (!userDocRef) return;
+
         const orderData: Record<string, number> = {};
         updatedUsers.forEach((u, index) => {
           if (u.email && !pinnedUsers.includes(u.email))
@@ -272,7 +298,12 @@ export const useMyFriends = () => {
         setSelectedUser(false);
       }
     },
-    [currentUserEmail, pinnedUsers, refreshPinned, fetchAllUsersWithRelation],
+    [
+      pinnedUsers,
+      getCurrentUserDocRef,
+      refreshPinned,
+      fetchAllUsersWithRelation,
+    ],
   );
 
   const handleDragEnd = useCallback(
