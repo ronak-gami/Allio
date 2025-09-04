@@ -62,11 +62,17 @@ const useAiAssistant = () => {
       if (currentIndex < fullText.length) {
         currentText += fullText[currentIndex];
         currentIndex++;
+
         setMessages(prev =>
           prev.map(msg =>
             msg.id === messageId ? { ...msg, text: currentText } : msg,
           ),
         );
+
+        if (typingIntervalRef.current) {
+          clearTimeout(typingIntervalRef.current);
+        }
+
         typingIntervalRef.current = setTimeout(typeNextChar, 20);
       } else {
         setTypingMessageId(null);
@@ -74,6 +80,7 @@ const useAiAssistant = () => {
         clearTypingInterval();
       }
     };
+
     typeNextChar();
   };
 
@@ -92,7 +99,13 @@ const useAiAssistant = () => {
     setInputText('');
     setIsLoading(true);
 
-    setTimeout(() => scrollToBottom(), 100);
+    // clear previous scroll timeout before setting a new one
+    if (sendMessage.scrollTimeoutId) {
+      clearTimeout(sendMessage.scrollTimeoutId);
+    }
+    sendMessage.scrollTimeoutId = setTimeout(() => {
+      scrollToBottom();
+    }, 100);
 
     try {
       const response = await api.AI.getAiResponse({
@@ -111,7 +124,14 @@ const useAiAssistant = () => {
       setMessages(prev => [...prev, aiMessage]);
       setIsLoading(false);
       setTypingMessageId(aiMessageId);
-      setTimeout(() => typeWriterEffect(aiResponseText, aiMessageId), 300);
+
+      // clear previous typing timeout before setting a new one
+      if (sendMessage.typingTimeoutId) {
+        clearTimeout(sendMessage.typingTimeoutId);
+      }
+      sendMessage.typingTimeoutId = setTimeout(() => {
+        typeWriterEffect(aiResponseText, aiMessageId);
+      }, 300);
     } catch (error) {
       console.error('AI Response Error:', error);
       setIsLoading(false);
@@ -119,16 +139,26 @@ const useAiAssistant = () => {
     }
   };
 
-  const printFullMessage = messageId => {
+  const printFullMessage = (messageId: string) => {
     clearTypingInterval();
+
     setMessages(prev =>
       prev.map(msg =>
         msg.id === messageId ? { ...msg, text: msg.fullText } : msg,
       ),
     );
+
     setTypingMessageId(null);
     setShowPrintOption(null);
-    setTimeout(() => scrollToBottom(), 50);
+
+    // clear any previous timeout before scheduling new one
+    if (printFullMessage.scrollTimeoutId) {
+      clearTimeout(printFullMessage.scrollTimeoutId);
+    }
+
+    printFullMessage.scrollTimeoutId = setTimeout(() => {
+      scrollToBottom();
+    }, 50);
   };
 
   const stopTyping = () => {
@@ -140,7 +170,13 @@ const useAiAssistant = () => {
   const handleCopy = (text: string, messageId: string) => {
     Clipboard.setString(text);
     setCopiedMessageId(messageId);
-    setTimeout(() => {
+
+    // clear any existing timeout before setting new one
+    if (handleCopy.timeoutId) {
+      clearTimeout(handleCopy.timeoutId);
+    }
+
+    handleCopy.timeoutId = setTimeout(() => {
       setCopiedMessageId(null);
     }, 2000);
   };

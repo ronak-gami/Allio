@@ -34,6 +34,7 @@ export type HomeStackParamList = {
     email?: string;
   };
   NewsApp: undefined;
+  Users: undefined;
 };
 
 export type TabParamList = {

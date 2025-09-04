@@ -177,6 +177,12 @@ export const useMore = () => {
         type: 'navigation',
         screenName: HOME.NewsApp,
       },
+      {
+        key: 'Users',
+        title: 'Users',
+        type: 'navigation',
+        screenName: HOME.Users,
+      },
     ],
     [notificationsEnabled, handleNotificationToggle],
   );

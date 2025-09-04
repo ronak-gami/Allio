@@ -5,9 +5,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import * as Sentry from '@sentry/react-native'; // Sentry import
-
-import { StyleSheet, Linking } from 'react-native';
+import * as Sentry from '@sentry/react-native';
+import { Linking } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 
 import { store, persistor } from './src/redux/store';
@@ -22,6 +21,7 @@ import {
 } from '@utils/deepLinking';
 import { getUserData } from '@utils/helper';
 import { navigationRef } from './src/navigations/navigationRef';
+import { checkAppVersion } from './src/services/versionCheck';
 
 Sentry.init({
   dsn: 'https://61501c2e99978ee58ca285d730991b4d@o4509948781920256.ingest.us.sentry.io/4509948783558656',
@@ -46,6 +46,7 @@ Sentry.init({
 
 const App = () => {
   useEffect(() => {
+    checkAppVersion();
     GoogleSignin.configure({
       webClientId: WEB_CLIENT_ID,
       offlineAccess: true,
@@ -80,10 +81,14 @@ const App = () => {
         }
 
         const id = extractShareId(url);
-        if (!id) return;
+        if (!id) {
+          return;
+        }
 
         const rec = await resolveSharedMedia(id);
-        if (!rec) return;
+        if (!rec) {
+          return;
+        }
 
         const senderEmail = (
           rec.sender ||

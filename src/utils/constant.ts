@@ -78,6 +78,7 @@ const HOME = {
   LocationScreen: 'LocationScreen',
   UpdateProfile: 'UpdateProfile',
   NewsApp: 'NewsApp',
+  Users: 'Users',
 } as const;
 
 const LICENSE_KEY =

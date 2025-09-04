@@ -49,13 +49,16 @@ const MyFriends = () => {
     [users, pinnedUsers],
   );
 
-
   const combinedUnique = useMemo(() => {
     const map = new Map<string, any>();
     [...pinnedUserObjects, ...nonPinnedUsers].forEach(u => {
       const key = (u?.email || '').toLowerCase();
-      if (!key) return;
-      if (!map.has(key)) map.set(key, u);
+      if (!key) {
+        return;
+      }
+      if (!map.has(key)) {
+        map.set(key, u);
+      }
     });
     return Array.from(map.values());
   }, [pinnedUserObjects, nonPinnedUsers]);

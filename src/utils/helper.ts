@@ -752,7 +752,9 @@ const formatLastUpdated = (timeStamp: string | Date): string => {
   }
 
   if (diffInHours < 24) {
-    if (diffInHours === 1) return 'Last updated 1 hour ago';
+    if (diffInHours === 1) {
+      return 'Last updated 1 hour ago';
+    }
     return `Last updated ${diffInHours} hours ago`;
   }
 
@@ -762,6 +764,25 @@ const formatLastUpdated = (timeStamp: string | Date): string => {
 
   // Fallback → formatted date
   return `Last updated ${updated.format('DD MMM, YYYY')}`;
+};
+
+const isVersionLower = (currentVersion: string, requiredVersion: string) => {
+  const currentParts = currentVersion.split('.').map(Number);
+  const requiredParts = requiredVersion.split('.').map(Number);
+
+  const len = Math.max(currentParts.length, requiredParts.length);
+
+  for (let i = 0; i < len; i++) {
+    const current = currentParts[i] || 0;
+    const required = requiredParts[i] || 0;
+    if (current < required) {
+      return true;
+    }
+    if (current > required) {
+      return false;
+    }
+  }
+  return false;
 };
 
 export {
@@ -792,4 +813,5 @@ export {
   removeFCMTokenFromFirestore,
   isOnline,
   formatLastUpdated,
+  isVersionLower,
 };

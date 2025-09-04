@@ -14,6 +14,7 @@ import ChatDetailsScreen from '@screens/App/ChatDetails';
 import AiAssistant from '@screens/App/AiAssistant';
 import News from '@screens/App/News';
 import UpdateProfile from '@screens/App/UpdateProfile';
+import Users from '@screens/App/UsersScreen';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
@@ -38,6 +39,7 @@ const HomeNavigator: React.FC = () => {
         <Stack.Screen name={HOME.UpdateProfile} component={UpdateProfile} />
         <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />
         <Stack.Screen name={HOME.NewsApp} component={News} />
+        <Stack.Screen name={HOME.Users} component={Users} />
       </Stack.Navigator>
     </>
   );

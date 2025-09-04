@@ -48,8 +48,11 @@ const usePhotoMedia = () => {
   }, []);
 
   useEffect(() => {
-    if (email) dispatch(fetchImages(email));
-    else dispatch(setImages([]));
+    if (email) {
+      dispatch(fetchImages(email));
+    } else {
+      dispatch(setImages([]));
+    }
   }, [email, dispatch]);
 
   const states = useMemo(
@@ -76,7 +79,9 @@ const usePhotoMedia = () => {
   );
 
   const formatFileSize = useCallback((bytes?: number): string => {
-    if (!bytes) return 'Unknown';
+    if (!bytes) {
+      return 'Unknown';
+    }
     const mb = bytes / 1024 / 1024;
     return mb < 1 ? `${(bytes / 1024).toFixed(1)} KB` : `${mb.toFixed(1)} MB`;
   }, []);
@@ -112,7 +117,9 @@ const usePhotoMedia = () => {
       { mediaType: 'photo', saveToPhotos: true },
       (response: ImagePickerResponse) => {
         const asset = response.assets?.[0];
-        if (!asset?.uri) return;
+        if (!asset?.uri) {
+          return;
+        }
         setPhotoUri(asset.uri);
         setPhotoAsset({
           uri: asset.uri,
@@ -128,13 +135,17 @@ const usePhotoMedia = () => {
 
   const handleSelectPhoto = useCallback(async () => {
     const permissionResult = await handlePermissions('storage');
-    if (!permissionResult?.canAccessGallery) return;
+    if (!permissionResult?.canAccessGallery) {
+      return;
+    }
 
     launchImageLibrary(
       { mediaType: 'photo', selectionLimit: 1, includeExtra: true },
       (response: ImagePickerResponse) => {
         const asset = response.assets?.[0];
-        if (!asset?.uri) return;
+        if (!asset?.uri) {
+          return;
+        }
         setPhotoUri(asset.uri);
         setPhotoAsset({
           uri: asset.uri,
@@ -149,7 +160,9 @@ const usePhotoMedia = () => {
   }, []);
 
   const handleEdit = useCallback(async () => {
-    if (!PhotoUri) return;
+    if (!PhotoUri) {
+      return;
+    }
     setLoading(true);
 
     try {
@@ -234,13 +247,13 @@ const usePhotoMedia = () => {
         name: `image_${Date.now()}.jpg`,
       } as any);
 
-      console.log("the data is ")
-
       const response = await api.MEDIA.upload({ data: formData });
       if (response?.data?.success) {
         showSuccess(response.data?.message || 'Image saved successfully!');
         dispatch(fetchImages(email));
-      } else showError('Failed to save image.');
+      } else {
+        showError('Failed to save image.');
+      }
     } catch (error: any) {
       console.error(
         'Save error:',
@@ -256,7 +269,9 @@ const usePhotoMedia = () => {
   }, [PhotoUri, email, dispatch, handleClear]);
 
   const onRefresh = useCallback(async () => {
-    if (!email) return;
+    if (!email) {
+      return;
+    }
     setRefreshing(true);
     try {
       await dispatch(fetchImages(email));

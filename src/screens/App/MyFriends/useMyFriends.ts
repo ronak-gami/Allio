@@ -63,7 +63,9 @@ export const useMyFriends = () => {
 
   // ------------------- Fetch Pinned -------------------
   const refreshPinned = useCallback(async () => {
-    if (!currentUserEmail) return;
+    if (!currentUserEmail) {
+      return;
+    }
 
     try {
       const userDocRef = await getCurrentUserDocRef();
@@ -83,20 +85,23 @@ export const useMyFriends = () => {
 
   // ------------------- Ensure Self Relation -------------------
   const ensureSelfRelation = useCallback(async () => {
-    if (!currentUserEmail) return;
+    if (!currentUserEmail) {
+      return;
+    }
     const me = currentUserEmail.toLowerCase();
     const selfDocRef = firestore().collection('relation').doc(`${me}_${me}`);
     const selfDocSnapshot = await selfDocRef.get();
 
     if (!selfDocSnapshot.exists) {
       await selfDocRef.set({ from: me, to: me, isAccept: true });
-      console.log('Created self-relation document');
     }
   }, [currentUserEmail]);
 
   // ------------------- Fetch Users with Relation -------------------
   const fetchAllUsersWithRelation = useCallback(async () => {
-    if (!currentUserEmail) return;
+    if (!currentUserEmail) {
+      return;
+    }
     setLoading(true);
 
     try {
@@ -130,13 +135,15 @@ export const useMyFriends = () => {
         const to = (data?.to || '').toLowerCase();
         const isAccept = !!data?.isAccept;
 
-        if (!from || !to) return;
+        if (!from || !to) {
+          return;
+        }
 
         relationMap[`${from}_${to}`] = { from, to, isAccept };
         relationMap[`${to}_${from}`] = { from, to, isAccept };
 
         if (from === to && isAccept) {
-          relationMap['self'] = { from, to, isAccept };
+          relationMap.self = { from, to, isAccept };
         }
       });
 
@@ -149,12 +156,19 @@ export const useMyFriends = () => {
         const isSelf = normalized === email1;
 
         let relationStatus: User['relationStatus'] = 'none';
-        if (isSelf) relationStatus = relation?.isAccept ? 'accepted' : 'none';
-        else if (!relation) relationStatus = 'none';
-        else if (relation.isAccept) relationStatus = 'accepted';
-        else if (relation.from === email1) relationStatus = 'sent';
-        else if (relation.to === email1) relationStatus = 'received';
-        else relationStatus = 'pending';
+        if (isSelf) {
+          relationStatus = relation?.isAccept ? 'accepted' : 'none';
+        } else if (!relation) {
+          relationStatus = 'none';
+        } else if (relation.isAccept) {
+          relationStatus = 'accepted';
+        } else if (relation.from === email1) {
+          relationStatus = 'sent';
+        } else if (relation.to === email1) {
+          relationStatus = 'received';
+        } else {
+          relationStatus = 'pending';
+        }
 
         return {
           ...user,
@@ -170,19 +184,28 @@ export const useMyFriends = () => {
       const dedupMap = new Map<string, User>();
       mappedUsersRaw.forEach(u => {
         const key = (u.email || '').toLowerCase();
-        if (!key) return;
-        if (!dedupMap.has(key)) dedupMap.set(key, u);
+        if (!key) {
+          return;
+        }
+        if (!dedupMap.has(key)) {
+          dedupMap.set(key, u);
+        }
       });
 
       let filteredUsers = Array.from(dedupMap.values()).filter(user => {
-        if (activeTab === 'all') return true;
-        if (activeTab === 'friends') return user.relationStatus === 'accepted';
-        if (activeTab === 'pending')
+        if (activeTab === 'all') {
+          return true;
+        }
+        if (activeTab === 'friends') {
+          return user.relationStatus === 'accepted';
+        }
+        if (activeTab === 'pending') {
           return ['sent', 'received', 'pending'].includes(user.relationStatus);
+        }
         return true;
       });
 
-      const selfDoc = relationMap['self'];
+      const selfDoc = relationMap.self;
       if (
         (activeTab === 'all' &&
           !filteredUsers.some(u => (u.email || '').toLowerCase() === email1)) ||
@@ -208,6 +231,7 @@ export const useMyFriends = () => {
       const unorderedUsers = filteredUsers.filter(u => u.order === undefined);
       setUsers([...orderedUsers, ...unorderedUsers]);
       setSelectedUser(false);
+      setLoading(false);
     } catch (err) {
       console.error('Error fetching users with relation:', err);
     } finally {
@@ -250,9 +274,12 @@ export const useMyFriends = () => {
 
           const newOrder: Record<string, number> = {};
           Object.entries(savedOrder).forEach(([e, idx]) => {
-            if (e === email) return;
-            if (!newPinned.includes(e))
+            if (e === email) {
+              return;
+            }
+            if (!newPinned.includes(e)) {
               newOrder[e] = (typeof idx === 'number' ? idx : 9999) + 1;
+            }
           });
           newOrder[email] = 0;
 
@@ -286,8 +313,9 @@ export const useMyFriends = () => {
 
         const orderData: Record<string, number> = {};
         updatedUsers.forEach((u, index) => {
-          if (u.email && !pinnedUsers.includes(u.email))
+          if (u.email && !pinnedUsers.includes(u.email)) {
             orderData[u.email] = index;
+          }
         });
         await userDocRef.set({ order: orderData }, { merge: true });
       } catch (e) {
@@ -333,7 +361,9 @@ export const useMyFriends = () => {
   }, [activeTab, fetchAllUsersWithRelation, refreshPinned]);
 
   useEffect(() => {
-    if (!currentUserEmail) return;
+    if (!currentUserEmail) {
+      return;
+    }
     const me = currentUserEmail.toLowerCase();
     const unsub = firestore()
       .collection('relation')

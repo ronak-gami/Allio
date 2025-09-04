@@ -79,13 +79,15 @@ export const BottomSheetProvider: React.FC<BottomSheetProviderProps> = ({
     if (bottomSheetRef.current) {
       bottomSheetRef.current.close();
 
-      // Show tab bar when bottom sheet closes
-      if (tabBarRef.current && tabBarRef.current.setTabBarVisible) {
+      if (tabBarRef.current?.setTabBarVisible) {
         tabBarRef.current.setTabBarVisible(true);
       }
 
-      // Clear all state after closing
-      setTimeout(() => {
+      if (closeBottomSheet.timeoutId) {
+        clearTimeout(closeBottomSheet.timeoutId);
+      }
+
+      closeBottomSheet.timeoutId = setTimeout(() => {
         setContent(null);
         setTitle(null);
         setShowCloseButton(true);
@@ -95,6 +97,9 @@ export const BottomSheetProvider: React.FC<BottomSheetProviderProps> = ({
       console.warn('BottomSheet ref is not available for closing');
     }
   };
+
+  // attach static property for timeoutId
+  (closeBottomSheet as any).timeoutId = null;
 
   const updateSnapPoints = (newSnapPoints: string[]) => {
     setSnapPoints(newSnapPoints);
