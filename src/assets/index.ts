@@ -54,6 +54,8 @@ export const ICONS = {
   Chat: require('./icons/chat.png'),
   Logout: require('./icons/logoutIcon.png'),
   drag: require('./icons/drag.png'),
+  online: require('./icons/online.png'),
+  offline: require('./icons/offline.png'),
 };
 
 export const FONTS = {

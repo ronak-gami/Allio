@@ -38,8 +38,15 @@ const useStyle = () => {
     },
     rightButton: {
       position: 'absolute',
-      right: width * 0.04,
+      right: width * 0.12,
       top: '50%',
+      transform: [{ translateY: -scale(15) }],
+      zIndex: 1,
+    },
+    rightButtonIcon: {
+      position: 'absolute',
+      right: width * 0.04,
+      top: '60%',
       transform: [{ translateY: -scale(15) }],
       zIndex: 1,
     },
@@ -56,6 +63,10 @@ const useStyle = () => {
     logoStyle: {
       width: scale(56),
       height: scale(56),
+    },
+    offlineIcon: {
+      width: scale(20),
+      height: scale(20),
     },
   });
 };

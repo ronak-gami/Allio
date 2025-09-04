@@ -1,12 +1,14 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 
 import { View, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import NetInfo from '@react-native-community/netinfo';
 
 import Text from '../Text';
 import CustomLogo from '@components/molecules/HeaderLogo';
 import CustomProfileButton from '@components/molecules/ProfileButton';
 import { ICONS } from '@assets/index';
+import { isOnline } from '@utils/helper';
 
 import type { HomeTabsNavigationProp } from '@navigation/types';
 import useStyle from './style';
@@ -30,6 +32,25 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
 }) => {
   const styles = useStyle();
   const navigate = useNavigation<HomeTabsNavigationProp>();
+  const [online, setOnline] = useState(false);
+
+  useEffect(() => {
+    const checkInitialStatus = async () => {
+      const initialStatus = await isOnline();
+      setOnline(initialStatus);
+    };
+    checkInitialStatus();
+
+    const unsubscribe = NetInfo.addEventListener(state => {
+      const isConnected =
+        state?.isConnected && state?.isInternetReachable !== false;
+      setOnline(isConnected);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const handleBackPress = () => {
     onBackPress ? onBackPress() : navigate.goBack();
@@ -66,6 +87,13 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
           <CustomProfileButton onPress={handleProfilePress} />
         </View>
       )}
+      <View style={styles.rightButtonIcon}>
+        <Image
+          source={online ? ICONS.online : ICONS.offline}
+          style={styles.offlineIcon}
+          resizeMode="contain"
+        />
+      </View>
     </View>
   );
 };
