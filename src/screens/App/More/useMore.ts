@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { logout, setStateKey } from '@redux/slices/AuthSlice';
@@ -110,6 +111,21 @@ export const useMore = () => {
     }
   }, [dispatch, closeBottomSheet]);
 
+  const openAllioExpoApp = useCallback(async () => {
+    const url = 'allioexpo://app';
+    try {
+      await Linking.openURL(url);
+
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+      } else {
+        console.warn('AllioExpo app is not installed.');
+      }
+    } catch (e) {
+      console.warn('Failed to open AllioExpo:', e);
+    }
+  }, []);
+
   const settingsConfig = useMemo(
     () => [
       {
@@ -149,6 +165,11 @@ export const useMore = () => {
         key: 'logout',
         title: 'settings.Logout',
         type: 'bottomSheet',
+      },
+      {
+        key: 'alliolight',
+        title: 'Alliolight',
+        type: 'action',
       },
       {
         key: 'News App',
@@ -197,9 +218,16 @@ export const useMore = () => {
             snapPoints: ['40%'],
           });
         }
+      } else if (config.type === 'action') {
+        openAllioExpoApp();
       }
     },
-    [settingsConfig, handleNavigation, openBottomSheetWithConfig],
+    [
+      settingsConfig,
+      handleNavigation,
+      openBottomSheetWithConfig,
+      openAllioExpoApp,
+    ],
   );
 
   return {

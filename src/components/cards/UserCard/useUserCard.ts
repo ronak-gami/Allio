@@ -34,9 +34,10 @@ export const useUserCard = (
   const [lastMessageDate, setLastMessageDate] = useState<string>('');
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
-  // 👇 new drag states
   const [dragVisible, setDragVisible] = useState<boolean>(false);
   const [dragDistance, setDragDistance] = useState<number>(0);
+
+  const [attachVisible, setAttachVisible] = useState<boolean>(false);
 
   useEffect(() => {
     if (!myEmail || !userEmail) {
@@ -130,7 +131,10 @@ export const useUserCard = (
   }, [myEmail, user]);
 
   useEffect(() => {
-    setDragVisible(selectedUser?.email === user?.email && !isPinned);
+    // Decouple attach vs drag visibility based on selectedUser.selectType
+    const isThisUser = selectedUser?.email === user?.email && !isPinned;
+    setDragVisible(isThisUser && selectedUser?.selectType === 'drag');
+    setAttachVisible(isThisUser && selectedUser?.selectType === 'attach');
   }, [selectedUser, user?.email, isPinned]);
 
   const panResponder = PanResponder.create({
@@ -265,6 +269,7 @@ export const useUserCard = (
     },
     relationStatus,
     dragVisible,
+    attachVisible, // 👈 expose attach visibility
     panResponder,
     handlePress,
     handlePressPin,

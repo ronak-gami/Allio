@@ -61,6 +61,7 @@ const UserCard: React.FC<UserCardProps> = ({
     handleReject,
     states,
     dragVisible,
+    attachVisible, 
     panResponder,
     handlePress,
     handlePressPin,
@@ -74,6 +75,35 @@ const UserCard: React.FC<UserCardProps> = ({
     onPin,
     onUnpin,
   );
+
+  // Add double-tap support to reveal attach icon by selecting the user
+  const lastTapRef = React.useRef<number>(0);
+  const singleTapTimeoutRef = React.useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+
+  const handleCardPressDoubleAware = () => {
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 300;
+
+    if (now - lastTapRef.current < DOUBLE_TAP_DELAY) {
+      if (singleTapTimeoutRef.current) {
+        clearTimeout(singleTapTimeoutRef.current);
+        singleTapTimeoutRef.current = null;
+      }
+      // Double-tap: ONLY show attach icon (no drag)
+      if (!isPinned && isFriendTab) {
+        onLongPressUser?.({ ...user, selectType: 'attach' });
+      }
+      return;
+    }
+
+    lastTapRef.current = now;
+    singleTapTimeoutRef.current = setTimeout(() => {
+      handlePress(); // Single tap -> open chat
+      singleTapTimeoutRef.current = null;
+    }, DOUBLE_TAP_DELAY);
+  };
 
   const displayName = isSelf
     ? 'You'
@@ -112,10 +142,11 @@ const UserCard: React.FC<UserCardProps> = ({
 
   return (
     <TouchableWithoutFeedback
-      onPress={handlePress}
+      onPress={handleCardPressDoubleAware}
       onLongPress={() => {
         if (!isPinned && isFriendTab) {
-          onLongPressUser?.(user);
+          // Long-press: ONLY show drag (no attach)
+          onLongPressUser?.({ ...user, selectType: 'drag' });
           drag?.();
         }
       }}>
@@ -145,7 +176,7 @@ const UserCard: React.FC<UserCardProps> = ({
             <View style={styles.topRow}>
               <Text style={styles.name}>{displayName}</Text>
 
-              {(isPinned || dragVisible) && isFriendTab && (
+              {(isPinned || attachVisible) && isFriendTab && (
                 <TouchableOpacity
                   style={styles.actionIconWrapper}
                   onPress={handlePressPin}>

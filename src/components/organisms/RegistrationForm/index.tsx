@@ -137,7 +137,8 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ setLoading }) => {
       </View>
 
       <View style={styles.SocialButtonStyle}>
-        {__DEV__ && <SignInWithFacebook setLoading={setLoading} />}
+        <SignInWithFacebook setLoading={setLoading} register={true} />
+
         <SignInWithGoogle setLoading={setLoading} />
         {__DEV__ && <SignInWithGitHub />}
       </View>

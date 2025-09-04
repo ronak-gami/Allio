@@ -11,14 +11,16 @@ import SocialButton from '../socialButton';
 import { setStateKey } from '@redux/slices/AuthSlice';
 import { checkUserExistsByEmail } from '@utils/helper';
 import { ICONS } from '@assets/index';
-import { showError } from '@utils/toast';
+import { showError, showSuccess } from '@utils/toast';
 
 interface SignInWithFacebookProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  register?: boolean; // 👈 new prop
 }
 
 const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
   setLoading,
+  register = false,
 }) => {
   const dispatch = useDispatch();
 
@@ -52,30 +54,47 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
       const user = userCredential.user;
       const token = await user.getIdToken();
 
-      // Step 4: Check if user already exists in Firestore
-      await checkUserExistsByEmail(user.email);
-
+      // Step 4: Prepare user data
       const userData = {
         firstName: user.displayName?.split(' ')[0] || '',
         lastName: user.displayName?.split(' ')[1] || '',
         email: user.email,
         profileImage: user.photoURL || '',
         provider: 'facebook',
+        createdAt: firestore.FieldValue.serverTimestamp(),
       };
 
+      // Step 5: Handle based on register mode
+      const exists = await checkUserExistsByEmail(user.email);
+
+      if (register) {
+        // Register flow
+        if (exists) {
+          showError('User already registered with this email.');
+          return;
+        } else {
+          await firestore().collection('users').doc(user.uid).set(userData);
+          showSuccess('Registration successful!');
+        }
+      } else {
+        // Login flow
+        if (!exists) {
+          // Auto create user if not exists
+          await firestore().collection('users').doc(user.uid).set(userData);
+        }
+      }
+
+      // Step 6: Save in redux
       dispatch(setStateKey({ key: 'token', value: token }));
       dispatch(setStateKey({ key: 'userData', value: userData }));
     } catch (error: any) {
       console.error('Facebook Login Error:', error);
 
-      // Specific error handling
       if (error.code === 'auth/account-exists-with-different-credential') {
-        // This happens when the email is already linked to another provider (e.g., Google)
         showError(
           'An account with this email already exists. Please sign in using your original method (Google or Email).',
         );
       } else if (error.message === 'User cancelled the login process') {
-        // Silent exit for user cancellation
         return;
       } else if (error.code === 'auth/network-request-failed') {
         showError(
@@ -86,7 +105,6 @@ const SignInWithFacebook: React.FC<SignInWithFacebookProps> = ({
           'The login popup was closed before completing. Please try again.',
         );
       } else {
-        // Generic fallback error
         showError(
           'There was an issue signing you in with Facebook. Please try again.',
         );

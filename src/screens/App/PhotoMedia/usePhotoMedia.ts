@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import {
   launchImageLibrary,
@@ -31,16 +31,12 @@ interface PhotoAsset {
 }
 
 const usePhotoMedia = () => {
-  const [PhotoUri, setPhotoUri] = useState<string | undefined>(undefined);
-  const [PhotoAsset, setPhotoAsset] = useState<PhotoAsset | undefined>(
-    undefined,
-  );
+  const [PhotoUri, setPhotoUri] = useState<string | undefined>();
+  const [PhotoAsset, setPhotoAsset] = useState<PhotoAsset | undefined>();
   const [model, setModel] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedImage, setSelectedImage] = useState<string | undefined>(
-    undefined,
-  );
+  const [selectedImage, setSelectedImage] = useState<string | undefined>();
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const { email } = useSelector((state: any) => state.auth.userData);
@@ -51,100 +47,111 @@ const usePhotoMedia = () => {
     handlePermissions('all');
   }, []);
 
-  const states = {
-    PhotoUri,
-    PhotoAsset,
-    model,
-    loading,
-    modalVisible,
-    selectedImage,
-    images,
-    refreshing,
-  };
-
   useEffect(() => {
-    if (email) {
-      dispatch(fetchImages(email));
-    } else {
-      dispatch(setImages([]));
-    }
+    if (email) dispatch(fetchImages(email));
+    else dispatch(setImages([]));
   }, [email, dispatch]);
 
-  const formatFileSize = (bytes?: number): string => {
+  const states = useMemo(
+    () => ({
+      PhotoUri,
+      PhotoAsset,
+      model,
+      loading,
+      modalVisible,
+      selectedImage,
+      images,
+      refreshing,
+    }),
+    [
+      PhotoUri,
+      PhotoAsset,
+      model,
+      loading,
+      modalVisible,
+      selectedImage,
+      images,
+      refreshing,
+    ],
+  );
+
+  const formatFileSize = useCallback((bytes?: number): string => {
     if (!bytes) return 'Unknown';
     const mb = bytes / 1024 / 1024;
-    return mb < 1 ? `${(bytes / 1024)?.toFixed(1)} KB` : `${mb?.toFixed(1)} MB`;
-  };
+    return mb < 1 ? `${(bytes / 1024).toFixed(1)} KB` : `${mb.toFixed(1)} MB`;
+  }, []);
 
-  const getFormattedResolution = (asset?: PhotoAsset | null): string => {
-    if (!asset?.width || !asset?.height) return 'Unknown';
-    return `${asset?.width}×${asset?.height}`;
-  };
+  const getFormattedResolution = useCallback(
+    (asset?: PhotoAsset | null): string =>
+      asset?.width && asset?.height
+        ? `${asset.width}×${asset.height}`
+        : 'Unknown',
+    [],
+  );
 
-  const getPhotoFileName = (asset?: PhotoAsset | null): string => {
-    return asset?.fileName || 'Image File';
-  };
+  const getPhotoFileName = useCallback(
+    (asset?: PhotoAsset | null): string => asset?.fileName || 'Image File',
+    [],
+  );
 
-  const getEstimatedCompressedSize = (asset?: PhotoAsset | null): string => {
-    return asset?.fileSize ? formatFileSize(asset?.fileSize * 0.6) : 'Unknown';
-  };
+  const getEstimatedCompressedSize = useCallback(
+    (asset?: PhotoAsset | null): string =>
+      asset?.fileSize ? formatFileSize(asset.fileSize * 0.6) : 'Unknown',
+    [formatFileSize],
+  );
 
-  const hasValidPhotoAsset = (): boolean => !!PhotoAsset?.uri;
+  const hasValidPhotoAsset = useCallback(() => !!PhotoAsset?.uri, [PhotoAsset]);
 
-  const handleCameraOpen = async () => {
-    const cameraOptions = {
-      mediaType: 'photo' as MediaType,
-      saveToPhotos: true,
-    };
+  const handleClear = useCallback(() => {
+    setPhotoUri(undefined);
+    setPhotoAsset(undefined);
+  }, []);
 
-    launchCamera(cameraOptions, (response: ImagePickerResponse) => {
-      if (response?.didCancel || response?.errorMessage) return;
-
-      const asset = response?.assets?.[0];
-      if (asset?.uri) {
-        setPhotoUri(asset?.uri);
+  const handleCameraOpen = useCallback(() => {
+    launchCamera(
+      { mediaType: 'photo', saveToPhotos: true },
+      (response: ImagePickerResponse) => {
+        const asset = response.assets?.[0];
+        if (!asset?.uri) return;
+        setPhotoUri(asset.uri);
         setPhotoAsset({
-          uri: asset?.uri,
-          fileName: asset?.fileName,
-          fileSize: asset?.fileSize,
-          type: asset?.type,
-          width: asset?.width,
-          height: asset?.height,
+          uri: asset.uri,
+          fileName: asset.fileName,
+          fileSize: asset.fileSize,
+          type: asset.type,
+          width: asset.width,
+          height: asset.height,
         });
-      }
-    });
-  };
+      },
+    );
+  }, []);
 
-  const handleSelectPhoto = async () => {
+  const handleSelectPhoto = useCallback(async () => {
     const permissionResult = await handlePermissions('storage');
     if (!permissionResult?.canAccessGallery) return;
 
-    const galleryOptions = {
-      mediaType: 'photo' as MediaType,
-      selectionLimit: 1,
-      includeExtra: true,
-    };
-
-    launchImageLibrary(galleryOptions, (response: ImagePickerResponse) => {
-      if (response?.didCancel || response?.errorMessage) return;
-
-      const asset = response?.assets?.[0];
-      if (asset?.uri) {
-        setPhotoUri(asset?.uri);
+    launchImageLibrary(
+      { mediaType: 'photo', selectionLimit: 1, includeExtra: true },
+      (response: ImagePickerResponse) => {
+        const asset = response.assets?.[0];
+        if (!asset?.uri) return;
+        setPhotoUri(asset.uri);
         setPhotoAsset({
-          uri: asset?.uri,
-          fileName: asset?.fileName,
-          fileSize: asset?.fileSize,
-          type: asset?.type,
-          width: asset?.width,
-          height: asset?.height,
+          uri: asset.uri,
+          fileName: asset.fileName,
+          fileSize: asset.fileSize,
+          type: asset.type,
+          width: asset.width,
+          height: asset.height,
         });
-      }
-    });
-  };
+      },
+    );
+  }, []);
 
-  const handleEdit = async () => {
+  const handleEdit = useCallback(async () => {
+    if (!PhotoUri) return;
     setLoading(true);
+
     try {
       const settings = new EditorSettingsModel({
         license: LICENSE_KEY,
@@ -161,16 +168,14 @@ const usePhotoMedia = () => {
         { source: PhotoUri, type: SourceType.IMAGE },
         EditorPreset.PHOTO,
       );
-
       if (!result?.artifact) {
         showError('Image editing was cancelled or failed.');
         return;
       }
 
-      const compressedUri = result?.artifact?.startsWith('file://')
-        ? result?.artifact
-        : `file://${result?.artifact}`;
-
+      const compressedUri = result.artifact.startsWith('file://')
+        ? result.artifact
+        : `file://${result.artifact}`;
       const formData = new FormData();
       formData.append('email', email);
       formData.append('fileType', 'image');
@@ -178,53 +183,41 @@ const usePhotoMedia = () => {
         uri: compressedUri,
         type: 'image/jpeg',
         name: `image_${Date.now()}.jpg`,
-      });
+      } as any);
 
-      const response = await api?.MEDIA?.upload?.({ data: formData });
-
+      const response = await api.MEDIA.upload({ data: formData });
       if (response?.data?.success) {
         showSuccess(response?.data?.message || 'Upload successful!');
         dispatch(fetchImages(email));
       }
     } catch (error: any) {
-      const apiError =
-        error?.response?.data?.message ||
-        error?.message ||
-        'Something went wrong during upload.';
-      console.error('Caught error:', apiError);
+      console.error(
+        'Caught error:',
+        error?.response?.data?.message || error?.message || 'Upload failed.',
+      );
     } finally {
       setLoading(false);
       handleClear();
     }
-  };
+  }, [PhotoUri, email, dispatch, handleClear]);
 
-  const handleClear = () => {
-    setPhotoUri(null);
-    setPhotoAsset(null);
-  };
+  const handleCompress = useCallback(() => setModel(true), []);
+  const closeModel = useCallback(() => setModel(false), []);
+  const isPhotoLoaded = useCallback(() => !!PhotoUri, [PhotoUri]);
+  const isModalOpen = useCallback(() => !!model, [model]);
 
-  const handleCompress = () => setModel(true);
-  const closeModel = () => setModel(false);
-  const isPhotoLoaded = () => !!PhotoUri;
-  const isModalOpen = () => !!model;
-
-  const openModal = (uri: string) => {
+  const openModal = useCallback((uri: string) => {
     setSelectedImage(uri);
     setModalVisible(true);
-  };
-
-  const closeModal = () => {
+  }, []);
+  const closeModal = useCallback(() => {
     setModalVisible(false);
-    setSelectedImage(null);
-  };
+    setSelectedImage(undefined);
+  }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      handleClear();
-    }, []),
-  );
+  useFocusEffect(useCallback(() => handleClear(), [handleClear]));
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (!PhotoUri) {
       showError('No photo selected to save.');
       return;
@@ -241,35 +234,33 @@ const usePhotoMedia = () => {
         name: `image_${Date.now()}.jpg`,
       } as any);
 
-      const response = await api?.MEDIA?.upload?.({ data: formData });
+      console.log("the data is ")
 
+      const response = await api.MEDIA.upload({ data: formData });
       if (response?.data?.success) {
-        showSuccess(response?.data?.message || 'Image saved successfully!');
+        showSuccess(response.data?.message || 'Image saved successfully!');
         dispatch(fetchImages(email));
-      } else {
-        showError('Failed to save image.');
-      }
+      } else showError('Failed to save image.');
     } catch (error: any) {
-      const apiError =
-        error?.response?.data?.message ||
-        error?.message ||
-        'Something went wrong while saving.';
-      console.error('Save error:', apiError);
-      showError(apiError);
+      console.error(
+        'Save error:',
+        error?.response?.data?.message || error?.message || 'Save failed.',
+      );
+      showError(
+        error?.response?.data?.message || 'Something went wrong while saving.',
+      );
     } finally {
       setLoading(false);
       handleClear();
     }
-  };
+  }, [PhotoUri, email, dispatch, handleClear]);
 
   const onRefresh = useCallback(async () => {
     if (!email) return;
-
     setRefreshing(true);
-
     try {
       await dispatch(fetchImages(email));
-    } catch (error) {
+    } catch {
       showError('Failed to refresh images.');
     } finally {
       setRefreshing(false);

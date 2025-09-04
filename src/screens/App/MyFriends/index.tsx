@@ -26,6 +26,8 @@ const MyFriends = () => {
     handleDragEnd,
     selectedUser,
     setSelectedUser,
+    isDragging,
+    handleDragBegin,
   } = useMyFriends();
 
   const tabs = [
@@ -43,9 +45,10 @@ const MyFriends = () => {
     () =>
       users
         .filter(u => !pinnedUsers.includes(u.email))
-        .sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999)),
+        .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity)),
     [users, pinnedUsers],
   );
+
 
   const combinedUnique = useMemo(() => {
     const map = new Map<string, any>();
@@ -113,21 +116,27 @@ const MyFriends = () => {
                   selectedUser={selectedUser}
                 />
               )}
-              onDragBegin={index => {
-                nonPinnedUsers[index];
+              onDragBegin={() => {
+                handleDragBegin();
               }}
               onDragEnd={({ data, from, to }) => {
                 if (from !== to) {
-                  handleDragEnd({ data, from, to });
+                  handleDragEnd({ data, from, to } as any);
+                } else {
+                  // ensure we exit dragging mode even if no movement
+                  handleDragEnd({ data } as any);
                 }
               }}
               activationDistance={50}
               ListEmptyComponent={renderEmptyState}
+              // Disable pull-to-refresh while dragging
               refreshControl={
-                <RefreshControl
-                  refreshing={states.refreshing}
-                  onRefresh={onRefresh}
-                />
+                !isDragging ? (
+                  <RefreshControl
+                    refreshing={states.refreshing}
+                    onRefresh={onRefresh}
+                  />
+                ) : undefined
               }
             />
           </View>

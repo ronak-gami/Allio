@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import firestore from '@react-native-firebase/firestore';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
@@ -25,11 +25,14 @@ export const useMyFriends = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const states = { loading, refreshing };
 
   // ------------------- Fetch Pinned -------------------
-  const refreshPinned = async () => {
+  const refreshPinned = useCallback(async () => {
+    if (!currentUserEmail) return;
+
     try {
       const userDocSnapshot = await firestore()
         .collection('users')
@@ -45,10 +48,10 @@ export const useMyFriends = () => {
     } catch (e) {
       console.error('Error fetching pinned users:', e);
     }
-  };
+  }, [currentUserEmail]);
 
   // ------------------- Ensure Self Relation -------------------
-  const ensureSelfRelation = async () => {
+  const ensureSelfRelation = useCallback(async () => {
     if (!currentUserEmail) return;
     const me = currentUserEmail.toLowerCase();
     const selfDocRef = firestore().collection('relation').doc(`${me}_${me}`);
@@ -58,16 +61,16 @@ export const useMyFriends = () => {
       await selfDocRef.set({ from: me, to: me, isAccept: true });
       console.log('Created self-relation document');
     }
-  };
+  }, [currentUserEmail]);
 
   // ------------------- Fetch Users with Relation -------------------
-  const fetchAllUsersWithRelation = async () => {
+  const fetchAllUsersWithRelation = useCallback(async () => {
+    if (!currentUserEmail) return;
     setLoading(true);
+
     try {
-      if (!currentUserEmail) return;
       const email1 = currentUserEmail.toLowerCase();
 
-      // Ensure self-relation exists
       await ensureSelfRelation();
 
       const allUsers = await getAllUsers(currentUserEmail);
@@ -87,7 +90,6 @@ export const useMyFriends = () => {
         setPinnedUsers(savedPinned);
       }
 
-      // Build relation map
       const relationMap: Record<
         string,
         { from: string; to: string; isAccept: boolean }
@@ -108,7 +110,6 @@ export const useMyFriends = () => {
         }
       });
 
-      // Map users
       const mappedUsersRaw = allUsers.map(user => {
         const originalEmail = (user.email ?? '').trim();
         const normalized = originalEmail.toLowerCase();
@@ -136,7 +137,6 @@ export const useMyFriends = () => {
         };
       });
 
-      // Deduplicate by email
       const dedupMap = new Map<string, User>();
       mappedUsersRaw.forEach(u => {
         const key = (u.email || '').toLowerCase();
@@ -144,10 +144,7 @@ export const useMyFriends = () => {
         if (!dedupMap.has(key)) dedupMap.set(key, u);
       });
 
-      const mappedUsers = Array.from(dedupMap.values());
-
-      // Filter based on tab
-      let filteredUsers = mappedUsers.filter(user => {
+      let filteredUsers = Array.from(dedupMap.values()).filter(user => {
         if (activeTab === 'all') return true;
         if (activeTab === 'friends') return user.relationStatus === 'accepted';
         if (activeTab === 'pending')
@@ -155,15 +152,18 @@ export const useMyFriends = () => {
         return true;
       });
 
-      // Add self user to All tab even if self relation missing
+      const selfDoc = relationMap['self'];
       if (
-        activeTab === 'all' &&
-        !filteredUsers.some(u => (u.email || '').toLowerCase() === email1)
+        (activeTab === 'all' &&
+          !filteredUsers.some(u => (u.email || '').toLowerCase() === email1)) ||
+        (activeTab === 'friends' &&
+          selfDoc?.isAccept &&
+          !filteredUsers.some(u => (u.email || '').toLowerCase() === email1))
       ) {
         filteredUsers.push({
           id: `self-${email1}`,
           email: currentUserEmail,
-          relationStatus: 'none', // if self relation not found
+          relationStatus: activeTab === 'friends' ? 'accepted' : 'none',
           order:
             !savedPinned.includes(currentUserEmail) &&
             savedOrder[currentUserEmail] !== undefined
@@ -172,130 +172,134 @@ export const useMyFriends = () => {
         });
       }
 
-      // In Friends tab, only add self if selfDoc?.isAccept === true
-      const selfDoc = relationMap['self'];
-      if (activeTab === 'friends' && selfDoc?.isAccept) {
-        const hasMe = filteredUsers.some(
-          u => (u.email || '').toLowerCase() === email1,
-        );
-        if (!hasMe) {
-          filteredUsers.push({
-            id: `self-${email1}`,
-            email: currentUserEmail,
-            relationStatus: 'accepted',
-            order:
-              !savedPinned.includes(currentUserEmail) &&
-              savedOrder[currentUserEmail] !== undefined
-                ? savedOrder[currentUserEmail]
-                : undefined,
-          });
-        }
-      }
-
       const orderedUsers = filteredUsers
         .filter(u => u.order !== undefined)
         .sort((a, b) => a.order! - b.order!);
       const unorderedUsers = filteredUsers.filter(u => u.order === undefined);
-      const finalUsers = [...orderedUsers, ...unorderedUsers];
-
-      setUsers(finalUsers);
+      setUsers([...orderedUsers, ...unorderedUsers]);
       setSelectedUser(false);
-
-      finalUsers.forEach(u => {
-      
-      });
     } catch (err) {
       console.error('Error fetching users with relation:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentUserEmail, activeTab, ensureSelfRelation]);
 
   // ------------------- Pin / Unpin -------------------
-  const handlePin = async (email: string) => {
-    if (pinnedUsers.length >= 2) {
-      showError('You can pin up to 2 users only.');
-      return;
-    }
-    try {
-      const userSnapshot = await firestore()
-        .collection('users')
-        .where('email', '==', currentUserEmail)
-        .get();
-      const userDocRef = !userSnapshot.empty
-        ? userSnapshot.docs[0].ref
-        : firestore().collection('users').doc();
-      const newPinned = [...pinnedUsers, email];
-      await userDocRef.set({ pinned: newPinned }, { merge: true });
-      refreshPinned();
-    } catch (e) {
-      console.error('Error pinning user:', e);
-    }
-  };
-
-  const handleUnpin = async (email: string) => {
-    try {
-      const userSnapshot = await firestore()
-        .collection('users')
-        .where('email', '==', currentUserEmail)
-        .get();
-      if (!userSnapshot.empty) {
-        const userDocRef = userSnapshot.docs[0].ref;
-        const newPinned = pinnedUsers.filter(e => e !== email);
-        await userDocRef.set({ pinned: newPinned }, { merge: true });
-        refreshPinned();
+  const handlePin = useCallback(
+    async (email: string) => {
+      if (pinnedUsers.length >= 2) {
+        showError('You can pin up to 2 users only.');
+        return;
       }
-    } catch (e) {
-      console.error('Error unpinning user:', e);
-    } finally {
-      setSelectedUser(false);
-    }
-  };
+      try {
+        const userSnapshot = await firestore()
+          .collection('users')
+          .where('email', '==', currentUserEmail)
+          .get();
+        const userDocRef = !userSnapshot.empty
+          ? userSnapshot.docs[0].ref
+          : firestore().collection('users').doc();
+        const newPinned = [...pinnedUsers, email];
+        await userDocRef.set({ pinned: newPinned }, { merge: true });
+        await refreshPinned();
+      } catch (e) {
+        console.error('Error pinning user:', e);
+      }
+    },
+    [currentUserEmail, pinnedUsers, refreshPinned],
+  );
+
+  const handleUnpin = useCallback(
+    async (email: string) => {
+      try {
+        const userSnapshot = await firestore()
+          .collection('users')
+          .where('email', '==', currentUserEmail)
+          .get();
+        if (!userSnapshot.empty) {
+          const userDocRef = userSnapshot.docs[0].ref;
+          const data = userSnapshot.docs[0].data() || {};
+          const savedOrder: Record<string, number> = data?.order ?? {};
+          const newPinned = pinnedUsers.filter(e => e !== email);
+
+          const newOrder: Record<string, number> = {};
+          Object.entries(savedOrder).forEach(([e, idx]) => {
+            if (e === email) return;
+            if (!newPinned.includes(e))
+              newOrder[e] = (typeof idx === 'number' ? idx : 9999) + 1;
+          });
+          newOrder[email] = 0;
+
+          await userDocRef.set(
+            { pinned: newPinned, order: newOrder },
+            { merge: true },
+          );
+          await refreshPinned();
+          await fetchAllUsersWithRelation();
+        }
+      } catch (e) {
+        console.error('Error unpinning user:', e);
+      } finally {
+        setSelectedUser(false);
+      }
+    },
+    [currentUserEmail, pinnedUsers, refreshPinned, fetchAllUsersWithRelation],
+  );
 
   // ------------------- Save Order -------------------
-  const saveUserOrder = async (updatedUsers: User[]) => {
-    try {
-      const userSnapshot = await firestore()
-        .collection('users')
-        .where('email', '==', currentUserEmail)
-        .get();
-      const userDocRef = !userSnapshot.empty
-        ? userSnapshot.docs[0].ref
-        : firestore().collection('users').doc();
-      const orderData: Record<string, number> = {};
-      updatedUsers.forEach((u, index) => {
-        if (u.email && !pinnedUsers.includes(u.email))
-          orderData[u.email] = index;
-      });
-      await userDocRef.set({ order: orderData }, { merge: true });
-    } catch (e) {
-      console.error('Error saving order:', e);
-    } finally {
-      await refreshPinned();
-      await fetchAllUsersWithRelation();
-      setSelectedUser(false);
-    }
-  };
+  const saveUserOrder = useCallback(
+    async (updatedUsers: User[]) => {
+      try {
+        const userSnapshot = await firestore()
+          .collection('users')
+          .where('email', '==', currentUserEmail)
+          .get();
+        const userDocRef = !userSnapshot.empty
+          ? userSnapshot.docs[0].ref
+          : firestore().collection('users').doc();
+        const orderData: Record<string, number> = {};
+        updatedUsers.forEach((u, index) => {
+          if (u.email && !pinnedUsers.includes(u.email))
+            orderData[u.email] = index;
+        });
+        await userDocRef.set({ order: orderData }, { merge: true });
+      } catch (e) {
+        console.error('Error saving order:', e);
+      } finally {
+        await refreshPinned();
+        await fetchAllUsersWithRelation();
+        setSelectedUser(false);
+      }
+    },
+    [currentUserEmail, pinnedUsers, refreshPinned, fetchAllUsersWithRelation],
+  );
 
-  const handleDragEnd = ({ data }: { data: User[] }) => {
-    setUsers(data);
-    saveUserOrder(data);
-  };
+  const handleDragEnd = useCallback(
+    ({ data }: { data: User[] }) => {
+      setUsers(data);
+      saveUserOrder(data);
+      setIsDragging(false);
+    },
+    [saveUserOrder],
+  );
 
-  const onRefresh = async () => {
-    try {
-      setRefreshing(true);
-      await fetchAllUsersWithRelation();
-      await refreshPinned();
-    } finally {
-      setRefreshing(false);
-    }
-  };
+  const handleDragBegin = useCallback(() => {
+    setIsDragging(true);
+  }, []);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchAllUsersWithRelation();
+    await refreshPinned();
+    setRefreshing(false);
+  }, [fetchAllUsersWithRelation, refreshPinned]);
+
+  // ------------------- Effects -------------------
   useEffect(() => {
     fetchAllUsersWithRelation();
     refreshPinned();
-  }, [activeTab]);
+  }, [activeTab, fetchAllUsersWithRelation, refreshPinned]);
 
   useEffect(() => {
     if (!currentUserEmail) return;
@@ -307,7 +311,7 @@ export const useMyFriends = () => {
         fetchAllUsersWithRelation();
       });
     return () => unsub();
-  }, [currentUserEmail]);
+  }, [currentUserEmail, fetchAllUsersWithRelation]);
 
   return {
     activeTab,
@@ -321,5 +325,7 @@ export const useMyFriends = () => {
     handleDragEnd,
     selectedUser,
     setSelectedUser,
+    isDragging,
+    handleDragBegin,
   };
 };

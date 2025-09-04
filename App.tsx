@@ -5,11 +5,15 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import * as Sentry from '@sentry/react-native'; // Sentry import
+
+import { StyleSheet, Linking } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+
+
 import { store, persistor } from './src/redux/store';
 import StackNavigator from './src/navigations';
 import { WEB_CLIENT_ID } from '@utils/constant';
-import { StyleSheet, Linking } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
 import { initNotifications } from '@utils/notification';
 import {
   extractShareId,
@@ -18,7 +22,28 @@ import {
   extractProfileEmail,
 } from '@utils/deepLinking';
 import { getUserData } from '@utils/helper';
-import { navigationRef } from '@navigations/navigationRef';
+import { navigationRef } from './src/navigations/navigationRef';
+
+Sentry.init({
+  dsn: 'https://61501c2e99978ee58ca285d730991b4d@o4509948781920256.ingest.us.sentry.io/4509948783558656',
+  tracesSampleRate: 1.0, // performance monitoring
+  enableAutoSessionTracking: true,
+
+  profilesSampleRate: 1.0,
+  enableAutoPerformanceTracing: true,
+
+  // Optional integrations already present
+  integrations: [
+    Sentry.mobileReplayIntegration(),
+    Sentry.feedbackIntegration(),
+  ],
+
+  parentSpanIsAlwaysRootSpan: false,
+
+  // Replay
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1,
+});
 
 const App = () => {
   useEffect(() => {
@@ -46,33 +71,27 @@ const App = () => {
 
   useEffect(() => {
     const handleUrl = async (url?: string | null) => {
-      const profileEmail = extractProfileEmail(url);
-      if (profileEmail) {
-        if (navigationRef.isReady()) {
-          navigationRef.navigate('Profile', { email: profileEmail });
-        }
-        return;
-      }
-
-      const id = extractShareId(url);
-      if (!id) {
-        return;
-      }
-
       try {
-        const rec = await resolveSharedMedia(id);
-        if (!rec) {
+        const profileEmail = extractProfileEmail(url);
+        if (profileEmail) {
+          if (navigationRef.isReady()) {
+            navigationRef.navigate('Profile', { email: profileEmail });
+          }
           return;
         }
 
-        // Prefer sender from record; fallback to email query param
+        const id = extractShareId(url);
+        if (!id) return;
+
+        const rec = await resolveSharedMedia(id);
+        if (!rec) return;
+
         const senderEmail = (
           rec.sender ||
           extractShareEmail(url) ||
           ''
         ).toLowerCase();
 
-        // Fetch full user profile (may return null)
         let fullUser = null;
         if (senderEmail) {
           try {
@@ -88,6 +107,7 @@ const App = () => {
             }
           } catch (e) {
             console.warn('Deep link getUserData failed:', e);
+            Sentry.captureException(e); // Capture deep link errors
           }
         }
 
@@ -115,12 +135,13 @@ const App = () => {
         }
       } catch (e) {
         console.warn('resolveSharedMedia error', e);
+        Sentry.captureException(e); // Capture errors
       }
     };
 
     Linking.getInitialURL()
       .then(handleUrl)
-      .catch(() => {});
+      .catch(err => Sentry.captureException(err));
     const sub = Linking.addEventListener('url', e => handleUrl(e.url));
     return () => sub.remove();
   }, []);
@@ -139,7 +160,7 @@ const App = () => {
   );
 };
 
-export default App;
+export default Sentry.wrap(App);
 
 const styles = StyleSheet.create({
   container: {
