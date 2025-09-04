@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import api from '@api/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -104,7 +104,7 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
     }
   };
 
-  const handleResetMpin = async () => {
+  const handleResetMpin = useCallback(async () => {
     try {
       setLoading(true);
       if (!email) {
@@ -127,9 +127,9 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [email, mpin, navigation]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (resetMpin) {
       await handleResetMpin();
       return;
@@ -149,6 +149,7 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
           navigation.replace(HOME.HomeTabs, { screen: HOME.Home });
         } else {
           setErrorMessage('Incorrect MPIN');
+          setMpin(''); // Clear input for re-entry in auto-submit mode
         }
       } else {
         const encryptedMPIN = encryptMPIN(mpin);
@@ -165,7 +166,15 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    handleResetMpin,
+    isExistingUser,
+    mpin,
+    navigation,
+    resetMpin,
+    storedEncryptedMPIN,
+    userDocId,
+  ]);
 
   const isButtonDisabled =
     mpin.length !== 4 ||
@@ -173,6 +182,13 @@ const useMPINForm = ({ email, resetMpin = false }: UseMPINFormProps = {}) => {
       !resetMpin &&
       (confirmMpin.length !== 4 || mpin !== confirmMpin)) ||
     (resetMpin && (confirmMpin.length !== 4 || mpin !== confirmMpin));
+
+  // AUTO SUBMIT: existing user enter PIN mode (no reset) -> auto trigger when 4 digits filled
+  useEffect(() => {
+    if (isExistingUser && !resetMpin && mpin.length === 4 && !loading) {
+      handleSubmit();
+    }
+  }, [isExistingUser, resetMpin, mpin, loading, handleSubmit]);
 
   return {
     loading,

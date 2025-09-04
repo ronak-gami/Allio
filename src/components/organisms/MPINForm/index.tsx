@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import { useTheme, useNavigation } from '@react-navigation/native';
 
-import OTPInput from '@components/atoms/OTPInput';
+import OTPInput, { OTPInputHandle } from '@components/atoms/OTPInput';
 import Button from '@components/atoms/Button';
 import Text from '@components/atoms/Text';
 import { HOME } from '@utils/constant';
@@ -32,11 +32,34 @@ const MPINForm: React.FC<MPINFormProps> = ({ resetMpin = false, email }) => {
     handleSubmit,
   } = useMPINForm({ email, resetMpin });
 
+  const mpinRef = useRef<OTPInputHandle | null>(null);
+  const confirmRef = useRef<OTPInputHandle | null>(null);
+  const showConfirmField = resetMpin || !isExistingUser;
+
+  const handleFirstInput = useCallback(
+    (val: string) => {
+      handleMpinInput(val);
+      if (showConfirmField && val.length === 4) {
+        const timeoutId = setTimeout(() => {
+          confirmRef.current?.focus();
+        }, 50);
+        return () => clearTimeout(timeoutId);
+      }
+    },
+    [handleMpinInput, showConfirmField],
+  );
+
+  const handleSecondInput = useCallback(
+    (val: string) => {
+      handleConfirmInput(val);
+      // (Optional future: auto-submit when both filled & valid)
+    },
+    [handleConfirmInput],
+  );
+
   if (loading) {
     return null;
   }
-
-  const showConfirmField = resetMpin || !isExistingUser;
 
   const titleLabel = resetMpin
     ? 'mpin_reset_title'
@@ -67,13 +90,19 @@ const MPINForm: React.FC<MPINFormProps> = ({ resetMpin = false, email }) => {
 
         <Text type="medium" style={styles.subtitle} label={subtitleLabel} />
 
-        <OTPInput label="enter_mpin" value={mpin} onChange={handleMpinInput} />
+        <OTPInput
+          ref={mpinRef}
+          label="enter_mpin"
+          value={mpin}
+          onChange={handleFirstInput}
+        />
 
         {showConfirmField && (
           <OTPInput
+            ref={confirmRef}
             label="confirm_mpin"
             value={confirmMpin}
-            onChange={handleConfirmInput}
+            onChange={handleSecondInput}
           />
         )}
 
@@ -100,14 +129,17 @@ const MPINForm: React.FC<MPINFormProps> = ({ resetMpin = false, email }) => {
         )}
       </View>
 
-      <View style={styles.button}>
-        <Button
-          title={buttonLabel}
-          onPress={handleSubmit}
-          disabled={isButtonDisabled}
-          loading={loading}
-        />
-      </View>
+      {/* Hide button in Enter PIN auto-submit mode */}
+      {!(isExistingUser && !resetMpin) && (
+        <View style={styles.button}>
+          <Button
+            title={buttonLabel}
+            onPress={handleSubmit}
+            disabled={isButtonDisabled}
+            loading={loading}
+          />
+        </View>
+      )}
     </View>
   );
 };

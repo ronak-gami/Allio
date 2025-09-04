@@ -32,7 +32,7 @@ type ChatMsg = {
 
 type LatLng = { latitude: number; longitude: number };
 
-export const useChatDetails = (targetUser: any, deeplinkEmail: string) => {
+export const useChatDetails = (targetUser: { email: unknown; }, deeplinkEmail: unknown) => {
   const myEmail = useSelector(
     (state: RootState) => state.auth?.userData?.email,
   );

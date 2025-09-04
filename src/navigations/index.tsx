@@ -21,6 +21,7 @@ import i18n from '../assets/i18n';
 import colors from '@assets/theme';
 import { TamaguiProvider, Theme } from 'tamagui';
 import tamaguiConfig from '@assets/theme/tamagui.config';
+import DeepLinkManager from '@services/DeepLinkManager';
 // import tamaguiConfig from '../assets/theme/tamagui.config';
 
 const linking: LinkingOptions<any> = {
@@ -155,7 +156,9 @@ const StackNavigator: React.FC = () => {
   }, [dispatch, systemColorScheme]);
 
   useEffect(() => {
-    if (language) i18n.changeLanguage(language);
+    if (language) {
+      i18n.changeLanguage(language);
+    }
   }, [language]);
 
   useEffect(() => {
@@ -165,7 +168,9 @@ const StackNavigator: React.FC = () => {
 
   useEffect(() => {
     monitorOnlineStatus(myEmail);
-    if (myEmail) Sentry.setUser({ email: myEmail });
+    if (myEmail) {
+      Sentry.setUser({ email: myEmail });
+    }
   }, [myEmail]);
 
   useEffect(() => {
@@ -206,6 +211,7 @@ const StackNavigator: React.FC = () => {
           ref={navigationRef}
           onReady={onReady}
           onStateChange={onStateChange}>
+          <DeepLinkManager />
           <BottomSheetProvider>
             {splashVisible ? (
               <Splash />

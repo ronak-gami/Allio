@@ -10,7 +10,6 @@ import * as Sentry from '@sentry/react-native'; // Sentry import
 import { StyleSheet, Linking } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 
-
 import { store, persistor } from './src/redux/store';
 import StackNavigator from './src/navigations';
 import { WEB_CLIENT_ID } from '@utils/constant';
@@ -147,7 +146,7 @@ const App = () => {
   }, []);
 
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <GestureHandlerRootView>
       <Provider store={store}>
         <PaperProvider>
           <PersistGate loading={null} persistor={persistor}>
@@ -160,10 +159,4 @@ const App = () => {
   );
 };
 
-export default Sentry.wrap(App);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+export default App;
