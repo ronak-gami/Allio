@@ -24,7 +24,8 @@ import { navigationRef } from './src/navigations/navigationRef';
 import { checkAppVersion } from './src/services/versionCheck';
 
 Sentry.init({
-  dsn: 'https://61501c2e99978ee58ca285d730991b4d@o4509948781920256.ingest.us.sentry.io/4509948783558656',
+  // dsn: 'https://61501c2e99978ee58ca285d730991b4d@o4509948781920256.ingest.us.sentry.io/4509948783558656',
+  dsn: 'https://',
   tracesSampleRate: 1.0, // performance monitoring
   enableAutoSessionTracking: true,
 
