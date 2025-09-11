@@ -156,6 +156,12 @@ export const useMore = () => {
         type: 'navigation',
         screenName: HOME.NewsApp,
       },
+      {
+        key: 'Accelometer App',
+        title: 'Accelometer App',
+        type: 'navigation',
+        screenName: HOME.AccelometerApp,
+      },
     ],
     [notificationsEnabled, handleNotificationToggle],
   );

@@ -26,6 +26,22 @@ const timestampSchema = (name: string) => {
   };
 };
 
+const accelerometerSchema = (name: string) => {
+  return {
+    name,
+    primaryKey: 'id',
+    properties: {
+      id: 'string',
+      name: 'string',
+      time: 'int',
+    },
+  };
+};
+
+class Accelerometer extends Realm.Object {
+  static schema = accelerometerSchema('Accelerometer');
+}
+
 class News extends Realm.Object {
   static schema = newsSchema('News');
 }
@@ -38,6 +54,6 @@ class Timestamp extends Realm.Object {
   static schema = timestampSchema('Timestamp');
 }
 
-const Schemas = [News, OfflineNews, Timestamp];
+const Schemas = [News, OfflineNews, Timestamp, Accelerometer];
 
 export default Schemas;

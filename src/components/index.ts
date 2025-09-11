@@ -35,6 +35,7 @@ export { default as DeleteProfileOrganism } from './organisms/DeleteProfileOrgan
 // cards
 export { default as VideoCard } from './cards/VideoCard';
 export { default as NewsCard } from './cards/newsCard';
+export { default as AccelometerCard } from './cards/accelometerCard';
 
 //contex
 // export { default as BottomSheetProvider } from './context/BottomSheetContext';

@@ -78,7 +78,9 @@ const HOME = {
   LocationScreen: 'LocationScreen',
   UpdateProfile: 'UpdateProfile',
   NewsApp: 'NewsApp',
-} as const;
+  AccelometerApp: 'AccelometerApp',
+  AccelometerAppDetails: 'AccelometerAppDetails',
+};
 
 const LICENSE_KEY =
   'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
