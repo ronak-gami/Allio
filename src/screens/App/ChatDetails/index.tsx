@@ -221,8 +221,6 @@ const ChatDetailsScreen = () => {
     );
   };
 
-  
-
   return (
     <Container
       title="Chat Details"
@@ -272,6 +270,13 @@ const ChatDetailsScreen = () => {
               )}
             </TouchableOpacity>
 
+            <TouchableOpacity onPress={handleGoBack}>
+              <Image source={ICONS.voiceCall} style={styles.callIcons} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={handleGoBack}>
+              <Image source={ICONS.videoCall} style={styles.callIcons} />
+            </TouchableOpacity>
             <TouchableOpacity onPress={openMenu}>
               <Image source={ICONS.menu} style={styles.menuIcon} />
             </TouchableOpacity>

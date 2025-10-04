@@ -78,12 +78,28 @@ export const useMore = () => {
     [dispatch],
   );
 
+  const clearGetStreamToken = async (userId: string) => {
+    try {
+      await firestore().collection('users').doc(userId).update({
+        getStreamToken: firestore.FieldValue.delete(),
+        getStreamTokenUpdatedAt: firestore.FieldValue.delete(),
+      });
+      console.log('GetStream token cleared');
+    } catch (error) {
+      console.error('Error clearing GetStream token:', error);
+    }
+  };
+
   const handleLogout = useCallback(async () => {
     try {
       const authInstance = getAuth();
       const currentUser = authInstance.currentUser;
       if (currentUser) {
         await removeFCMTokenFromFirestore();
+
+        // Clear GetStream token before logout
+        await clearGetStreamToken(currentUser.uid);
+
         await authInstance.signOut();
         dispatch(resetMedia());
         dispatch(logout());

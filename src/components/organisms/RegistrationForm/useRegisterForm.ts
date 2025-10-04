@@ -14,6 +14,7 @@ import useValidation from '@utils/validationSchema';
 import { AUTH } from '@utils/constant';
 import { AuthNavigationProp } from '@types/navigations';
 import { showError, showSuccess } from '@utils/toast';
+import api from '@api/index';
 
 export type RegistrationValues = {
   firstName: string;
@@ -66,6 +67,7 @@ const useRegister = (options?: UseRegisterOptions) => {
       );
 
       const user = userCredential.user;
+      console.log('user: ', user);
       if (!user) {
         throw new Error('No user created');
       }
@@ -73,11 +75,34 @@ const useRegister = (options?: UseRegisterOptions) => {
       const idToken = await user.getIdToken();
       dispatch(setStateKey({ key: 'token', value: idToken }));
 
+      // Call GetStream API to add user
+      const getStreamResponse = await api.GETSTREAM.addUser({
+        data: {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          mobileNo: values.mobileNo,
+        },
+      });
+
+      let getStreamUserId = null;
+      if (getStreamResponse?.data?.success) {
+        getStreamUserId =
+          getStreamResponse.data.userData?.streamUserId ||
+          getStreamResponse.data.userId;
+        console.log('GetStream user created successfully:', getStreamUserId);
+      } else {
+        console.warn(
+          'GetStream API call failed, continuing without GetStream integration',
+        );
+      }
+
       const userData = {
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
         mobileNo: values.mobileNo,
+        ...(getStreamUserId && { getStreamUserId }),
       };
 
       await saveUserToFirestore(user.uid, userData);

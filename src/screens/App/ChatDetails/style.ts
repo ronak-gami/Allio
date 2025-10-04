@@ -31,6 +31,12 @@ const useStyle = () => {
       height: scale(18),
       tintColor: colors.black,
     },
+    callIcons: {
+      marginRight: width * 0.04,
+      width: scale(24),
+      height: scale(24),
+      tintColor: colors.black,
+    },
     headerImage: {
       width: width * 0.12,
       height: width * 0.12,
