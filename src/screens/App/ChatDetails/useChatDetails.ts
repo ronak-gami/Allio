@@ -1,5 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { ScrollView, Platform, VirtualizedList } from 'react-native';
+import {
+  StreamVideoClient,
+  User,
+  useStreamVideoClient,
+} from '@stream-io/video-react-native-sdk';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
 import { showSuccess, showError } from '@utils/toast';
@@ -7,7 +12,7 @@ import { useUserCard } from '@components/cards/UserCard/useUserCard';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import api from '@api/index';
-import { formatLastSeen, getAllUsers } from '@utils/helper';
+import { formatLastSeen, getAllUsers, getUserData } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
 
@@ -32,7 +37,11 @@ type ChatMsg = {
 
 type LatLng = { latitude: number; longitude: number };
 
-export const useChatDetails = (targetUser: { email: unknown; }, deeplinkEmail: unknown) => {
+export const useChatDetails = (
+  targetUser: { email: unknown },
+  deeplinkEmail: unknown,
+) => {
+  const client = useStreamVideoClient();
   const myEmail = useSelector(
     (state: RootState) => state.auth?.userData?.email,
   );
@@ -980,6 +989,32 @@ export const useChatDetails = (targetUser: { email: unknown; }, deeplinkEmail: u
     unblockUserInline: () => unblockUser(),
   };
 
+  const handleVideoCall = async () => {
+    const data = await getUserData(myEmail);
+    const data2 = await getUserData(targetUser?.email);
+    const callId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      },
+    );
+
+    if (client) {
+      client.call('default', callId).getOrCreate({
+        ring: true,
+        data: {
+          members: [
+            { user_id: data?.getStreamUserId },
+            { user_id: data2?.getStreamUserId },
+          ],
+        },
+      });
+      navigation.navigate(HOME.VideoCall);
+    }
+  };
+
   return {
     states,
     relationStatus,
@@ -1079,5 +1114,6 @@ export const useChatDetails = (targetUser: { email: unknown; }, deeplinkEmail: u
     listHelpers,
     scrollToMessage,
     scrollToBottom,
+    handleVideoCall,
   };
 };

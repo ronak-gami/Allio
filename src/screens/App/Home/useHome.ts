@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { getAuth } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { applyNotificationSettings } from '@utils/helper';
+import { applyNotificationSettings, getUserData } from '@utils/helper';
 import api from '@api/index';
 
 const useHome = () => {
@@ -23,11 +23,10 @@ const useHome = () => {
     userEmail: string,
   ) => {
     try {
-      // Convert email to GetStream userId format (replace @ and . with _)
-      const getStreamUserId = userEmail.replace('@', '_').replace(/\./g, '_');
+      const data = await getUserData(userEmail);
 
       const tokenResponse = await api.GETSTREAM.getToken({
-        data: { userId: getStreamUserId },
+        data: { userId: data?.getStreamUserId },
       });
 
       if (tokenResponse?.data?.success && tokenResponse.data.token) {
@@ -38,8 +37,6 @@ const useHome = () => {
 
         await saveUserToFirestore(userId, tokenData);
         console.log('GetStream token saved successfully');
-      } else {
-        console.warn('Failed to get GetStream token');
       }
     } catch (error) {
       console.error('Error fetching/storing GetStream token:', error);

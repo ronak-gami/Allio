@@ -361,6 +361,8 @@ const getUserData = async (email: string): Promise<UserProfileData | null> => {
         lastName: userData.lastName || '',
         profileImage: userData.profileImage,
         mobileNo: userData.mobileNo || '',
+        getStreamToken: userData.getStreamToken || '',
+        getStreamUserId: userData.getStreamUserId || '',
       };
       return userProfile;
     }

@@ -1,6 +1,7 @@
 import { IMAGES } from '@assets/index';
 
 import { width } from '@utils/helper';
+import Video from 'react-native-video';
 interface OnboardingItem {
   id: string;
   image: any;
@@ -80,6 +81,8 @@ const HOME = {
   UpdateProfile: 'UpdateProfile',
   NewsApp: 'NewsApp',
   Users: 'Users',
+  VideoCall: 'VideoCall',
+  AudioCall: 'AudioCall',
 } as const;
 
 const LICENSE_KEY =
