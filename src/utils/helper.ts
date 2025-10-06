@@ -48,6 +48,8 @@ interface UserProfileData {
   lastName: string;
   profileImage?: string;
   mobileNo: string;
+  getStreamToken?: string;
+  getStreamUserId?: string;
 }
 
 const height = Dimensions.get('screen').height;

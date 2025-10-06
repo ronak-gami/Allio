@@ -29,7 +29,8 @@ const StreamClientProvider = ({ children }: PropsWithChildren) => {
       });
 
     return () => {
-      // Cleanup: disconnect user when component unmounts
+      // Cleanup: disconnect u
+      // ser when component unmounts
       client.disconnectUser();
     };
   }, [myEmail]);

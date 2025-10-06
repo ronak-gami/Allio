@@ -136,6 +136,7 @@ const ChatDetailsScreen = () => {
     scrollToMessage,
     scrollToBottom,
     handleVideoCall,
+    handleAudioCall,
   } = useChatDetails(resolvedUser, deeplinkEmail);
 
   const user = resolvedUser; // keep local reference
@@ -271,7 +272,7 @@ const ChatDetailsScreen = () => {
               )}
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={handleGoBack}>
+            <TouchableOpacity onPress={handleAudioCall}>
               <Image source={ICONS.voiceCall} style={styles.callIcons} />
             </TouchableOpacity>
 

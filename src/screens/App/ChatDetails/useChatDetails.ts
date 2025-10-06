@@ -1011,7 +1011,33 @@ export const useChatDetails = (
           ],
         },
       });
-      navigation.navigate(HOME.VideoCall);
+      navigation.navigate(HOME.VideoCall as any);
+    }
+  };
+
+  const handleAudioCall = async () => {
+    const data = await getUserData(myEmail);
+    const data2 = await getUserData(targetUser?.email);
+    const callId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      },
+    );
+
+    if (client) {
+      client.call('audio_room', callId).getOrCreate({
+        ring: true,
+        data: {
+          members: [
+            { user_id: data?.getStreamUserId },
+            { user_id: data2?.getStreamUserId },
+          ],
+        },
+      });
+      navigation.navigate(HOME.AudioCall as any);
     }
   };
 
@@ -1115,5 +1141,6 @@ export const useChatDetails = (
     scrollToMessage,
     scrollToBottom,
     handleVideoCall,
+    handleAudioCall,
   };
 };

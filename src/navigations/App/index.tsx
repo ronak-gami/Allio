@@ -18,6 +18,7 @@ import Users from '@screens/App/UsersScreen';
 import VideoCall from '@screens/App/VideoCall';
 import CallsProvider from '@services/CallsProvider';
 import StreamClientProvider from '@services/stream';
+import AudioCall from '@screens/App/AudioCall';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
@@ -46,6 +47,7 @@ const HomeNavigator: React.FC = () => {
             <Stack.Screen name={HOME.NewsApp} component={News} />
             <Stack.Screen name={HOME.Users} component={Users} />
             <Stack.Screen name={HOME.VideoCall} component={VideoCall} />
+            <Stack.Screen name={HOME.AudioCall} component={AudioCall} />
           </Stack.Navigator>
         </CallsProvider>
       </StreamClientProvider>

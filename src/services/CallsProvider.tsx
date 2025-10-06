@@ -10,7 +10,12 @@ const CallsProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (calls.length > 0) {
-      navigation.navigate(HOME.VideoCall);
+      // For now, route audio calls based on call type, but allow 'default' type for audio calls
+      if (call?.type === 'audio_room') {
+        navigation.navigate(HOME.AudioCall);
+      } else {
+        navigation.navigate(HOME.VideoCall);
+      }
     }
   }, [calls]);
 
