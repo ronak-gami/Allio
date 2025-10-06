@@ -101,7 +101,14 @@ const OnGoingCall = ({ call, toUser }: any) => {
   };
 
   const handleHangup = () => {
-    call.leave();
+    try {
+      // Always end the call for everyone when hanging up
+      call.endCall();
+    } catch (error) {
+      console.error('Error ending call:', error);
+      // Fallback to leave if endCall fails
+      call.leave();
+    }
   };
 
   return (

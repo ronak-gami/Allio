@@ -1044,6 +1044,9 @@ export const useChatDetails = (
             { user_id: myData.getStreamUserId },
             { user_id: targetData.getStreamUserId },
           ],
+          custom: {
+            call_type: 'video',
+          },
         },
       });
 
@@ -1085,7 +1088,7 @@ export const useChatDetails = (
 
       const callId = generateCallId();
 
-      const call = client.call('audio_room', callId);
+      const call = client.call('default', callId);
       await call.getOrCreate({
         ring: true,
         data: {
@@ -1093,6 +1096,9 @@ export const useChatDetails = (
             { user_id: myData.getStreamUserId },
             { user_id: targetData.getStreamUserId },
           ],
+          custom: {
+            call_type: 'audio',
+          },
         },
       });
 

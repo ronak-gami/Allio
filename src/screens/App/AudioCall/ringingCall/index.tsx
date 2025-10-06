@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View, Alert } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import useStyles from './styles';
@@ -12,6 +12,7 @@ import { RootState } from '@redux/store';
 
 const RingingCall = ({ call, toUser }: any) => {
   const { colors } = useTheme();
+  const navigation = useNavigation();
   const styles = useStyles();
   const { t } = useTranslation();
   const [userData, setUserData] = useState<any>(null);
@@ -54,14 +55,27 @@ const RingingCall = ({ call, toUser }: any) => {
   const handleAcceptCall = async () => {
     try {
       await call.join({ audio: true, video: false });
-      await call.microphone.enable();
+
+      await call.microphone?.enable();
     } catch (err) {
-      console.log('Error joining call:', err);
+      console.error('Error joining call:', err);
     }
   };
 
   const handleRejectCall = () => {
-    call.leave();
+    try {
+      if (call?.isCreatedByMe) {
+        // If I created the call, end it for everyone
+        call.endCall();
+      } else {
+        // If I'm receiving the call, reject it (this will end it for the caller too)
+        call.reject();
+      }
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error ending/rejecting call:', error);
+      navigation.goBack();
+    }
   };
 
   return (

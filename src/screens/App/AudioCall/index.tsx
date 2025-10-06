@@ -33,11 +33,32 @@ const AudioCall = ({ route }) => {
   useEffect(() => {
     if (!call) return;
 
-    const unsubscribe = call.on('call.accepted', ({}) => {
+    const unsubscribeAccepted = call.on('call.accepted', ({}) => {
       setAccepted(true);
     });
 
-    return () => unsubscribe();
+    const unsubscribeEnded = call.on('call.ended', ({}) => {
+      navigation.goBack();
+    });
+
+    const unsubscribeRejected = call.on('call.rejected', ({}) => {
+      navigation.goBack();
+    });
+
+    const unsubscribeLeft = call.on('call.session_participant_left', event => {
+      // If all participants have left, navigate back
+      const remainingParticipants = call?.state?.participants?.length || 0;
+      if (remainingParticipants <= 1) {
+        navigation.goBack();
+      }
+    });
+
+    return () => {
+      unsubscribeAccepted();
+      unsubscribeEnded();
+      unsubscribeRejected();
+      unsubscribeLeft();
+    };
   }, [call]);
 
   useEffect(() => {
@@ -51,6 +72,10 @@ const AudioCall = ({ route }) => {
 
   if (!call) {
     return <Text label={t('callNotFound')} />;
+  }
+
+  if (!client) {
+    return <Text label={t('callServiceNotAvailable')} />;
   }
 
   return (
