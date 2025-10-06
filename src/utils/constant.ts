@@ -15,7 +15,7 @@ const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
 // const BASE_URL = 'https://allio-app-bxwta.ondigitalocean.app/api';
-const BASE_URL = 'https://ee30aa2c1d23.ngrok-free.app/api';
+const BASE_URL = 'https://d4ad59efa2c7.ngrok-free.app/api';
 
 const onboardingData: OnboardingItem[] = [
   {

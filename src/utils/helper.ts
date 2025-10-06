@@ -30,6 +30,7 @@ import notifee, {
 } from '@notifee/react-native';
 import { store } from '@redux/store';
 import { createSharedMediaLink } from '@utils/deepLinking';
+import { StreamVideoClient } from '@stream-io/video-react-native-sdk';
 
 type AndroidPermissionType = 'all' | 'camera' | 'storage' | 'microphone';
 
@@ -789,6 +790,38 @@ const isVersionLower = (currentVersion: string, requiredVersion: string) => {
   return false;
 };
 
+const connectUserToStream = async (
+  client: StreamVideoClient,
+  userEmail: string,
+): Promise<boolean> => {
+  try {
+    // Check if user is already connected
+    if (client.user) {
+      console.log('Stream user already connected');
+      return true;
+    }
+
+    const userData = await getUserData(userEmail);
+
+    if (!userData?.getStreamToken || !userData?.getStreamUserId) {
+      showError('Stream credentials not found');
+      return false;
+    }
+
+    await client.connectUser(
+      { id: userData.getStreamUserId },
+      userData.getStreamToken,
+    );
+
+    console.log('Stream user connected successfully');
+    return true;
+  } catch (error) {
+    console.error('Error connecting user to Stream:', error);
+    showError('Failed to connect to call service');
+    return false;
+  }
+};
+
 export {
   height,
   width,
@@ -818,4 +851,5 @@ export {
   isOnline,
   formatLastUpdated,
   isVersionLower,
+  connectUserToStream,
 };

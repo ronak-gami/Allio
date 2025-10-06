@@ -12,7 +12,12 @@ import { useUserCard } from '@components/cards/UserCard/useUserCard';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import api from '@api/index';
-import { formatLastSeen, getAllUsers, getUserData } from '@utils/helper';
+import {
+  formatLastSeen,
+  getAllUsers,
+  getUserData,
+  connectUserToStream, // Add this import
+} from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
 
@@ -989,10 +994,8 @@ export const useChatDetails = (
     unblockUserInline: () => unblockUser(),
   };
 
-  const handleVideoCall = async () => {
-    const data = await getUserData(myEmail);
-    const data2 = await getUserData(targetUser?.email);
-    const callId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+  const generateCallId = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
       /[xy]/g,
       function (c) {
         const r = (Math.random() * 16) | 0;
@@ -1000,44 +1003,103 @@ export const useChatDetails = (
         return v.toString(16);
       },
     );
+  };
 
-    if (client) {
-      client.call('default', callId).getOrCreate({
+  const handleVideoCall = async () => {
+    try {
+      if (!client) {
+        showError('Call service not available');
+        return;
+      }
+
+      if (!myEmail || !targetUser?.email) {
+        showError('User information not available');
+        return;
+      }
+
+      // Connect current user to Stream
+      const isConnected = await connectUserToStream(client, myEmail);
+      if (!isConnected) {
+        return;
+      }
+
+      // Get both users' data
+      const [myData, targetData] = await Promise.all([
+        getUserData(myEmail),
+        getUserData(targetUser.email as string),
+      ]);
+
+      if (!myData?.getStreamUserId || !targetData?.getStreamUserId) {
+        showError('Call setup failed - user data incomplete');
+        return;
+      }
+
+      const callId = generateCallId();
+
+      const call = client.call('default', callId);
+      await call.getOrCreate({
         ring: true,
         data: {
           members: [
-            { user_id: data?.getStreamUserId },
-            { user_id: data2?.getStreamUserId },
+            { user_id: myData.getStreamUserId },
+            { user_id: targetData.getStreamUserId },
           ],
         },
       });
+
       navigation.navigate(HOME.VideoCall as any);
+    } catch (error) {
+      console.error('Video call error:', error);
+      showError('Failed to start video call');
     }
   };
 
   const handleAudioCall = async () => {
-    const data = await getUserData(myEmail);
-    const data2 = await getUserData(targetUser?.email);
-    const callId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      },
-    );
+    try {
+      if (!client) {
+        showError('Call service not available');
+        return;
+      }
 
-    if (client) {
-      client.call('audio_room', callId).getOrCreate({
+      if (!myEmail || !targetUser?.email) {
+        showError('User information not available');
+        return;
+      }
+
+      // Connect current user to Stream
+      const isConnected = await connectUserToStream(client, myEmail);
+      if (!isConnected) {
+        return;
+      }
+
+      // Get both users' data
+      const [myData, targetData] = await Promise.all([
+        getUserData(myEmail),
+        getUserData(targetUser.email as string),
+      ]);
+
+      if (!myData?.getStreamUserId || !targetData?.getStreamUserId) {
+        showError('Call setup failed - user data incomplete');
+        return;
+      }
+
+      const callId = generateCallId();
+
+      const call = client.call('audio_room', callId);
+      await call.getOrCreate({
         ring: true,
         data: {
           members: [
-            { user_id: data?.getStreamUserId },
-            { user_id: data2?.getStreamUserId },
+            { user_id: myData.getStreamUserId },
+            { user_id: targetData.getStreamUserId },
           ],
         },
       });
+
       navigation.navigate(HOME.AudioCall as any);
+    } catch (error) {
+      console.error('Audio call error:', error);
+      showError('Failed to start audio call');
     }
   };
 

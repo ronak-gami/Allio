@@ -53,58 +53,10 @@ const RingingCall = ({ call, toUser }: any) => {
 
   const handleAcceptCall = async () => {
     try {
-      console.log('Attempting to join call:', {
-        callId: call?.id,
-        callType: call?.type,
-        members: call?.state?.members?.length,
-        currentUser: userData?.getStreamUserId,
-      });
-
-      // Try joining without going live first
-      await call.join({
-        audio: true,
-        video: false,
-      });
-
-      console.log('Successfully joined call');
-
-      // Enable microphone after successful join
-      call.microphone?.enable();
-
-      // For default call type, we might not need to go live
-      // Only try going live if the method exists and it's needed
-      if (call.goLive && call?.type === 'audio_room') {
-        try {
-          await call.goLive();
-          console.log('Successfully went live');
-        } catch (liveError) {
-          console.warn(
-            'Failed to go live, but call joined successfully:',
-            liveError,
-          );
-          // Don't fail the entire call if goLive fails
-        }
-      }
-    } catch (error: any) {
-      console.error('Error joining call:', error);
-
-      // Check if it's a Stream API permission error
-      const errorMessage = error?.message || error?.toString() || '';
-      if (
-        errorMessage.includes('not allowed to perform action') ||
-        errorMessage.includes('JoinBackstage') ||
-        errorMessage.includes('403')
-      ) {
-        Alert.alert(
-          'Call Permission Error',
-          'You do not have permission to join this call. This appears to be a server configuration issue. Please contact support.',
-        );
-      } else {
-        Alert.alert(
-          'Error',
-          'Unable to join call. Please check your permissions and try again.',
-        );
-      }
+      await call.join({ audio: true, video: false });
+      await call.microphone.enable();
+    } catch (err) {
+      console.log('Error joining call:', err);
     }
   };
 
@@ -136,10 +88,7 @@ const RingingCall = ({ call, toUser }: any) => {
           <TouchableOpacity
             onPress={handleRejectCall}
             activeOpacity={0.7}
-            style={[
-              styles.rejectButton,
-              { backgroundColor: colors.background },
-            ]}>
+            style={[styles.rejectButton]}>
             <Image
               source={ICONS.cancel}
               style={[styles.buttonIcon, { tintColor: colors.primary }]}
