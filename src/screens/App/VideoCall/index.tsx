@@ -10,6 +10,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import useStyles from './styles';
+import { CallAudioManager } from '@utils/callAudioManager';
 
 const VideoCall = () => {
   const [loaded, setLoaded] = useState(false);
@@ -35,15 +36,34 @@ const VideoCall = () => {
       return;
     }
 
+    const isIncoming = !call?.isCreatedByMe;
+    const isVideo = true; // Video call
+
+    // Start appropriate ringtone
+    if (isIncoming) {
+      CallAudioManager.startIncomingRingtone(isVideo);
+    } else {
+      CallAudioManager.startOutgoingRingtone(isVideo);
+    }
+
     const unsubscribeAccepted = call.on('call.accepted', () => {
       setLoaded(true);
+      // Stop ringtone and start call audio when call is accepted
+      CallAudioManager.stopAllAudio();
+      CallAudioManager.startCallAudio(true); // true = video call, speaker ON
     });
 
     const unsubscribeEnded = call.on('call.ended', () => {
+      // Stop all audio when call ends
+      CallAudioManager.stopCallAudio();
+      CallAudioManager.stopAllAudio();
       navigation.goBack();
     });
 
     const unsubscribeRejected = call.on('call.rejected', () => {
+      // Stop all audio when call is rejected
+      CallAudioManager.stopCallAudio();
+      CallAudioManager.stopAllAudio();
       navigation.goBack();
     });
 
@@ -52,12 +72,19 @@ const VideoCall = () => {
       () => {
         const remainingParticipants = call?.state?.participants?.length || 0;
         if (remainingParticipants <= 1) {
+          // Stop all audio when last participant leaves
+          CallAudioManager.stopCallAudio();
+          CallAudioManager.stopAllAudio();
           navigation.goBack();
         }
       },
     );
 
     return () => {
+      // Cleanup: stop all audio when component unmounts
+      CallAudioManager.stopAllAudio();
+      CallAudioManager.stopCallAudio();
+
       unsubscribeAccepted();
       unsubscribeEnded();
       unsubscribeRejected();
