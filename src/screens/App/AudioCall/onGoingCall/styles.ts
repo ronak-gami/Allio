@@ -1,8 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
 import { height, width } from '@utils/helper';
+import { useTheme } from '@react-navigation/native';
 
 const useStyles = () => {
+  const { colors } = useTheme();
+
   return StyleSheet.create({
     container: {
       alignItems: 'center',
@@ -46,8 +49,13 @@ const useStyles = () => {
       marginVertical: height * 0.01,
     },
     buttonIcon: {
-      width: scale(60),
-      height: scale(60),
+      width: scale(50),
+      height: scale(50),
+    },
+    buttonIconMute: {
+      width: scale(25),
+      height: scale(25),
+      tintColor: colors.background,
     },
   });
 };

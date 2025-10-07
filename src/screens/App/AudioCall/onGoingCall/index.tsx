@@ -135,15 +135,15 @@ const OnGoingCall = ({ call, toUser }: any) => {
               { backgroundColor: isMuted ? colors.background : colors.primary },
             ]}>
             <Image
-              source={isMuted ? ICONS.voiceCall : ICONS.voiceCall}
-              style={[styles.buttonIcon, { tintColor: colors.primary }]}
+              source={isMuted ? ICONS.mute : ICONS.unmute}
+              style={styles.buttonIconMute}
             />
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={handleHangup}
             activeOpacity={0.7}
-            style={[styles.hangupButton, { backgroundColor: colors.primary }]}>
+            style={styles.hangupButton}>
             <Image
               source={ICONS.cancel}
               style={[styles.buttonIcon, { tintColor: colors.primary }]}

@@ -56,6 +56,9 @@ export const ICONS = {
   drag: require('./icons/drag.png'),
   voiceCall: require('./icons/voiceCallIcon.png'),
   videoCall: require('./icons/videoCallIcon.png'),
+  phone: require('./icons/phone-receiver-silhouette.png'),
+  mute: require('./icons/mute-microphone.png'),
+  unmute: require('./icons/microphone.png'),
 };
 
 export const FONTS = {

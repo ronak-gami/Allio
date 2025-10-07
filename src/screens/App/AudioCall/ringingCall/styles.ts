@@ -49,8 +49,13 @@ const useStyles = () => {
       marginVertical: height * 0.01,
     },
     buttonIcon: {
-      width: scale(60),
-      height: scale(60),
+      width: scale(50),
+      height: scale(50),
+    },
+    buttonIcon2: {
+      width: scale(30),
+      height: scale(30),
+      tintColor: colors.background,
     },
   });
 };

@@ -117,10 +117,7 @@ const RingingCall = ({ call, toUser }: any) => {
                 styles.acceptButton,
                 { backgroundColor: colors.primary },
               ]}>
-              <Image
-                source={ICONS.voiceCall}
-                style={[styles.buttonIcon, { tintColor: colors.primary }]}
-              />
+              <Image source={ICONS.phone} style={styles.buttonIcon2} />
             </TouchableOpacity>
           )}
         </View>
