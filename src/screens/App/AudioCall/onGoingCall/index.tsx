@@ -64,6 +64,34 @@ const OnGoingCall = ({ call, toUser }: any) => {
   const session = call?.state?.session;
   const startedAt = session?.started_at;
 
+  // Get the display name and image for the other participant
+  const getOtherParticipant = () => {
+    if (call?.isCreatedByMe && toUser) {
+      return {
+        name: toUser?.name || 'Unknown User',
+        image: toUser?.photos?.[0]
+          ? `${process.env.IMAGE_URL}${toUser?.photos?.[0]}`
+          : null,
+      };
+    } else if (receiver?.user) {
+      return {
+        name: receiver.user.name || 'Unknown User',
+        image: receiver.user.image || null,
+      };
+    } else {
+      // Fallback to call members
+      const otherMember = participants.find(
+        (member: any) => member.user?.id !== userData?.getStreamUserId,
+      );
+      return {
+        name: otherMember?.user?.name || 'Audio Call',
+        image: otherMember?.user?.image || null,
+      };
+    }
+  };
+
+  const otherParticipant = getOtherParticipant();
+
   const startedAtDate = useMemo(() => {
     if (!startedAt) {
       return Date.now();
@@ -114,18 +142,22 @@ const OnGoingCall = ({ call, toUser }: any) => {
   return (
     <Container title="">
       <View style={styles.container}>
-        <Image
-          style={styles.image}
-          source={{
-            uri: call?.isCreatedByMe
-              ? `${process.env.IMAGE_URL}${toUser?.photos?.[0]}`
-              : receiver?.user?.image,
-          }}
-        />
-        <Text style={[styles.title, { color: colors.primary }]}>
-          {call?.isCreatedByMe ? toUser?.name : receiver?.user?.name}
+        <Text
+          style={[styles.title, { color: colors.primary }]}
+          numberOfLines={2}>
+          {otherParticipant.name}
         </Text>
-        <Text style={{ color: colors.primary }}>{elapsed}</Text>
+
+        {/* Call Status */}
+        {/* <Text style={[styles.callStatus, { color: colors.primary }]}>
+          Audio Call
+        </Text> */}
+
+        {/* Call Duration */}
+        <Text style={[styles.duration, { color: colors.primary }]}>
+          {elapsed}
+        </Text>
+
         <View style={styles.buttons}>
           <TouchableOpacity
             onPress={handleMute}

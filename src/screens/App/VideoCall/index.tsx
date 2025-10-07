@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, BackHandler, NativeModules } from 'react-native';
 import {
   StreamCall,
   StreamVideo,
   RingingCallContent,
+  CallContent,
   useCalls,
   useStreamVideoClient,
 } from '@stream-io/video-react-native-sdk';
@@ -14,6 +15,7 @@ import { CallAudioManager } from '@utils/callAudioManager';
 
 const VideoCall = () => {
   const [loaded, setLoaded] = useState(false);
+  const [accepted, setAccepted] = useState(false);
 
   const styles = useStyles();
   const navigation = useNavigation();
@@ -51,6 +53,7 @@ const VideoCall = () => {
       // Stop ringtone and start call audio when call is accepted
       CallAudioManager.stopAllAudio();
       CallAudioManager.startCallAudio(true); // true = video call, speaker ON
+      setAccepted(true);
     });
 
     const unsubscribeEnded = call.on('call.ended', () => {
@@ -92,6 +95,25 @@ const VideoCall = () => {
     };
   }, [call, navigation]);
 
+  useEffect(() => {
+    if (!accepted) {
+      return;
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        // Enter PiP mode when back is pressed during an ongoing call
+        NativeModules.PiPModule?.enterPiP();
+        return true; // Prevent default back behavior
+      },
+    );
+
+    return () => {
+      backHandler.remove();
+    };
+  }, [accepted]);
+
   if (!call) {
     return <Text>Not found</Text>;
   }
@@ -104,7 +126,11 @@ const VideoCall = () => {
     <StreamVideo client={client}>
       <StreamCall call={call}>
         <View style={styles.container}>
-          <RingingCallContent />
+          {call?.state?.callingState === 'ringing' && !accepted ? (
+            <RingingCallContent />
+          ) : (
+            <CallContent disablePictureInPicture={false} />
+          )}
         </View>
       </StreamCall>
     </StreamVideo>

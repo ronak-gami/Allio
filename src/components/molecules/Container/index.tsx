@@ -11,6 +11,7 @@ import CustomLoader from '@components/atoms/CustomLoader';
 import useStyle from './style';
 import StatusBar from '@components/atoms/CustomStatusBar';
 import CustomHeader from '@components/atoms/CustomHeader';
+import AudioCallHeader from '@components/molecules/AudioCallHeader';
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -54,6 +55,10 @@ const Container: React.FC<PageLayoutProps> = ({
         }
         barStyle={auth && dark ? 'light-content' : 'dark-content'}
       />
+
+      {/* Audio Call Header - appears below status bar when active */}
+      <AudioCallHeader />
+
       {showHeader && (
         <CustomHeader
           showProfileLogo={showProfileLogo}

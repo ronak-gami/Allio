@@ -19,6 +19,7 @@ import VideoCall from '@screens/App/VideoCall';
 import CallsProvider from '@services/CallsProvider';
 import StreamClientProvider from '@services/stream';
 import AudioCall from '@screens/App/AudioCall';
+import { CallProvider } from '../../context/CallContext';
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
@@ -30,26 +31,31 @@ const HomeNavigator: React.FC = () => {
         barStyle="dark-content"
       />
       <StreamClientProvider>
-        <CallsProvider>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name={HOME.MPIN} component={MPINSetupScreen} />
-            <Stack.Screen name={HOME.ForgetMPIN} component={ForgetMPIN} />
-            <Stack.Screen name={HOME.MyQR} component={MyQR} />
-            <Stack.Screen name={HOME.MyFriends} component={MyFriends} />
-            <Stack.Screen
-              name={HOME.ChatDetailsScreen}
-              component={ChatDetailsScreen}
-            />
-            <Stack.Screen name={HOME.AiAssistant} component={AiAssistant} />
-            <Stack.Screen name={HOME.Profile} component={Profile} />
-            <Stack.Screen name={HOME.UpdateProfile} component={UpdateProfile} />
-            <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />
-            <Stack.Screen name={HOME.NewsApp} component={News} />
-            <Stack.Screen name={HOME.Users} component={Users} />
-            <Stack.Screen name={HOME.VideoCall} component={VideoCall} />
-            <Stack.Screen name={HOME.AudioCall} component={AudioCall} />
-          </Stack.Navigator>
-        </CallsProvider>
+        <CallProvider>
+          <CallsProvider>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name={HOME.MPIN} component={MPINSetupScreen} />
+              <Stack.Screen name={HOME.ForgetMPIN} component={ForgetMPIN} />
+              <Stack.Screen name={HOME.MyQR} component={MyQR} />
+              <Stack.Screen name={HOME.MyFriends} component={MyFriends} />
+              <Stack.Screen
+                name={HOME.ChatDetailsScreen}
+                component={ChatDetailsScreen}
+              />
+              <Stack.Screen name={HOME.AiAssistant} component={AiAssistant} />
+              <Stack.Screen name={HOME.Profile} component={Profile} />
+              <Stack.Screen
+                name={HOME.UpdateProfile}
+                component={UpdateProfile}
+              />
+              <Stack.Screen name={HOME.HomeTabs} component={TabNavigator} />
+              <Stack.Screen name={HOME.NewsApp} component={News} />
+              <Stack.Screen name={HOME.Users} component={Users} />
+              <Stack.Screen name={HOME.VideoCall} component={VideoCall} />
+              <Stack.Screen name={HOME.AudioCall} component={AudioCall} />
+            </Stack.Navigator>
+          </CallsProvider>
+        </CallProvider>
       </StreamClientProvider>
     </>
   );

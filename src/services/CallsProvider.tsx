@@ -22,7 +22,7 @@ const CallsProvider = ({ children }: PropsWithChildren) => {
         navigation.navigate(HOME.VideoCall);
       }
     }
-  }, [calls]);
+  }, [calls, call, navigation]);
 
   return children;
 };

@@ -7,17 +7,20 @@ import {
 } from '@stream-io/video-react-native-sdk';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import { BackHandler } from 'react-native';
 
 import OnGoingCall from './onGoingCall';
 import RingingCall from './ringingCall';
 import { Text } from '@components/index';
+import { useCall } from '../../../context/CallContext';
 
-const AudioCall = ({ route }) => {
+const AudioCall = ({ route }: { route?: any }) => {
   const [loaded, setLoaded] = useState(false);
   const [accepted, setAccepted] = useState<boolean>(false);
   const [user, setUser] = useState(route?.params?.toUser);
 
   const { t } = useTranslation();
+  const { setShowAudioCallHeader } = useCall();
 
   useEffect(() => {
     if (route?.params?.toUser) {
@@ -30,6 +33,35 @@ const AudioCall = ({ route }) => {
   const calls = useCalls();
   const call = calls[0];
 
+  // Check if call is already in progress when component mounts
+  useEffect(() => {
+    if (call && call.state?.callingState === 'joined' && !accepted) {
+      console.log('AudioCall - Call already joined, setting accepted to true');
+      setAccepted(true);
+    }
+  }, [call, accepted]);
+
+  // Handle back button during active audio call
+  useEffect(() => {
+    if (!accepted) {
+      return;
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        // Show audio call header and navigate back
+        setShowAudioCallHeader(true);
+        navigation.goBack();
+        return true; // Prevent default back behavior
+      },
+    );
+
+    return () => {
+      backHandler.remove();
+    };
+  }, [accepted, navigation, setShowAudioCallHeader]);
+
   useEffect(() => {
     if (!call) return;
 
@@ -38,17 +70,22 @@ const AudioCall = ({ route }) => {
     });
 
     const unsubscribeEnded = call.on('call.ended', ({}) => {
+      // Hide the header when call ends
+      setShowAudioCallHeader(false);
       navigation.goBack();
     });
 
     const unsubscribeRejected = call.on('call.rejected', ({}) => {
+      // Hide the header when call is rejected
+      setShowAudioCallHeader(false);
       navigation.goBack();
     });
 
     const unsubscribeLeft = call.on('call.session_participant_left', event => {
-      // If all participants have left, navigate back
+      // If all participants have left, navigate back and hide header
       const remainingParticipants = call?.state?.participants?.length || 0;
       if (remainingParticipants <= 1) {
+        setShowAudioCallHeader(false);
         navigation.goBack();
       }
     });
@@ -59,7 +96,7 @@ const AudioCall = ({ route }) => {
       unsubscribeRejected();
       unsubscribeLeft();
     };
-  }, [call]);
+  }, [call, navigation, setShowAudioCallHeader]);
 
   useEffect(() => {
     if (!call && loaded) {
@@ -81,11 +118,26 @@ const AudioCall = ({ route }) => {
   return (
     <StreamVideo client={client}>
       <StreamCall call={call}>
-        {call?.state?.callingState === 'ringing' && !accepted && (
-          <RingingCall call={call} toUser={user} />
-        )}
+        {(() => {
+          const isRinging =
+            call?.state?.callingState === 'ringing' && !accepted;
+          const isOngoing = accepted;
 
-        {accepted && <OnGoingCall call={call} toUser={user} />}
+          if (isRinging) {
+            return <RingingCall call={call} toUser={user} />;
+          }
+
+          if (isOngoing) {
+            return <OnGoingCall call={call} toUser={user} />;
+          }
+
+          // Fallback - show ongoing if call exists and is joined
+          if (call?.state?.callingState === 'joined') {
+            return <OnGoingCall call={call} toUser={user} />;
+          }
+
+          return null;
+        })()}
       </StreamCall>
     </StreamVideo>
   );

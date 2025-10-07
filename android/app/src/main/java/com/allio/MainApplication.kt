@@ -32,6 +32,9 @@ class MainApplication : Application(), ReactApplication {
                         return emptyList()
                     }
                 })
+              // Packages that cannot be autolinked yet can be added manually here, for example:
+              // add(MyReactNativePackage())
+              add(PiPModulePackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

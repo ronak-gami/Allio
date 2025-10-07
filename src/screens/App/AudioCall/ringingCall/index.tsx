@@ -52,6 +52,33 @@ const RingingCall = ({ call, toUser }: any) => {
     );
   }, [call, userData]);
 
+  const getOtherParticipant = () => {
+    if (call?.isCreatedByMe && toUser) {
+      return {
+        name: toUser?.name || 'Unknown User',
+        image: toUser?.photos?.[0]
+          ? `${process.env.IMAGE_URL}${toUser?.photos?.[0]}`
+          : null,
+      };
+    } else if (receiver?.user) {
+      return {
+        name: receiver.user.name || 'Unknown User',
+        image: receiver.user.image || null,
+      };
+    } else {
+      // Fallback to call members
+      const otherMember = call?.state?.members?.find(
+        (member: any) => member.user?.id !== userData?.getStreamUserId,
+      );
+      return {
+        name: otherMember?.user?.name || 'Audio Call',
+        image: otherMember?.user?.image || null,
+      };
+    }
+  };
+
+  const otherParticipant = getOtherParticipant();
+
   const handleAcceptCall = async () => {
     try {
       await call.join({ audio: true, video: false });
@@ -81,21 +108,29 @@ const RingingCall = ({ call, toUser }: any) => {
   return (
     <Container title="">
       <View style={styles.container}>
-        <Text style={[styles.title, { color: colors.primary }]}>
+        {/* <Text style={[styles.title, { color: colors.primary }]}>
           {call?.isCreatedByMe ? t('outGoingCall') : t('incomingCall')}
-        </Text>
+        </Text> */}
 
-        <Image
-          style={styles.image}
-          source={{
-            uri: call?.isCreatedByMe
-              ? `${process.env.IMAGE_URL}${toUser?.photos?.[0]}`
-              : receiver?.user?.image,
-          }}
-        />
+        {/* User Profile Image */}
+        {/* {otherParticipant.image ? (
+          <Image
+            style={styles.image}
+            source={{ uri: otherParticipant.image }}
+          />
+        ) : ( */}
+        {/* <View style={[styles.image, styles.placeholderImage]}>
+          <Text style={styles.placeholderText}>
+            {otherParticipant.name.charAt(0).toUpperCase()}
+          </Text>
+        </View> */}
+        {/* )} */}
 
-        <Text style={[styles.title, { color: colors.primary }]}>
-          {call?.isCreatedByMe ? toUser?.name : receiver?.user?.name}
+        {/* User Name */}
+        <Text
+          style={[styles.title, { color: colors.primary }]}
+          numberOfLines={2}>
+          {otherParticipant.name}
         </Text>
 
         <View style={styles.buttons}>

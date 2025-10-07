@@ -22,6 +22,7 @@ export type HomeStackParamList = {
   MPIN: undefined;
   ForgetMPIN: undefined;
   MyQR: undefined;
+  MyFriends: undefined;
   ChatDetailsScreen: undefined;
   HomeTabs: NavigatorScreenParams<TabParamList> | undefined;
   Profile: { email?: string };
@@ -35,6 +36,8 @@ export type HomeStackParamList = {
   };
   NewsApp: undefined;
   Users: undefined;
+  VideoCall: undefined;
+  AudioCall: undefined;
 };
 
 export type TabParamList = {

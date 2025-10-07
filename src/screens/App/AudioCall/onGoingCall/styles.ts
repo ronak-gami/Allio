@@ -10,17 +10,28 @@ const useStyles = () => {
     container: {
       alignItems: 'center',
       flexGrow: 1,
-      paddingTop: height * 0.2,
+      marginTop: height * 0.2,
     },
     image: {
-      height: height * 0.2,
-      width: height * 0.2,
-      borderRadius: height * 0.1,
-      marginBottom: height * 0.02,
+      height: height * 0.25,
+      width: height * 0.25,
+      borderRadius: height * 0.125,
+      marginBottom: height * 0.03,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.3,
+      shadowRadius: 4.65,
+      elevation: 8,
     },
     title: {
-      fontSize: scale(18),
-      marginBottom: height * 0.02,
+      fontSize: scale(24),
+      fontWeight: '700',
+      marginBottom: height * 0.01,
+      textAlign: 'center',
+      paddingHorizontal: scale(20),
     },
     buttons: {
       bottom: height * 0.05,
@@ -56,6 +67,27 @@ const useStyles = () => {
       width: scale(25),
       height: scale(25),
       tintColor: colors.background,
+    },
+    placeholderImage: {
+      backgroundColor: colors.primary,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    placeholderText: {
+      fontSize: scale(28),
+      fontWeight: '600',
+      color: colors.background,
+    },
+    callStatus: {
+      fontSize: scale(16),
+      fontWeight: '500',
+      marginBottom: height * 0.01,
+      opacity: 0.8,
+    },
+    duration: {
+      fontSize: scale(20),
+      fontWeight: '600',
+      marginBottom: height * 0.03,
     },
   });
 };
