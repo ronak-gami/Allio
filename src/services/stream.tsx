@@ -6,8 +6,9 @@ import {
 import { getUserData } from '@utils/helper';
 import { useSelector } from 'react-redux';
 import { RootState } from '@redux/store';
+import { STREAM_API_KEY } from '@utils/constant';
 
-const client = new StreamVideoClient('sgjdmtadrnsy');
+const client = new StreamVideoClient(STREAM_API_KEY);
 
 const StreamClientProvider = ({ children }: PropsWithChildren) => {
   const myEmail = useSelector(

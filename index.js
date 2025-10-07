@@ -13,6 +13,12 @@ import notifee, {
   AndroidImportance,
   AndroidVisibility,
 } from '@notifee/react-native';
+import {
+  isFirebaseStreamVideoMessage,
+  firebaseDataHandler,
+  onAndroidNotifeeEvent,
+  isNotifeeStreamVideoEvent,
+} from '@stream-io/video-react-native-sdk';
 
 // Ensure channel exists for headless/background (initNotifications not called yet)
 async function ensureHeadlessChannel() {
@@ -33,36 +39,72 @@ async function ensureHeadlessChannel() {
   }
 }
 
-// Notifee background event handler (removes warning)
-notifee.onBackgroundEvent(async ({ type, detail }) => {
-  switch (type) {
-    case EventType.ACTION_PRESS:
-      // detail.pressAction.id, detail.notification
-      // Handle action buttons if you add them later
-      break;
-    case EventType.PRESS:
-      // User tapped notification body (deep-link logic can go here)
-      break;
-    case EventType.DELIVERED:
-    case EventType.DISMISSED:
-    default:
-      break;
+// Ensure incoming call channel exists
+async function ensureIncomingCallChannel() {
+  try {
+    const channelId = 'stream_incoming_call';
+    const channels = await notifee.getChannels();
+    if (!channels.find(c => c.id === channelId)) {
+      await notifee.createChannel({
+        id: channelId,
+        name: 'Incoming call notifications',
+        importance: AndroidImportance.HIGH,
+        visibility: AndroidVisibility.PUBLIC,
+        sound: 'default',
+        vibration: true,
+        lightColor: '#00FF00',
+      });
+    }
+  } catch (e) {
+    console.warn('ensureIncomingCallChannel error', e);
+  }
+}
+
+// Notifee background event handler
+notifee.onBackgroundEvent(async event => {
+  console.log('Notifee background event:', event);
+
+  if (isNotifeeStreamVideoEvent(event)) {
+    console.log('Processing Stream Video event in background');
+    await onAndroidNotifeeEvent({ event, isBackground: true });
+  } else {
+    // Handle regular chat notifications
+    switch (event.type) {
+      case EventType.ACTION_PRESS:
+        break;
+      case EventType.PRESS:
+        break;
+      case EventType.DELIVERED:
+      case EventType.DISMISSED:
+      default:
+        break;
+    }
   }
 });
 
-// FCM data messages (background/killed)
+// FCM background message handler
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  await ensureHeadlessChannel();
-  await onDisplayNotification({
-    title:
-      remoteMessage.data?.title ||
-      remoteMessage.notification?.title ||
-      'New Message',
-    body:
-      remoteMessage.data?.body ||
-      remoteMessage.notification?.body ||
-      'You have a new message',
-  });
+  console.log('Background message received:', remoteMessage);
+
+  // Check if it's a Stream Video call
+  if (isFirebaseStreamVideoMessage(remoteMessage)) {
+    console.log('Stream Video call detected in background');
+    await ensureIncomingCallChannel();
+    await firebaseDataHandler(remoteMessage.data);
+  } else {
+    // Regular chat notification
+    await ensureHeadlessChannel();
+    await onDisplayNotification({
+      title:
+        remoteMessage.data?.title ||
+        remoteMessage.notification?.title ||
+        'New Message',
+      body:
+        remoteMessage.data?.body ||
+        remoteMessage.notification?.body ||
+        'You have a new message',
+    });
+  }
 });
 
 AppRegistry.registerComponent(appName, () => App);

@@ -28,6 +28,7 @@ import notifee, {
   AndroidVisibility,
   AuthorizationStatus,
 } from '@notifee/react-native';
+import { Alert, Linking } from 'react-native';
 import { store } from '@redux/store';
 import { createSharedMediaLink } from '@utils/deepLinking';
 import { StreamVideoClient } from '@stream-io/video-react-native-sdk';
@@ -822,6 +823,57 @@ const connectUserToStream = async (
   }
 };
 
+const requestFullScreenIntentPermission = async (): Promise<boolean> => {
+  try {
+    if (Platform.OS !== 'android') {
+      return true; // iOS doesn't need this permission
+    }
+
+    // Only required for Android 14+ (API level 34+)
+    if (Platform.Version < 34) {
+      return true;
+    }
+
+    const settings = await notifee.getNotificationSettings();
+
+    // Check if alarm permission (USE_FULL_SCREEN_INTENT) is granted
+    if (settings.android.alarm === 1) {
+      return true; // Already granted
+    }
+
+    // Show alert to guide user to settings
+    return new Promise(resolve => {
+      Alert.alert(
+        'Permission Required',
+        'To receive incoming calls when your phone is locked, please enable "Alarms & reminders" or "Display over other apps" permission.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+            onPress: () => resolve(false),
+          },
+          {
+            text: 'Open Settings',
+            onPress: async () => {
+              try {
+                await Linking.openSettings();
+                resolve(true);
+              } catch (error) {
+                console.error('Error opening settings:', error);
+                resolve(false);
+              }
+            },
+          },
+        ],
+        { cancelable: false },
+      );
+    });
+  } catch (error) {
+    console.error('Error requesting full-screen intent permission:', error);
+    return false;
+  }
+};
+
 export {
   height,
   width,
@@ -852,4 +904,5 @@ export {
   formatLastUpdated,
   isVersionLower,
   connectUserToStream,
+  requestFullScreenIntentPermission, // Add this export
 };

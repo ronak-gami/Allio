@@ -23,7 +23,9 @@ api.interceptors.response.use(
 
   error => {
     const status = error?.response?.status;
+    console.log('status: ', status);
     const errorData = error?.response?.data;
+    console.log('errorData: ', errorData);
     if (status >= 400 && status < 410) {
       showError(errorData?.error);
     } else {
@@ -57,9 +59,6 @@ const client = ({
     ...otherParams,
   });
 };
-
-
-
 
 // import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 // import * as Sentry from '@sentry/react-native';

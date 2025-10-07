@@ -17,6 +17,8 @@ const SPACING = (width - CARD_WIDTH) / 0.6;
 // const BASE_URL = 'https://allio-app-bxwta.ondigitalocean.app/api';
 const BASE_URL = 'https://baf758511c70.ngrok-free.app/api';
 
+const STREAM_API_KEY = 'sgjdmtadrnsy';
+
 const onboardingData: OnboardingItem[] = [
   {
     id: '1',
@@ -116,6 +118,7 @@ const FeaturesDataItem = [
 export {
   WEB_CLIENT_ID,
   BASE_URL,
+  STREAM_API_KEY,
   onboardingData,
   AUTH,
   HOME,

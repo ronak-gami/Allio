@@ -10,6 +10,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import { HOME } from '@utils/constant';
 import { TabParamList } from '@types/navigations';
 import { resetMedia } from '@redux/slices/MediaSlice';
+import { StreamVideoRN } from '@stream-io/video-react-native-sdk';
 import {
   capitalizeFirst,
   removeFCMTokenFromFirestore,
@@ -99,6 +100,8 @@ export const useMore = () => {
 
         // Clear GetStream token before logout
         await clearGetStreamToken(currentUser.uid);
+
+        await StreamVideoRN.onPushLogout();
 
         await authInstance.signOut();
         dispatch(resetMedia());

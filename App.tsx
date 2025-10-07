@@ -22,6 +22,9 @@ import {
 import { getUserData } from '@utils/helper';
 import { navigationRef } from './src/navigations/navigationRef';
 import { checkAppVersion } from './src/services/versionCheck';
+import { setPushConfig } from '@utils/setPushConfig';
+import { setFirebaseListeners } from '@utils/setFirebaseListeners';
+import { requestFullScreenIntentPermission } from '@utils/helper';
 
 Sentry.init({
   // dsn: 'https://61501c2e99978ee58ca285d730991b4d@o4509948781920256.ingest.us.sentry.io/4509948783558656',
@@ -149,6 +152,21 @@ const App = () => {
       .catch(err => Sentry.captureException(err));
     const sub = Linking.addEventListener('url', e => handleUrl(e.url));
     return () => sub.remove();
+  }, []);
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      // Set up Firebase listeners
+      setFirebaseListeners();
+
+      // Configure Stream push notifications
+      await setPushConfig();
+
+      // Request full-screen intent permission for Android 14+
+      await requestFullScreenIntentPermission();
+    };
+
+    initializeApp();
   }, []);
 
   return (

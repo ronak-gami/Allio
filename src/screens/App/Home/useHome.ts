@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { getAuth } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { applyNotificationSettings, getUserData } from '@utils/helper';
+import { requestNotifications } from 'react-native-permissions';
 import api from '@api/index';
 
 const useHome = () => {
@@ -44,6 +45,8 @@ const useHome = () => {
   };
 
   useEffect(() => {
+    requestNotifications(['alert', 'sound']);
+
     const timeoutId = setTimeout(async () => {
       await applyNotificationSettings();
     }, 2000);
