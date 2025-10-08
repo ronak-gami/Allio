@@ -874,6 +874,19 @@ const requestFullScreenIntentPermission = async (): Promise<boolean> => {
   }
 };
 
+// Add this helper function
+export const generateChatDocumentId = (
+  email1: string,
+  email2: string,
+): string => {
+  const normalizedEmail1 = email1.trim().toLowerCase();
+  const normalizedEmail2 = email2.trim().toLowerCase();
+
+  // Always sort emails alphabetically to ensure consistent document ID
+  const emails = [normalizedEmail1, normalizedEmail2].sort();
+  return `${emails[0]}_${emails[1]}`;
+};
+
 export {
   height,
   width,

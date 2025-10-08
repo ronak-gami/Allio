@@ -3,7 +3,7 @@ import { PanResponder } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import moment from 'moment';
 
-import { getCurrentTimestamp } from '@utils/helper';
+import { getCurrentTimestamp, generateChatDocumentId } from '@utils/helper';
 import { showError, showSuccess } from '@utils/toast';
 import api from '@api/index';
 import { useNavigation } from '@react-navigation/native';
@@ -168,26 +168,28 @@ export const useUserCard = (
   // Send / Accept / Reject
   // -------------------------
   const sendRequest = async () => {
-    if (!myEmail || !userEmail || !documentId) {
+    if (!myEmail || !userEmail) {
       return;
     }
-    const email1 = myEmail.trim().toLowerCase();
-    const email2 = userEmail.trim().toLowerCase();
+    
+    const documentId = generateChatDocumentId(myEmail, userEmail);
+    
     const timestamp = getCurrentTimestamp
       ? getCurrentTimestamp()
       : firestore.FieldValue.serverTimestamp();
 
     await firestore().collection('relation').doc(documentId).set({
-      from: email1,
-      to: email2,
+      from: myEmail.trim().toLowerCase(),
+      to: userEmail.trim().toLowerCase(),
       isAccept: false,
       timestamp,
+      users: [myEmail.trim().toLowerCase(), userEmail.trim().toLowerCase()].sort(),
     });
 
     const title = 'Connection Request';
-    const body = `${email1} has sent you a connection request.`;
+    const body = `${myEmail.trim().toLowerCase()} has sent you a connection request.`;
 
-    const data = { emails: [email2], title, body };
+    const data = { emails: [userEmail.trim().toLowerCase()], title, body };
     const response = await api?.NOTIFICATION.sendNotification({ data });
     if (response?.data?.success) {
       showSuccess(response?.data?.message || 'Notification sent!');

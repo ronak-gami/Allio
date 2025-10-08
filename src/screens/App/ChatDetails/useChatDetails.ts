@@ -17,6 +17,7 @@ import {
   getAllUsers,
   getUserData,
   connectUserToStream, // Add this import
+  generateChatDocumentId,
 } from '@utils/helper';
 import { HOME } from '@utils/constant';
 import { HomeNavigationProp } from '@types/navigations';
@@ -173,13 +174,12 @@ export const useChatDetails = (
   const otherNorm = (targetUser?.email || '').trim().toLowerCase();
   const isSelf = !!myNorm && myNorm === otherNorm;
 
-  /** Firestore paths */
+  /** Firestore paths - FIXED: Always use alphabetical order */
   const relationId = (() => {
     if (!myNorm || !otherNorm) {
       return null;
     }
-    // enforce myEmail_otherEmail (no sort, lowercased)
-    return `${myNorm}_${otherNorm}`;
+    return generateChatDocumentId(myNorm, otherNorm);
   })();
 
   useEffect(() => {
@@ -225,6 +225,7 @@ export const useChatDetails = (
           });
 
         setChatHistory(msgs);
+        console.log('Chat history updated, total messages:', msgs); // --- IGNORE ---
         setLoadingMessages(false);
       });
 
@@ -292,60 +293,134 @@ export const useChatDetails = (
   }, [states?.chatHistory?.length, scrollToBottom]);
 
   const handleSendMessage = useCallback(async () => {
-    if (!message.trim() || !relationId) {
+    console.log('handleSendMessage called with:', {
+      message: message.trim(),
+      relationId,
+      myEmail,
+      targetUserEmail: targetUser?.email,
+      myNorm,
+      otherNorm,
+    });
+
+    if (!message.trim()) {
+      console.log('Message is empty, returning');
+      return;
+    }
+
+    if (!relationId) {
+      console.log('relationId is null, returning');
+      showError('Unable to send message - invalid relation');
+      return;
+    }
+
+    if (!myEmail || !targetUser?.email) {
+      console.log('Missing email data:', {
+        myEmail,
+        targetUserEmail: targetUser?.email,
+      });
+      showError('Unable to send message - missing user data');
       return;
     }
 
     try {
       const timestamp = firestore.FieldValue.serverTimestamp();
       const relationRef = firestore().collection('relation').doc(relationId);
+
       const docSnapshot = await relationRef.get();
 
       if (!docSnapshot.exists) {
+        // Always create with both users as accepted since they're chatting
         await relationRef.set({
           from: myNorm,
           to: otherNorm,
           isAccept: true,
           timestamp,
+          // Store both users for easier querying later
+          users: [myNorm, otherNorm].sort(),
         });
-      } else if (docSnapshot.exists && !docSnapshot.data()?.isAccept) {
-        await relationRef.set(
-          {
-            isAccept: true,
-            from: myNorm,
-            to: otherNorm,
-          },
-          { merge: true },
-        );
+      } else {
+        const data = docSnapshot.data();
+        if (!data?.isAccept) {
+          await relationRef.set(
+            {
+              isAccept: true,
+              from: myNorm,
+              to: otherNorm,
+              users: [myNorm, otherNorm].sort(),
+            },
+            { merge: true },
+          );
+          console.log('Relation updated successfully');
+        }
       }
 
-      await relationRef.collection('messages').add({
+      const messageData = {
         text: message.trim(),
         from: myEmail,
         to: targetUser?.email,
         timestamp,
-      });
+      };
 
+      console.log('Adding message to collection with data:', messageData);
+
+      const messageRef = await relationRef
+        .collection('messages')
+        .add(messageData);
+
+      console.log('Message added successfully with ID:', messageRef.id);
+
+      // Verify message was written
+      console.log('Verifying message was written - reading it back...');
+      try {
+        const verifyDoc = await messageRef.get();
+        if (verifyDoc.exists) {
+          console.log('✅ Message verified in Firestore:', verifyDoc.data());
+        } else {
+          console.log('❌ Message NOT found in Firestore after write');
+        }
+      } catch (readError) {
+        console.error('Error reading back message:', readError);
+      }
+
+      // Clear message input
+      if (isMounted.current) {
+        setMessage('');
+      }
+
+      // Send notification if applicable
       if (!isSelf && !isBlockedByMe && !isBlockedByThem && !isOnline) {
+        console.log('Sending notification...');
         const email2 = (targetUser?.email || '').trim().toLowerCase();
-        const data = {
+        const notificationData = {
           emails: [email2],
           title: 'Message Sent',
           body: `${myNorm} has sent a message to you.`,
         };
+
         try {
-          const response = await api?.NOTIFICATION.sendNotification({ data });
+          const response = await api?.NOTIFICATION.sendNotification({
+            data: notificationData,
+          });
           if (response?.data?.success) {
+            console.log('Notification sent successfully');
             showSuccess(response?.data?.message || 'Notification sent!');
           }
-        } catch {
-          // ignore notification error
+        } catch (notificationError) {
+          console.error(
+            'Notification error (non-critical):',
+            notificationError,
+          );
         }
       }
-      // if (isMounted.current) setMessage('');
-      setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
+
+      if (error instanceof Error) {
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      }
+
+      showError('Failed to send message. Please try again.');
     }
   }, [
     message,
@@ -899,14 +974,13 @@ export const useChatDetails = (
     setIsEditing(false);
   }, [editMsgId, editText, relationId]);
 
+  // Add this ref to track component mount status
+  const isMounted = useRef(true);
+
   useEffect(() => {
+    isMounted.current = true;
     return () => {
-      if (liveWatchId.current != null) {
-        Geolocation.clearWatch(liveWatchId.current);
-      }
-      if (liveEndTimer.current) {
-        clearTimeout(liveEndTimer.current);
-      }
+      isMounted.current = false;
     };
   }, []);
 
