@@ -1,76 +1,291 @@
-# Social Authentication Documentation
+# Allio Social Media Authentication - Reference Guide
 
-## Overview
-This document outlines the steps to implement social authentication using Google and Facebook for both Android and iOS platforms.
 
-## Google Login Implementation Steps
+## 📋 Quick Reference
 
-1. **Create a Google Developer Project**
-   - Go to the [Google Developers Console](https://console.developers.google.com/).
-   - Create a new project and enable the "Google Sign-In" API.
+This guide shows how to implement social media authentication in your existing Allio project structure.
 
-2. **Configure OAuth Consent Screen**
-   - Set up the OAuth consent screen with the required information.
+## 🏗 Current Project Integration
 
-3. **Generate OAuth 2.0 Credentials**
-   - Create credentials for OAuth 2.0 Client IDs for both Android and iOS.
+Based on your Allio project, integrate authentication into existing structure:
 
-4. **Add Google Sign-In to Your App**
-   - Follow the [official documentation](https://developers.google.com/identity/sign-in/android/start-integrating) for Android.
-   - Follow the [official documentation](https://developers.google.com/identity/sign-in/ios/start-integrating) for iOS.
-
-### Code Example for Google Login
-
-```java
-// Android Code Example
-GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestEmail()
-        .build();
-
-GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+```
+your-existing-src/
+├── screens/          # Add LoginScreen here
+├── components/       # Add SocialButtons here  
+├── services/         # Add AuthService here
+├── navigation/       # Modify existing navigator
+└── utils/           # Add auth helpers
 ```
 
-```swift
-// iOS Code Example
-GIDSignIn.sharedInstance.signIn(with: signInConfig, presenting: self) { user, error in
-    // Handle sign-in
+## 🔧 Quick Setup
+
+### 1. Install Dependencies
+```bash
+npm install @react-native-google-signin/google-signin react-native-fbsdk-next
+cd ios && pod install && cd ..
+```
+
+### 2. Configuration Setup
+```javascript
+// src/config/auth.js
+export const AUTH_CONFIG = {
+  google: {
+    webClientId: 'YOUR_WEB_CLIENT_ID',
+    iosClientId: 'YOUR_IOS_CLIENT_ID',
+  },
+  facebook: {
+    appId: 'YOUR_FB_APP_ID',
+    permissions: ['email', 'public_profile'],
+  }
+};
+```
+
+## 🔑 Service Integration
+
+### Main Auth Service
+```javascript
+// src/services/AuthService.js
+import GoogleSignin from '@react-native-google-signin/google-signin';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+
+class AuthService {
+  // Initialize in your app startup
+  init() {
+    GoogleSignin.configure(AUTH_CONFIG.google);
+  }
+
+  // Google Sign-In
+  async googleLogin() {
+    const userInfo = await GoogleSignin.signIn();
+    return userInfo.user;
+  }
+
+  // Facebook Login  
+  async facebookLogin() {
+    await LoginManager.logInWithPermissions(AUTH_CONFIG.facebook.permissions);
+    const token = await AccessToken.getCurrentAccessToken();
+    // Get user profile from Graph API
+    return userProfile;
+  }
+
+  // Logout
+  async logout() {
+    await GoogleSignin.signOut();
+    await LoginManager.logOut();
+    // Clear your app's user data
+  }
+}
+
+export default new AuthService();
+```
+
+## 📱 Screen Integration
+
+### Add to Existing Navigation
+```javascript
+// In your existing navigation setup
+import LoginScreen from '../screens/LoginScreen';
+
+// Add to your stack navigator
+<Stack.Screen name="Login" component={LoginScreen} />
+```
+
+### Login Screen Component
+```javascript
+// src/screens/LoginScreen.js
+import AuthService from '../services/AuthService';
+
+const LoginScreen = ({ navigation }) => {
+  const handleGoogleLogin = async () => {
+    try {
+      const user = await AuthService.googleLogin();
+      // Navigate to your main app screen
+      navigation.navigate('YourMainScreen');
+    } catch (error) {
+      // Handle error
+    }
+  };
+
+  return (
+    <View>
+      <TouchableOpacity onPress={handleGoogleLogin}>
+        <Text>Continue with Google</Text>
+      </TouchableOpacity>
+      {/* Similar for Facebook */}
+    </View>
+  );
+};
+```
+
+## 🔗 Deep Linking Integration
+
+### In your existing deep link handler
+```javascript
+// Add to your existing linking configuration
+const linking = {
+  prefixes: ['allio://'],
+  config: {
+    screens: {
+      // Your existing screens
+      Login: 'auth/login',
+      AuthSuccess: 'auth/success',
+    },
+  },
+};
+```
+
+## ⚙️ Platform Setup
+
+### Android Configuration
+Add to your existing `android/app/build.gradle`:
+```gradle
+dependencies {
+    // Your existing dependencies
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    implementation 'com.facebook.android:facebook-android-sdk:16.2.0'
 }
 ```
 
-## Facebook Login Implementation Steps
-
-1. **Create a Facebook App**
-   - Go to the [Facebook Developers](https://developers.facebook.com/) page and create a new app.
-
-2. **Configure App Settings**
-   - Set up the app settings and enable Facebook Login.
-
-3. **Add Facebook SDK to Your App**
-   - Follow the [official documentation](https://developers.facebook.com/docs/facebook-login/android) for Android.
-   - Follow the [official documentation](https://developers.facebook.com/docs/facebook-login/ios) for iOS.
-
-### Code Example for Facebook Login
-
-```java
-// Android Code Example
-LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
+### iOS Configuration  
+Add to your existing `ios/Allio/Info.plist`:
+```xml
+<key>CFBundleURLSchemes</key>
+<array>
+    <string>YOUR_REVERSED_CLIENT_ID</string>
+    <string>fbYOUR_FACEBOOK_APP_ID</string>
+</array>
 ```
 
-```swift
-// iOS Code Example
-let loginManager = LoginManager()
-loginManager.logIn(permissions: ["public_profile", "email"], from: self) { result, error in
-    // Handle login
+## 🚀 Integration Steps
+
+### Step 1: Initialize Authentication
+```javascript
+// In your App.js or main component
+import AuthService from './src/services/AuthService';
+
+export default function App() {
+  useEffect(() => {
+    AuthService.init();
+  }, []);
+  
+  // Your existing app code
 }
 ```
 
-## Troubleshooting
+### Step 2: Add Authentication Check
+```javascript
+// In your main navigator
+const [user, setUser] = useState(null);
 
-- **Common Issues**
-  - Make sure you have the correct package name and SHA-1 fingerprint for Android.
-  - Ensure that your iOS bundle ID matches the one configured in the Facebook Developer Console.
-  - Verify that you have set the correct OAuth redirect URIs.
+useEffect(() => {
+  // Check if user is logged in
+  const checkAuth = async () => {
+    const currentUser = await AuthService.getCurrentUser();
+    setUser(currentUser);
+  };
+  checkAuth();
+}, []);
 
-- **Debugging Tips**
-  - Use logging to track the authentication flow.
-  - Check for errors returned by the SDKs and handle them appropriately.
+return (
+  <NavigationContainer>
+    {user ? <YourMainNavigator /> : <AuthNavigator />}
+  </NavigationContainer>
+);
+```
+
+### Step 3: Handle User State
+```javascript
+// In your user context or state management
+const AuthContext = createContext();
+
+export const useAuth = () => {
+  const [user, setUser] = useState(null);
+  
+  const login = async (provider) => {
+    const userData = await AuthService[`${provider}Login`]();
+    setUser(userData);
+  };
+  
+  const logout = async () => {
+    await AuthService.logout();
+    setUser(null);
+  };
+  
+  return { user, login, logout };
+};
+```
+
+## 🔍 Testing in Your Project
+
+### Test Authentication Flow
+```bash
+# Run your existing project
+npx react-native run-android
+npx react-native run-ios
+
+# Test deep links
+adb shell am start -W -a android.intent.action.VIEW -d "allio://auth/login" com.yourpackage.allio
+```
+
+## 🛠 Integration with Existing Features
+
+### With Your User Profile
+```javascript
+// Update your existing user profile screen
+const ProfileScreen = () => {
+  const { user, logout } = useAuth();
+  
+  return (
+    <View>
+      <Text>{user.name}</Text>
+      <Image source={{ uri: user.photo }} />
+      <Button title="Logout" onPress={logout} />
+    </View>
+  );
+};
+```
+
+### With Your Navigation
+```javascript
+// Protect your existing screens
+const ProtectedScreen = ({ navigation }) => {
+  const { user } = useAuth();
+  
+  if (!user) {
+    navigation.navigate('Login');
+    return null;
+  }
+  
+  // Your existing screen content
+};
+```
+
+## 📊 Quick Analytics
+```javascript
+// Add to your existing analytics
+const trackAuth = (event, provider) => {
+  // Your existing analytics service
+  Analytics.track('auth_' + event, { provider });
+};
+```
+
+## 🔐 Security Notes
+
+1. **Store credentials securely** using your existing secure storage
+2. **Validate tokens** before API calls
+3. **Handle token refresh** automatically
+4. **Clear data on logout** completely
+
+## 📚 Project-Specific References
+
+- **Your Repository**: ronak-gami/Allio
+- **Your Branch**: features/rg/deep-linking  
+- **Integration Point**: Existing navigation structure
+- **User Management**: Your current user state system
+
+---
+
+**Quick Implementation**: Add auth services → Update navigation → Test flow  
+**Developer**: ayushnathvani  
+**Status**: Ready for integration into existing Allio project
