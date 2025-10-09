@@ -1,5 +1,11 @@
 import React from 'react';
-import { Image, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  TouchableOpacity,
+  View,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import {
   Text,
   VideoCard,
@@ -7,6 +13,8 @@ import {
   Button,
   Container,
   CustomSimpleTab,
+  ImagePreviewModal,
+  VideoPreviewModal,
 } from '@components/index';
 
 import useStyle from './style';
@@ -53,7 +61,7 @@ const ProfileHeader: React.FC<{
   handleReject,
   onEditProfile,
   handleShareProfile,
-  onChatPress, // ADDED
+  onChatPress,
   states,
 }) => {
   const displayName =
@@ -219,7 +227,9 @@ const MediaContent: React.FC<{
   onRefresh: () => void;
   states: object;
   styles: ReturnType<typeof useStyle>;
-}> = ({ activeTab, images, videos, styles }) => {
+  onImagePress: (uri: string) => void;
+  onVideoPress: (uri: string) => void;
+}> = ({ activeTab, images, videos, styles, onImagePress, onVideoPress }) => {
   const renderEmptyVideoState = () => (
     <View style={styles.emptyGridContainer}>
       <Image
@@ -246,7 +256,6 @@ const MediaContent: React.FC<{
     </View>
   );
 
-  // ADDED: Reels empty state
   const renderEmptyReelsState = () => (
     <View style={styles.emptyGridContainer}>
       <Image
@@ -265,26 +274,16 @@ const MediaContent: React.FC<{
       <CustomFlatList
         key="videos"
         data={videos || []}
-        renderItem={({ item }) => <VideoCard item={item} />}
+        renderItem={({ item }) => (
+          <VideoCard
+            item={item}
+            handleSelectStoredVideo={() => onVideoPress(item.videoURL)}
+          />
+        )}
         numColumns={2}
         columnWrapperStyle={styles.gridRow}
         contentContainerStyle={styles.gridContent}
         ListEmptyComponent={renderEmptyVideoState()}
-      />
-    );
-  }
-
-  // ADDED: Reels case
-  if (activeTab === 'reels') {
-    return (
-      <CustomFlatList
-        key="reels"
-        data={[]} // Empty for now
-        renderItem={({ item }) => <VideoCard item={item} />}
-        numColumns={2}
-        columnWrapperStyle={styles.gridRow}
-        contentContainerStyle={styles.gridContent}
-        ListEmptyComponent={renderEmptyReelsState()}
       />
     );
   }
@@ -294,11 +293,13 @@ const MediaContent: React.FC<{
       key="images"
       data={images || []}
       renderItem={({ item }) => (
-        <Image
-          source={{ uri: item }}
-          style={styles.mediaItem}
-          resizeMode="cover"
-        />
+        <TouchableOpacity onPress={() => onImagePress(item)}>
+          <Image
+            source={{ uri: item }}
+            style={styles.mediaItem}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
       )}
       numColumns={2}
       columnWrapperStyle={styles.gridRow}
@@ -321,21 +322,31 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
     onRefresh,
     onEditProfile,
     handleShareProfile,
+    openImageModal,
+    openVideoModal,
+    closeModal,
   } = useProfile({
     userEmail: route.params?.email,
   });
 
   return (
     <Container showLoader={false} showBackArrow title="Profile">
-      <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={states.refreshing}
+            onRefresh={onRefresh}
+          />
+        }>
         <ProfileHeader
           email={data.email}
           firstName={data.firstName}
           lastName={data.lastName}
           profileImage={data.profileImage}
           mobileNo={data.mobileNo}
-          images={data.allImages}
-          videos={data.allVideos}
+          images={data.images}
+          videos={data.videos}
           styles={styles}
           isExternalProfile={isExternalProfile}
           navigateToMyFriends={navigateToMyFriends}
@@ -345,27 +356,41 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
           handleAccept={handleAccept}
           handleReject={handleReject}
           onEditProfile={onEditProfile}
-          states={states}
           handleShareProfile={handleShareProfile}
-          onChatPress={navigateToMyFriends} // ADDED: navigate to Chat Details with user prop
-        />
-        <TabBar
-          activeTab={states.activeTab}
-          onTabChange={states.setActiveTab}
           states={states}
-          styles={styles}
         />
-        <View style={styles.contentContainer}>
-          <MediaContent
-            activeTab={states.activeTab}
-            images={data.images}
-            videos={data.videos}
-            styles={styles}
-            onRefresh={onRefresh}
-            states={states}
-          />
-        </View>
-      </View>
+
+        <TabBar
+          onTabChange={states.setActiveTab}
+          styles={styles}
+          states={states}
+        />
+
+        <MediaContent
+          activeTab={states.activeTab}
+          images={data.images}
+          videos={data.videos}
+          styles={styles}
+          onImagePress={openImageModal}
+          onVideoPress={openVideoModal}
+        />
+
+        {/* Image Preview Modal */}
+        <ImagePreviewModal
+          visible={states.imageModalVisible}
+          imageUri={states.selectedImageUri}
+          onClose={closeModal}
+          hideActions={true}
+        />
+
+        {/* Video Preview Modal */}
+        <VideoPreviewModal
+          visible={states.videoModalVisible}
+          videoUri={states.selectedVideoUri}
+          onClose={closeModal}
+          hideActions={true}
+        />
+      </ScrollView>
     </Container>
   );
 };

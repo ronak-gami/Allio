@@ -167,8 +167,8 @@ export const useMore = () => {
       },
 
       {
-        key: 'News App',
-        title: 'settings.News App',
+        key: 'Offline Sync',
+        title: 'settings.Offline Sync',
         type: 'navigation',
         screenName: HOME.NewsApp,
       },

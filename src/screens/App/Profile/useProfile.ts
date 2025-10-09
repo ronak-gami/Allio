@@ -30,6 +30,10 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
   const [activeTab, setActiveTab] = useState<string>('images');
   const [isFriend, setIsFriend] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [imageModalVisible, setImageModalVisible] = useState<boolean>(false);
+  const [videoModalVisible, setVideoModalVisible] = useState<boolean>(false);
+  const [selectedImageUri, setSelectedImageUri] = useState<string>('');
+  const [selectedVideoUri, setSelectedVideoUri] = useState<string>('');
   const [userData, setUserData] = useState<UserData>({
     email: '',
     firstName: undefined,
@@ -154,7 +158,14 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
     checkFriendStatus();
   }, [userEmail, userData.email, checkIfFriend]);
 
-  const handleTabChange = (tab: string) => setActiveTab(tab);
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    // Clear modal states when changing tabs
+    setImageModalVisible(false);
+    setVideoModalVisible(false);
+    setSelectedImageUri('');
+    setSelectedVideoUri('');
+  };
 
   const navigateToMyFriends = () => {
     navigation.navigate(HOME.ChatDetailsScreen, { user: userData });
@@ -203,6 +214,27 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
     }
   };
 
+  const openImageModal = (imageUri: string) => {
+    setSelectedImageUri(imageUri);
+    setSelectedVideoUri('');
+    setImageModalVisible(true);
+    setVideoModalVisible(false);
+  };
+
+  const openVideoModal = (videoUri: string) => {
+    setSelectedVideoUri(videoUri);
+    setSelectedImageUri('');
+    setVideoModalVisible(true);
+    setImageModalVisible(false);
+  };
+
+  const closeModal = () => {
+    setImageModalVisible(false);
+    setVideoModalVisible(false);
+    setSelectedImageUri('');
+    setSelectedVideoUri('');
+  };
+
   return {
     states: {
       isFriend,
@@ -210,6 +242,10 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
       setActiveTab: handleTabChange,
       relationStatus,
       refreshing,
+      imageModalVisible,
+      videoModalVisible,
+      selectedImageUri,
+      selectedVideoUri,
     },
     data: {
       email: userData.email,
@@ -238,6 +274,9 @@ const useProfile = ({ userEmail }: UseProfileProps = {}) => {
     onRefresh,
     onEditProfile,
     handleShareProfile,
+    openImageModal,
+    openVideoModal,
+    closeModal,
   };
 };
 
