@@ -8,15 +8,10 @@ import {
 } from '@stream-io/video-react-native-sdk';
 
 export const setFirebaseListeners = () => {
-  console.log('Setting up Firebase listeners for Stream Video');
-
   // Set up the background message handler for FCM
   messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('Background FCM message received:', remoteMessage);
-
     // Check if it's a Stream Video call notification
     if (isFirebaseStreamVideoMessage(remoteMessage)) {
-      console.log('Processing Stream Video message in background');
       await firebaseDataHandler(remoteMessage.data);
     } else {
       // Handle your regular chat notifications
@@ -26,10 +21,7 @@ export const setFirebaseListeners = () => {
 
   // Handle foreground FCM messages
   messaging().onMessage(async remoteMessage => {
-    console.log('Foreground FCM message received:', remoteMessage);
-
     if (isFirebaseStreamVideoMessage(remoteMessage)) {
-      console.log('Processing Stream Video message in foreground');
       await firebaseDataHandler(remoteMessage.data);
     } else {
       // Handle your regular chat notifications
@@ -39,10 +31,7 @@ export const setFirebaseListeners = () => {
 
   // Notifee background event handler
   notifee.onBackgroundEvent(async event => {
-    console.log('Notifee background event:', event);
-
     if (isNotifeeStreamVideoEvent(event)) {
-      console.log('Processing Stream Video notifee event in background');
       await onAndroidNotifeeEvent({ event, isBackground: true });
     } else {
       // Handle your regular notification actions
@@ -61,10 +50,7 @@ export const setFirebaseListeners = () => {
 
   // Notifee foreground event handler
   notifee.onForegroundEvent(async event => {
-    console.log('Notifee foreground event:', event);
-
     if (isNotifeeStreamVideoEvent(event)) {
-      console.log('Processing Stream Video notifee event in foreground');
       await onAndroidNotifeeEvent({ event, isBackground: false });
     } else {
       // Handle your regular notification actions

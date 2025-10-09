@@ -18,12 +18,14 @@ interface VideoPreviewModalProps {
   visible: boolean;
   videoUri: string;
   onClose: () => void;
+  hideActions?: boolean; // Add prop to hide all action icons
 }
 
 const VideoPreviewModal = ({
   visible,
   videoUri,
   onClose,
+  hideActions = false, // Default to false to maintain existing behavior
 }: VideoPreviewModalProps) => {
   const styles = useStyle();
 
@@ -118,7 +120,7 @@ const VideoPreviewModal = ({
             style={styles.sendButton}
           />
         </View>
-      ) : (
+      ) : !hideActions ? ( // Conditionally render actions based on hideActions prop
         <View style={styles.iconRow}>
           <TouchableOpacity onPress={handleDownload}>
             <Image source={ICONS.Download} style={styles.iconImage} />
@@ -132,7 +134,7 @@ const VideoPreviewModal = ({
             <Image source={ICONS.Share} style={styles.iconImage} />
           </TouchableOpacity>
         </View>
-      )}
+      ) : null}
     </CustomModal>
   );
 };

@@ -13,6 +13,7 @@ import OnGoingCall from './onGoingCall';
 import RingingCall from './ringingCall';
 import { Text } from '@components/index';
 import { useCall } from '../../../context/CallContext';
+import { CallAudioManager } from '@utils/callAudioManager';
 
 const AudioCall = ({ route }: { route?: any }) => {
   const [loaded, setLoaded] = useState(false);
@@ -41,6 +42,68 @@ const AudioCall = ({ route }: { route?: any }) => {
     }
   }, [call, accepted]);
 
+  // Handle ringtone and audio management
+  useEffect(() => {
+    if (!call) {
+      return;
+    }
+
+    const isIncoming = !call?.isCreatedByMe;
+    const isVideo = false; // Audio call
+
+    // Start appropriate ringtone
+    if (isIncoming) {
+      CallAudioManager.startIncomingRingtone(isVideo);
+    } else {
+      CallAudioManager.startOutgoingRingtone(isVideo);
+    }
+
+    const unsubscribeAccepted = call.on('call.accepted', () => {
+      // Stop ringtone and start call audio when call is accepted
+      CallAudioManager.stopAllAudio();
+      CallAudioManager.startCallAudio(false); // false = audio call, speaker OFF
+      setAccepted(true);
+    });
+
+    const unsubscribeEnded = call.on('call.ended', () => {
+      // Stop all audio when call ends
+      CallAudioManager.stopCallAudio();
+      CallAudioManager.stopAllAudio();
+      setShowAudioCallHeader(false);
+      navigation.goBack();
+    });
+
+    const unsubscribeRejected = call.on('call.rejected', () => {
+      // Stop all audio when call is rejected
+      CallAudioManager.stopCallAudio();
+      CallAudioManager.stopAllAudio();
+      setShowAudioCallHeader(false);
+      navigation.goBack();
+    });
+
+    const unsubscribeLeft = call.on('call.session_participant_left', () => {
+      const remainingParticipants = call?.state?.participants?.length || 0;
+      if (remainingParticipants <= 1) {
+        // Stop all audio when last participant leaves
+        CallAudioManager.stopCallAudio();
+        CallAudioManager.stopAllAudio();
+        setShowAudioCallHeader(false);
+        navigation.goBack();
+      }
+    });
+
+    return () => {
+      // Cleanup: stop all audio when component unmounts
+      CallAudioManager.stopAllAudio();
+      CallAudioManager.stopCallAudio();
+
+      unsubscribeAccepted();
+      unsubscribeEnded();
+      unsubscribeRejected();
+      unsubscribeLeft();
+    };
+  }, [call, navigation, setShowAudioCallHeader]);
+
   // Handle back button during active audio call
   useEffect(() => {
     if (!accepted) {
@@ -61,42 +124,6 @@ const AudioCall = ({ route }: { route?: any }) => {
       backHandler.remove();
     };
   }, [accepted, navigation, setShowAudioCallHeader]);
-
-  useEffect(() => {
-    if (!call) return;
-
-    const unsubscribeAccepted = call.on('call.accepted', ({}) => {
-      setAccepted(true);
-    });
-
-    const unsubscribeEnded = call.on('call.ended', ({}) => {
-      // Hide the header when call ends
-      setShowAudioCallHeader(false);
-      navigation.goBack();
-    });
-
-    const unsubscribeRejected = call.on('call.rejected', ({}) => {
-      // Hide the header when call is rejected
-      setShowAudioCallHeader(false);
-      navigation.goBack();
-    });
-
-    const unsubscribeLeft = call.on('call.session_participant_left', event => {
-      // If all participants have left, navigate back and hide header
-      const remainingParticipants = call?.state?.participants?.length || 0;
-      if (remainingParticipants <= 1) {
-        setShowAudioCallHeader(false);
-        navigation.goBack();
-      }
-    });
-
-    return () => {
-      unsubscribeAccepted();
-      unsubscribeEnded();
-      unsubscribeRejected();
-      unsubscribeLeft();
-    };
-  }, [call, navigation, setShowAudioCallHeader]);
 
   useEffect(() => {
     if (!call && loaded) {

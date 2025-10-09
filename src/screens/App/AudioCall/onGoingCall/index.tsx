@@ -23,6 +23,7 @@ const OnGoingCall = ({ call, toUser }: any) => {
   const [elapsed, setElapsed] = useState<string>('00:00');
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [userData, setUserData] = useState<any>(null);
+  const [callStartTime, setCallStartTime] = useState<number | null>(null);
   const { colors } = useTheme();
   const styles = useStyles();
 
@@ -56,16 +57,12 @@ const OnGoingCall = ({ call, toUser }: any) => {
     };
   }, [myEmail]);
 
-  // Mock participants and session for this example
-  const participants = call?.state?.members || [];
-  const receiver = participants?.find?.(
-    (p: any) => p?.id !== userData?.getStreamUserId,
-  );
   const session = call?.state?.session;
   const startedAt = session?.started_at;
 
   // Get the display name and image for the other participant
   const getOtherParticipant = () => {
+    // If I created the call (outgoing call)
     if (call?.isCreatedByMe && toUser) {
       return {
         name: toUser?.name || 'Unknown User',
@@ -73,45 +70,68 @@ const OnGoingCall = ({ call, toUser }: any) => {
           ? `${process.env.IMAGE_URL}${toUser?.photos?.[0]}`
           : null,
       };
-    } else if (receiver?.user) {
+    }
+
+    // If I'm receiving the call (incoming call)
+    // Find the caller from call members
+    const caller = call?.state?.members?.find(
+      (member: any) => member.user?.id !== userData?.getStreamUserId,
+    );
+
+    if (caller?.user) {
       return {
-        name: receiver.user.name || 'Unknown User',
-        image: receiver.user.image || null,
-      };
-    } else {
-      // Fallback to call members
-      const otherMember = participants.find(
-        (member: any) => member.user?.id !== userData?.getStreamUserId,
-      );
-      return {
-        name: otherMember?.user?.name || 'Audio Call',
-        image: otherMember?.user?.image || null,
+        name: caller.user.name || 'Unknown User',
+        image: caller.user.image || null,
       };
     }
+
+    // Fallback
+    return {
+      name: 'Audio Call',
+      image: null,
+    };
   };
 
-  const otherParticipant = getOtherParticipant();
+  const otherParticipant = useMemo(() => {
+    if (!userData) return { name: 'Loading...', image: null };
+    return getOtherParticipant();
+  }, [call, userData, toUser]);
 
-  const startedAtDate = useMemo(() => {
-    if (!startedAt) {
-      return Date.now();
+  // Set call start time when session starts
+  useEffect(() => {
+    if (startedAt && !callStartTime) {
+      const date = new Date(startedAt).getTime();
+      if (!isNaN(date)) {
+        setCallStartTime(date);
+      } else {
+        setCallStartTime(Date.now());
+      }
+    } else if (!callStartTime) {
+      // If no startedAt yet, use current time as fallback
+      setCallStartTime(Date.now());
     }
-    const date = new Date(startedAt).getTime();
-    return isNaN(date) ? Date.now() : date;
   }, [startedAt]);
 
+  // Update elapsed time
   useEffect(() => {
-    const initialElapsedSeconds = Math.max(
-      0,
-      (Date.now() - startedAtDate) / 1000,
-    );
-    setElapsed(formatTime(initialElapsedSeconds));
-    const interval = setInterval(() => {
-      const elapsedSeconds = (Date.now() - startedAtDate) / 1000;
+    if (!callStartTime) {
+      return;
+    }
+
+    // Calculate initial elapsed time
+    const updateElapsed = () => {
+      const elapsedSeconds = Math.max(0, (Date.now() - callStartTime) / 1000);
       setElapsed(formatTime(elapsedSeconds));
-    }, 1000);
+    };
+
+    // Update immediately
+    updateElapsed();
+
+    // Then update every second
+    const interval = setInterval(updateElapsed, 1000);
+
     return () => clearInterval(interval);
-  }, [startedAtDate]);
+  }, [callStartTime]);
 
   useEffect(() => {
     if (call?.isCreatedByMe) {
@@ -142,16 +162,14 @@ const OnGoingCall = ({ call, toUser }: any) => {
   return (
     <Container title="">
       <View style={styles.container}>
+        {/* User Profile Image */}
+
+        {/* User Name */}
         <Text
           style={[styles.title, { color: colors.primary }]}
           numberOfLines={2}>
           {otherParticipant.name}
         </Text>
-
-        {/* Call Status */}
-        {/* <Text style={[styles.callStatus, { color: colors.primary }]}>
-          Audio Call
-        </Text> */}
 
         {/* Call Duration */}
         <Text style={[styles.duration, { color: colors.primary }]}>

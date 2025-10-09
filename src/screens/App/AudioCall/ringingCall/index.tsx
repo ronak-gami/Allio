@@ -46,43 +46,46 @@ const RingingCall = ({ call, toUser }: any) => {
     };
   }, [myEmail]);
 
-  const receiver = useMemo(() => {
-    return call?.state?.members?.find?.(
-      (p: any) => p?.id !== userData?.getStreamUserId,
-    );
-  }, [call, userData]);
-
   const getOtherParticipant = () => {
+    // If I created the call (outgoing call)
     if (call?.isCreatedByMe && toUser) {
+      console.log('Outgoing call - showing toUser:', toUser?.name);
       return {
         name: toUser?.name || 'Unknown User',
         image: toUser?.photos?.[0]
           ? `${process.env.IMAGE_URL}${toUser?.photos?.[0]}`
           : null,
       };
-    } else if (receiver?.user) {
+    }
+
+    // If I'm receiving the call (incoming call)
+    // Find the caller from call members
+    const caller = call?.state?.members?.find(
+      (member: any) => member.user?.id !== userData?.getStreamUserId,
+    );
+
+    if (caller?.user) {
       return {
-        name: receiver.user.name || 'Unknown User',
-        image: receiver.user.image || null,
-      };
-    } else {
-      // Fallback to call members
-      const otherMember = call?.state?.members?.find(
-        (member: any) => member.user?.id !== userData?.getStreamUserId,
-      );
-      return {
-        name: otherMember?.user?.name || 'Audio Call',
-        image: otherMember?.user?.image || null,
+        name: caller.user.name || 'Unknown User',
+        image: caller.user.image || null,
       };
     }
+
+    // Fallback
+    return {
+      name: 'Audio Call',
+      image: null,
+    };
   };
 
-  const otherParticipant = getOtherParticipant();
+  const otherParticipant = useMemo(() => {
+    if (!userData) return { name: 'Loading...', image: null };
+    return getOtherParticipant();
+  }, [call, userData, toUser]);
 
   const handleAcceptCall = async () => {
     try {
       await call.join({ audio: true, video: false });
-
       await call.microphone?.enable();
     } catch (err) {
       console.error('Error joining call:', err);
@@ -95,7 +98,7 @@ const RingingCall = ({ call, toUser }: any) => {
         // If I created the call, end it for everyone
         call.endCall();
       } else {
-        // If I'm receiving the call, reject it (this will end it for the caller too)
+        // If I'm receiving the call, reject it
         call.reject();
       }
       navigation.goBack();
@@ -108,23 +111,12 @@ const RingingCall = ({ call, toUser }: any) => {
   return (
     <Container title="">
       <View style={styles.container}>
-        {/* <Text style={[styles.title, { color: colors.primary }]}>
+        {/* Call Type Title */}
+        {/* <Text style={[styles.subtitle, { color: colors.text }]}>
           {call?.isCreatedByMe ? t('outGoingCall') : t('incomingCall')}
         </Text> */}
 
         {/* User Profile Image */}
-        {/* {otherParticipant.image ? (
-          <Image
-            style={styles.image}
-            source={{ uri: otherParticipant.image }}
-          />
-        ) : ( */}
-        {/* <View style={[styles.image, styles.placeholderImage]}>
-          <Text style={styles.placeholderText}>
-            {otherParticipant.name.charAt(0).toUpperCase()}
-          </Text>
-        </View> */}
-        {/* )} */}
 
         {/* User Name */}
         <Text

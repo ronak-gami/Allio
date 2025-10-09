@@ -24,7 +24,7 @@ const UpdateProfile: React.FC = () => {
   } = useUpdateProfile(email);
 
   return (
-    <Container title="Video Media" showBackArrow>
+    <Container title="Update Profile" showBackArrow>
       <View style={styles.content}>
         <View style={styles.avatarContainer}>
           <View style={styles.avatarWrapper}>

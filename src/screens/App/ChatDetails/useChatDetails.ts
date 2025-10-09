@@ -225,7 +225,6 @@ export const useChatDetails = (
           });
 
         setChatHistory(msgs);
-        console.log('Chat history updated, total messages:', msgs); // --- IGNORE ---
         setLoadingMessages(false);
       });
 

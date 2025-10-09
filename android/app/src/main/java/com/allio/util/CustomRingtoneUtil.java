@@ -1,4 +1,4 @@
-package com.streamvideo.reactnative.util;
+package com.allio.util;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -16,15 +16,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * Custom RingtoneUtil to avoid conflicts with Stream Video SDK
  * Original source: https://github.com/signalapp/Signal-Android/blob/main/app/src/main/java/org/thoughtcrime/securesms/util/RingtoneUtil.java
- * Some custom ROMs and some Samsung Android 11 devices have quirks around accessing the default ringtone. This attempts to deal
- * with them with progressively worse approaches.
  */
-public final class RingtoneUtil {
+public final class CustomRingtoneUtil {
 
-    private static final String TAG = "RingtoneUtil";
+    private static final String TAG = "CustomRingtoneUtil";
 
-    private RingtoneUtil() {}
+    private CustomRingtoneUtil() {}
 
     public static @Nullable Ringtone getRingtone(@NonNull Context context, @NonNull Uri uri) {
         Ringtone tone;
@@ -32,7 +31,7 @@ public final class RingtoneUtil {
             tone = RingtoneManager.getRingtone(context, uri);
         } catch (SecurityException e) {
             Log.w(TAG, "Unable to get default ringtone due to permission", e);
-            tone = RingtoneManager.getRingtone(context, RingtoneUtil.getActualDefaultRingtoneUri(context));
+            tone = RingtoneManager.getRingtone(context, CustomRingtoneUtil.getActualDefaultRingtoneUri(context));
         }
         return tone;
     }

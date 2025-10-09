@@ -96,7 +96,10 @@
     "Theme": "થીમ",
     "Language": "ભાષા",
     "Delete Account": "એકાઉન્ટ કાઢી નાખો",
-    "Logout": "લોગઆઉટ"
+    "Logout": "લૉગઆઉટ",
+    "AI Assistant": "એઆઇ સહાયક",
+    "Notifications": "સૂચનાઓ",
+    "News App": "સમાચાર એપ"
   },
   "bottomSheet": {
     "selectTheme": "થીમ પસંદ કરો",

@@ -154,16 +154,23 @@ export const useMore = () => {
       },
       {
         key: 'AI Assistant',
-        title: 'AI Assistant',
+        title: 'settings.AI Assistant',
         type: 'navigation',
         screenName: HOME.AiAssistant,
       },
       {
         key: 'notifications',
-        title: 'Notifications',
+        title: 'settings.Notifications',
         type: 'toggle',
         isEnabled: notificationsEnabled,
         onToggle: handleNotificationToggle,
+      },
+
+      {
+        key: 'News App',
+        title: 'settings.News App',
+        type: 'navigation',
+        screenName: HOME.NewsApp,
       },
       {
         key: 'theme',
@@ -184,23 +191,6 @@ export const useMore = () => {
         key: 'logout',
         title: 'settings.Logout',
         type: 'bottomSheet',
-      },
-      {
-        key: 'alliolight',
-        title: 'Alliolight',
-        type: 'action',
-      },
-      {
-        key: 'News App',
-        title: 'News App',
-        type: 'navigation',
-        screenName: HOME.NewsApp,
-      },
-      {
-        key: 'Users',
-        title: 'Users',
-        type: 'navigation',
-        screenName: HOME.Users,
       },
     ],
     [notificationsEnabled, handleNotificationToggle],

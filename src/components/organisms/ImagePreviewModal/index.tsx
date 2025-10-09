@@ -19,6 +19,7 @@ interface MediaPreviewProps {
   imageUri: string;
   onClose: () => void;
   mediaType?: 'photo' | 'video';
+  hideActions?: boolean; // Add prop to hide all action icons
 }
 
 const MediaPreview = ({
@@ -26,6 +27,7 @@ const MediaPreview = ({
   imageUri,
   onClose,
   mediaType = 'photo',
+  hideActions = false, // Default to false to maintain existing behavior
 }: MediaPreviewProps) => {
   const styles = useStyle();
 
@@ -112,7 +114,7 @@ const MediaPreview = ({
             style={styles.sendButton}
           />
         </View>
-      ) : (
+      ) : !hideActions ? (
         <View style={styles.iconRow}>
           <TouchableOpacity onPress={handleDownload}>
             <Image source={ICONS.Download} style={styles.iconImage} />
@@ -126,7 +128,7 @@ const MediaPreview = ({
             <Image source={ICONS.Share} style={styles.iconImage} />
           </TouchableOpacity>
         </View>
-      )}
+      ) : null}
     </CustomModal>
   );
 };

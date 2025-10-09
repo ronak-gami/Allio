@@ -98,8 +98,11 @@
     "My Friends": "मेरे दोस्त",
     "Theme": "थीम",
     "Language": "भाषा",
-    "Delete Account": "खाता हटाएं",
-    "Logout": "लॉगआउट"
+    "Delete Account": "खाता हटाएँ",
+    "Logout": "लॉगआउट",
+    "AI Assistant": "एआई सहायक",
+    "Notifications": "सूचनाएँ",
+    "News App": "समाचार ऐप"
   },
   "HeroSection": {
     "titleone": "Allio में आपका स्वागत है",

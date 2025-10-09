@@ -12,3 +12,8 @@
 
 -keep class org.webrtc.** { *; }
 -keep class com.stream.video.** { *; }
+
+-keep class com.streamvideo.reactnative.** { *; }
+# Keep IMG.LY Editor classes
+-keep class ly.img.** { *; }
+ 
