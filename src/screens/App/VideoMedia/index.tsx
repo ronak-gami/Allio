@@ -124,11 +124,13 @@ const VideoMedia: React.FC<Props> = () => {
                           states.saveVisible ? handleSaveMedia : handleEdit
                         }
                       />
-                      <CustomChip
-                        label="Save"
-                        bgColor={colors.primary}
-                        onPress={handleSaveMedia}
-                      />
+                      {!states.saveVisible && (
+                        <CustomChip
+                          label="Save"
+                          bgColor={colors.primary}
+                          onPress={handleSaveMedia}
+                        />
+                      )}
                     </View>
                     <CustomChip
                       label="Cancel"

@@ -88,7 +88,7 @@ const HOME = {
 } as const;
 
 const LICENSE_KEY =
-  'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
+  'kV0UprBEskCBl7Jy96Qhp5DOl7EkpWWArn5LJ2_kOa48OoFM-x-Ba-6MK4te3MCu';
 
 const WORD_COUNT_THRESHOLD = 20;
 

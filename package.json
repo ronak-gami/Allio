@@ -9,7 +9,7 @@
     "start": "react-native start",
     "test": "jest",
     "refresh-asset": "cd android && ./gradlew clean && cd .. && react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
-    "release-build": "cd android && ./gradlew clean && ./gradlew assembleRelease",
+    "release-build": "cd android && ./gradlew clean && ./gradlew assembleRelease && cd ..",
     "release-bundle": "cd android && ./gradlew clean && ./gradlew && ./gradlew bundleRelease",
     "android:build": "cd android && ./gradlew clean && ./gradlew && ./gradlew bundleRelease && ./gradlew installRelease",
     "clean": "yarn cache clean && npm cache verify && npm cache clean --force && rm -rf node_modules && rm -rf package-lock.json && rm -rf yarn.lock && rm -rf .expo && yarn install",
