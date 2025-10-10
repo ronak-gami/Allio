@@ -31,7 +31,6 @@
   "mpin_reset_title": "4-अंकीय MPIN रीसेट करें",
   "mpin_enter_title": "4-अंकीय MPIN दर्ज करें",
   "mpin_set_title": "4-अंकीय MPIN सेट करें",
-  "forgot_mpin": "MPIN भूल गए?",
   "social_sign_in": "सोशल मीडिया के साथ साइन इन करें",
 
   "mpin_reset_subtitle": "अपने खाते की सुरक्षा के लिए नया MPIN दर्ज करें",
@@ -56,6 +55,9 @@
   "edit": "संपादित करें",
   "cancel": "रद्द करें",
   "size": "आकार",
+  "social_media": "सोशल मीडिया",
+  "photos": "फ़ोटो",
+  "videos": "वीडियो",
 
   "photoMedia": {
     "no_image_selected": "कोई चित्र चयनित नहीं",
@@ -67,6 +69,7 @@
     "no_video_selected": "कोई वीडियो चयनित नहीं",
     "choose_video_prompt": "अपनी गैलरी से वीडियो चुनें या नया रिकॉर्ड करें",
     "record_video": "वीडियो रिकॉर्ड करें",
+    "record_new": "नया रिकॉर्ड करें",
     "choose_from_gallery": "गैलरी से चुनें",
     "duration": "अवधि",
     "resolution": "रिज़ॉल्यूशन"

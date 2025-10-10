@@ -160,12 +160,12 @@ const PhotoMedia: React.FC<Props> = () => {
             {!isPhotoLoaded() && (
               <View style={styles.actionButtonContainer}>
                 <Button
-                  title="Take Photo"
+                  title="photoMedia.take_photo"
                   onPress={handleCameraOpen}
                   style={styles.buttonStyle}
                 />
                 <Button
-                  title="Choose from Gallery"
+                  title="photoMedia.choose_from_gallery"
                   onPress={handleSelectPhoto}
                   outlineColor={colors.primary}
                   style={styles.buttonStyle}

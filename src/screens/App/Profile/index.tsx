@@ -204,8 +204,7 @@ const ProfileHeader: React.FC<{
 const TabBar: React.FC<{
   onTabChange: (tab: string) => void;
   states: object;
-  styles: ReturnType<typeof useStyle>;
-}> = ({ onTabChange, styles, states }) => {
+}> = ({ onTabChange, states }) => {
   const tabsData = [
     { id: 'images', title: 'Images' },
     { id: 'videos', title: 'Videos' },
@@ -222,6 +221,7 @@ const TabBar: React.FC<{
 
 // ONLY CHANGED: Added reels case in MediaContent
 const MediaContent: React.FC<{
+  activeTab: string;
   images: any[];
   videos: any[];
   onRefresh: () => void;
@@ -256,25 +256,12 @@ const MediaContent: React.FC<{
     </View>
   );
 
-  const renderEmptyReelsState = () => (
-    <View style={styles.emptyGridContainer}>
-      <Image
-        source={ICONS.NoVideo}
-        style={styles.emptyGridIcon}
-        resizeMode="contain"
-      />
-      <Text type="BOLD" style={styles.emptyGridTitle}>
-        No Reels Yet
-      </Text>
-    </View>
-  );
-
   if (activeTab === 'videos') {
     return (
       <CustomFlatList
         key="videos"
         data={videos || []}
-        renderItem={({ item }) => (
+        renderItem={({ item }: any) => (
           <VideoCard
             item={item}
             handleSelectStoredVideo={() => onVideoPress(item.videoURL)}
@@ -292,7 +279,7 @@ const MediaContent: React.FC<{
     <CustomFlatList
       key="images"
       data={images || []}
-      renderItem={({ item }) => (
+      renderItem={({ item }: any) => (
         <TouchableOpacity onPress={() => onImagePress(item)}>
           <Image
             source={{ uri: item }}
@@ -359,21 +346,17 @@ const Profile: React.FC<ProfileProps> = ({ route }) => {
           handleShareProfile={handleShareProfile}
           states={states}
         />
-
-        <TabBar
-          onTabChange={states.setActiveTab}
-          styles={styles}
-          states={states}
-        />
-
-        <MediaContent
-          activeTab={states.activeTab}
-          images={data.images}
-          videos={data.videos}
-          styles={styles}
-          onImagePress={openImageModal}
-          onVideoPress={openVideoModal}
-        />
+        <View style={styles.tabContainer}>
+          <TabBar onTabChange={states.setActiveTab} states={states} />
+          <MediaContent
+            activeTab={states.activeTab}
+            images={data.images}
+            videos={data.videos}
+            styles={styles}
+            onImagePress={openImageModal}
+            onVideoPress={openVideoModal}
+          />
+        </View>
 
         {/* Image Preview Modal */}
         <ImagePreviewModal

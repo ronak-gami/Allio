@@ -84,12 +84,12 @@ const VideoMedia: React.FC<Props> = () => {
   const renderBottomButtons = () => (
     <View style={styles.bottomButtonsContainer}>
       <Button
-        title="Record New"
+        title={'videoMedia.record_new'}
         onPress={handleRecordVideo}
         style={styles.buttonStyle}
       />
       <Button
-        title="Choose From Gallery"
+        title={'videoMedia.choose_from_gallery'}
         onPress={handleSelectVideo}
         outlineColor={colors.primary}
         style={styles.buttonStyle}
@@ -98,8 +98,8 @@ const VideoMedia: React.FC<Props> = () => {
   );
 
   const tabs = [
-    { id: 0, title: 'Photos' },
-    { id: 1, title: 'Videos' },
+    { id: 0, title: 'photos' },
+    { id: 1, title: 'videos' },
   ];
 
   const renderContent = () => {
@@ -163,18 +163,14 @@ const VideoMedia: React.FC<Props> = () => {
                         </View>
                         <View style={styles.statDivider} />
                         <View style={styles.statItem}>
-                          <Text type="REGULAR" style={styles.statLabel}>
-                            Duration
-                          </Text>
+                          <Text style={styles.statLabel}>Duration</Text>
                           <Text type="SEMIBOLD" style={styles.statValue}>
                             {formatDuration(states.videoAsset?.duration)}
                           </Text>
                         </View>
                         <View style={styles.statDivider} />
                         <View style={styles.statItem}>
-                          <Text type="REGULAR" style={styles.statLabel}>
-                            Resolution
-                          </Text>
+                          <Text style={styles.statLabel}>Resolution</Text>
                           <Text type="SEMIBOLD" style={styles.statValue}>
                             {getFormattedResolution(states.videoAsset)}
                           </Text>
@@ -205,7 +201,7 @@ const VideoMedia: React.FC<Props> = () => {
   };
 
   return (
-    <Container showLoader={states.loading} title="Social Media">
+    <Container showLoader={states.loading} title="social_media">
       <CustomSimpleTab
         tabs={tabs}
         activeTab={states?.activeTab}

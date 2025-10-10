@@ -33,6 +33,9 @@ const useStyle = () => {
       borderWidth: scale(3),
       borderColor: colors.primary,
     },
+    tabContainer: {
+      paddingHorizontal: width * 0.04,
+    },
     onlineIndicator: {
       position: 'absolute',
       bottom: scale(5),

@@ -29,7 +29,6 @@
   "mpin_enter_title": "4-અંકનું MPIN દાખલ કરો",
   "mpin_set_title": "4-અંકનું MPIN સેટ કરો",
   "social_sign_in": "સોશિયલ મીડિયા સાથે લૉગિન કરો",
-  "mpin_forgot_title": "તમારું MPIN ભૂલી ગયા છો?",
 
   "mpin_reset_subtitle": "તમારું ખાતું સુરક્ષિત કરવા માટે નવું MPIN દાખલ કરો",
   "mpin_enter_subtitle": "આગળ વધવા માટે તમારું MPIN દાખલ કરો",
@@ -53,6 +52,10 @@
   "edit": "સંપાદન કરો",
   "cancel": "રદ કરો",
   "size": "કદ",
+  "social_media": "સોશિયલ મીડિયા",
+  "photos": "ફોટા",
+  "videos": "વિડિયો",
+
   "photoMedia": {
     "no_image_selected": "કોઈ છબી પસંદ કરવામાં આવી નથી",
     "choose_image_prompt": "તમારી ગેલેરીમાંથી છબી પસંદ કરો અથવા નવી લો",
@@ -63,6 +66,7 @@
     "no_video_selected": "કોઈ વિડિયો પસંદ કરેલ નથી",
     "choose_video_prompt": "તમારી ગેલેરીમાંથી વિડિયો પસંદ કરો અથવા નવો રેકોર્ડ કરો",
     "record_video": "વિડિયો રેકોર્ડ કરો",
+    "record_new": "નવો રેકોર્ડ કરો",
     "choose_from_gallery": "ગેલેરીમાંથી પસંદ કરો",
     "duration": "અવધિ",
     "resolution": "રિઝોલ્યુશન"
