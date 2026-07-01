@@ -28,7 +28,7 @@ pipeline {
 
         stage('Unlock System Keychain') {
             steps {
-                withCredentials([password(credentialsId: 'mac-login-password', variable: 'MAC_PASSWORD')]) {
+                withCredentials([string(credentialsId: 'mac-login-password', variable: 'MAC_PASSWORD')]) {
                     sh 'security unlock-keychain -p "${MAC_PASSWORD}" ~/Library/Keychains/login.keychain-db'
                 }
             }
