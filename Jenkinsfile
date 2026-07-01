@@ -39,7 +39,7 @@ pipeline {
                     rm -f package-lock.json
                     
                     echo "=== Installing npm packages ==="
-                    npm install
+                    npm install --legacy-peer-deps
                     
                     echo "=== Cleaning Android build ==="
                     npm run clean:android
