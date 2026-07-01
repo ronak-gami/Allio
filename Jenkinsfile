@@ -33,8 +33,7 @@ pipeline {
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                     if [ -f .nvmrc ]; then nvm use; fi
-                    npm install -g yarn || true
-                    yarn install --frozen-lockfile
+                    npm ci
                 '''
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
