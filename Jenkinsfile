@@ -4,7 +4,7 @@ pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         disableConcurrentBuilds()
-        timeout(time: 30, unit: 'MINUTES')
+        timeout(time: 45, unit: 'MINUTES')
     }
 
     environment {
@@ -12,6 +12,9 @@ pipeline {
         ANDROID_KEYSTORE_FILE_ID = 'android-staging-keystore'
         ANDROID_SECRETS_ID = 'android-signing-credentials'
         ANDROID_HOME = "${HOME}/Library/Android/sdk"
+        // Ensure Homebrew, system gems, and user gems are on PATH
+        PATH = "${HOME}/.nvm/versions/node/v24.14.0/bin:/opt/homebrew/bin:/usr/local/bin:${HOME}/Library/Android/sdk/platform-tools:${HOME}/Library/Android/sdk/tools:/usr/bin:/bin:/usr/sbin:/sbin"
+        LANG = 'en_US.UTF-8'
     }
 
     stages {
@@ -30,15 +33,16 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    if [ -f .nvmrc ]; then nvm use; fi
+                    echo "=== Node version ==="
+                    node --version
+                    npm --version
+                    echo "=== Installing npm packages ==="
                     npm install
                 '''
                 sh '''
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    cd ios && pod install
+                    echo "=== Installing CocoaPods ==="
+                    which pod || echo "pod not found, will try to install"
+                    cd ios && pod install --repo-update
                 '''
             }
         }
@@ -69,9 +73,7 @@ pipeline {
                 ]) {
                     dir('android') {
                         sh """
-                            export NVM_DIR="\$HOME/.nvm"
-                            [ -s "\$NVM_DIR/nvm.sh" ] && . "\$NVM_DIR/nvm.sh"
-                            if [ -f ../.nvmrc ]; then nvm use; fi
+                            echo "=== Building Android APK ==="
                             ./gradlew assembleRelease \\
                               -PMYAPP_UPLOAD_STORE_FILE=\${KEYSTORE_FILE} \\
                               -PMYAPP_UPLOAD_STORE_PASSWORD=\${KEYSTORE_PASSWORD} \\
@@ -88,15 +90,14 @@ pipeline {
             steps {
                 dir('ios') {
                     sh '''
-                        export NVM_DIR="$HOME/.nvm"
-                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
+                        echo "=== Building iOS Archive ==="
                         xcodebuild -workspace Allio.xcworkspace \
                           -scheme Allio \
                           -configuration Release \
                           -archivePath build/Allio.xcarchive \
                           clean archive
 
+                        echo "=== Exporting IPA ==="
                         xcodebuild -exportArchive \
                           -archivePath build/Allio.xcarchive \
                           -exportOptionsPlist ExportOptions-Staging.plist \
