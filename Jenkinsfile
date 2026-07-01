@@ -12,7 +12,6 @@ pipeline {
         ANDROID_KEYSTORE_FILE_ID = 'android-staging-keystore'
         ANDROID_SECRETS_ID = 'android-signing-credentials'
         ANDROID_HOME = "${HOME}/Library/Android/sdk"
-        // Ensure Homebrew, system gems, and user gems are on PATH
         PATH = "${HOME}/.nvm/versions/node/v24.14.0/bin:/opt/homebrew/bin:/usr/local/bin:${HOME}/Library/Android/sdk/platform-tools:${HOME}/Library/Android/sdk/tools:/usr/bin:/bin:/usr/sbin:/sbin"
         LANG = 'en_US.UTF-8'
     }
@@ -39,11 +38,6 @@ pipeline {
                     echo "=== Installing npm packages ==="
                     npm install
                 '''
-                sh '''
-                    echo "=== Installing CocoaPods ==="
-                    which pod || echo "pod not found, will try to install"
-                    cd ios && pod install --repo-update
-                '''
             }
         }
 
@@ -58,9 +52,6 @@ pipeline {
             steps {
                 script {
                     env.APP_BUILD_NUMBER = env.BUILD_NUMBER
-                }
-                dir('ios') {
-                    sh '/usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${APP_BUILD_NUMBER}" Allio/Info.plist'
                 }
             }
         }
@@ -85,38 +76,17 @@ pipeline {
                 }
             }
         }
-
-        stage('Build iOS Staging (IPA)') {
-            steps {
-                dir('ios') {
-                    sh '''
-                        echo "=== Building iOS Archive ==="
-                        xcodebuild -workspace Allio.xcworkspace \
-                          -scheme Allio \
-                          -configuration Release \
-                          -archivePath build/Allio.xcarchive \
-                          clean archive
-
-                        echo "=== Exporting IPA ==="
-                        xcodebuild -exportArchive \
-                          -archivePath build/Allio.xcarchive \
-                          -exportOptionsPlist ExportOptions-Staging.plist \
-                          -exportPath build/
-                    '''
-                }
-            }
-        }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'android/app/build/outputs/apk/release/*.apk, ios/build/*.ipa', allowEmptyArchive: true, fingerprint: true
+            archiveArtifacts artifacts: 'android/app/build/outputs/apk/release/*.apk', allowEmptyArchive: true, fingerprint: true
         }
         success {
-            echo "Staging build #${env.BUILD_NUMBER} completed successfully. APK and IPA are available in Jenkins artifacts."
+            echo "Android staging build #${env.BUILD_NUMBER} completed successfully. APK is available in Jenkins artifacts."
         }
         failure {
-            echo "Staging build #${env.BUILD_NUMBER} failed. Check the console output for details."
+            echo "Android staging build #${env.BUILD_NUMBER} failed. Check the console output for details."
         }
     }
 }
