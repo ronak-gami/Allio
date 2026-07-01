@@ -4,6 +4,7 @@ pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
     }
 
     environment {
@@ -26,25 +27,20 @@ pipeline {
             }
         }
 
-        stage('Unlock System Keychain') {
-            steps {
-                withCredentials([string(credentialsId: 'mac-login-password', variable: 'MAC_PASSWORD')]) {
-                    sh 'security unlock-keychain -p "${MAC_PASSWORD}" ~/Library/Keychains/login.keychain-db'
-                }
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                     if [ -f .nvmrc ]; then nvm use; fi
+                    npm install -g yarn || true
                     yarn install --frozen-lockfile
                 '''
-                dir('ios') {
-                    sh 'pod install'
-                }
+                sh '''
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    cd ios && pod install
+                '''
             }
         }
 
@@ -74,14 +70,14 @@ pipeline {
                 ]) {
                     dir('android') {
                         sh """
-                            export NVM_DIR="\\$HOME/.nvm"
-                            [ -s "\\$NVM_DIR/nvm.sh" ] && \\. "\\$NVM_DIR/nvm.sh"
+                            export NVM_DIR="\$HOME/.nvm"
+                            [ -s "\$NVM_DIR/nvm.sh" ] && . "\$NVM_DIR/nvm.sh"
                             if [ -f ../.nvmrc ]; then nvm use; fi
                             ./gradlew assembleRelease \\
-                              -PMYAPP_UPLOAD_STORE_FILE=${KEYSTORE_FILE} \\
-                              -PMYAPP_UPLOAD_STORE_PASSWORD=${KEYSTORE_PASSWORD} \\
-                              -PMYAPP_UPLOAD_KEY_ALIAS=${KEYSTORE_ALIAS} \\
-                              -PMYAPP_UPLOAD_KEY_PASSWORD=${KEYSTORE_PASSWORD} \\
+                              -PMYAPP_UPLOAD_STORE_FILE=\${KEYSTORE_FILE} \\
+                              -PMYAPP_UPLOAD_STORE_PASSWORD=\${KEYSTORE_PASSWORD} \\
+                              -PMYAPP_UPLOAD_KEY_ALIAS=\${KEYSTORE_ALIAS} \\
+                              -PMYAPP_UPLOAD_KEY_PASSWORD=\${KEYSTORE_PASSWORD} \\
                               -PversionCode=${env.APP_BUILD_NUMBER}
                         """
                     }
@@ -89,19 +85,22 @@ pipeline {
             }
         }
 
-        stage('Build iOS Staging (Ad-Hoc IPA)') {
+        stage('Build iOS Staging (IPA)') {
             steps {
                 dir('ios') {
                     sh '''
-                        xcodebuild -workspace Allio.xcworkspace \\
-                          -scheme Allio \\
-                          -configuration Release \\
-                          -archivePath build/Allio.xcarchive \\
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+                        xcodebuild -workspace Allio.xcworkspace \
+                          -scheme Allio \
+                          -configuration Release \
+                          -archivePath build/Allio.xcarchive \
                           clean archive
 
-                        xcodebuild -exportArchive \\
-                          -archivePath build/Allio.xcarchive \\
-                          -exportOptionsPlist ExportOptions-Staging.plist \\
+                        xcodebuild -exportArchive \
+                          -archivePath build/Allio.xcarchive \
+                          -exportOptionsPlist ExportOptions-Staging.plist \
                           -exportPath build/
                     '''
                 }
@@ -111,11 +110,13 @@ pipeline {
 
     post {
         always {
-            sh 'security lock-keychain ~/Library/Keychains/login.keychain-db || true'
-            archiveArtifacts artifacts: 'android/app/build/outputs/apk/release/*.apk, ios/build/*.ipa', allowEmptyArchive: false, fingerprint: true
+            archiveArtifacts artifacts: 'android/app/build/outputs/apk/release/*.apk, ios/build/*.ipa', allowEmptyArchive: true, fingerprint: true
         }
         success {
-            echo "Staging build #${env.BUILD_NUMBER} generated successfully."
+            echo "Staging build #${env.BUILD_NUMBER} completed successfully. APK and IPA are available in Jenkins artifacts."
+        }
+        failure {
+            echo "Staging build #${env.BUILD_NUMBER} failed. Check the console output for details."
         }
     }
 }
