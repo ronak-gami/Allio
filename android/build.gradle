@@ -33,6 +33,13 @@ allprojects {
             }
         }
     }
+    
+    // Disable noisy/unstable sonatype snapshots repository to prevent 504 Gateway Time-out build failures
+    afterEvaluate { project ->
+        project.repositories.removeIf { repo ->
+            repo.hasProperty('url') && repo.url.toString().contains("oss.sonatype.org")
+        }
+    }
 }
 
 apply plugin: "com.facebook.react.rootproject"
