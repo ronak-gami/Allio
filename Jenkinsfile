@@ -10,7 +10,6 @@ pipeline {
     environment {
         NODE_ENV = 'staging'
         ANDROID_KEYSTORE_FILE_ID = 'android-staging-keystore'
-        ANDROID_SECRETS_ID = 'android-signing-credentials'
         ANDROID_HOME = "${HOME}/Library/Android/sdk"
         PATH = "${HOME}/.nvm/versions/node/v24.14.0/bin:/opt/homebrew/bin:/usr/local/bin:${HOME}/Library/Android/sdk/platform-tools:${HOME}/Library/Android/sdk/tools:/usr/bin:/bin:/usr/sbin:/sbin"
         LANG = 'en_US.UTF-8'
@@ -59,17 +58,13 @@ pipeline {
         stage('Build Android Staging (APK)') {
             steps {
                 withCredentials([
-                    file(credentialsId: env.ANDROID_KEYSTORE_FILE_ID, variable: 'KEYSTORE_FILE'),
-                    usernamePassword(credentialsId: env.ANDROID_SECRETS_ID, usernameVariable: 'KEYSTORE_ALIAS', passwordVariable: 'KEYSTORE_PASSWORD')
+                    file(credentialsId: env.ANDROID_KEYSTORE_FILE_ID, variable: 'KEYSTORE_FILE')
                 ]) {
                     dir('android') {
                         sh """
                             echo "=== Building Android APK ==="
                             ./gradlew assembleRelease \\
                               -PMYAPP_UPLOAD_STORE_FILE=\${KEYSTORE_FILE} \\
-                              -PMYAPP_UPLOAD_STORE_PASSWORD=\${KEYSTORE_PASSWORD} \\
-                              -PMYAPP_UPLOAD_KEY_ALIAS=\${KEYSTORE_ALIAS} \\
-                              -PMYAPP_UPLOAD_KEY_PASSWORD=\${KEYSTORE_PASSWORD} \\
                               -PversionCode=${env.APP_BUILD_NUMBER}
                         """
                     }
