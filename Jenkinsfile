@@ -34,8 +34,15 @@ pipeline {
                     echo "=== Node version ==="
                     node --version
                     npm --version
+                    
+                    echo "=== Removing package-lock.json ==="
+                    rm -f package-lock.json
+                    
                     echo "=== Installing npm packages ==="
                     npm install
+                    
+                    echo "=== Cleaning Android build ==="
+                    npm run clean:android
                 '''
             }
         }
@@ -63,7 +70,7 @@ pipeline {
                     dir('android') {
                         sh """
                             echo "=== Building Android APK ==="
-                            ./gradlew assembleRelease \\
+                            ./gradlew clean assembleRelease \\
                               -PMYAPP_UPLOAD_STORE_FILE=\${KEYSTORE_FILE} \\
                               -PversionCode=${env.APP_BUILD_NUMBER}
                         """
