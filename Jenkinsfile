@@ -33,7 +33,7 @@ pipeline {
                     export NVM_DIR="$HOME/.nvm"
                     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                     if [ -f .nvmrc ]; then nvm use; fi
-                    npm ci
+                    npm install
                 '''
                 sh '''
                     export NVM_DIR="$HOME/.nvm"
